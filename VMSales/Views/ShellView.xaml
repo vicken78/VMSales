@@ -1,0 +1,64 @@
+﻿<Window x:Class="VMSales.Views.ShellView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:syncfusion="http://schemas.syncfusion.com/wpf"
+        xmlns:syncfusionskin="clr-namespace:Syncfusion.SfSkinManager;assembly=Syncfusion.SfSkinManager.WPF" 
+        syncfusionskin:SfSkinManager.VisualStyle="Office2013White" 
+        xmlns:local="clr-namespace:VMSales.Views"
+        mc:Ignorable="d"
+        Title="ShellView" Height="1920" Width="1080" WindowState="Maximized">
+    <Grid ShowGridLines="False">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="*"/>
+
+        </Grid.RowDefinitions>
+
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="auto"/>
+            <ColumnDefinition Width="auto"/>
+            <ColumnDefinition Width="auto"/>
+            <ColumnDefinition Width="auto"/>
+            <ColumnDefinition Width="auto"/>
+            <ColumnDefinition Width="auto"/>
+            <ColumnDefinition Width="auto"/>
+            <ColumnDefinition Width="auto"/>
+            <ColumnDefinition Width="auto"/>
+            <ColumnDefinition Width="auto"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+
+        <Button x:Name="LoadUser" Grid.Row="1"  Grid.Column="1" Padding="15">Users</Button>
+        <Button x:Name="LoadUserRole" Grid.Row="1"  Grid.Column="2" Padding="15">User Roles</Button>
+        <Button x:Name="LoadLocation" Grid.Row="1"  Grid.Column="3" Padding="15">Locations</Button>
+        <Button x:Name="LoadSupplier" Grid.Row="1"  Grid.Column="4" Padding="15">Suppliers</Button>
+        <ContentControl Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="12" x:Name="ActiveItem"/>
+        <Button x:Name="LoadPurchaseOrder" Grid.Row="1"  Grid.Column="5" Padding="15">Purchase Orders</Button>
+        <Button x:Name="LoadProduct" Grid.Row="1"  Grid.Column="6" Padding="15">Products</Button>
+        <Button x:Name="LoadProductCategory" Grid.Row="1"  Grid.Column="7" Padding="15">Product Category</Button>
+        <Button x:Name="LoadProductPhoto" Grid.Row="1"  Grid.Column="8" Padding="15">Product Photos</Button>
+        <Button x:Name="LoadCustomer" Grid.Row="1"  Grid.Column="9" Padding="15">Customers</Button>
+        <Button x:Name="LoadCustomerOrder" Grid.Row="1"  Grid.Column="10" Padding="15">Sales</Button>
+
+
+
+        <!--
+             <TextBlock Text="{Binding Path=FullName, Mode=OneWay}" Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2"></TextBlock>
+             <TextBox MinWidth="100" Grid.Row="2" Grid.Column="1" x:Name="FirstName"></TextBox>
+             <TextBox MinWidth="100" Grid.Row="2" Grid.Column="2" x:Name="LastName"></TextBox>
+        <ComboBox Grid.Row="3" Grid.Column="1" x:Name="People" 
+            SelectedItem="{Binding Path=SelectedPerson, Mode=OneWayToSource}" 
+            DisplayMemberPath="FirstName"/>
+        <TextBlock Grid.Row="3" Grid.Column="2" x:Name="SelectedPerson_LastName"/>
+        <Button x:Name="ClearText" Grid.Row="4" Grid.Column="1">Clear Names</Button>
+       
+        
+        <Button x:Name="LoadPurchaseOrder" Grid.Row="3" Grid.Column="1">Load First Page</Button>
+      -->
+    </Grid>
+</Window>
