@@ -9,10 +9,10 @@ namespace VMSales.ViewModels
 
         }
 
-        public void LoadPurchaseOrder()
-        {
-            ActivateItemAsync(new PurchaseOrderViewModel());
-        }
+        //public void LoadPurchaseOrder()
+        //{
+        //    ActivateItemAsync(new PurchaseOrderViewModel());
+        //}
         public void LoadSupplier()
         {
             ActivateItemAsync(new SupplierViewModel());

@@ -40,40 +40,40 @@
                     </TextBlock>
                     <!-- Name -->
                     <Label Content="Name" Grid.Column="0" Grid.Row="1" />
-                    <TextBox Text="{Binding Path=SelectedItem.Sname, ElementName=SupplierDataGrid, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}" 
+                    <TextBox Text="{Binding Path=SelectedItem.Sname, ElementName=ObservableCollectionSupplierModel, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}" 
                     Grid.Column="1" Grid.Row="1"/>
                     <!-- Address -->
                     <Label Content="Address" Grid.Column="0" Grid.Row="2" />
-                    <TextBox Text="{Binding SelectedItem.Address, ElementName=SupplierDataGrid, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}" Grid.Column="1" Grid.Row="2" />
+                    <TextBox Text="{Binding SelectedItem.Address, ElementName=ObservableCollectionSupplierModel, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}" Grid.Column="1" Grid.Row="2" />
                     <!-- City -->
                     <Label Content="City" Grid.Column="0" Grid.Row="3" />
                     <TextBox
-                        Text="{Binding Path=SelectedItem.City, ElementName=SupplierDataGrid, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}"
+                        Text="{Binding Path=SelectedItem.City, ElementName=ObservableCollectionSupplierModel, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}"
                         Grid.Column="1" Grid.Row="3" />
                     <!-- State -->
                     <Label Content="State" Grid.Column="0" Grid.Row="4" />
                     <TextBox
-                        Text="{Binding SelectedItem.State, ElementName=SupplierDataGrid, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}"
+                        Text="{Binding SelectedItem.State, ElementName=ObservableCollectionSupplierModel, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}"
                         Grid.Column="1" Grid.Row="4" />
                     <!-- Country -->
                     <Label Content="Country" Grid.Column="0" Grid.Row="5" />
                     <TextBox
-                        Text="{Binding SelectedItem.Country, ElementName=SupplierDataGrid, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}"
+                        Text="{Binding SelectedItem.Country, ElementName=ObservableCollectionSupplierModel, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}"
                         Grid.Column="1" Grid.Row="5" />
                     <!-- Zip -->
                     <Label Content="Zip" Grid.Column="0" Grid.Row="6" />
                     <TextBox
-                        Text="{Binding SelectedItem.Zip, ElementName=SupplierDataGrid, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}"
+                        Text="{Binding SelectedItem.Zip, ElementName=ObservableCollectionSupplierModel, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}"
                         Grid.Column="1" Grid.Row="6" />
                     <!-- Phone -->
                     <Label Content="Phone" Grid.Column="0" Grid.Row="7" />
                     <TextBox
-                        Text="{Binding SelectedItem.Phone, ElementName=SupplierDataGrid, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}"
+                        Text="{Binding SelectedItem.Phone, ElementName=ObservableCollectionSupplierModel, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}"
                         Grid.Column="1" Grid.Row="7" />
                     <!-- Email -->
                     <Label Content="Email" Grid.Column="0" Grid.Row="8" />
                     <TextBox
-                        Text="{Binding SelectedItem.Email, ElementName=SupplierDataGrid, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}"
+                        Text="{Binding SelectedItem.Email, ElementName=ObservableCollectionSupplierModel, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}"
                         Grid.Column="1" Grid.Row="8" />
                     <!--  Save Button -->
                     <Button x:Name="SaveCommand" Grid.Row="9"
@@ -83,26 +83,26 @@
                             Width="75"/>
                     <!-- Delete Button -->
                     <Button x:Name="DeleteCommand" Grid.Row="9"             
-                            Margin="90,5,359,-25.778"
+                            Margin="90,5,353,-27"
                             Content="Delete"
                             Width="75" Grid.Column="1"/>
                     <!--  Add Button -->
                     <Button x:Name="AddCommand" Grid.Row="9"
                             Grid.Column="1"
-                            Margin="180,5,273,-27"
+                            Margin="180,5,253,-27"
                             Content="Add"
                             Width="75"/>
                     <!-- Reset Button -->
-                    <Button x:Name="ResetCommand" Grid.Row="9"
+                        <Button x:Name="ResetCommand" Grid.Row="9"
                             Grid.Column="1"
-                            Margin="270,5,183,-27"
+                            Margin="270,5,153,-27"
                             Content="Reset"
                             Width="75"/>
                 </Grid>
             </GroupBox>
             <GroupBox Grid.Column="1" Grid.Row="0" Header="Suppliers" Grid.RowSpan="2">
-                <DataGrid x:Name="SupplierDataGrid" AutoGenerateColumns="False" Margin="-10,1,10.778,-0.778"
-                          ItemsSource="{Binding ObservableCollectionSupplierModel}"        
+                <DataGrid x:Name="ObservableCollectionSupplierModel"  AutoGenerateColumns="False" Margin="-10,1,10.778,-0.778"
+                          ItemsSource="{Binding ObservableCollectionSupplierModel}"      
                           IsSynchronizedWithCurrentItem="True" 
                           EnableRowVirtualization="True" Width="800" IsReadOnly="False">
                     <!--<DataGrid AutoGenerateColumns="False" HorizontalAlignment="Center" Name="Suppliers" VerticalAlignment="Top" ItemsSource="{Binding Suppliers, Mode=OneWay, NotifyOnSourceUpdated=True, UpdateSourceTrigger=PropertyChanged}"> -->

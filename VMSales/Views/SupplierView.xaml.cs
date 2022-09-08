@@ -29,7 +29,7 @@ namespace VMSales.Views
     {
         public SupplierView()
         {
-       //     InitializeComponent();
+            InitializeComponent();
         }
     }
 }

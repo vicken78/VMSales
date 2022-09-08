@@ -5,6 +5,7 @@ using System.Data.SQLite;
 using System.Collections.Generic;
 using Dapper;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using System.Data.Common;
@@ -90,22 +91,23 @@ namespace VMSales.Database
             return dt;
         }
 
+      
 
 
-            
-//            SqlConnection con = new SqlConnection(connection);//
-//            con.Open();
-  //          using (SqlCommand cmd = new SqlCommand("up_searchUsers", con))
-   //         {
-    //            cmd.CommandType = CommandType.StoredProcedure;
-    //            cmd.Parameters.Add("@SearchName", SqlDbType.VarChar).Value = name;
-    //            SqlDataAdapter da = new SqlDataAdapter(cmd);
-    //            
-     //           da.Fill(dt);
-     //           con.Close();
-     //           return dt;
-      //      }
-      //  }
+
+        //            SqlConnection con = new SqlConnection(connection);//
+        //            con.Open();
+        //          using (SqlCommand cmd = new SqlCommand("up_searchUsers", con))
+        //         {
+        //            cmd.CommandType = CommandType.StoredProcedure;
+        //            cmd.Parameters.Add("@SearchName", SqlDbType.VarChar).Value = name;
+        //            SqlDataAdapter da = new SqlDataAdapter(cmd);
+        //            
+        //           da.Fill(dt);
+        //           con.Close();
+        //           return dt;
+        //      }
+        //  }
 
 
     }

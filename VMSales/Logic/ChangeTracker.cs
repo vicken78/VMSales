@@ -55,7 +55,6 @@ namespace VMSales.ChangeTrack
         {
             get
             {
-                Debug.WriteLine(Updated.Count.ToString());
                 if (Updated.Count == 0) return new List<DataRow>();
                 return (List<DataRow>)Updated.ToList();
             }
@@ -135,7 +134,9 @@ namespace VMSales.ChangeTrack
         public void CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
         {
 
-            switch (e.Action)
+
+                    switch (e.Action)
+
             {
                 case System.Collections.Specialized.NotifyCollectionChangedAction.Add:
                     foreach (DataRow row in e.NewItems)

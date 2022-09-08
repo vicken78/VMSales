@@ -1,12 +1,15 @@
-﻿using VMSales.BaseType;
-using System.Diagnostics;
-using System.Windows;
-using System.ComponentModel;
-
+﻿using System.ComponentModel;
 namespace VMSales.Models
 {
-    public class SupplierModel : BaseModel
+    public class SupplierModel : INotifyPropertyChanged
     {
+        public event PropertyChangedEventHandler PropertyChanged;
+        protected void RaisePropertyChanged(string property) 
+        {
+            if (PropertyChanged != null)
+            PropertyChanged(this, new PropertyChangedEventArgs(property));
+        }
+
         private string _supplier_pk;
         private string _sname;
         private string _address;
@@ -23,7 +26,7 @@ namespace VMSales.Models
             {
                 if (_supplier_pk == value) return;
                 _supplier_pk = value;
-                OnPropertyChanged(nameof(Supplier_pk));
+                RaisePropertyChanged("Supplier_pk");
             }
         }
         public string Sname
@@ -33,7 +36,7 @@ namespace VMSales.Models
             {
                 if (_sname == value) return;
                 _sname = value;
-                OnPropertyChanged(nameof(Sname));
+                RaisePropertyChanged("Sname");
             }
         }
         public string Address
@@ -43,7 +46,7 @@ namespace VMSales.Models
             {
                 if (_address == value) return;
                 _address = value;
-                OnPropertyChanged(nameof(Address));
+                RaisePropertyChanged("Address");
             }
         }
         public string City
@@ -53,7 +56,7 @@ namespace VMSales.Models
             {
                 if (_city == value) return;
                 _city = value;
-                OnPropertyChanged(nameof(City));
+                RaisePropertyChanged("City");
             }
         }
 
@@ -64,7 +67,7 @@ namespace VMSales.Models
             {
                 if (_state == value) return;
                 _state = value;
-                OnPropertyChanged(nameof(State));
+                RaisePropertyChanged("State");
             }
         }
 
@@ -75,7 +78,7 @@ namespace VMSales.Models
             {
                 if (_country == value) return;
                 _country = value;
-                OnPropertyChanged(nameof(Country));
+                RaisePropertyChanged("Country");
             }
         }
 
@@ -86,7 +89,7 @@ namespace VMSales.Models
             {
                 if (_zip == value) return;
                 _zip = value;
-                OnPropertyChanged(nameof(Zip));
+                RaisePropertyChanged("Zip");
             }
         }
 
@@ -97,10 +100,9 @@ namespace VMSales.Models
             {
                 if (_phone == value) return;
                 _phone = value;
-                OnPropertyChanged(nameof(Phone));
+                RaisePropertyChanged("Phone");
             }
         }
-
         public string Email
         {
             get { return _email; }
@@ -108,22 +110,8 @@ namespace VMSales.Models
             {
                 if (_email == value) return;
                 _email = value;
-                OnPropertyChanged(nameof(Email));
+                RaisePropertyChanged("Email");
             }
         }
-        /*    private string _selectedSname;
-            public string SelectedSname
-            {
-            get { return SelectedSname; }
-
-            set
-            {
-                if (selectedSname != value)
-                {
-                    selectedSname = value;
-                    OnPropertyChanged(nameof(selectedSname));
-                }
-            }
-        */
     }
 }

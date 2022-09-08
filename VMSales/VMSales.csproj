@@ -132,12 +132,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="Logic\Change.cs" />
     <Compile Include="Logic\ChangeTracker.cs" />
     <Compile Include="Bootstrapper.cs" />
     <Compile Include="Logic\DataBaseOps.cs" />
-    <Compile Include="Logic\Annotations.cs" />
-    <Compile Include="Models\BaseType.cs" />
+    <Compile Include="ViewModels\ViewModelBase.cs" />
     <Compile Include="Models\customers.cs" />
     <Compile Include="Models\PurchaseOrderModel.cs" />
     <Compile Include="App.xaml.cs">
