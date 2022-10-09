@@ -3,10 +3,128 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:VMSales.Views"
+             xmlns:local="clr-namespace:VMSales.ViewModels"
              mc:Ignorable="d" 
-             d:DesignHeight="800" d:DesignWidth="800" Background="blue">
-    <Grid>
-        <TextBlock VerticalAlignment="Top" HorizontalAlignment="Center">Welcome to Syncfusion Controls</TextBlock>
-    </Grid>
+             Height="800" Width="1300" VerticalAlignment="Top" MinHeight="400" MinWidth="800">
+    <UserControl.DataContext>
+        <local:PurchaseOrderViewModel/>
+    </UserControl.DataContext>
+    <DockPanel LastChildFill="True">
+        <Grid Margin="10" DockPanel.Dock="Top" Background="Azure">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="25" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="100"/>
+                <ColumnDefinition Width="300"/>
+                <ColumnDefinition Width="200"/>
+                <ColumnDefinition Width="200"/>
+                <ColumnDefinition Width="200"/>
+            </Grid.ColumnDefinitions>
+
+
+            <!-- Supplier Combo static -->
+            <Label Grid.Row="2" Grid.Column="0">Supplier</Label>
+            <ComboBox x:Name="cmbSupplier" ItemsSource="{Binding Supplier}"  SelectedItem="{Binding SelectedSname, Mode=TwoWay}"  SelectedValue="SelectedSname" SelectedValuePath="Sname" Width="300" HorizontalAlignment="Left" DisplayMemberPath="Sname" Grid.Row="2" Grid.Column="1"/>
+            <!-- Address -->
+            <Label Content="Address" Grid.Column="0" Grid.Row="4" />
+            <TextBox Name="Address" IsReadOnly="True" Background="WhiteSmoke"  Text="{Binding SelectedItem.Address, ElementName=cmbSupplier}" 
+                        Grid.Column="1" Grid.Row="4"/>
+
+            <!-- State -->
+            <Label Content="State" Grid.Column="0" Grid.Row="5" />
+            <TextBox Name="State" IsReadOnly="True" Background="WhiteSmoke" Text="{Binding SelectedItem.State, ElementName=cmbSupplier}"
+                        Grid.Column="1" Grid.Row="5"/>
+            <!-- Country -->
+            <Label Content="Country" Grid.Column="0" Grid.Row="6" />
+            <TextBox Name="Country" IsReadOnly="True" Background="WhiteSmoke" Text="{Binding SelectedItem.Country, ElementName=cmbSupplier}"
+                        Grid.Column="1" Grid.Row="6" />
+            <!-- Zip -->
+            <Label Content="Zip" Grid.Column="0" Grid.Row="7" />
+            <TextBox Name="Zip" IsReadOnly="True" Background="WhiteSmoke" Text="{Binding SelectedItem.Zip, ElementName=cmbSupplier}"
+                        Grid.Column="1" Grid.Row="7"/>
+            <!-- Phone -->
+            <Label Content="Phone" Grid.Column="0" Grid.Row="8" />
+            <TextBox Name="Phone" IsReadOnly="True" Background="WhiteSmoke" Text="{Binding SelectedItem.Phone, ElementName=cmbSupplier}"
+                        Grid.Column="1" Grid.Row="8"/>
+            <!-- Email -->
+            <Label Content="Email" Grid.Column="0" Grid.Row="9" />
+            <TextBox Name="Email" IsReadOnly="True" Background="WhiteSmoke" Text="{Binding SelectedItem.Email, ElementName=cmbSupplier}"
+                        Grid.Column="1" Grid.Row="9"/>
+
+            <!-- Invoice Number updateable -->
+            <TextBlock Grid.Row="2" Grid.Column="3" FontSize="14" FontWeight="Bold">Invoice No.</TextBlock>
+            <TextBox x:Name="Invoicenumber" Grid.Row="2" Grid.Column="4" Text="{Binding Invoicenumber, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}"/>
+            <!-- Purchase Date updateable -->
+            <TextBlock Grid.Row="3" Grid.Column="3">Purchase Date</TextBlock>
+            <!--<TextBox Grid.Row="3" Grid.Column="4" MaxLength="10" Text="{Binding Path=Thing4}"/>-->
+            <DatePicker x:Name="Purchasedate" Text="{Binding Purchasedate}" Grid.Row="3" Grid.Column="4" Height="25" HorizontalAlignment="Left" Width="200"/>
+
+
+            <!-- Totals Cost -->
+            <TextBlock Grid.Row="5" Grid.Column="3" FontSize="16" Grid.ColumnSpan="2" Grid.RowSpan="2">SubTotal</TextBlock>
+            <TextBox Grid.Row="6" Grid.Column="4" Text="{Binding Totallotcost, StringFormat='c'}" IsReadOnly="True" Background="WhiteSmoke"/>
+            <!-- Total Sales Tax -->
+            <TextBlock Grid.Row="7" Grid.Column="3" FontSize="16">Total Sales Tax</TextBlock>
+            <TextBox Grid.Row="7" Grid.Column="4" Text="{Binding Totalsalestax, StringFormat='c'}" IsReadOnly="True" Background="WhiteSmoke"/>
+            <!-- Total Shipping -->
+            <TextBlock Grid.Row="8" Grid.Column="3" FontSize="16">Total Shipping</TextBlock>
+            <TextBox Grid.Row="8" Grid.Column="4" Text="{Binding Totalshippingcost, StringFormat='c'}" IsReadOnly="True" Background="WhiteSmoke"/>
+            <!-- Final -->
+            <TextBlock Grid.Row="9" Grid.Column="3" FontSize="16" FontWeight="Bold">Total Cost</TextBlock>
+            <TextBox Grid.Row="9" Grid.Column="4" FontWeight="Bold" Text="{Binding Totallotcost, StringFormat='c'}" IsReadOnly="True" Background="WhiteSmoke"/>
+
+            <!--  Save Button -->
+            <Button x:Name="SaveCommand" Grid.Column="1" Grid.Row="11"
+                            Width="75"
+                            Content="Save"
+                            HorizontalAlignment="Left"/>
+            <!-- Delete Button -->
+            <Button x:Name="DeleteCommand" Grid.Column="1" Grid.Row="11"             
+                            Width="75"        
+                            Content="Delete"/>
+            <!--  Add Button -->
+            <Button x:Name="AddCommand" Grid.Column="1" Grid.Row="11"
+                            Width="75"                                      
+                            HorizontalAlignment="Left"
+                            Content="Add" Margin="220,0,0,0"/>
+            <!-- Reset Button -->
+            <Button x:Name="ResetCommand" Grid.Column="2" Grid.Row="11"
+                            Width="75" 
+                            HorizontalAlignment="Left"
+                            Content="Reset" Margin="30,0,0,0"/>
+        </Grid>
+
+        <DataGrid x:Name="PurchaseOrderDataGrid"  AutoGenerateColumns="False" 
+                   ItemsSource="{Binding PurchaseOrder}"       
+                          IsSynchronizedWithCurrentItem="True" 
+                          EnableRowVirtualization="True" IsReadOnly="False" Grid.Row="10" Height="Auto" Width="1400"  HorizontalAlignment="Left" >
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Lot Number" Width="90"
+                            Binding="{Binding Lotnumber, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}"/>
+                <DataGridTextColumn Header="Quantity" Width="60" 
+                            Binding="{Binding Lotqty, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}" />
+                <DataGridTextColumn Header="Lot Name" Width="Auto" 
+                            Binding="{Binding Lotname, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}" />
+                <DataGridTextColumn Header="Lot Description" Width="Auto" 
+                            Binding="{Binding Lotdescription, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}" />
+                <DataGridTextColumn Header="Sales Tax" Width="70" 
+                            Binding="{Binding Salestax, StringFormat='c', ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}" />
+                <DataGridTextColumn Header="Shipping Cost" Width="100" 
+                            Binding="{Binding Shippingcost, StringFormat='c', ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}" />
+            </DataGrid.Columns>
+        </DataGrid>
+
+    </DockPanel>
 </UserControl>

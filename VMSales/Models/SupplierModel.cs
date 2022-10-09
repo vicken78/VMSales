@@ -1,16 +1,18 @@
-﻿using System.ComponentModel;
+﻿using System.Collections.ObjectModel;
+
 namespace VMSales.Models
 {
-    public class SupplierModel : INotifyPropertyChanged
+    public class SupplierModel : BaseModel 
     {
-        public event PropertyChangedEventHandler PropertyChanged;
-        protected void RaisePropertyChanged(string property) 
-        {
-            if (PropertyChanged != null)
-            PropertyChanged(this, new PropertyChangedEventArgs(property));
-        }
+        public int SnameLength = 255;
+        public int AddressLength = 255;
+        public int CityLength = 255;
+        public int StateLength = 50;
+        public int ZipLength = 9;
+        public int CountryLength = 50;
+        public int PhoneLength = 25;
+    
 
-        private string _supplier_pk;
         private string _sname;
         private string _address;
         private string _city;
@@ -19,26 +21,21 @@ namespace VMSales.Models
         private string _country;
         private string _phone;
         private string _email;
-        public string Supplier_pk
-        {
-            get { return _supplier_pk; }
-            set
-            {
-                if (_supplier_pk == value) return;
-                _supplier_pk = value;
-                RaisePropertyChanged("Supplier_pk");
-            }
-        }
+        private string _supplier_pk;
+
         public string Sname
         {
             get { return _sname; }
             set
-            {
+           {
                 if (_sname == value) return;
                 _sname = value;
                 RaisePropertyChanged("Sname");
             }
         }
+
+
+
         public string Address
         {
             get { return _address; }
@@ -59,7 +56,6 @@ namespace VMSales.Models
                 RaisePropertyChanged("City");
             }
         }
-
         public string State
         {
             get { return _state; }
@@ -70,7 +66,6 @@ namespace VMSales.Models
                 RaisePropertyChanged("State");
             }
         }
-
         public string Country
         {
             get { return _country; }
@@ -81,7 +76,6 @@ namespace VMSales.Models
                 RaisePropertyChanged("Country");
             }
         }
-
         public string Zip
         {
             get { return _zip; }
@@ -92,7 +86,6 @@ namespace VMSales.Models
                 RaisePropertyChanged("Zip");
             }
         }
-
         public string Phone
         {
             get { return _phone; }
@@ -111,6 +104,28 @@ namespace VMSales.Models
                 if (_email == value) return;
                 _email = value;
                 RaisePropertyChanged("Email");
+            }
+        }
+        public string Supplier_pk
+        {
+            get { return _supplier_pk; }
+            set
+            {
+                if (_supplier_pk == value) return;
+                _supplier_pk = value;
+                RaisePropertyChanged("Supplier_pk");
+            }
+        }
+
+        private string _selectedsname;
+        public string SelectedSname
+        {
+            get { return _selectedsname; }
+            set
+            {
+                if (_selectedsname == value) return;
+                _selectedsname = value;
+                RaisePropertyChanged("SelectedSname");
             }
         }
     }

@@ -40,7 +40,7 @@
         <ContentControl Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="12" x:Name="ActiveItem"/>
         <Button x:Name="LoadPurchaseOrder" Grid.Row="1"  Grid.Column="5" Padding="15">Purchase Orders</Button>
         <Button x:Name="LoadProduct" Grid.Row="1"  Grid.Column="6" Padding="15">Products</Button>
-        <Button x:Name="LoadProductCategory" Grid.Row="1"  Grid.Column="7" Padding="15">Product Category</Button>
+        <Button x:Name="LoadCategory" Grid.Row="1"  Grid.Column="7" Padding="15">Product Category</Button>
         <Button x:Name="LoadProductPhoto" Grid.Row="1"  Grid.Column="8" Padding="15">Product Photos</Button>
         <Button x:Name="LoadCustomer" Grid.Row="1"  Grid.Column="9" Padding="15">Customers</Button>
         <Button x:Name="LoadCustomerOrder" Grid.Row="1"  Grid.Column="10" Padding="15">Sales</Button>

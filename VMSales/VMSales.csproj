@@ -90,6 +90,7 @@
       <HintPath>..\packages\System.Buffers.4.5.1\lib\net461\System.Buffers.dll</HintPath>
     </Reference>
     <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Data" />
     <Reference Include="System.Data.SQLite, Version=1.0.116.0, Culture=neutral, PublicKeyToken=db937bc2d44ff139, processorArchitecture=x86" />
     <Reference Include="System.Data.SQLite.EF6, Version=1.0.116.0, Culture=neutral, PublicKeyToken=db937bc2d44ff139, processorArchitecture=MSIL" />
@@ -135,8 +136,10 @@
     <Compile Include="Logic\ChangeTracker.cs" />
     <Compile Include="Bootstrapper.cs" />
     <Compile Include="Logic\DataBaseOps.cs" />
-    <Compile Include="ViewModels\ViewModelBase.cs" />
-    <Compile Include="Models\customers.cs" />
+    <Compile Include="Logic\DataValidator.cs" />
+    <Compile Include="Models\BaseModel.cs" />
+    <Compile Include="Models\CategoryModel.cs" />
+    <Compile Include="ViewModels\CategoryViewModel.cs" />
     <Compile Include="Models\PurchaseOrderModel.cs" />
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
@@ -154,6 +157,9 @@
     </Compile>
     <Compile Include="Views\SupplierView.xaml.cs">
       <DependentUpon>SupplierView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\CategoryView.xaml.cs">
+      <DependentUpon>CategoryView.xaml</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>
@@ -197,6 +203,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\SupplierView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\CategoryView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

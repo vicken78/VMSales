@@ -1,14 +1,13 @@
 ﻿using System.Windows.Controls;
 
-
 namespace VMSales.Views
 {
     /// <summary>
-    /// Interaction logic for SupplierView.xaml
+    /// Interaction logic for CategoryView.xaml
     /// </summary>
-    public partial class SupplierView : UserControl
+    public partial class CategoryView : UserControl
     {
-        public SupplierView()
+        public CategoryView()
         {
             InitializeComponent();
         }
