@@ -1,18 +1,26 @@
 ﻿using System;
-using VMSales.Logic;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
 
 namespace VMSales.Models
-{   
-    public class PurchaseOrderModel : BaseModel    {
-        public int lotnum = 10;
-        public int invoicenumber = 255;
-        public int lotname = 255;
-        public int lotdescription = 255;
+{
+  
+    public class PurchaseOrderModel : BaseModel 
+    {
+        private ObservableCollection<PurchaseOrderModel> _ObservableCollectionPOD;
+
+        public ObservableCollection<PurchaseOrderModel> ObservableCollectionPOD
+        {
+            get { return _ObservableCollectionPOD; }
+            set { _ObservableCollectionPOD = value; RaisePropertyChanged("ObservableCollectionPOD"); }
+        }
+
+        public int invoicenumberlength = 255;
+        public int lotnumlength = 10;
+        public int lotnamelength = 255;
+        public int lotdescriptionlength = 255;
         // purchase_order_detail table
-        public decimal Totallotcost { get; set; }
-        public decimal Totalsalestax { get; set; }
-        public decimal Totalshippingcost { get; set; }
-        public decimal Totalcost { get; set; }
+        
         private string _porder_pk { get; set; }
         private string _purchaseorder_fk { get; set; }
         private decimal _lotcost { get; set; }
@@ -22,28 +30,8 @@ namespace VMSales.Models
         private string _lotdescription { get; set; }
         private decimal _salestax { get; set; }
         private decimal _shippingcost { get; set; }
-      
-        // purchaseorder table
-        private string _purchaseorder_pk { get; set; }
-        private string _supplier_fk { get; set; }
-        private string _invoicenumber { get; set; }
-        private DateTime _purchasedate;
 
-
-        private string _selectedSname;
-
-        public string SelectedSname
-        {
-            get
-            {
-                return _selectedSname;
-            }
-            set
-            {
-                _selectedSname = value;
-                RaisePropertyChanged("SelectedSname");
-            }
-        }
+        // purchase order detail
         public string Porder_pk
         {
             get { return _porder_pk; }
@@ -56,7 +44,7 @@ namespace VMSales.Models
         }
         public string Purchaseorder_fk
         {
-            get { return _porder_pk; }
+            get { return _purchaseorder_fk; }
             set
             {
                 if (_purchaseorder_fk == value) return;
@@ -136,17 +124,34 @@ namespace VMSales.Models
                 RaisePropertyChanged("Shippingcost");
             }
         }
-        // purchaseorder table
-        public string Purchaseorder_pk
-        {
-            get { return _purchaseorder_pk; }
-            set
+
+        // purchase order
+        private string _invoicenumber { get; set; }
+        private DateTime _purchasedate { get; set; }
+
+        private string _purchaseorder_pk { get; set; }
+        private string _supplier_fk { get; set; }
+        public string Invoicenumber
+        { 
+            get { return _invoicenumber; }
+            set 
             {
-                if (_purchaseorder_pk == value) return;
-                _purchaseorder_pk = value;
-                RaisePropertyChanged("Purchaseorder_pk");
+                if (_invoicenumber == value) return;
+                _invoicenumber = value;
+                RaisePropertyChanged("Invoicenumber");
             }
         }
+        public DateTime Purchasedate
+        {
+            get { return _purchasedate; }
+            set 
+            {
+                if (_purchasedate == value) return;
+                _purchasedate = value;
+                RaisePropertyChanged("Purchasedate");
+            }
+        }
+
         public string Supplier_fk
         {
             get { return _supplier_fk; }
@@ -157,29 +162,54 @@ namespace VMSales.Models
                 RaisePropertyChanged("Supplier_fk");
             }
         }
-        public string Invoicenumber
+
+
+
+        // totals
+        private decimal _totallotcost { get; set; }
+        private decimal _totalsalestax { get; set; }
+        private decimal _totalshippingcost { get; set; }
+        private decimal _totalcost { get; set; }
+
+        public decimal Totallotcost
         {
-            get { return _invoicenumber; }
+            get { return _totallotcost; }
             set
             {
-                if (_invoicenumber == value) return;
-                _invoicenumber = value;
-                RaisePropertyChanged("Invoicenumber");
+                if (_totallotcost == value) return;
+                _totallotcost = value;
+                RaisePropertyChanged("Totallotcost");
             }
         }
 
-        public DateTime Purchasedate
+        public decimal Totalsalestax
         {
-            get
-            {
-                return (this._purchasedate == default(DateTime))
-                   ? this._purchasedate = DateTime.Now
-                   : this._purchasedate;
-            }
+            get { return _totalsalestax; }
             set
             {
-                this._purchasedate = value;
-                RaisePropertyChanged("Purchasedate");
+                if (_totalsalestax == value) return;
+                _totalsalestax = value;
+                RaisePropertyChanged("Totalsalestax");
+            }
+        }
+        public decimal Totalshippingcost
+        {
+            get { return _totalshippingcost; }
+            set
+            {
+                if (_totalshippingcost == value) return;
+                _totalshippingcost = value;
+                RaisePropertyChanged("Totalshippingcost");
+            }
+        }
+        public decimal Totalcost
+        {
+            get { return _totalcost; }
+            set
+            {
+                if (_totalcost == value) return;
+                _totalcost = value;
+                RaisePropertyChanged("Totalcost");
             }
         }
     }

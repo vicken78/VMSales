@@ -54,6 +54,7 @@ namespace VMSales.Database
             }
         }
 
+
         // reads all data in table, returns data table
         public static DataTable SQLiteDataTableWithQuery(string tablename)
         {
@@ -91,24 +92,6 @@ namespace VMSales.Database
                 return false;
             }  
         }
-        
-        public static DataTable SQLiteColumnQuery(string column, string table)
-        {
-            DataTable dt = new DataTable();
-            SQLiteConnection con;
-            con = new SQLiteConnection(LoadConnectionString());
-            con.Open();
-            SQLiteCommand SQLiteCommand;
-            SQLiteCommand = con.CreateCommand();
-            SQLiteCommand.CommandText = "SELECT " + column + " FROM " + table;
-            SQLiteDataAdapter DataAdapter = new SQLiteDataAdapter(SQLiteCommand);
-            DataAdapter.Fill(dt);
-            con.Close();
-            return dt;
-        }
-      
-
-
 
     }
 }
