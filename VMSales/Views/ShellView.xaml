@@ -33,9 +33,6 @@
         </Grid.ColumnDefinitions>
 
 
-        <Button x:Name="LoadUser" Grid.Row="1"  Grid.Column="1" Padding="15">Users</Button>
-        <Button x:Name="LoadUserRole" Grid.Row="1"  Grid.Column="2" Padding="15">User Roles</Button>
-        <Button x:Name="LoadLocation" Grid.Row="1"  Grid.Column="3" Padding="15">Locations</Button>
         <Button x:Name="LoadSupplier" Grid.Row="1"  Grid.Column="4" Padding="15">Suppliers</Button>
         <ContentControl Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="12" x:Name="ActiveItem"/>
         <Button x:Name="LoadPurchaseOrder" Grid.Row="1"  Grid.Column="5" Padding="15">Purchase Orders</Button>

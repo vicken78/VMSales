@@ -1,8 +1,8 @@
 ﻿using System.ComponentModel;
 
-namespace VMSales.Models
+namespace VMSales.ViewModels
 {
-    public class BaseModel : INotifyPropertyChanged
+    public class BaseViewModel : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
         protected void RaisePropertyChanged(string property)
@@ -10,5 +10,5 @@ namespace VMSales.Models
             if (PropertyChanged != null)
                 PropertyChanged(this, new PropertyChangedEventArgs(property));
         }
-     }
+    }
 }

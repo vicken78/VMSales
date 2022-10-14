@@ -69,41 +69,33 @@
                         Grid.Column="1" Grid.Row="9"/>
 
             <!-- Invoice Number updateable -->
-            <Button Grid.Row="2" Grid.Column="8" Width="50">Add</Button>
-            <Button Grid.Row="3" Grid.Column="8" Width="50">Delete</Button>
 
             <TextBlock Grid.Row="2" Grid.Column="6" FontSize="14" HorizontalAlignment="Center" FontWeight="Bold">Invoice No.</TextBlock>
-            <TextBox Grid.Row="2" Grid.Column="7" Text="{Binding Invoicenumber, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}"/>
 
-            <ComboBox Background="White" Grid.Row="3" Grid.Column="7" ItemsSource="{Binding ObservableCollectionPOD}"  SelectedItem="{Binding Invoicenumber, Mode=TwoWay}"  SelectedValue="Invoicenumber" Width="100" HorizontalAlignment="Left" DisplayMemberPath="Invoicenumber"/>
-
+            <ComboBox IsEditable="False" Background="White" Grid.Row="3" Grid.Column="6" ItemsSource="{Binding ObservableCollectionPOD}" SelectedItem="{Binding Selectedinvoicenumber, Mode=TwoWay}"  SelectedValue="Selectedinvoicenumber" Width="100" HorizontalAlignment="Left" DisplayMemberPath="Invoicenumber"/>
 
 
 
-            <!-- Purchase Date updateable -->
 
-            <DatePicker Text="{Binding Purchasedate, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Row="2" Grid.Column="4" Height="25" HorizontalAlignment="Left" Width="200"/>
+            <!-- Purchase Date -->
 
+       
+            <TextBlock Grid.Row="2" Grid.Column="4" FontSize="14" FontWeight="Bold" HorizontalAlignment="Center">Purchase Date</TextBlock>
+            <ComboBox IsEditable="False"  Background="White" Grid.Row="3" Grid.Column="4" ItemsSource="{Binding ObservableCollectionPOD}"  SelectedItem="{Binding Selectedpurchasedate, Mode=TwoWay}"  SelectedValue="Purchasedate" Width="100" HorizontalAlignment="Left" DisplayMemberPath="Purchasedate" Height="22" Margin="0.222,0.222,0,0" VerticalAlignment="Top"/>
 
+            <!-- Total Lot Cost -->
+            <TextBlock Grid.Row="7" Grid.Column="7" FontSize="14">Total Lot Cost</TextBlock>
+            <TextBox Grid.Row="7" Grid.Column="8" Text="{Binding Totallotcost, StringFormat='c', Mode=OneWay}" IsReadOnly="True" Background="WhiteSmoke"/>
 
-            <Button Grid.Column="5" Grid.Row="2" Width="50">Add</Button>
-
-            <TextBlock Grid.Row="2" Grid.Column="3" FontSize="14" FontWeight="Bold" HorizontalAlignment="Center">Purchase Date</TextBlock>
-            <ComboBox Background="White" Grid.Row="3" Grid.Column="4" ItemsSource="{Binding ObservableCollectionPOD}"  SelectedItem="{Binding Purchasedate, Mode=TwoWay}"  SelectedValue="Purchasedate" Width="100" HorizontalAlignment="Left" DisplayMemberPath="Purchasedate"/>
-
-
-            <!-- Totals Cost -->
-            <TextBlock Grid.Row="7" Grid.Column="7" FontSize="14">SubTotal</TextBlock>
-            <TextBox Grid.Row="7" Grid.Column="8" Text="{Binding Totallotcost, Mode=TwoWay, StringFormat='c', UpdateSourceTrigger=PropertyChanged}" IsReadOnly="False" Background="WhiteSmoke"/>
             <!-- Total Sales Tax -->
             <TextBlock Grid.Row="8" Grid.Column="7" FontSize="14">Total Sales Tax</TextBlock>
-            <TextBox x:Name="Totalsalestax" Grid.Row="8" Grid.Column="8" Text="{Binding Totalsalestax, StringFormat='c'}" IsReadOnly="True" Background="WhiteSmoke"/>
+            <TextBox Grid.Row="8" Grid.Column="8" Text="{Binding Totalsalestax, StringFormat='c', Mode=OneWay}" IsReadOnly="True" Background="WhiteSmoke"/>
             <!-- Total Shipping -->
             <TextBlock Grid.Row="9" Grid.Column="7" FontSize="14">Total Shipping</TextBlock>
-            <TextBox x:Name="Totalshippingcost" Grid.Row="9" Grid.Column="8" Text="{Binding Totalshippingcost, StringFormat='c'}" IsReadOnly="True" Background="WhiteSmoke"/>
-            <!-- Final -->
+            <TextBox  Grid.Row="9" Grid.Column="8" Text="{Binding Totalshippingcost, StringFormat='c', Mode=OneWay}" IsReadOnly="True" Background="WhiteSmoke"/>
+             <!-- Total Cost -->
             <TextBlock Grid.Row="10" Grid.Column="7" FontSize="16" FontWeight="Bold">Total Cost</TextBlock>
-            <TextBox x:Name="Totalcost" Grid.Row="10" Grid.Column="8" FontSize="14" FontWeight="Bold" Text="{Binding Totalcost, StringFormat='c'}" IsReadOnly="True" Background="WhiteSmoke"/>
+            <TextBox Grid.Row="10" Grid.Column="8" FontSize="14" FontWeight="Bold" Text="{Binding Totalcost, StringFormat='c', Mode=OneWay}" IsReadOnly="True" Background="WhiteSmoke"/>
 
             <!--  Save Button -->
             <Button x:Name="SaveCommand" Grid.Column="0" Grid.Row="11"
@@ -124,8 +116,6 @@
                             Width="75" 
                             HorizontalAlignment="Left"
                             Content="Reset"/>
-            <Button Grid.Column="5" Grid.Row="2" Width="50" Content="Add"/>
-            <Button Grid.Row="3" Grid.Column="5" Width="50" Content="Delete"/>
         </Grid>
 
         <!-- <DataGrid x:Name="PurchaseOrderDataGrid"  AutoGenerateColumns="False" 
@@ -133,7 +123,7 @@
                           IsSynchronizedWithCurrentItem="True" 
                           EnableRowVirtualization="True" IsReadOnly="False" Grid.Row="10" Height="Auto" Width="1280"  HorizontalAlignment="Center" SelectionChanged="PurchaseOrderDataGrid_SelectionChanged" >-->
         <DataGrid x:Name="PurchaseOrderDataGrid"  AutoGenerateColumns="False" 
-                   ItemsSource="{Binding PurchaseOrder}"       
+                   ItemsSource="{Binding ObservableCollectionPOD}"       
                           IsSynchronizedWithCurrentItem="True" 
                           EnableRowVirtualization="True" IsReadOnly="False" Grid.Row="10" Height="Auto" Width="1280"  HorizontalAlignment="Center" >
 
@@ -152,6 +142,13 @@
                             Binding="{Binding Salestax, StringFormat='c', ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}" />
                 <DataGridTextColumn Header="Shipping Cost" Width="100" 
                             Binding="{Binding Shippingcost, StringFormat='c', ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}" />
+                <DataGridTextColumn Header="Invoice Number" Width="100" 
+                            Binding="{Binding Invoicenumber, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}" />
+                <DataGridTextColumn Header="Purchase Date" Width="100" 
+                            Binding="{Binding Purchasedate, StringFormat='MM-dd-yyyy', ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}" />
+
+
+
             </DataGrid.Columns>
         </DataGrid>
 

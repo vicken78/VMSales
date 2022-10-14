@@ -1,8 +1,9 @@
 ﻿using System.Collections.ObjectModel;
+using VMSales.ViewModels;
 
 namespace VMSales.Models
 {
-    public class SupplierModel : BaseModel 
+    public class SupplierModel : BaseViewModel 
     {
         public int SnameLength = 255;
         public int AddressLength = 255;

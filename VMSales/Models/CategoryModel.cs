@@ -1,6 +1,7 @@
-﻿namespace VMSales.Models
+﻿using VMSales.ViewModels;
+namespace VMSales.Models
 {
-    public class CategoryModel : BaseModel 
+    public class CategoryModel : BaseViewModel 
     {
         public int CnameLength = 255;
         public int DescriptionLength = 255;

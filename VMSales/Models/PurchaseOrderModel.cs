@@ -1,18 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-
+using VMSales.ViewModels;
 namespace VMSales.Models
 {
-  
-    public class PurchaseOrderModel : BaseModel 
+
+    public class PurchaseOrderModel : BaseViewModel
     {
         private ObservableCollection<PurchaseOrderModel> _ObservableCollectionPOD;
 
         public ObservableCollection<PurchaseOrderModel> ObservableCollectionPOD
         {
             get { return _ObservableCollectionPOD; }
-            set { _ObservableCollectionPOD = value; RaisePropertyChanged("ObservableCollectionPOD"); }
+            set { _ObservableCollectionPOD = value; }
         }
 
         public int invoicenumberlength = 255;
@@ -20,7 +20,7 @@ namespace VMSales.Models
         public int lotnamelength = 255;
         public int lotdescriptionlength = 255;
         // purchase_order_detail table
-        
+
         private string _porder_pk { get; set; }
         private string _purchaseorder_fk { get; set; }
         private decimal _lotcost { get; set; }
@@ -132,9 +132,9 @@ namespace VMSales.Models
         private string _purchaseorder_pk { get; set; }
         private string _supplier_fk { get; set; }
         public string Invoicenumber
-        { 
+        {
             get { return _invoicenumber; }
-            set 
+            set
             {
                 if (_invoicenumber == value) return;
                 _invoicenumber = value;
@@ -144,7 +144,7 @@ namespace VMSales.Models
         public DateTime Purchasedate
         {
             get { return _purchasedate; }
-            set 
+            set
             {
                 if (_purchasedate == value) return;
                 _purchasedate = value;
@@ -159,58 +159,13 @@ namespace VMSales.Models
             {
                 if (_supplier_fk == value) return;
                 _supplier_fk = value;
-                RaisePropertyChanged("Supplier_fk");
             }
         }
 
-
-
-        // totals
-        private decimal _totallotcost { get; set; }
-        private decimal _totalsalestax { get; set; }
-        private decimal _totalshippingcost { get; set; }
-        private decimal _totalcost { get; set; }
-
-        public decimal Totallotcost
-        {
-            get { return _totallotcost; }
-            set
-            {
-                if (_totallotcost == value) return;
-                _totallotcost = value;
-                RaisePropertyChanged("Totallotcost");
-            }
-        }
-
-        public decimal Totalsalestax
-        {
-            get { return _totalsalestax; }
-            set
-            {
-                if (_totalsalestax == value) return;
-                _totalsalestax = value;
-                RaisePropertyChanged("Totalsalestax");
-            }
-        }
-        public decimal Totalshippingcost
-        {
-            get { return _totalshippingcost; }
-            set
-            {
-                if (_totalshippingcost == value) return;
-                _totalshippingcost = value;
-                RaisePropertyChanged("Totalshippingcost");
-            }
-        }
-        public decimal Totalcost
-        {
-            get { return _totalcost; }
-            set
-            {
-                if (_totalcost == value) return;
-                _totalcost = value;
-                RaisePropertyChanged("Totalcost");
-            }
-        }
+        //totals
+        public decimal Totallotcost { get; set; }
+        public decimal Totalsalestax { get; set; }
+        public decimal Totalshippingcost { get; set; }
+        public decimal Totalcost { get; set; }
     }
 }
