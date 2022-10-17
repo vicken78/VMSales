@@ -48,9 +48,13 @@ namespace VMSales.ViewModels
             {
                 case FilterField.InvoiceNumber:
                     AddInvoiceNumberFilter();
+                    PurchaseOrderView.Filter = new Predicate<object>(x => ((PurchaseOrderModel)x).Invoicenumber.ToString() == _selectedinvoicenumber);
+                    RaisePropertyChanged("PurchaseOrderView");
                     break;
                 case FilterField.PurchaseDate:
                     AddPurchaseDateFilter();
+                    PurchaseOrderView.Filter = new Predicate<object>(x => ((PurchaseOrderModel)x).Purchasedate.ToString() == _selectedpurchasedate);
+                    RaisePropertyChanged("PurchaseOrderView");
                     break;
                 default:
                     break;
@@ -149,7 +153,6 @@ namespace VMSales.ViewModels
                 _selectedpurchasedate = value;
                 RaisePropertyChanged("SelectedPurchaseDate");
                 ApplyFilter(!string.IsNullOrEmpty(_selectedpurchasedate) ? FilterField.PurchaseDate : FilterField.None);
-            
             }
         }
 
@@ -217,20 +220,24 @@ namespace VMSales.ViewModels
         {
             cvsPurchaseOrderView.Filter -= new FilterEventHandler(FilterByInvoiceNumber);
             SelectedInvoiceNumber = null;
+            PurchaseOrderView.Filter = null;
             CanRemoveInvoiceNumberFilter = false;
+            RaisePropertyChanged("PurchaseOrderView");
+
         }
         public void RemovePurchaseDateFilterCommand()
         {
             cvsPurchaseOrderView.Filter -= new FilterEventHandler(FilterByPurchaseDate);
             SelectedPurchaseDate = null;
+            PurchaseOrderView.Filter = null;
             CanRemovePurchaseDateFilter = false;
-
+            RaisePropertyChanged("PurchaseOrderView");
         }
 
         #endregion
         #region Load Purchase Order Data
         #region filterfunctions
-        
+
         /* Notes on Adding Filters:
         *   Each filter is added by subscribing a filter method to the Filter event
         *   of the CVS.  Filters are applied in the order in which they were added. 
@@ -287,8 +294,6 @@ namespace VMSales.ViewModels
                 e.Accepted = false;
             else if (string.Compare(SelectedInvoiceNumber, src.Invoicenumber.ToString()) != 0)
                 e.Accepted = false;
-     
-            // programmers note, if im not mistaken the button needs to call this.
         }
         private void FilterByPurchaseDate(object sender, FilterEventArgs e)
         {
@@ -296,9 +301,7 @@ namespace VMSales.ViewModels
             if (src == null)
                 e.Accepted = false;
             else if (string.Compare(SelectedPurchaseDate, src.Purchasedate.ToString()) != 0)
-                e.Accepted = false;
-      
-            // programmers note, if im not mistaken the button needs to call this.
+                e.Accepted = false;     
         }
 
         #endregion
