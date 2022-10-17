@@ -71,8 +71,17 @@
             <!-- Invoice Number updateable -->
 
             <TextBlock Grid.Row="2" Grid.Column="6" FontSize="14" HorizontalAlignment="Center" FontWeight="Bold">Invoice No.</TextBlock>
+        
+            <ComboBox IsEditable="False" Background="White" Grid.Row="3" Grid.Column="6" 
+                ItemsSource="{Binding InvoiceNumber}" 
+                SelectedItem="{Binding SelectedInvoiceNumber, 
+                Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+                Width="100" HorizontalAlignment="Left"/>
 
-            <ComboBox IsEditable="False" Background="White" Grid.Row="3" Grid.Column="6" ItemsSource="{Binding ObservableCollectionPOD}" SelectedItem="{Binding Selectedinvoicenumber, Mode=TwoWay}"  SelectedValue="Selectedinvoicenumber" Width="100" HorizontalAlignment="Left" DisplayMemberPath="Invoicenumber"/>
+            <Button x:Name="RemoveInvoiceNumberFilterCommand" HorizontalAlignment="Left" Margin="20,0,0,0" Grid.Row="3" Grid.Column="7" Width="16" Height="16" 
+            IsEnabled="{Binding CanRemoveInvoiceNumberFilter, Mode=OneWay}">
+                <Image Width="10" Height="10" Style="{DynamicResource ImageStyleForButtons}"/>
+            </Button>
 
 
 
@@ -81,7 +90,17 @@
 
        
             <TextBlock Grid.Row="2" Grid.Column="4" FontSize="14" FontWeight="Bold" HorizontalAlignment="Center">Purchase Date</TextBlock>
-            <ComboBox IsEditable="False"  Background="White" Grid.Row="3" Grid.Column="4" ItemsSource="{Binding ObservableCollectionPOD}"  SelectedItem="{Binding Selectedpurchasedate, Mode=TwoWay}"  SelectedValue="Purchasedate" Width="100" HorizontalAlignment="Left" DisplayMemberPath="Purchasedate" Height="22" Margin="0.222,0.222,0,0" VerticalAlignment="Top"/>
+            
+            <ComboBox IsEditable="False"  Background="White" Grid.Row="3" Grid.Column="4" 
+                ItemsSource="{Binding PurchaseDate}"  
+                SelectedItem="{Binding SelectedPurchaseDate, 
+                Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"  
+                Width="100" HorizontalAlignment="Left"/>
+
+            <Button x:Name="RemovePurchaseDateFilterCommand" HorizontalAlignment="Left" Margin="20,0,0,0" Grid.Row="3" Grid.Column="5" Width="16" Height="16" 
+            IsEnabled="{Binding CanRemovePurchaseDateFilter, Mode=OneWay}">
+             <Image Width="10" Height="10" Style="{DynamicResource ImageStyleForButtons}"/>
+            </Button>
 
             <!-- Total Lot Cost -->
             <TextBlock Grid.Row="7" Grid.Column="7" FontSize="14">Total Lot Cost</TextBlock>
@@ -123,7 +142,7 @@
                           IsSynchronizedWithCurrentItem="True" 
                           EnableRowVirtualization="True" IsReadOnly="False" Grid.Row="10" Height="Auto" Width="1280"  HorizontalAlignment="Center" SelectionChanged="PurchaseOrderDataGrid_SelectionChanged" >-->
         <DataGrid x:Name="PurchaseOrderDataGrid"  AutoGenerateColumns="False" 
-                   ItemsSource="{Binding ObservableCollectionPOD}"       
+                   ItemsSource="{Binding PurchaseOrderView}"       
                           IsSynchronizedWithCurrentItem="True" 
                           EnableRowVirtualization="True" IsReadOnly="False" Grid.Row="10" Height="Auto" Width="1280"  HorizontalAlignment="Center" >
 

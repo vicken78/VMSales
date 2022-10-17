@@ -1,0 +1,16 @@
+﻿<ResourceDictionary
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <!-- This is the style used to display enabled or disabled button images for removing filters-->
+    <Style x:Key="ImageStyleForButtons" TargetType="{x:Type Image}"> 
+        <Style.Triggers>
+            <DataTrigger Binding="{Binding IsEnabled, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Button}}}" Value="True">
+                <Setter Property="Source" Value="/VMSales;component/Resources/1385_Disable_16x16_72.png"/>
+                
+            </DataTrigger>
+            <DataTrigger Binding="{Binding IsEnabled, RelativeSource={RelativeSource AncestorType={x:Type Button}, Mode=FindAncestor}}" Value="False">
+                <Setter Property="Source" Value="/VMSales;component/Resources/1385_Disable_16x16_72_disabled.png"/>
+            </DataTrigger>
+        </Style.Triggers>
+    </Style>
+</ResourceDictionary>

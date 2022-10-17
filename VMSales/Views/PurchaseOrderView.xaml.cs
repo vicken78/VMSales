@@ -20,12 +20,6 @@ namespace VMSales.Views
     /// </summary>
     public partial class PurchaseOrderView :  UserControl
     {
-      /*  private void cmbSupplier_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            ComboBox cbx = (ComboBox)sender;
-          
-        }
-      */
         public PurchaseOrderView()
         {
 

@@ -7,18 +7,10 @@ namespace VMSales.Models
 
     public class PurchaseOrderModel : BaseViewModel
     {
-        private ObservableCollection<PurchaseOrderModel> _ObservableCollectionPOD;
-
-        public ObservableCollection<PurchaseOrderModel> ObservableCollectionPOD
-        {
-            get { return _ObservableCollectionPOD; }
-            set { _ObservableCollectionPOD = value; }
-        }
-
-        public int invoicenumberlength = 255;
-        public int lotnumlength = 10;
-        public int lotnamelength = 255;
-        public int lotdescriptionlength = 255;
+        public int invoiceNumberLength = 255;
+        public int lotNumberLength = 10;
+        public int lotNameLength = 255;
+        public int lotDescriptionLength = 255;
         // purchase_order_detail table
 
         private string _porder_pk { get; set; }
