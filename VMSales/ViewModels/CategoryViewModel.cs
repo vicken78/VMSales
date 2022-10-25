@@ -38,19 +38,19 @@ namespace VMSales.ViewModels
 
             foreach (CategoryModel SM in SMListUpdate)
             {
-                if ((SM.Cname ?? SM.Description) == "")
+                if ((SM.categoryName ?? SM.Description) == "")
                 {
                     MessageBox.Show("Name and Description cannot be empty.");
                     Validated = false;
                 }
-                if ((SM.Cname.Length > 255 || SM.Description.Length > 255))
+                if ((SM.categoryName.Length > 255 || SM.Description.Length > 255))
                 {
                     MessageBox.Show("Name or Description exceeds max values.");
                     Validated = false;
                 }
                 if (Validated == true)
                 {
-                    kvp.Add(new Tuple<string, string>("Cname", SM.Cname));
+                    kvp.Add(new Tuple<string, string>("Cname", SM.categoryName));
                     kvp.Add(new Tuple<string, string>("Description", SM.Description));
                     kvp.Add(new Tuple<string, string>("Date", "now"));
                     kvp.Add(new Tuple<string, string>("Category_pk", SM.Category_pk));
@@ -77,19 +77,19 @@ namespace VMSales.ViewModels
                     foreach (CategoryModel SM in SMListCreate)
                     {
 
-                        if (SM.Cname == null || SM.Description == null)
+                        if (SM.categoryName == null || SM.Description == null)
                         {
                             MessageBox.Show("Name and Description must contain a value");
                             Validated = false;
                         }
-                        else if ((SM.Cname.Length > 255 || SM.Description.Length > 255))
+                        else if ((SM.categoryName.Length > 255 || SM.Description.Length > 255))
                         {
                             MessageBox.Show("Name or Description exceeds max values");
                             Validated = false;
                         }
                         if (Validated == true)
                         {
-                            kvp.Add(new Tuple<string, string>("cname", SM.Cname));
+                            kvp.Add(new Tuple<string, string>("cname", SM.categoryName));
                             kvp.Add(new Tuple<string, string>("description", SM.Description));
                             DataBaseOps.IUDTable(sqlparams, kvp, rowcount);
                             changetracker.Dispose();
@@ -152,7 +152,7 @@ namespace VMSales.ViewModels
                     CM = new CategoryModel()
                 {
                     Category_pk = (string)row["category_pk"].ToString(),
-                    Cname = (string)row["cname"],
+                    categoryName = (string)row["cname"],
                     Description = (string)row["description"],
                     CreationDate = (DateTime)row["creationdate"]
                 };
@@ -180,7 +180,7 @@ namespace VMSales.ViewModels
                 CM = new CategoryModel()
                 {
                     Category_pk = (string)row["category_pk"].ToString(),
-                    Cname = (string)row["cname"],
+                    categoryName = (string)row["cname"],
                     Description = (string)row["description"],
                     CreationDate = (DateTime)row["creationdate"]
                 };

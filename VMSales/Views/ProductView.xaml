@@ -1,0 +1,184 @@
+﻿<UserControl x:Class="VMSales.Views.ProductView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:VMSales.ViewModels"
+             mc:Ignorable="d" 
+             Height="800" Width="1300" VerticalAlignment="Top" MinHeight="400" MinWidth="800">
+    <UserControl.DataContext>
+        <local:ProductViewModel/>
+    </UserControl.DataContext>
+
+    <UserControl.Resources>
+        <Style x:Key="CenterGridHeaderStyle" TargetType="DataGridColumnHeader">
+            <Setter Property="HorizontalContentAlignment" Value="Center"/>
+        </Style>
+    </UserControl.Resources>
+    
+    
+    
+    <DockPanel LastChildFill="True">
+        <Grid Margin="10" DockPanel.Dock="Top" Background="Azure">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="25" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="100"/>
+                <ColumnDefinition Width="200"/>
+                <ColumnDefinition Width="100"/>
+                <ColumnDefinition Width="100"/>
+                <ColumnDefinition Width="100"/>
+                <ColumnDefinition Width="100"/>
+                <ColumnDefinition Width="100"/>
+                <ColumnDefinition Width="100"/>
+                <ColumnDefinition Width="100"/>
+                <ColumnDefinition Width="100"/>
+            </Grid.ColumnDefinitions>
+
+            <!-- Supplier Text static -->
+            <Label Grid.Row="2" Grid.Column="0">Supplier</Label>
+            <TextBox Name="Supplier" Width="200" IsReadOnly="True" Background="WhiteSmoke"  Text="{Binding SelectedSname, ElementName=cmbSupplier}" 
+                        Grid.Column="1" Grid.Row="2"/>
+
+            <!-- Lot Number -->
+            <Label Content="Lot Number" Grid.Column="0" Grid.Row="4" />
+            <TextBox Name="lotNumber" IsReadOnly="True" Background="WhiteSmoke"  Text="{Binding SelectedItem.Address, ElementName=cmbSupplier}" 
+                        Grid.Column="1" Grid.Row="4"/>
+
+            <!-- Lot Name -->
+            <Label Content="Lot Name" Grid.Column="0" Grid.Row="5" />
+            <TextBox Name="lotname" IsReadOnly="True" Background="WhiteSmoke" Text="{Binding SelectedItem.State, ElementName=cmbSupplier}"
+                        Grid.Column="1" Grid.Row="5"/>
+            <!-- Lot Description -->
+            <Label Content="Lot Description" Grid.Column="0" Grid.Row="6" />
+            <TextBox Name="lotDescription" IsReadOnly="True" Background="WhiteSmoke" Text="{Binding SelectedItem.Country, ElementName=cmbSupplier}"
+                        Grid.Column="1" Grid.Row="6" />
+            <!-- Lot Quantity -->
+            <Label Content="Lot Quantity" Grid.Column="0" Grid.Row="7" />
+            <TextBox Name="lotQuantity" IsReadOnly="True" Background="WhiteSmoke" Text="{Binding SelectedItem.Zip, ElementName=cmbSupplier}"
+                        Grid.Column="1" Grid.Row="7"/>
+            <!-- Lot Cost -->
+            <Label Content="Lot Cost" Grid.Column="0" Grid.Row="8" />
+            <TextBox Name="lotCost" IsReadOnly="True" Background="WhiteSmoke" Text="{Binding SelectedItem.Phone, ElementName=cmbSupplier}"
+                        Grid.Column="1" Grid.Row="8"/>
+            <!-- Lot Sales Tax -->
+            <Label Content="Lot Sales Tax" Grid.Column="0" Grid.Row="9" />
+            <TextBox Name="lotSalesTax" IsReadOnly="True" Background="WhiteSmoke" Text="{Binding SelectedItem.Email, ElementName=cmbSupplier}"
+                        Grid.Column="1" Grid.Row="9"/>
+            <!-- Lot Shipping -->
+            <Label Content="Lot Shipping" Grid.Column="0" Grid.Row="10" />
+            <TextBox Name="lotShipping" IsReadOnly="True" Background="WhiteSmoke" Text="{Binding SelectedItem.Email, ElementName=cmbSupplier}"
+                        Grid.Column="1" Grid.Row="10"/>
+
+
+            <!-- Filter Category -->
+
+            <TextBlock Grid.Row="2" Grid.Column="6" FontSize="14" HorizontalAlignment="Center" FontWeight="Bold">Category</TextBlock>
+            <ComboBox IsEditable="False" Background="White" Grid.Row="3" Grid.Column="6" 
+                ItemsSource="{Binding categoryName}" 
+                SelectedItem="{Binding selectedCategoryName, 
+                UpdateSourceTrigger=PropertyChanged}" 
+                Width="100" HorizontalAlignment="Left"/>
+
+            <Button x:Name="RemoveInvoiceNumberFilterCommand" HorizontalAlignment="Left" Margin="20,0,0,0" Grid.Row="3" Grid.Column="7" Width="16" Height="16" 
+            IsEnabled="{Binding canRemoveCategoryFilter, Mode=OneWay}">
+                <Image Width="10" Height="10" Style="{DynamicResource ImageStyleForButtons}"/>
+            </Button>
+
+            <!-- Filter Supplier -->
+
+            <TextBlock Grid.Row="2" Grid.Column="4" FontSize="14" FontWeight="Bold" HorizontalAlignment="Center">Supplier</TextBlock>
+            <ComboBox IsEditable="False" Background="White" Grid.Row="3" Grid.Column="4" 
+                ItemsSource="{Binding Supplier}"  
+                SelectedItem="{Binding selectedSupplierName, 
+                Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"  
+                Width="100" HorizontalAlignment="Left"/>
+
+            <Button x:Name="RemovePurchaseDateFilterCommand" HorizontalAlignment="Left" Margin="20,0,0,0" Grid.Row="3" Grid.Column="5" Width="16" Height="16" 
+            IsEnabled="{Binding canRemoveSupplierFilter, Mode=OneWay}">
+                <Image Width="10" Height="10" Style="{DynamicResource ImageStyleForButtons}"/>
+            </Button>
+
+            <CheckBox FlowDirection="RightToLeft" IsChecked="True" Grid.Column="4" Grid.Row="5" Grid.ColumnSpan="2" HorizontalAlignment="Left" VerticalAlignment="Center">
+                <TextBlock FlowDirection="RightToLeft" FontWeight="Bold" FontSize="14" Text="Show All Products" />
+            </CheckBox>
+
+            <!--  Save Button -->
+            <Button x:Name="SaveCommand" Grid.Column="0" Grid.Row="12"
+                            Width="75"
+                            Content="Save"
+                            HorizontalAlignment="Left"/>
+            <!--  Add Button -->
+            <Button x:Name="AddCommand" Grid.Column="1" Grid.Row="12"
+                            Width="75"                                      
+                            HorizontalAlignment="Left"
+                            Content="Add"/>
+            <!-- Delete Button -->
+            <Button x:Name="DeleteCommand" Grid.Column="1" Grid.Row="12"             
+                            Width="75"        
+                            Content="Delete" Height="19" Margin="90,0,20,0" VerticalAlignment="Top"/>
+            <!-- Reset Button -->
+            <Button x:Name="ResetCommand" Grid.Column="2" Grid.Row="12"
+                            Width="75" 
+                            HorizontalAlignment="Left"
+                            Content="Reset"/>
+        </Grid>
+
+        <DataGrid x:Name="ProductDataGrid"  AutoGenerateColumns="False" 
+                          ItemsSource="{Binding ocProductView}"
+                          IsSynchronizedWithCurrentItem="True" 
+                          EnableRowVirtualization="True" IsReadOnly="False" Grid.Row="10" 
+                          Height="Auto" Width="1280"  HorizontalAlignment="Center">
+
+            <DataGrid.Columns>
+
+
+                <DataGridComboBoxColumn Header="Category" Width="100" x:Name="Category" 
+                    ItemsSource="{Binding categoryName}"
+                    SelectedItemBinding="{Binding selectedCategoryName, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}"  
+                    DisplayMemberPath="{Binding categoryName}" />
+
+
+                <DataGridTextColumn Header="Product Name" Width="150" 
+                    HeaderStyle="{StaticResource CenterGridHeaderStyle}"                
+                    Binding="{Binding Product, ValidatesOnDataErrors=True, 
+                    UpdateSourceTrigger=PropertyChanged}"/>
+                <DataGridTextColumn Header="Description" Width="Auto" 
+                    Binding="{Binding Description, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}"/>
+                <DataGridTextColumn Header="Quantity" Width="60" 
+                    Binding="{Binding Quanity, Mode=TwoWay,ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}"/>
+                <DataGridTextColumn Header="Cost" Width="Auto" 
+                    Binding="{Binding Cost, StringFormat='c', ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}"/>
+                <DataGridTextColumn Header="SKU" Width="70" 
+                    Binding="{Binding SKU, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}"/>
+
+                <DataGridTextColumn Header="Price" Width="70" 
+                    Binding="{Binding Price, StringFormat='c', ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}"/>
+
+            
+                <DataGridTextColumn Header="Brand" Width="90" 
+                    Binding="{Binding brandName, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}"/>
+
+                <DataGridTextColumn Header="In Stock" Width="100" 
+                    Binding="{Binding InStock, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}" />
+
+                <DataGridComboBoxColumn Width="100" x:Name="Condition" Header="Condition" 
+                    SelectedValueBinding="{Binding Condition}"  
+                    DisplayMemberPath="{Binding Condition}" />
+            </DataGrid.Columns>
+        </DataGrid>
+    </DockPanel>
+</UserControl>

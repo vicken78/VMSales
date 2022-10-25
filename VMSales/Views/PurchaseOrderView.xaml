@@ -137,14 +137,11 @@
                             Content="Reset"/>
         </Grid>
 
-        <!-- <DataGrid x:Name="PurchaseOrderDataGrid"  AutoGenerateColumns="False" 
-                   ItemsSource="{Binding PurchaseOrder}"       
-                          IsSynchronizedWithCurrentItem="True" 
-                          EnableRowVirtualization="True" IsReadOnly="False" Grid.Row="10" Height="Auto" Width="1280"  HorizontalAlignment="Center" SelectionChanged="PurchaseOrderDataGrid_SelectionChanged" >-->
         <DataGrid x:Name="PurchaseOrderDataGrid"  AutoGenerateColumns="False" 
-                   ItemsSource="{Binding PurchaseOrderView}"       
+                          ItemsSource="{Binding PurchaseOrderView}"       
                           IsSynchronizedWithCurrentItem="True" 
-                          EnableRowVirtualization="True" IsReadOnly="False" Grid.Row="10" Height="Auto" Width="1280"  HorizontalAlignment="Center" >
+                          EnableRowVirtualization="True" IsReadOnly="False" Grid.Row="10" 
+                          Height="Auto" Width="1280"  HorizontalAlignment="Center" >
 
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Lot Number" Width="90"

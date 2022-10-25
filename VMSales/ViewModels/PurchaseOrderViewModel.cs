@@ -7,12 +7,22 @@ using VMSales.Models;
 using System.Linq;
 using System.Collections.Generic;
 using System.ComponentModel;
+using VMSales.ChangeTrack;
+using System.Windows;
+
 
 namespace VMSales.ViewModels
 {
 
     public class PurchaseOrderViewModel : BaseViewModel
     {
+        #region tracking
+        public ChangeTracker<PurchaseOrderModel> changetracker { get; set; }
+        List<PurchaseOrderModel> POListUpdate = new List<PurchaseOrderModel>();
+        List<PurchaseOrderModel> POListCreate = new List<PurchaseOrderModel>();
+        List<PurchaseOrderModel> POListDelete = new List<PurchaseOrderModel>();
+
+        #endregion
 
         #region collectionmodel
         public ObservableCollection<PurchaseOrderModel> ocPurchaseOrderView { get; set; } = new ObservableCollection<PurchaseOrderModel>();
@@ -54,7 +64,7 @@ namespace VMSales.ViewModels
                 case FilterField.PurchaseDate:
                     AddPurchaseDateFilter();
                     PurchaseOrderView.Filter = new Predicate<object>(x => ((PurchaseOrderModel)x).Purchasedate.ToString() == _selectedpurchasedate);
-                    RaisePropertyChanged("PurchaseOrderView");
+                
                     break;
                 default:
                     break;
@@ -206,7 +216,24 @@ namespace VMSales.ViewModels
         #region ButtonCommands
         public void SaveCommand()
         {
+            //  if (POListUpdate.Any(x => x != null))
+            //  {
+                POListUpdate = changetracker.RowsUpdated;
+                foreach (PurchaseOrderModel PO in POListUpdate)
+                {
+                    MessageBox.Show(PO.Invoicenumber.ToString());
+                    MessageBox.Show(PO.Purchasedate.ToString());
+                    MessageBox.Show(PO.Lotnumber.ToString()); 
+                    MessageBox.Show(PO.Lotqty.ToString());
+                    MessageBox.Show(PO.Lotname.ToString());
+                    MessageBox.Show(PO.Lotdescription.ToString());
+                    MessageBox.Show(PO.Lotcost.ToString());
+                    MessageBox.Show(PO.Salestax.ToString());
+                    MessageBox.Show(PO.Shippingcost.ToString());
+                }
+            //}
         }
+            
         public void AddCommand()
         {
         }
@@ -215,6 +242,18 @@ namespace VMSales.ViewModels
         }
         public void ResetCommand()
         {
+            if (changetracker != null)
+            {
+               
+                changetracker.Dispose();
+                changetracker.ClearTracking();
+                SelectedInvoiceNumber = null;
+                SelectedPurchaseDate = null;
+                CanRemoveInvoiceNumberFilter = false;
+                CanRemovePurchaseDateFilter = false;
+                PurchaseOrderView.Filter = null;      
+                LoadPurchaseOrder(SelectedSupplier_pk);
+            }
         }
         public void RemoveInvoiceNumberFilterCommand()
         {
@@ -308,12 +347,13 @@ namespace VMSales.ViewModels
 
         public void LoadPurchaseOrder(string SelectedSupplier_pk)
         {
-
+           
 
             if (SelectedSupplier_pk != null)
             {
 
                 // clear old data
+                ocPurchaseOrderView.Clear();
                 InvoiceNumber = new ObservableCollection<string>();
                 PurchaseDate = new ObservableCollection<string>();
                 Totallotcost = 0;
@@ -352,19 +392,35 @@ namespace VMSales.ViewModels
                         Totallotcost = Totallotcost + obj.Lotcost;
                         Totalsalestax = Totalsalestax + obj.Salestax;
                         Totalshippingcost = Totalshippingcost + obj.Shippingcost;
+                        Totalcost = Totallotcost + Totalsalestax + Totalshippingcost;
                         RaisePropertyChanged("Totallotcost");
                         RaisePropertyChanged("Totalsalestax");
                         RaisePropertyChanged("Totalshippingcost");
                         RaisePropertyChanged("Totalcost");
-                        Totalcost = Totallotcost + Totalsalestax + Totalshippingcost;
                         ocPurchaseOrderView.Add(obj);
                         }
                     
                     }
                 cvsPurchaseOrderView.Source = ocPurchaseOrderView;
+
+                changetracker = new ChangeTracker<PurchaseOrderModel>(ocPurchaseOrderView);
+                changetracker.StartTracking(ocPurchaseOrderView);
+
+
+                //var Totalsalestax = (from a in cvsPurchaseOrderView.OfType<Totalsalestax>() where a = )
+                //Totalsalestax = Totalsalestax + obj.Salestax;
+                //Totalshippingcost = Totalshippingcost + obj.Shippingcost;
+                //Totalcost = Totallotcost + Totalsalestax + Totalshippingcost;
+                //RaisePropertyChanged("Totallotcost");
+                //RaisePropertyChanged("Totalsalestax");
+                //RaisePropertyChanged("Totalshippingcost");
+                //RaisePropertyChanged("Totalcost");
+                //Totalcost = Totallotcost + Totalsalestax + Totalshippingcost;
+
+
                 //CollectionViewSource.GetDefaultView(ocPurchaseOrderView).Refresh();
-               
-    }
+
+            }
         }
         #endregion
 

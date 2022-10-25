@@ -139,6 +139,7 @@
     <Compile Include="Logic\DataBaseOps.cs" />
     <Compile Include="Logic\DataValidator.cs" />
     <Compile Include="Models\CategoryModel.cs" />
+    <Compile Include="Models\ProductModel.cs" />
     <Compile Include="ViewModels\BaseViewModel.cs" />
     <Compile Include="ViewModels\CategoryViewModel.cs" />
     <Compile Include="Models\PurchaseOrderModel.cs" />
@@ -147,10 +148,13 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Models\SupplierModel.cs" />
+    <Compile Include="ViewModels\ProductViewModel.cs" />
     <Compile Include="ViewModels\PurchaseOrderViewModel.cs" />
-    <Compile Include="ViewModels\RelayCommand.cs" />
     <Compile Include="ViewModels\ShellViewModel.cs" />
     <Compile Include="ViewModels\SupplierViewModel.cs" />
+    <Compile Include="Views\ProductView.xaml.cs">
+      <DependentUpon>ProductView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\PurchaseOrderView.xaml.cs">
       <DependentUpon>PurchaseOrderView.xaml</DependentUpon>
     </Compile>
@@ -196,6 +200,10 @@
     <Resource Include="App.ico" />
   </ItemGroup>
   <ItemGroup>
+    <Page Include="Views\ProductView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\PurchaseOrderView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

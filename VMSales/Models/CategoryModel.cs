@@ -3,19 +3,19 @@ namespace VMSales.Models
 {
     public class CategoryModel : BaseViewModel 
     {
-        public int CnameLength = 255;
+        public int categorynameLength = 255;
         public int DescriptionLength = 255;
-        private string _cname;
+        private string _categoryname;
         private string _description;
         private string _category_pk;
-        public string Cname
+        public string categoryName
         {
-            get { return _cname; }
+            get { return _categoryname; }
             set
             {
-                if (_cname == value) return;
-                _cname = value;
-                RaisePropertyChanged("Cname");
+                if (_categoryname == value) return;
+                _categoryname = value;
+                RaisePropertyChanged("categoryName");
             }
         }
         public string Description
