@@ -22,9 +22,23 @@ namespace VMSales.ViewModels
         List<ProductModel> productListDelete = new List<ProductModel>();
         #endregion
 
+        private List<string> _productcondition { get; set; }
+        public List<string> productCondition
+        {
+            get { return _productcondition; }
+            set
+            {
+                _productcondition = value;
+                RaisePropertyChanged("productCondition");
+            }
+        }
+
+     
+
+
         #region CollectionModels
-        public List<string> supplierName { get; set; } = new List<string>();
-        public List<string> categoryName { get; set; } = new List<string>();
+     //   public List<string> supplierName { get; set; } = new List<string>();
+     //   public List<string> categoryName { get; set; } = new List<string>();
         public ObservableCollection<ProductModel> ocProductView { get; set; } = new ObservableCollection<ProductModel>();
         private CollectionViewSource cvsProductView { get; set; } = new CollectionViewSource();
         public ICollectionView productView
@@ -47,7 +61,6 @@ namespace VMSales.ViewModels
                   //LoadProduct(selectedCategoryName);
             }
         }
-
 
         private string _selectedsuppliername;
         //public SupplierModel selectedSupplierName
@@ -218,51 +231,60 @@ namespace VMSales.ViewModels
         }
         #endregion
 
+        public List<string> GetPurchaseOrders(string parameter, string stringtablename)
+        {
+            List<string> listName = new List<string>();
+            
+            // populate Supplier Filter DropDown
+            DataTable myDataTable = DataBaseOps.SQLiteDataTableWithQuery(parameter);
+            foreach (DataRow row in myDataTable.Rows)
+            {
+                listName.Add((string)row[stringtablename]);
+            }
+
+            return listName;
+        }
 
         public ProductViewModel()
         {
-            // populate Supplier Filter DropDown
-            string supplierParameter = "supplier";
-            DataTable supplierDataTable = DataBaseOps.SQLiteDataTableWithQuery(supplierParameter);
-            foreach (DataRow row in supplierDataTable.Rows)
-            {
-                supplierName.Add((string)row["sname"]);
-            }
-
-            // populate Category Filter DropDown
-            string categoryParameter = "category";
-            DataTable categoryDataTable = DataBaseOps.SQLiteDataTableWithQuery(categoryParameter);
-            foreach (DataRow row in categoryDataTable.Rows)
-            {
-                categoryName.Add((string)row["cname"]);
-            }
-
+           
 
 
 
             // populate any existing products
             string productParameter = "product";
             DataTable productDataTable = DataBaseOps.SQLiteDataTableWithQuery(productParameter);
-                foreach (DataRow row in productDataTable.Rows)
-                    {
-                        var obj = new ProductModel()
-                        {
-                            product_PK = (string)row["product_pk"].ToString(),
-                            productBrandName = (string)row["bname"],
-                            productName = (string)row["pname"],
-                            productDescription = (string)row["description"],
-                            productQuantity = (string)row["qty"],
-                            productCost = (decimal)row["cost"],
-                            productSKU = (string)row["sku"],
-                            productSoldPrice = (decimal)row["soldprice"],
-                            productStock = (int)row["instock"],
-                            productCondition = (string)row["condition"],
-                            productListingURL = (string)row["listingurl"],
-                            productListingNumber = (string)row["listingnum"],
-                            productListingDate = (DateTime)row["listingdate"],
-                         };
-                    ocProductView.Add(obj);
-                    };    
+            foreach (DataRow row in productDataTable.Rows)
+            {
+                var obj = new ProductModel()
+                {
+                    product_PK = (string)row["product_pk"].ToString(),
+                    productBrandName = (string)row["bname"],
+                    productName = (string)row["pname"],
+                    productDescription = (string)row["description"],
+                    productQuantity = (string)row["qty"],
+                    productCost = (decimal)row["cost"],
+                    productSKU = (string)row["sku"],
+                    productSoldPrice = (decimal)row["soldprice"],
+                    productStock = (int)row["instock"],
+                    productCondition = new List<string> { (string)row["condition"] },
+                    productListingURL = (string)row["listingurl"],
+                    productListingNumber = (string)row["listingnum"],
+                    productListingDate = (DateTime)row["listingdate"],
+                };
+                ocProductView.Add(obj);
+            };
+
+            ocProductView.Add(new ProductModel()
+            {
+                productCondition = new List<String> { "New", "Used" },
+                supplierName = GetPurchaseOrders("supplier", "sname"),
+                categoryName = GetPurchaseOrders("category", "cname")
+            }); 
+
+
+
+
         }
     }
 }

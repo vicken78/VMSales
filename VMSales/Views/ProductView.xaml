@@ -88,7 +88,8 @@
 
             <TextBlock Grid.Row="2" Grid.Column="6" FontSize="14" HorizontalAlignment="Center" FontWeight="Bold">Category</TextBlock>
             <ComboBox IsEditable="False" Background="White" Grid.Row="3" Grid.Column="6" 
-                ItemsSource="{Binding categoryName}" 
+                ItemsSource="{Binding ocProductView}" 
+                DisplayMemberPath="{Binding categoryName}"
                 SelectedItem="{Binding selectedCategoryName, 
                 UpdateSourceTrigger=PropertyChanged}" 
                 Width="100" HorizontalAlignment="Left"/>
@@ -102,7 +103,7 @@
 
             <TextBlock Grid.Row="2" Grid.Column="4" FontSize="14" FontWeight="Bold" HorizontalAlignment="Center">Supplier</TextBlock>
             <ComboBox IsEditable="False" Background="White" Grid.Row="3" Grid.Column="4" 
-                ItemsSource="{Binding Supplier}"  
+                ItemsSource="{Binding supplierName}"  
                 SelectedItem="{Binding selectedSupplierName, 
                 Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"  
                 Width="100" HorizontalAlignment="Left"/>
@@ -137,6 +138,7 @@
                             Content="Reset"/>
         </Grid>
 
+        <!--
         <DataGrid x:Name="ProductDataGrid"  AutoGenerateColumns="False" 
                           ItemsSource="{Binding ocProductView}"
                           IsSynchronizedWithCurrentItem="True" 
@@ -146,10 +148,8 @@
             <DataGrid.Columns>
 
 
-                <DataGridComboBoxColumn Header="Category" Width="100" x:Name="Category" 
-                    ItemsSource="{Binding categoryName}"
-                    SelectedItemBinding="{Binding selectedCategoryName, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}"  
-                    DisplayMemberPath="{Binding categoryName}" />
+                <DataGridComboBoxColumn Header="Category" Width="100" 
+                    ItemsSource="{Binding categoryName}"/>
 
 
                 <DataGridTextColumn Header="Product Name" Width="150" 
@@ -175,10 +175,56 @@
                 <DataGridTextColumn Header="In Stock" Width="100" 
                     Binding="{Binding InStock, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}" />
 
-                <DataGridComboBoxColumn Width="100" x:Name="Condition" Header="Condition" 
-                    SelectedValueBinding="{Binding Condition}"  
-                    DisplayMemberPath="{Binding Condition}" />
+                <DataGridComboBoxColumn Width="100" Header="Condition" 
+                    ItemsSource="{Binding productCondition}" />
             </DataGrid.Columns>
-        </DataGrid>
+        </DataGrid> -->
+
+        <Grid>
+            
+            <DataGrid Margin="5" CanUserAddRows="false" ItemsSource="{Binding ocProductView}" AutoGenerateColumns="False">
+                <DataGrid.Columns>
+                    <DataGridTemplateColumn Header="Category" Width="200">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <ComboBox Margin="2" ItemsSource="{Binding categoryName}" SelectedValuePath="categoryName"/>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+
+                    <DataGridTemplateColumn Header="Supplier" Width="200">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <ComboBox Margin="2" ItemsSource="{Binding supplierName,Mode=TwoWay}" SelectedValuePath="selectedSupplierName"/>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+
+                    <DataGridTemplateColumn Header="Lot Number" Width="200">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <ComboBox Margin="2" ItemsSource="{Binding supplierName}" SelectedValuePath="supplierName"/>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+
+
+                    <DataGridTemplateColumn Header="Condition" Width="200">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <ComboBox Margin="2" ItemsSource="{Binding productCondition, Mode=TwoWay}" SelectedValuePath="productCondition"/>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+
+
+
+                </DataGrid.Columns>
+            </DataGrid>
+        </Grid>
+
+
+
+
     </DockPanel>
 </UserControl>

@@ -1,11 +1,15 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using VMSales.ViewModels;
 
 namespace VMSales.Models
 {
     public class ProductModel : BaseViewModel
     {
-        private string _categoryname { get; set; }
+
+       
+
         private string _product_pk { get; set; }
         private string _productname { get; set; }
         private string _productdescription { get; set; }
@@ -14,13 +18,11 @@ namespace VMSales.Models
         private string _productsku { get; set; }
         private decimal _productsoldprice { get; set; }
         private int _productstock { get; set; }
-        private string _productcondition { get; set; }
         private string _productlistingurl { get; set; }
         private string _productlistingnumber { get; set; }
         private DateTime _productlistingdate { get; set; }
         private string _productbrandname { get; set; }
 
-        public string categoryName { get; set; }
         public string product_PK { get; set; }
         public string productName
         {
@@ -85,15 +87,13 @@ namespace VMSales.Models
             RaisePropertyChanged("productStock");
             }
         }
-        public string productCondition
-        {
-            get { return _productcondition; }
-            set
-            {
-            _productcondition = value;
-            RaisePropertyChanged("productCondition");
-            }
-        }
+
+        // Lists
+        public List<string> productCondition { get; set; }
+        public List<string> supplierName { get; set; }
+        public List<string> categoryName { get; set; }
+
+
         public string productListingURL 
         {
             get { return _productlistingurl; }

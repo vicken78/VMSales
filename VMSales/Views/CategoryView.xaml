@@ -44,7 +44,7 @@
                     </TextBlock>
                     <!-- Name -->
                     <Label Content="Name" Grid.Column="0" Grid.Row="1" />
-                    <TextBox Text="{Binding Path=SelectedItem.Cname, ElementName=CategoryDataGrid, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}" 
+                    <TextBox Text="{Binding Path=SelectedItem.categoryName, ElementName=CategoryDataGrid, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}" 
                     Grid.Column="1" Grid.Row="1"/>
                     <!-- Description -->
                     <Label Content="Description" Grid.Column="0" Grid.Row="2" />
@@ -103,8 +103,8 @@
                         
                         <DataGridTextColumn Header="ID" Width="Auto" x:Name="Category_pk"
                             Binding="{Binding Category_pk, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}" IsReadOnly="True" />
-                        <DataGridTextColumn Header="Name" Width="Auto" x:Name="Cname"
-                            Binding="{Binding Cname, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}" />
+                        <DataGridTextColumn Header="Name" Width="Auto" x:Name="categoryName"
+                            Binding="{Binding categoryName, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}" />
                         <DataGridTextColumn Header="Description" Width="Auto" x:Name="Description" 
                             Binding="{Binding Description, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}" />
                         <DataGridTextColumn Header="Creation Date" Width="Auto" x:Name="CreationDate" 
