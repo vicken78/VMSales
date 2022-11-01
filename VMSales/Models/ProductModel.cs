@@ -1,15 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Windows;
 using VMSales.ViewModels;
 
 namespace VMSales.Models
 {
     public class ProductModel : BaseViewModel
     {
-
-       
-
+        private List<string> _productcondition { get; set; }
         private string _product_pk { get; set; }
         private string _productname { get; set; }
         private string _productdescription { get; set; }
@@ -90,9 +89,8 @@ namespace VMSales.Models
 
         // Lists
         public List<string> productCondition { get; set; }
-        public List<string> supplierName { get; set; }
         public List<string> categoryName { get; set; }
-
+        public List<string> lotName { get; set; }
 
         public string productListingURL 
         {

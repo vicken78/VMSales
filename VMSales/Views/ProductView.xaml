@@ -4,8 +4,11 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:VMSales.ViewModels"
+             
+             xmlns:cal="http://www.caliburnproject.org"
+ 
              mc:Ignorable="d" 
-             Height="800" Width="1300" VerticalAlignment="Top" MinHeight="400" MinWidth="800">
+             Height="800" Width="1400" VerticalAlignment="Top" MinHeight="400" MinWidth="800">
     <UserControl.DataContext>
         <local:ProductViewModel/>
     </UserControl.DataContext>
@@ -48,18 +51,24 @@
                 <ColumnDefinition Width="100"/>
             </Grid.ColumnDefinitions>
 
-            <!-- Supplier Text static -->
+            <!-- Supplier -->
             <Label Grid.Row="2" Grid.Column="0">Supplier</Label>
-            <TextBox Name="Supplier" Width="200" IsReadOnly="True" Background="WhiteSmoke"  Text="{Binding SelectedSname, ElementName=cmbSupplier}" 
-                        Grid.Column="1" Grid.Row="2"/>
+            <ComboBox x:Name="supplierName" IsEditable="False" Background="WhiteSmoke"  
+                ItemsSource="{Binding supplierName}"
+                SelectedItem="{Binding selectedSupplierName, 
+                Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"  
+                Width="200" Grid.Column="1" Grid.Row="2" />
 
             <!-- Lot Number -->
             <Label Content="Lot Number" Grid.Column="0" Grid.Row="4" />
-            <TextBox Name="lotNumber" IsReadOnly="True" Background="WhiteSmoke"  Text="{Binding SelectedItem.Address, ElementName=cmbSupplier}" 
-                        Grid.Column="1" Grid.Row="4"/>
-
+            <ComboBox x:Name="lotNumber" IsEditable="False" Background="WhiteSmoke"  
+                ItemsSource="{Binding lotNumber}"  
+                SelectedItem="{Binding selectedLotNumber, 
+                Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"  
+                Width="200" Grid.Column="1" Grid.Row="4" />
+            
             <!-- Lot Name -->
-            <Label Content="Lot Name" Grid.Column="0" Grid.Row="5" />
+                <Label Content="Lot Name" Grid.Column="0" Grid.Row="5" />
             <TextBox Name="lotname" IsReadOnly="True" Background="WhiteSmoke" Text="{Binding SelectedItem.State, ElementName=cmbSupplier}"
                         Grid.Column="1" Grid.Row="5"/>
             <!-- Lot Description -->
@@ -83,13 +92,11 @@
             <TextBox Name="lotShipping" IsReadOnly="True" Background="WhiteSmoke" Text="{Binding SelectedItem.Email, ElementName=cmbSupplier}"
                         Grid.Column="1" Grid.Row="10"/>
 
-
             <!-- Filter Category -->
 
             <TextBlock Grid.Row="2" Grid.Column="6" FontSize="14" HorizontalAlignment="Center" FontWeight="Bold">Category</TextBlock>
             <ComboBox IsEditable="False" Background="White" Grid.Row="3" Grid.Column="6" 
-                ItemsSource="{Binding ocProductView}" 
-                DisplayMemberPath="{Binding categoryName}"
+                ItemsSource="{Binding categoryNameFilter}" 
                 SelectedItem="{Binding selectedCategoryName, 
                 UpdateSourceTrigger=PropertyChanged}" 
                 Width="100" HorizontalAlignment="Left"/>
@@ -103,8 +110,8 @@
 
             <TextBlock Grid.Row="2" Grid.Column="4" FontSize="14" FontWeight="Bold" HorizontalAlignment="Center">Supplier</TextBlock>
             <ComboBox IsEditable="False" Background="White" Grid.Row="3" Grid.Column="4" 
-                ItemsSource="{Binding supplierName}"  
-                SelectedItem="{Binding selectedSupplierName, 
+                ItemsSource="{Binding supplierNameFilter}"  
+                SelectedItem="{Binding selectedSupplierNameFilter, 
                 Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"  
                 Width="100" HorizontalAlignment="Left"/>
 
@@ -118,7 +125,7 @@
             </CheckBox>
 
             <!--  Save Button -->
-            <Button x:Name="SaveCommand" Grid.Column="0" Grid.Row="12"
+            <Button x:Name="SaveCommand" cal:Message.Attach="SaveCommand" Grid.Column="0" Grid.Row="12"
                             Width="75"
                             Content="Save"
                             HorizontalAlignment="Left"/>
@@ -138,93 +145,142 @@
                             Content="Reset"/>
         </Grid>
 
-        <!--
+<!-- Product DataGrid Start -->
         <DataGrid x:Name="ProductDataGrid"  AutoGenerateColumns="False" 
                           ItemsSource="{Binding ocProductView}"
-                          IsSynchronizedWithCurrentItem="True" 
+                          IsSynchronizedWithCurrentItem="True"
+                          CanUserReorderColumns="False"
+                          CanUserAddRows="False"
                           EnableRowVirtualization="True" IsReadOnly="False" Grid.Row="10" 
-                          Height="Auto" Width="1280"  HorizontalAlignment="Center">
-
+                          Height="Auto" Width="1400">
             <DataGrid.Columns>
+                <!-- Category DropDown -->
+                <DataGridTemplateColumn Header="Category" Width="100">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <ComboBox Margin="2" ItemsSource="{Binding categoryName}" SelectedValuePath="categoryName"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <!--Product Name -->
+                <DataGridTextColumn Header="Product Name" Width="140" Binding="{Binding productName, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}">
+                    <DataGridTextColumn.ElementStyle>
+                        <Style TargetType="TextBlock">
+                            <Setter Property="TextWrapping" Value="Wrap"/>
+                        </Style>
+                    </DataGridTextColumn.ElementStyle>
+                </DataGridTextColumn>
+                <!-- Product Description -->
+                <DataGridTextColumn Header="Description" Width="230" Binding="{Binding productDescription, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}">
+                    <DataGridTextColumn.ElementStyle>
+                        <Style TargetType="TextBlock">
+                            <Setter Property="TextWrapping" Value="Wrap"/>
+                        </Style>
+                    </DataGridTextColumn.ElementStyle>
+                </DataGridTextColumn>
+                <!-- SKU-->
+                <DataGridTextColumn Header="SKU" Width="100" Binding="{Binding productSKU, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}"  >
+                    <DataGridTextColumn.ElementStyle>
+                        <Style TargetType="TextBlock">
+                            <Setter Property="TextWrapping" Value="Wrap"/>
+                        </Style>
+                    </DataGridTextColumn.ElementStyle>
+                </DataGridTextColumn>
+                <!-- Brand Name-->
+                <DataGridTextColumn Header="Brand Name" Width="100" Binding="{Binding productBrandName, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}">
+                    <DataGridTextColumn.ElementStyle>
+                        <Style TargetType="TextBlock">
+                            <Setter Property="TextWrapping" Value="Wrap"/>
+                        </Style>
+                    </DataGridTextColumn.ElementStyle>
+                </DataGridTextColumn>
+                <!-- Condition -->
+                <DataGridTemplateColumn Header="Condition" Width="60">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <ComboBox Margin="2" ItemsSource="{Binding productCondition, Mode=TwoWay}" SelectedValuePath="productCondition"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <!-- Quantity -->
+                <DataGridTemplateColumn Header="Qty" Width="50">
+             
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBox Text="{Binding productQuantity, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}" PreviewTextInput="NumericInput"/>
+                            <!-- <TextBox Text="{Binding productQuanity, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}"/> -->
+               
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <!-- Cost -->
+                <DataGridTextColumn Header="Cost" Width="70" Binding="{Binding productCost, StringFormat='c', ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}">
+                    <DataGridTextColumn.ElementStyle>
+                        <Style TargetType="TextBlock">
+                            <Setter Property="TextWrapping" Value="Wrap"/>
+                            <Setter Property="HorizontalAlignment" Value="Center"/>
+                        </Style>
+                    </DataGridTextColumn.ElementStyle>
+                </DataGridTextColumn>
+                <!-- Sold Price -->
+                <DataGridTextColumn Header="Sold Price" Width="70" Binding="{Binding productSoldPrice, StringFormat='c', ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}">
+                    <DataGridTextColumn.ElementStyle>
+                        <Style TargetType="TextBlock">
+                            <Setter Property="TextWrapping" Value="Wrap"/>
+                            <Setter Property="HorizontalAlignment" Value="Center"/>
+                        </Style>
+                    </DataGridTextColumn.ElementStyle>
+                </DataGridTextColumn>
+                <!-- Stock -->
+                <DataGridTemplateColumn Header="In Stock" Width="50">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <CheckBox HorizontalAlignment="Center" VerticalAlignment="Center" IsChecked="{Binding productStock, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <!-- Listing Number -->
+                <DataGridTextColumn Header="Listing Number" Width="120" Binding="{Binding productListingNumber}"  >
+                    <DataGridTextColumn.ElementStyle>
+                        <Style TargetType="TextBlock">
+                            <Setter Property="TextWrapping" Value="Wrap"/>
+                        </Style>
+                    </DataGridTextColumn.ElementStyle>
+                </DataGridTextColumn>
+                <!-- Listing URL-->
+                <DataGridTextColumn Header="Listing Url" Width="100" Binding="{Binding productListingURL}">
+                    <DataGridTextColumn.ElementStyle>
+                        <Style TargetType="TextBlock">
+                            <Setter Property="TextWrapping" Value="Wrap"/>
+                        </Style>
+                    </DataGridTextColumn.ElementStyle>
+                </DataGridTextColumn>
+                <!-- Listing Date -->
+               
+                <DataGridTemplateColumn Header="Listing Date">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding productListingDate}" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                    <DataGridTemplateColumn.CellEditingTemplate>
+                        <DataTemplate>
+                            <DatePicker SelectedDate="{Binding productListingDate}" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellEditingTemplate>
+                </DataGridTemplateColumn>
+<!-- Add Button-->
+                <DataGridTemplateColumn Header="Add">
+                <DataGridTemplateColumn.CellTemplate>
+                    <DataTemplate>
+                            <Button x:Name="addRowCommand" cal:Message.Attach="addRowCommand" Content="Add Row" Width="80" HorizontalAlignment="Center" HorizontalContentAlignment="Center"/>
+                        </DataTemplate>
+                </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
 
 
-                <DataGridComboBoxColumn Header="Category" Width="100" 
-                    ItemsSource="{Binding categoryName}"/>
 
-
-                <DataGridTextColumn Header="Product Name" Width="150" 
-                    HeaderStyle="{StaticResource CenterGridHeaderStyle}"                
-                    Binding="{Binding Product, ValidatesOnDataErrors=True, 
-                    UpdateSourceTrigger=PropertyChanged}"/>
-                <DataGridTextColumn Header="Description" Width="Auto" 
-                    Binding="{Binding Description, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}"/>
-                <DataGridTextColumn Header="Quantity" Width="60" 
-                    Binding="{Binding Quanity, Mode=TwoWay,ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}"/>
-                <DataGridTextColumn Header="Cost" Width="Auto" 
-                    Binding="{Binding Cost, StringFormat='c', ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}"/>
-                <DataGridTextColumn Header="SKU" Width="70" 
-                    Binding="{Binding SKU, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}"/>
-
-                <DataGridTextColumn Header="Price" Width="70" 
-                    Binding="{Binding Price, StringFormat='c', ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}"/>
-
-            
-                <DataGridTextColumn Header="Brand" Width="90" 
-                    Binding="{Binding brandName, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}"/>
-
-                <DataGridTextColumn Header="In Stock" Width="100" 
-                    Binding="{Binding InStock, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}" />
-
-                <DataGridComboBoxColumn Width="100" Header="Condition" 
-                    ItemsSource="{Binding productCondition}" />
             </DataGrid.Columns>
-        </DataGrid> -->
-
-        <Grid>
-            
-            <DataGrid Margin="5" CanUserAddRows="false" ItemsSource="{Binding ocProductView}" AutoGenerateColumns="False">
-                <DataGrid.Columns>
-                    <DataGridTemplateColumn Header="Category" Width="200">
-                        <DataGridTemplateColumn.CellTemplate>
-                            <DataTemplate>
-                                <ComboBox Margin="2" ItemsSource="{Binding categoryName}" SelectedValuePath="categoryName"/>
-                            </DataTemplate>
-                        </DataGridTemplateColumn.CellTemplate>
-                    </DataGridTemplateColumn>
-
-                    <DataGridTemplateColumn Header="Supplier" Width="200">
-                        <DataGridTemplateColumn.CellTemplate>
-                            <DataTemplate>
-                                <ComboBox Margin="2" ItemsSource="{Binding supplierName,Mode=TwoWay}" SelectedValuePath="selectedSupplierName"/>
-                            </DataTemplate>
-                        </DataGridTemplateColumn.CellTemplate>
-                    </DataGridTemplateColumn>
-
-                    <DataGridTemplateColumn Header="Lot Number" Width="200">
-                        <DataGridTemplateColumn.CellTemplate>
-                            <DataTemplate>
-                                <ComboBox Margin="2" ItemsSource="{Binding supplierName}" SelectedValuePath="supplierName"/>
-                            </DataTemplate>
-                        </DataGridTemplateColumn.CellTemplate>
-                    </DataGridTemplateColumn>
-
-
-                    <DataGridTemplateColumn Header="Condition" Width="200">
-                        <DataGridTemplateColumn.CellTemplate>
-                            <DataTemplate>
-                                <ComboBox Margin="2" ItemsSource="{Binding productCondition, Mode=TwoWay}" SelectedValuePath="productCondition"/>
-                            </DataTemplate>
-                        </DataGridTemplateColumn.CellTemplate>
-                    </DataGridTemplateColumn>
-
-
-
-                </DataGrid.Columns>
-            </DataGrid>
-        </Grid>
-
-
-
-
+        </DataGrid>
     </DockPanel>
 </UserControl>

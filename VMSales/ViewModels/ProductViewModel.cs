@@ -10,7 +10,6 @@ using System.ComponentModel;
 using VMSales.ChangeTrack;
 using System.Windows;
 
-
 namespace VMSales.ViewModels 
 {
     public class ProductViewModel : BaseViewModel
@@ -22,24 +21,20 @@ namespace VMSales.ViewModels
         List<ProductModel> productListDelete = new List<ProductModel>();
         #endregion
 
-        private List<string> _productcondition { get; set; }
-        public List<string> productCondition
+        #region CollectionModels
+        public List<string> supplierName { get; set; } = new List<string>();
+        public List<string> supplierNameFilter { get; set; } = new List<string>();
+        public List<string> categoryNameFilter { get; set; } = new List<string>();
+
+
+
+        private ObservableCollection<ProductModel> ocproductview;
+
+        public ObservableCollection<ProductModel> ocProductView
         {
-            get { return _productcondition; }
-            set
-            {
-                _productcondition = value;
-                RaisePropertyChanged("productCondition");
-            }
+            get { return ocproductview ?? (ocproductview = new ObservableCollection<ProductModel>()); }
         }
 
-     
-
-
-        #region CollectionModels
-     //   public List<string> supplierName { get; set; } = new List<string>();
-     //   public List<string> categoryName { get; set; } = new List<string>();
-        public ObservableCollection<ProductModel> ocProductView { get; set; } = new ObservableCollection<ProductModel>();
         private CollectionViewSource cvsProductView { get; set; } = new CollectionViewSource();
         public ICollectionView productView
         {
@@ -48,22 +43,21 @@ namespace VMSales.ViewModels
         #endregion
 
         #region Selected
-        
+
         private string _selectedcategoryname;
         public string selectedCategoryName
         {
             get { return _selectedcategoryname; }
             set
             {
-                  _selectedcategoryname = value;
-                  RaisePropertyChanged("selectedCategoryName");
-                  //MessageBox.Show(selectedCategoryName);
-                  //LoadProduct(selectedCategoryName);
+                _selectedcategoryname = value;
+                RaisePropertyChanged("selectedCategoryName");
+                //MessageBox.Show(selectedCategoryName);
+                //LoadProduct(selectedCategoryName);
             }
         }
 
         private string _selectedsuppliername;
-        //public SupplierModel selectedSupplierName
         public string selectedSupplierName
         {
             get { return _selectedsuppliername; }
@@ -71,11 +65,14 @@ namespace VMSales.ViewModels
             {
                 _selectedsuppliername = value;
                 RaisePropertyChanged("selectedSupplierName");
-                MessageBox.Show(selectedSupplierName);
-                //SelectedSupplier_pk = _selectedsname.Supplier_pk.ToString();
-                //LoadPurchaseOrder(SelectedSupplier_pk);
+                // here is where we get lot and filter it.  
+
             }
         }
+
+
+
+
 
 
         #endregion
@@ -90,20 +87,20 @@ namespace VMSales.ViewModels
         }
         private void ApplyFilter(FilterField field)
         {
-        switch (field)
+            switch (field)
             {
-            case FilterField.category:
-            AddCategoryFilter();
-            //PurchaseOrderView.Filter = new Predicate<object>(x => ((PurchaseOrderModel)x).Purchasedate.ToString() == _selectedpurchasedate);
-            //RaisePropertyChanged("PurchaseOrderView");
-            break;
-            case FilterField.supplier:
-            AddSupplierFilter();
-            //PurchaseOrderView.Filter = new Predicate<object>(x => ((PurchaseOrderModel)x).Invoicenumber.ToString() == _selectedinvoicenumber);
-            //RaisePropertyChanged("PurchaseOrderView");
-            break;
-            default:
-            break;
+                case FilterField.category:
+                    AddCategoryFilter();
+                    //PurchaseOrderView.Filter = new Predicate<object>(x => ((PurchaseOrderModel)x).Purchasedate.ToString() == _selectedpurchasedate);
+                    //RaisePropertyChanged("PurchaseOrderView");
+                    break;
+                case FilterField.supplier:
+                    AddSupplierFilter();
+                    //PurchaseOrderView.Filter = new Predicate<object>(x => ((PurchaseOrderModel)x).Invoicenumber.ToString() == _selectedinvoicenumber);
+                    //RaisePropertyChanged("PurchaseOrderView");
+                    break;
+                default:
+                    break;
             }
         }
         public bool canRemoveCategoryFilter
@@ -210,8 +207,8 @@ namespace VMSales.ViewModels
             var src = e.Item as SupplierModel;
             if (src == null)
                 e.Accepted = false;
-         //   else if (string.Compare(SelectedPurchaseDate, src.Purchasedate.ToString()) != 0)
-         //       e.Accepted = false;
+            //   else if (string.Compare(SelectedPurchaseDate, src.Purchasedate.ToString()) != 0)
+            //       e.Accepted = false;
         }
 
         #endregion
@@ -219,6 +216,24 @@ namespace VMSales.ViewModels
         #region ButtonCommands
         public void SaveCommand()
         {
+            productListUpdate = changetracker.RowsUpdated;
+            foreach (ProductModel PO in productListUpdate)
+            {
+                MessageBox.Show(PO.categoryName.First().ToString());
+                MessageBox.Show(PO.productName.ToString());
+                MessageBox.Show(PO.productDescription.ToString());
+                MessageBox.Show(PO.productSKU.ToString());
+                MessageBox.Show(PO.productBrandName.ToString());
+                MessageBox.Show(PO.productCondition.First().ToString());
+                MessageBox.Show(PO.productQuantity.ToString());
+                MessageBox.Show(PO.productCost.ToString());
+                MessageBox.Show(PO.productSoldPrice.ToString());
+                MessageBox.Show(PO.productStock.ToString());
+                MessageBox.Show(PO.productListingNumber.ToString());
+                MessageBox.Show(PO.productListingURL.ToString());
+                MessageBox.Show(PO.productListingDate.ToString());
+            }
+
         }
         public void AddCommand()
         {
@@ -229,31 +244,76 @@ namespace VMSales.ViewModels
         public void ResetCommand()
         {
         }
-        #endregion
 
-        public List<string> GetPurchaseOrders(string parameter, string stringtablename)
+        public void addRowCommand()
+        {
+            MessageBox.Show("Press");
+            var obj = new ProductModel()
+            {
+                productCondition = new List<String> { "New", "Used" },
+                categoryName = GetPurchaseOrders("category", "cname"),
+                productBrandName = null,
+                productName = null,
+                productDescription = null,
+                productQuantity = "0",
+                productCost = 0,
+                productSKU = null,
+                productSoldPrice = 0,
+                productStock = 1,
+                productListingURL = null,
+                productListingNumber = null,
+                productListingDate = DateTime.Now,
+            };
+            ocProductView.Add(obj);
+        
+    }
+    #endregion
+
+    public List<string> GetPurchaseOrders(string parameter, string stringtablename)
         {
             List<string> listName = new List<string>();
-            
+
             // populate Supplier Filter DropDown
             DataTable myDataTable = DataBaseOps.SQLiteDataTableWithQuery(parameter);
             foreach (DataRow row in myDataTable.Rows)
             {
-                listName.Add((string)row[stringtablename]);
+                listName.Add(row[stringtablename].ToString());
             }
 
             return listName;
         }
 
+
         public ProductViewModel()
         {
-           
-
-
+            changetracker = new ChangeTracker<ProductModel>(ocProductView);
 
             // populate any existing products
             string productParameter = "product";
             DataTable productDataTable = DataBaseOps.SQLiteDataTableWithQuery(productParameter);
+
+            if (productDataTable == null || productDataTable.Rows.Count < 1)
+            {
+                    var obj = new ProductModel()
+                    {
+                        productCondition = new List<String> { "New", "Used" },
+                        categoryName = GetPurchaseOrders("category", "cname"),
+                        productBrandName = null,
+                        productName = null,
+                        productDescription = null,
+                        productQuantity = "0",
+                        productCost = 0,
+                        productSKU = null,
+                        productSoldPrice = 0,
+                        productStock = 1,
+                        productListingURL = null,
+                        productListingNumber = null,
+                        productListingDate = DateTime.Now,
+                    };
+                    ocProductView.Add(obj);
+            }
+
+
             foreach (DataRow row in productDataTable.Rows)
             {
                 var obj = new ProductModel()
@@ -275,16 +335,19 @@ namespace VMSales.ViewModels
                 ocProductView.Add(obj);
             };
 
-            ocProductView.Add(new ProductModel()
-            {
-                productCondition = new List<String> { "New", "Used" },
-                supplierName = GetPurchaseOrders("supplier", "sname"),
-                categoryName = GetPurchaseOrders("category", "cname")
-            }); 
+            /*
+                     ocProductView.Add(new ProductModel()
+                   {
+                        productCondition = new List<String> { "New", "Used" },
+                        categoryName = GetPurchaseOrders("category", "cname"),
+                   }) ;
+             */
 
-
-
-
+            supplierName = GetPurchaseOrders("supplier", "sname");
+            supplierNameFilter = GetPurchaseOrders("supplier", "sname");
+            categoryNameFilter = GetPurchaseOrders("category", "cname");
+            cvsProductView.Source = ocProductView;
+            changetracker.StartTracking(ocProductView);
         }
     }
 }
