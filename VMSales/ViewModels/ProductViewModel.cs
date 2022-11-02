@@ -44,6 +44,21 @@ namespace VMSales.ViewModels
 
         #region Selected
 
+        private string _selectedcondition;
+        public string selectedCondition
+        {
+            get { return _selectedcondition; }
+            set
+            {
+                _selectedcondition = value;
+                RaisePropertyChanged("selectedCondition");
+                MessageBox.Show(selectedCondition);
+                //LoadProduct(selectedCategoryName);
+            }
+        }
+
+
+
         private string _selectedcategoryname;
         public string selectedCategoryName
         {
@@ -65,6 +80,8 @@ namespace VMSales.ViewModels
             {
                 _selectedsuppliername = value;
                 RaisePropertyChanged("selectedSupplierName");
+                MessageBox.Show(selectedSupplierName);
+                
                 // here is where we get lot and filter it.  
 
             }
@@ -213,18 +230,20 @@ namespace VMSales.ViewModels
 
         #endregion
 
-        #region ButtonCommands
+        #region -ButtonCommands
         public void SaveCommand()
         {
             productListUpdate = changetracker.RowsUpdated;
             foreach (ProductModel PO in productListUpdate)
             {
-                MessageBox.Show(PO.categoryName.First().ToString());
+
+                MessageBox.Show(PO.selectedCondition.ToString());
+
+
                 MessageBox.Show(PO.productName.ToString());
                 MessageBox.Show(PO.productDescription.ToString());
                 MessageBox.Show(PO.productSKU.ToString());
                 MessageBox.Show(PO.productBrandName.ToString());
-                MessageBox.Show(PO.productCondition.First().ToString());
                 MessageBox.Show(PO.productQuantity.ToString());
                 MessageBox.Show(PO.productCost.ToString());
                 MessageBox.Show(PO.productSoldPrice.ToString());
@@ -252,16 +271,16 @@ namespace VMSales.ViewModels
             {
                 productCondition = new List<String> { "New", "Used" },
                 categoryName = GetPurchaseOrders("category", "cname"),
-                productBrandName = null,
-                productName = null,
-                productDescription = null,
+                productBrandName = "",
+                productName = "",
+                productDescription = "",
                 productQuantity = "0",
                 productCost = 0,
-                productSKU = null,
+                productSKU = "",
                 productSoldPrice = 0,
                 productStock = 1,
-                productListingURL = null,
-                productListingNumber = null,
+                productListingURL = "",
+                productListingNumber = "",
                 productListingDate = DateTime.Now,
             };
             ocProductView.Add(obj);
@@ -297,17 +316,18 @@ namespace VMSales.ViewModels
                     var obj = new ProductModel()
                     {
                         productCondition = new List<String> { "New", "Used" },
+                        selectedCondition = "",
                         categoryName = GetPurchaseOrders("category", "cname"),
-                        productBrandName = null,
-                        productName = null,
-                        productDescription = null,
+                        productBrandName = "",
+                        productName = "",
+                        productDescription = "",
                         productQuantity = "0",
                         productCost = 0,
-                        productSKU = null,
+                        productSKU = "",
                         productSoldPrice = 0,
                         productStock = 1,
-                        productListingURL = null,
-                        productListingNumber = null,
+                        productListingURL = "",
+                        productListingNumber = "",
                         productListingDate = DateTime.Now,
                     };
                     ocProductView.Add(obj);

@@ -92,6 +92,8 @@ namespace VMSales.Models
         public List<string> categoryName { get; set; }
         public List<string> lotName { get; set; }
 
+        // Selected
+        public string selectedCondition { get; set; }
         public string productListingURL 
         {
             get { return _productlistingurl; }

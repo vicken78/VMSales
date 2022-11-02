@@ -56,7 +56,7 @@
             <ComboBox x:Name="supplierName" IsEditable="False" Background="WhiteSmoke"  
                 ItemsSource="{Binding supplierName}"
                 SelectedItem="{Binding selectedSupplierName, 
-                Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"  
+                UpdateSourceTrigger=PropertyChanged}"  
                 Width="200" Grid.Column="1" Grid.Row="2" />
 
             <!-- Lot Number -->
@@ -198,7 +198,7 @@
                 <DataGridTemplateColumn Header="Condition" Width="60">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <ComboBox Margin="2" ItemsSource="{Binding productCondition, Mode=TwoWay}" SelectedValuePath="productCondition"/>
+                            <ComboBox ItemsSource="{Binding productCondition}" SelectedItem="{Binding selectedCondition, UpdateSourceTrigger=PropertyChanged}"/>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
