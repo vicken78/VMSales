@@ -44,19 +44,9 @@ namespace VMSales.ViewModels
 
         #region Selected
 
-        private string _selectedcondition;
-        public string selectedCondition
-        {
-            get { return _selectedcondition; }
-            set
-            {
-                _selectedcondition = value;
-                RaisePropertyChanged("selectedCondition");
-                MessageBox.Show(selectedCondition);
-                //LoadProduct(selectedCategoryName);
-            }
-        }
 
+       
+ 
 
 
         private string _selectedcategoryname;
@@ -67,7 +57,7 @@ namespace VMSales.ViewModels
             {
                 _selectedcategoryname = value;
                 RaisePropertyChanged("selectedCategoryName");
-                //MessageBox.Show(selectedCategoryName);
+                MessageBox.Show(selectedCategoryName);
                 //LoadProduct(selectedCategoryName);
             }
         }
@@ -86,11 +76,6 @@ namespace VMSales.ViewModels
 
             }
         }
-
-
-
-
-
 
         #endregion
         #region FilterMethods
@@ -233,17 +218,37 @@ namespace VMSales.ViewModels
         #region -ButtonCommands
         public void SaveCommand()
         {
+
+
             productListUpdate = changetracker.RowsUpdated;
+            var kvp = new List<Tuple<string, string>>();
+
+            // selected condition is not working.
+
             foreach (ProductModel PO in productListUpdate)
             {
-
-                MessageBox.Show(PO.selectedCondition.ToString());
-
-
+                if (PO.selectedCondition.ToString() != null || PO.productName.ToString() != null || PO.productSKU.ToString() != null)
+                {
+                    kvp.Add(new Tuple<string, string>("bname", PO.productBrandName.ToString()));
+                    kvp.Add(new Tuple<string, string>("pname", PO.productName.ToString()));
+                    kvp.Add(new Tuple<string, string>("description", PO.productDescription.ToString()));
+                    kvp.Add(new Tuple<string, string>("quantity", PO.productQuantity.ToString()));
+                    kvp.Add(new Tuple<string, string>("cost", PO.productCost.ToString()));
+                    kvp.Add(new Tuple<string, string>("sku", PO.productSKU.ToString()));
+                    kvp.Add(new Tuple<string, string>("soldprice", PO.productSoldPrice.ToString()));
+                    kvp.Add(new Tuple<string, string>("instock", PO.productStock.ToString()));
+                    kvp.Add(new Tuple<string, string>("condition", PO.selectedCondition.ToString()));
+                    kvp.Add(new Tuple<string, string>("listingurl", PO.productListingURL.ToString()));
+                    kvp.Add(new Tuple<string, string>("listingnum", PO.productListingNumber.ToString()));
+                    kvp.Add(new Tuple<string, string>("listingdate", PO.productListingDate.ToString()));
+                    DataBaseOps.update("product", kvp, "", "");
+                }
+     
                 MessageBox.Show(PO.productName.ToString());
                 MessageBox.Show(PO.productDescription.ToString());
                 MessageBox.Show(PO.productSKU.ToString());
                 MessageBox.Show(PO.productBrandName.ToString());
+                MessageBox.Show(PO.selectedCondition.ToString());
                 MessageBox.Show(PO.productQuantity.ToString());
                 MessageBox.Show(PO.productCost.ToString());
                 MessageBox.Show(PO.productSoldPrice.ToString());
@@ -251,6 +256,7 @@ namespace VMSales.ViewModels
                 MessageBox.Show(PO.productListingNumber.ToString());
                 MessageBox.Show(PO.productListingURL.ToString());
                 MessageBox.Show(PO.productListingDate.ToString());
+            
             }
 
         }
@@ -272,16 +278,16 @@ namespace VMSales.ViewModels
                 productCondition = new List<String> { "New", "Used" },
                 categoryName = GetPurchaseOrders("category", "cname"),
                 productBrandName = "",
-                productName = "",
-                productDescription = "",
+                productName = "Name",
+                productDescription = "Description",
                 productQuantity = "0",
                 productCost = 0,
-                productSKU = "",
+                productSKU = "0",
                 productSoldPrice = 0,
                 productStock = 1,
                 productListingURL = "",
                 productListingNumber = "",
-                productListingDate = DateTime.Now,
+                productListingDate = DateTime.MinValue,
             };
             ocProductView.Add(obj);
         
@@ -316,19 +322,19 @@ namespace VMSales.ViewModels
                     var obj = new ProductModel()
                     {
                         productCondition = new List<String> { "New", "Used" },
-                        selectedCondition = "",
+                        selectedCondition = "New",
                         categoryName = GetPurchaseOrders("category", "cname"),
                         productBrandName = "",
-                        productName = "",
-                        productDescription = "",
+                        productName = "Name",
+                        productDescription = "Description",
                         productQuantity = "0",
                         productCost = 0,
-                        productSKU = "",
+                        productSKU = "0",
                         productSoldPrice = 0,
                         productStock = 1,
                         productListingURL = "",
                         productListingNumber = "",
-                        productListingDate = DateTime.Now,
+                        productListingDate = DateTime.MinValue,
                     };
                     ocProductView.Add(obj);
             }

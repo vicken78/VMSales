@@ -7,7 +7,7 @@ namespace VMSales.Logic
 {
     public class DataValidator : IValueConverter
     {
-        private DateTime? dateCreated = null;
+     //   private DateTime? dateCreated = null;
 
 
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)

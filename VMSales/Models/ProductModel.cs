@@ -93,7 +93,24 @@ namespace VMSales.Models
         public List<string> lotName { get; set; }
 
         // Selected
-        public string selectedCondition { get; set; }
+        //public string selectedCondition { get; set; }
+        private string _selectedcondition;
+        public string selectedCondition
+        {
+            get { return _selectedcondition; }
+            set
+            {
+                _selectedcondition = value;
+                RaisePropertyChanged("selectedCondition");
+            
+          
+                //LoadProduct(selectedCategoryName);
+            }
+        }
+
+
+
+
         public string productListingURL 
         {
             get { return _productlistingurl; }

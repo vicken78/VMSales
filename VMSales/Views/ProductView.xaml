@@ -187,7 +187,7 @@
                     </DataGridTextColumn.ElementStyle>
                 </DataGridTextColumn>
                 <!-- Brand Name-->
-                <DataGridTextColumn Header="Brand Name" Width="100" Binding="{Binding productBrandName, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}">
+                <DataGridTextColumn Header="Brand Name" Width="90" Binding="{Binding productBrandName, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}">
                     <DataGridTextColumn.ElementStyle>
                         <Style TargetType="TextBlock">
                             <Setter Property="TextWrapping" Value="Wrap"/>
@@ -195,10 +195,10 @@
                     </DataGridTextColumn.ElementStyle>
                 </DataGridTextColumn>
                 <!-- Condition -->
-                <DataGridTemplateColumn Header="Condition" Width="60">
+                <DataGridTemplateColumn Header="Condition" Width="70">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <ComboBox ItemsSource="{Binding productCondition}" SelectedItem="{Binding selectedCondition, UpdateSourceTrigger=PropertyChanged}"/>
+                            <ComboBox ItemsSource="{Binding productCondition}" SelectedValue="{Binding selectedCondition, UpdateSourceTrigger=PropertyChanged}"/>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
