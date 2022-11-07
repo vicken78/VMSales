@@ -158,7 +158,7 @@
                 <DataGridTemplateColumn Header="Category" Width="100">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <ComboBox Margin="2" ItemsSource="{Binding categoryName}" SelectedValuePath="categoryName"/>
+                            <ComboBox Margin="2" ItemsSource="{Binding categoryName}" SelectedValue="{Binding selectedCategory, UpdateSourceTrigger=PropertyChanged}"/>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>

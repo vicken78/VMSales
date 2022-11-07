@@ -44,24 +44,6 @@ namespace VMSales.ViewModels
 
         #region Selected
 
-
-       
- 
-
-
-        private string _selectedcategoryname;
-        public string selectedCategoryName
-        {
-            get { return _selectedcategoryname; }
-            set
-            {
-                _selectedcategoryname = value;
-                RaisePropertyChanged("selectedCategoryName");
-                MessageBox.Show(selectedCategoryName);
-                //LoadProduct(selectedCategoryName);
-            }
-        }
-
         private string _selectedsuppliername;
         public string selectedSupplierName
         {
@@ -70,7 +52,7 @@ namespace VMSales.ViewModels
             {
                 _selectedsuppliername = value;
                 RaisePropertyChanged("selectedSupplierName");
-                MessageBox.Show(selectedSupplierName);
+                //MessageBox.Show(selectedSupplierName);
                 
                 // here is where we get lot and filter it.  
 
@@ -223,12 +205,11 @@ namespace VMSales.ViewModels
             productListUpdate = changetracker.RowsUpdated;
             var kvp = new List<Tuple<string, string>>();
 
-            // selected condition is not working.
-
             foreach (ProductModel PO in productListUpdate)
             {
-                if (PO.selectedCondition.ToString() != null || PO.productName.ToString() != null || PO.productSKU.ToString() != null)
+                if (PO.selectedCategory.ToString() != null || PO.selectedCondition.ToString() != null || PO.productName.ToString() != null || PO.productSKU.ToString() != null)
                 {
+                    kvp.Add(new Tuple<string, string>("cname", PO.selectedCategory.ToString()));
                     kvp.Add(new Tuple<string, string>("bname", PO.productBrandName.ToString()));
                     kvp.Add(new Tuple<string, string>("pname", PO.productName.ToString()));
                     kvp.Add(new Tuple<string, string>("description", PO.productDescription.ToString()));
@@ -243,7 +224,8 @@ namespace VMSales.ViewModels
                     kvp.Add(new Tuple<string, string>("listingdate", PO.productListingDate.ToString()));
                     DataBaseOps.update("product", kvp, "", "");
                 }
-     
+
+                MessageBox.Show(PO.selectedCategory.ToString());
                 MessageBox.Show(PO.productName.ToString());
                 MessageBox.Show(PO.productDescription.ToString());
                 MessageBox.Show(PO.productSKU.ToString());
@@ -323,6 +305,7 @@ namespace VMSales.ViewModels
                     {
                         productCondition = new List<String> { "New", "Used" },
                         selectedCondition = "New",
+                        selectedCategory = "",
                         categoryName = GetPurchaseOrders("category", "cname"),
                         productBrandName = "",
                         productName = "Name",
@@ -342,6 +325,8 @@ namespace VMSales.ViewModels
 
             foreach (DataRow row in productDataTable.Rows)
             {
+
+                 // need to get category too
                 var obj = new ProductModel()
                 {
                     product_PK = (string)row["product_pk"].ToString(),

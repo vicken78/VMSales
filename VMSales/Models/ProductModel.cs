@@ -93,7 +93,6 @@ namespace VMSales.Models
         public List<string> lotName { get; set; }
 
         // Selected
-        //public string selectedCondition { get; set; }
         private string _selectedcondition;
         public string selectedCondition
         {
@@ -102,14 +101,20 @@ namespace VMSales.Models
             {
                 _selectedcondition = value;
                 RaisePropertyChanged("selectedCondition");
-            
-          
-                //LoadProduct(selectedCategoryName);
             }
         }
 
-
-
+        private string _selectedcategory;
+        public string selectedCategory
+        {
+            get { return _selectedcategory; }
+            set
+            {
+                _selectedcategory = value;
+                RaisePropertyChanged("selectedCategory");
+            }
+        }
+        // End selected
 
         public string productListingURL 
         {
