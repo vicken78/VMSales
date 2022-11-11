@@ -10,6 +10,7 @@ using System.ComponentModel;
 using VMSales.ChangeTrack;
 using System.Windows;
 
+
 namespace VMSales.ViewModels 
 {
     public class ProductViewModel : BaseViewModel
@@ -52,7 +53,7 @@ namespace VMSales.ViewModels
             {
                 _selectedsuppliername = value;
                 RaisePropertyChanged("selectedSupplierName");
-                //MessageBox.Show(selectedSupplierName);
+                MessageBox.Show(selectedSupplierName);
                 
                 // here is where we get lot and filter it.  
 
@@ -254,7 +255,6 @@ namespace VMSales.ViewModels
 
         public void addRowCommand()
         {
-            MessageBox.Show("Press");
             var obj = new ProductModel()
             {
                 productCondition = new List<String> { "New", "Used" },

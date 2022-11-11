@@ -2,12 +2,11 @@
 using VMSales.Models;
 using System;
 using System.Data;
-using System.Windows.Controls;
-using System.Windows;
 using System.Collections.ObjectModel;
 using System.Collections.Generic;
 using VMSales.ChangeTrack;
 using VMSales.Database;
+using System.Windows.Forms;
 
 namespace VMSales.ViewModels
 {

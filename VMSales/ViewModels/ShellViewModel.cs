@@ -27,5 +27,12 @@ namespace VMSales.ViewModels
         {
             ActivateItemAsync(new SupplierViewModel());
         }
+
+        public void LoadCustomerOrder()
+        {
+            ActivateItemAsync(new TestDatabaseOps());
+        }
+
+
     }
 }
