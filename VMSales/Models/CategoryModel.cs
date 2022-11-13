@@ -1,6 +1,11 @@
 ﻿using VMSales.ViewModels;
-namespace VMSales.Models
+using System.ComponentModel.DataAnnotations;
+using System.Collections.Generic;
+using Dapper.Contrib.Extensions;
+
+    namespace VMSales.Models
 {
+    [Table("category")]
     public class CategoryModel : BaseViewModel 
     {
         public int categorynameLength = 255;
@@ -8,6 +13,9 @@ namespace VMSales.Models
         private string _categoryname;
         private string _description;
         private string _category_pk;
+
+        public ICollection<ProductModel> Products { get; set; }
+
         public string categoryName
         {
             get { return _categoryname; }
@@ -29,6 +37,10 @@ namespace VMSales.Models
             }
         }
         public System.DateTime CreationDate { get; set; }
+
+        public List<ProductModel> ProductModel { get; set; } = new List<ProductModel>();
+
+        [ExplicitKey]
         public string Category_pk
         {
             get { return _category_pk; }

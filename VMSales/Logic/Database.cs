@@ -46,34 +46,66 @@ namespace VMSales.Logic
 
         // Select Relationship
 
-// Photos photo -> product Photo -> product
+        // Photos photo -> product Photo -> product
 
-//   category -> product category-> product
 
-//purchase order -> supplier
+        //purchase order -> supplier
 
-//purchase order -> purchase_order detail
+        //purchase order -> purchase_order detail
 
-//purchase_order_detail -> product_purcahse_order -> product
+        //purchase_order_detail -> product_purcahse_order -> product
 
-// customer -> customer_order -> customer order detail
+        // customer -> customer_order -> customer order detail
 
-// customer order detail -> product
+        // customer order detail -> product
 
-        public static async Task<List<T>> getRelationship<T>(Dictionary<string,string>, string table)
+        // Relationship: category -> product_category -> product
+     /*   public static async Task<Dictionary<int, string>> getCategoryProductRelationship(string where)
         {
+            using (var connection = new SQLiteConnection(getConnectionString()))
+            {
+                var sql = @"select productid, productname, p.categoryid, categoryname 
+                from products p 
+                inner join categories c on p.categoryid = c.categoryid";
+                var products = await connection.QueryAsync<ProductModel, CategoryModel, ProductModel>(sql, (product, category) => {
+                    product.Category = category;
+                    return product;
+                },
+                splitOn: "CategoryId");
+                products.ToList();        
+            }
+            return null;
+        }
+     */
+
+
+
+
+
+            /*
             using (IDbConnection db = GetConnection())
             {
+                var categoryRelatonship = new Dictionary<int, string>();
+
+                db.Query<>;
+
                 var sql = "";
-                string primaryKe = null;
-                var selectRelationship = await db.QueryAsync<T>(sql,())
-                return selectRelationship;
+                var list = db.QueryASYNC<CategoryModel, ProductModel, CategoryModel>(@"SELECT c.*, p.* FROM Category c INNER JOIN Product p ON c.category_PK = p. WHERE f.Id = 1"),(c, p) =>
+                    {
+                    CategoryModel categoryEntry;
+                    if (!categoryRelatonship.TryGetValue(c.Id, out categoryEntry))
+                    {
+                        categoryEntry = c;
+                        categoryEntry.products = new List<products>;
+                        categoryRelationship.Add(categoryEntry.Id, categoryEntry);
+                    }
+                    categoryEntry.products.Add(p);
+                    return CategoryEntry;
+                }).Distinct().ToList();
             }
         }
 
-
-
-
+            */
 
 
         // Insert

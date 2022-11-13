@@ -1,11 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using VMSales.ViewModels;
+using Dapper.Contrib.Extensions;
+
 namespace VMSales.Models
 {
-
-    public class PurchaseOrderModel : BaseViewModel
+    
+[Table("purchase_order")]
+public class PurchaseOrderModel : BaseViewModel
     {
         public int invoiceNumberLength = 255;
         public int lotNumberLength = 10;
@@ -24,6 +25,7 @@ namespace VMSales.Models
         private decimal _shippingcost { get; set; }
 
         // purchase order detail
+        [ExplicitKey]
         public string Porder_pk
         {
             get { return _porder_pk; }

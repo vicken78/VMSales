@@ -1,12 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Dapper.Contrib.Extensions;
 
 namespace VMSales.Models
 {
+    [Table("customer")]
     class CustomerModel
     {
+        [ExplicitKey]
+        public string customer_pk { get; set; }
     }
 }

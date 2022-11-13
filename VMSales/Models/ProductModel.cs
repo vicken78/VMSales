@@ -1,13 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Windows;
 using VMSales.ViewModels;
+using Dapper.Contrib.Extensions;
+
 
 namespace VMSales.Models
 {
+    [Table("product")]
     public class ProductModel : BaseViewModel
     {
+        public CategoryModel CategoryModel { get; set; }
         private List<string> _productcondition { get; set; }
         private string _product_pk { get; set; }
         private string _productname { get; set; }
@@ -22,6 +24,8 @@ namespace VMSales.Models
         private DateTime _productlistingdate { get; set; }
         private string _productbrandname { get; set; }
 
+
+        [ExplicitKey]
         public string product_PK { get; set; }
         public string productName
         {

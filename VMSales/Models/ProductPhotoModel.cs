@@ -1,12 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Dapper.Contrib.Extensions;
 
 namespace VMSales.Models
 {
+        [Table("product_photo")]
     class ProductPhotoModel
     {
+            [ExplicitKey]
+            public string pphoto_pk { get; set; }
     }
 }

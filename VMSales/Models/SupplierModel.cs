@@ -1,8 +1,9 @@
-﻿using System.Collections.ObjectModel;
+﻿using Dapper.Contrib.Extensions;
 using VMSales.ViewModels;
 
 namespace VMSales.Models
 {
+    [Table("supplier")]
     public class SupplierModel : BaseViewModel 
     {
         public int SnameLength = 255;
@@ -107,6 +108,7 @@ namespace VMSales.Models
                 RaisePropertyChanged("Email");
             }
         }
+        [ExplicitKey]
         public string Supplier_pk
         {
             get { return _supplier_pk; }
