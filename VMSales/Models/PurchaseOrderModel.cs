@@ -1,6 +1,7 @@
 ﻿using System;
 using VMSales.ViewModels;
 using Dapper.Contrib.Extensions;
+using System.Collections.Generic;
 
 namespace VMSales.Models
 {
@@ -12,141 +13,24 @@ public class PurchaseOrderModel : BaseViewModel
         public int lotNumberLength = 10;
         public int lotNameLength = 255;
         public int lotDescriptionLength = 255;
-        // purchase_order_detail table
+        public List<PurchaseOrderDetailModel> OrderDetails { get; set; }
 
-        private string _porder_pk { get; set; }
-        private string _purchaseorder_fk { get; set; }
-        private decimal _lotcost { get; set; }
-        private int _lotqty { get; set; }
-        private string _lotname { get; set; }
-        private string _lotnumber { get; set; }
-        private string _lotdescription { get; set; }
-        private decimal _salestax { get; set; }
-        private decimal _shippingcost { get; set; }
-
-        // purchase order detail
-        [ExplicitKey]
-        public string Porder_pk
-        {
-            get { return _porder_pk; }
-            set
-            {
-                if (_porder_pk == value) return;
-                _porder_pk = value;
-                RaisePropertyChanged("Porder_pk");
-            }
-        }
-        public string Purchaseorder_fk
-        {
-            get { return _purchaseorder_fk; }
-            set
-            {
-                if (_purchaseorder_fk == value) return;
-                _purchaseorder_fk = value;
-                RaisePropertyChanged("Purchaseorder_fk");
-            }
-        }
-        public string Lotnumber
-        {
-            get { return _lotnumber; }
-            set
-            {
-                if (_lotnumber == value) return;
-                _lotnumber = value;
-                RaisePropertyChanged("Lotnumber");
-            }
-        }
-        public decimal Lotcost
-        {
-            get { return _lotcost; }
-            set
-            {
-                if (_lotcost == value) return;
-                _lotcost = value;
-                RaisePropertyChanged("Lotcost");
-            }
-        }
-        public int Lotqty
-        {
-            get { return _lotqty; }
-            set
-            {
-                if (_lotqty == value) return;
-                _lotqty = value;
-                RaisePropertyChanged("Lotqty");
-            }
-        }
-
-        public string Lotname
-        {
-            get { return _lotname; }
-            set
-            {
-                if (_lotname == value) return;
-                _lotname = value;
-                RaisePropertyChanged("Lotname");
-            }
-        }
-
-        public string Lotdescription
-        {
-            get { return _lotdescription; }
-            set
-            {
-                if (_lotdescription == value) return;
-                _lotdescription = value;
-                RaisePropertyChanged("Lotdescription");
-            }
-        }
-        public decimal Salestax
-        {
-            get { return _salestax; }
-            set
-            {
-                if (_salestax == value) return;
-                _salestax = value;
-                RaisePropertyChanged("Salestax");
-            }
-        }
-        public decimal Shippingcost
-        {
-            get { return _shippingcost; }
-            set
-            {
-                if (_shippingcost == value) return;
-                _shippingcost = value;
-                RaisePropertyChanged("Shippingcost");
-            }
-        }
-
-        // purchase order
-        private string _invoicenumber { get; set; }
-        private DateTime _purchasedate { get; set; }
-
-        private string _purchaseorder_pk { get; set; }
+        private string _purchase_order_pk { get; set; }
         private string _supplier_fk { get; set; }
-        public string Invoicenumber
+        private string _invoice_number { get; set; }
+        private DateTime _purchase_date { get; set; }
+        [ExplicitKey]
+        public string purchase_order_pk
         {
-            get { return _invoicenumber; }
+            get { return _purchase_order_pk; }
             set
             {
-                if (_invoicenumber == value) return;
-                _invoicenumber = value;
-                RaisePropertyChanged("Invoicenumber");
+                if (_purchase_order_pk == value) return;
+                _purchase_order_pk = value;
+                RaisePropertyChanged("purchase_order_pk");
             }
         }
-        public DateTime Purchasedate
-        {
-            get { return _purchasedate; }
-            set
-            {
-                if (_purchasedate == value) return;
-                _purchasedate = value;
-                RaisePropertyChanged("Purchasedate");
-            }
-        }
-
-        public string Supplier_fk
+        public string supplier_fk
         {
             get { return _supplier_fk; }
             set
@@ -156,6 +40,26 @@ public class PurchaseOrderModel : BaseViewModel
             }
         }
 
+        public string invoice_number
+        {
+            get { return _invoice_number; }
+            set
+            {
+                if (_invoice_number == value) return;
+                _invoice_number = value;
+                RaisePropertyChanged("invoice_number");
+            }
+        }
+        public DateTime purchase_date
+        {
+            get { return _purchase_date; }
+            set
+            {
+                if (_purchase_date == value) return;
+                _purchase_date = value;
+                RaisePropertyChanged("Purchase_date");
+            }
+        }
         //totals
         public decimal Totallotcost { get; set; }
         public decimal Totalsalestax { get; set; }

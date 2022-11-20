@@ -14,11 +14,28 @@ using System.Configuration;
 using System.Windows;
 using VMSales.Logic;
 using System.Windows.Forms;
+using Dapper;
+using Dapper.Contrib.Extensions;
+
 
 namespace VMSales.Database
 {
     public static class DataBaseOps
     {
+
+
+
+ 
+//select * from purchase_order, supplier
+//inner join purchase_order_detail
+//on purchase_order.purchaseorder_pk = purchase_order_detail.purchaseorder_fk
+//where supplier.supplier_pk= '1';
+// parameter the where.
+
+
+
+
+
         private static List<Tuple<string, string>> dataBaseParams = new List<Tuple<string, string>>();
        
         private static string getConnectionString()
@@ -162,7 +179,19 @@ namespace VMSales.Database
             return sqlqueryparams;
          }
 
-   
+        public static string UpdateQueryBuilder(List<string> fields)
+        {
+            StringBuilder updateQueryBuilder = new StringBuilder();
+
+            foreach (string columnName in fields)
+            {
+                updateQueryBuilder.AppendFormat("{0}=@{0}, ", columnName);
+            }
+            return updateQueryBuilder.ToString().TrimEnd(',', ' ');
+        }
+
+
+
         // Update
         public static int update(string tableNames, List<Tuple<string, string>> columnValuePair, string whereParam, string whereValue) 
         //Tuple 1

@@ -58,7 +58,7 @@ namespace VMSales.ViewModels
             {
                 case FilterField.InvoiceNumber:
                     AddInvoiceNumberFilter();
-                    PurchaseOrderView.Filter = new Predicate<object>(x => ((PurchaseOrderModel)x).Invoicenumber.ToString() == _selectedinvoicenumber);
+                    PurchaseOrderView.Filter = new Predicate<object>(x => ((PurchaseOrderModel)x).invoicenum.ToString() == _selectedinvoicenumber);
                     RaisePropertyChanged("PurchaseOrderView");
                     break;
                 case FilterField.PurchaseDate:
@@ -221,7 +221,7 @@ namespace VMSales.ViewModels
                 POListUpdate = changetracker.RowsUpdated;
                 foreach (PurchaseOrderModel PO in POListUpdate)
                 {
-                    MessageBox.Show(PO.Invoicenumber.ToString());
+                 /*   MessageBox.Show(PO.invoicenum.ToString());
                     MessageBox.Show(PO.Purchasedate.ToString());
                     MessageBox.Show(PO.Lotnumber.ToString()); 
                     MessageBox.Show(PO.Lotqty.ToString());
@@ -230,6 +230,7 @@ namespace VMSales.ViewModels
                     MessageBox.Show(PO.Lotcost.ToString());
                     MessageBox.Show(PO.Salestax.ToString());
                     MessageBox.Show(PO.Shippingcost.ToString());
+                 */
                 }
             //}
         }
@@ -331,7 +332,7 @@ namespace VMSales.ViewModels
             var src = e.Item as PurchaseOrderModel;
             if (src == null)
                 e.Accepted = false;
-            else if (string.Compare(SelectedInvoiceNumber, src.Invoicenumber.ToString()) != 0)
+            else if (string.Compare(SelectedInvoiceNumber, src.invoicenum.ToString()) != 0)
                 e.Accepted = false;
         }
         private void FilterByPurchaseDate(object sender, FilterEventArgs e)
@@ -379,19 +380,19 @@ namespace VMSales.ViewModels
                     {
                         var obj = new PurchaseOrderModel()
                         {
-                            Lotnumber = (string)row["lotnum"],
-                            Lotname = (string)row["Lotname"],
-                            Lotdescription = (string)row["Lotdescription"],
-                            Lotqty = (int)row["Lotqty"],
-                            Lotcost = (decimal)row["Lotcost"],
-                            Salestax = (decimal)row["Salestax"],
-                            Shippingcost = (decimal)row["Shippingcost"],
-                            Invoicenumber = (string)row["Invoicenum"],
+                   //         Lotnumber = (string)row["lotnum"],
+                   //         Lotname = (string)row["Lotname"],
+                   //         Lotdescription = (string)row["Lotdescription"],
+                   //         Lotqty = (int)row["Lotqty"],
+                   //         Lotcost = (decimal)row["Lotcost"],
+                   //         Salestax = (decimal)row["Salestax"],
+                   //         Shippingcost = (decimal)row["Shippingcost"],
+                            invoicenum = (string)row["Invoicenum"],
                             Purchasedate = (DateTime)row["Purchasedate"],
                         };
-                        Totallotcost = Totallotcost + obj.Lotcost;
-                        Totalsalestax = Totalsalestax + obj.Salestax;
-                        Totalshippingcost = Totalshippingcost + obj.Shippingcost;
+                   //     Totallotcost = Totallotcost + obj.Lotcost;
+                   //     Totalsalestax = Totalsalestax + obj.Salestax;
+                   //     Totalshippingcost = Totalshippingcost + obj.Shippingcost;
                         Totalcost = Totallotcost + Totalsalestax + Totalshippingcost;
                         RaisePropertyChanged("Totallotcost");
                         RaisePropertyChanged("Totalsalestax");

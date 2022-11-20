@@ -3,10 +3,8 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:VMSales.ViewModels"
-             
+             xmlns:local="clr-namespace:VMSales.ViewModels"         
              xmlns:cal="http://www.caliburnproject.org"
- 
              mc:Ignorable="d" 
              Height="800" Width="1400" VerticalAlignment="Top" MinHeight="400" MinWidth="800">
     <UserControl.DataContext>
@@ -18,8 +16,6 @@
             <Setter Property="HorizontalContentAlignment" Value="Center"/>
         </Style>
     </UserControl.Resources>
-    
-    
     
     <DockPanel LastChildFill="True">
         <Grid Margin="10" DockPanel.Dock="Top" Background="Azure">

@@ -139,7 +139,7 @@
     </ApplicationDefinition>
     <Compile Include="Logic\ChangeTracker.cs" />
     <Compile Include="Bootstrapper.cs" />
-    <Compile Include="Logic\Database.cs" />
+    <Compile Include="Logic\DataBaseLayer.cs" />
     <Compile Include="Logic\DataConversion.cs" />
     <Compile Include="Logic\DataBaseOps.cs" />
     <Compile Include="Logic\DataValidator.cs" />
@@ -148,6 +148,7 @@
     <Compile Include="Models\CustomerOrderModel.cs" />
     <Compile Include="Models\ProductModel.cs" />
     <Compile Include="Models\ProductPhotoModel.cs" />
+    <Compile Include="Models\PurchaseOrderDetailModel.cs" />
     <Compile Include="ViewModels\BaseViewModel.cs" />
     <Compile Include="ViewModels\CategoryViewModel.cs" />
     <Compile Include="Models\PurchaseOrderModel.cs" />

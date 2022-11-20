@@ -1,5 +1,5 @@
 ﻿using VMSales.ViewModels;
-using System.ComponentModel.DataAnnotations;
+using System;
 using System.Collections.Generic;
 using Dapper.Contrib.Extensions;
 
@@ -10,47 +10,53 @@ using Dapper.Contrib.Extensions;
     {
         public int categorynameLength = 255;
         public int DescriptionLength = 255;
-        private string _categoryname;
-        private string _description;
+
         private string _category_pk;
-
-        public ICollection<ProductModel> Products { get; set; }
-
-        public string categoryName
-        {
-            get { return _categoryname; }
-            set
-            {
-                if (_categoryname == value) return;
-                _categoryname = value;
-                RaisePropertyChanged("categoryName");
-            }
-        }
-        public string Description
-        {
-            get { return _description; }
-            set
-            {
-                if (_description == value) return;
-                _description = value;
-                RaisePropertyChanged("Description");
-            }
-        }
-        public System.DateTime CreationDate { get; set; }
-
-        public List<ProductModel> ProductModel { get; set; } = new List<ProductModel>();
-
+        private string _category_name;
+        private string _description;
+        private DateTime _creation_date;
+    
         [ExplicitKey]
-        public string Category_pk
+        public string category_pk
         {
             get { return _category_pk; }
             set
             {
                 if (_category_pk == value) return;
                 _category_pk = value;
-                RaisePropertyChanged("Category_pk");
+                RaisePropertyChanged("category_pk");
+            }
+        }
+        public string category_name
+        {
+            get { return _category_name; }
+            set
+            {
+                if (_category_name == value) return;
+                _category_name = value;
+                RaisePropertyChanged("category_name");
+            }
+        }
+        public string description
+        {
+            get { return _description; }
+            set
+            {
+                if (_description == value) return;
+                _description = value;
+                RaisePropertyChanged("description");
             }
         }
 
+        public System.DateTime creation_date
+        {
+            get { return _creation_date; }
+            set
+            {
+                if (_creation_date == value) return;
+                _creation_date = value;
+                RaisePropertyChanged("creation_date");
+            }
+        }
     }
 }

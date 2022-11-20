@@ -6,6 +6,6 @@ namespace VMSales.Models
     class CustomerOrderModel
     {
         [ExplicitKey]
-        public string corder_pk { get; set; }
+        public string customer_order_pk { get; set; }
     }
 }

@@ -4,7 +4,6 @@ using System.Data;
 using System.Windows.Data;
 using VMSales.Database;
 using VMSales.Models;
-using System.Linq;
 using System.Collections.Generic;
 using System.ComponentModel;
 using VMSales.ChangeTrack;
@@ -22,11 +21,15 @@ namespace VMSales.ViewModels
         List<ProductModel> productListDelete = new List<ProductModel>();
         #endregion
 
-        #region CollectionModels
+        // dropdown variables
+
+        public List<PurchaseOrderModel> PurchaseOrder { get; set; }
         public List<string> supplierName { get; set; } = new List<string>();
+        public List<string> lotNum { get; set; } = new List<string>();
         public List<string> supplierNameFilter { get; set; } = new List<string>();
         public List<string> categoryNameFilter { get; set; } = new List<string>();
 
+        #region CollectionModels
 
 
         private ObservableCollection<ProductModel> ocproductview;
@@ -54,11 +57,23 @@ namespace VMSales.ViewModels
                 _selectedsuppliername = value;
                 RaisePropertyChanged("selectedSupplierName");
                 MessageBox.Show(selectedSupplierName);
-                
-                // here is where we get lot and filter it.  
 
-            }
-        }
+                // get FK
+                //selectedSupplierName
+
+
+           /*     List<PurchaseOrderModel> PurchaseOrder; 
+                {
+
+
+                };
+           */
+
+
+        // here is where we get lot and filter it.  
+
+    }
+}
 
         #endregion
         #region FilterMethods
@@ -269,7 +284,7 @@ namespace VMSales.ViewModels
                 productStock = 1,
                 productListingURL = "",
                 productListingNumber = "",
-                productListingDate = DateTime.MinValue,
+                productListingDate = DateTime.Now,
             };
             ocProductView.Add(obj);
         
@@ -317,7 +332,7 @@ namespace VMSales.ViewModels
                         productStock = 1,
                         productListingURL = "",
                         productListingNumber = "",
-                        productListingDate = DateTime.MinValue,
+                        productListingDate = DateTime.Now,
                     };
                     ocProductView.Add(obj);
             }

@@ -9,7 +9,6 @@ namespace VMSales.Models
     [Table("product")]
     public class ProductModel : BaseViewModel
     {
-        public CategoryModel CategoryModel { get; set; }
         private List<string> _productcondition { get; set; }
         private string _product_pk { get; set; }
         private string _productname { get; set; }
