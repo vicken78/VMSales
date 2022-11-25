@@ -13,9 +13,6 @@ namespace VMSales.ViewModels
     {
 
 
-        //IDatabaseProvider = SQLite.DataBaseProvider.ObtainConnection();
-
-
         public ObservableCollection<CategoryModel> ObservableCollectionCategoryModel;
 
         public CategoryViewModel()
@@ -25,40 +22,9 @@ namespace VMSales.ViewModels
             dataBaseProvider = BaseViewModel.getprovider();
 
             CategoryRepository CategoryRepo = new CategoryRepository(dataBaseProvider);
-            var CategoryData = CategoryRepo.GetAll();
-
-            // need to convert to observablecollection
-           // ObservableCollectionCategoryModel = CategoryData;
-
- //           CR.ToObservable().SelectMany(x => x);
+            ObservableCollectionCategoryModel = CategoryRepo.GetAll().Result.ToObservable();
 
         }
-
-         
- 
-           
-
-
-        //   public Repository(IDatabaseProvider dbProvider)
-        //  {
-        //     Connection = dbProvider.ObtainConnection();
-        //     Connection.Open();
-        //     Transaction = Connection.BeginTransaction();
-        //}
-
-
-
-
-
-        //    ObtainConnection
-        // IECategoryModel = CategoryRepository.GetAll(); 
-
-        //        public override async Task<IEnumerable<CategoryModel>> GetAll()
-        //       {
-        //          return await Connection.QueryAsync<CategoryModel>("SELECT category_pk, category_name, description, creation_date FROM category", null, Transaction);
-        //      }
-
-
 
 
         /*       private ObservableCollection<CategoryModel> _ObservableCollectionCategoryModel;
