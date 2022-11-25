@@ -10,7 +10,7 @@ using System.Windows.Forms;
 
 namespace VMSales.ViewModels
 {
-    public class SupplierViewModel
+    public class SupplierViewModel : BaseViewModel
     {
         public DataGrid SupplierDataGrid;
         public ObservableCollection<SupplierModel> ObservableCollectionSupplierModel { get; private set; }
@@ -26,38 +26,38 @@ namespace VMSales.ViewModels
             SMListUpdate = changetracker.RowsUpdated;
             int rowcount = SMListUpdate.Count;
             var sqlvalues = new List<Tuple<string, string>>();
-            string sqlparams = "UPDATE supplier SET sname = @sname, address = @address, city = @city, state = @state, Zip = @zip, country = @country, phone = @phone,  email = @email WHERE supplier_pk = @supplier_pk;";
+            string sqlparams = "UPDATE supplier SET supplier_name = @supplier_name, address = @address, city = @city, state = @state, Zip = @zip, country = @country, phone = @phone,  email = @email WHERE supplier_pk = @supplier_pk;";
 
             var kvp = new List<Tuple<string, string>>();
 
             foreach (SupplierModel SM in SMListUpdate)
             {
                 // Email is allowed to be null.  if null, replace value
-                if (SM.Email == "")
+                if (SM.email == "")
                 {
-                    SM.Email = "null";
+                    SM.email = "null";
                 }
-                if ((SM.Sname ?? SM.Address ?? SM.City ?? SM.State ?? SM.Zip ?? SM.Country ?? SM.Phone ?? SM.Supplier_pk) == "")
+                if ((SM.supplier_name ?? SM.address ?? SM.city ?? SM.state ?? SM.zip ?? SM.country ?? SM.phone ?? SM.supplier_pk) == "")
                 {
                     MessageBox.Show("Name, Address, City, State, Zip, Country, and Phone must contain a value");
                     Validated = false;
                 }
-                if ((SM.Sname.Length > 255 || SM.Address.Length > 255 || SM.City.Length > 255 || SM.Zip.Length > 9 || SM.State.Length > 50 || SM.Country.Length > 50 || SM.Phone.Length > 25 || SM.Email.Length > 50))
+                if ((SM.supplier_name.Length > 255 || SM.address.Length > 255 || SM.city.Length > 255 || SM.zip.Length > 9 || SM.state.Length > 50 || SM.country.Length > 50 || SM.phone.Length > 25 || SM.email.Length > 50))
                 {
                     MessageBox.Show("Name, Address, City, State, Zip, Country, and Phone exceeds max values");
                     Validated = false;
                 }
                 if (Validated == true)
                 {
-                    kvp.Add(new Tuple<string, string>("Sname", SM.Sname));
-                    kvp.Add(new Tuple<string, string>("Address", SM.Address));
-                    kvp.Add(new Tuple<string, string>("City", SM.City));
-                    kvp.Add(new Tuple<string, string>("State", SM.State));
-                    kvp.Add(new Tuple<string, string>("Zip", SM.Zip));
-                    kvp.Add(new Tuple<string, string>("Country", SM.Country));
-                    kvp.Add(new Tuple<string, string>("Phone", SM.Phone));
-                    kvp.Add(new Tuple<string, string>("Email", SM.Email));
-                    kvp.Add(new Tuple<string, string>("Supplier_pk", SM.Supplier_pk));
+                    kvp.Add(new Tuple<string, string>("supplier_name", SM.supplier_name));
+                    kvp.Add(new Tuple<string, string>("address", SM.address));
+                    kvp.Add(new Tuple<string, string>("city", SM.city));
+                    kvp.Add(new Tuple<string, string>("state", SM.state));
+                    kvp.Add(new Tuple<string, string>("zip", SM.zip));
+                    kvp.Add(new Tuple<string, string>("country", SM.country));
+                    kvp.Add(new Tuple<string, string>("phone", SM.phone));
+                    kvp.Add(new Tuple<string, string>("email", SM.email));
+                    kvp.Add(new Tuple<string, string>("supplier_pk", SM.supplier_pk));
                     DataBaseOps.IUDTable(sqlparams, kvp, rowcount);
                     changetracker.Dispose();
                 }
@@ -73,7 +73,7 @@ namespace VMSales.ViewModels
                 SMListCreate = changetracker.RowsCreated;
                 int rowcount = SMListCreate.Count;
                 var kvp = new List<Tuple<string, string>>();
-                string sqlparams = "INSERT INTO supplier (sname, address, city, state, zip, country, phone, email) VALUES (@sname, @address, @city, @state, @zip, @country, @phone, @email);";
+                string sqlparams = "INSERT INTO supplier (supplier_name, address, city, state, zip, country, phone, email) VALUES (@supplier_name, @address, @city, @state, @zip, @country, @phone, @email);";
                 //check if any rows created
                 if (rowcount > 0)
                 {
@@ -81,30 +81,30 @@ namespace VMSales.ViewModels
                     {
              
                         // Email is allowed to be null.  if null, replace value
-                        if (SM.Email == null)
+                        if (SM.email == null)
                         {
-                            SM.Email = "null";
+                            SM.email = "null";
                         }
-                        if (SM.Address == null || SM.City == null || SM.Country== null || SM.Phone == null)
+                        if (SM.address == null || SM.city == null || SM.country== null || SM.phone == null)
                         {
                             MessageBox.Show("Name, Address, City, State, Zip, Country, and Phone must contain a value");
                             Validated = false;
                         }
-                        else if ((SM.Sname.Length > 255 || SM.Address.Length > 255 || SM.City.Length > 255 || SM.Zip.Length > 9 || SM.State.Length > 50 || SM.Country.Length > 50 || SM.Phone.Length > 25 || SM.Email.Length > 50))
+                        else if ((SM.supplier_name.Length > 255 || SM.address.Length > 255 || SM.city.Length > 255 || SM.zip.Length > 9 || SM.state.Length > 50 || SM.country.Length > 50 || SM.phone.Length > 25 || SM.email.Length > 50))
                         {
                             MessageBox.Show("Name, Address, City, State, Zip, Country, and Phone exceeds max values");
                             Validated = false;
                         }
                         if (Validated == true)
                         {
-                            kvp.Add(new Tuple<string, string>("Sname", SM.Sname));
-                            kvp.Add(new Tuple<string, string>("Address", SM.Address));
-                            kvp.Add(new Tuple<string, string>("City", SM.City));
-                            kvp.Add(new Tuple<string, string>("State", SM.State));
-                            kvp.Add(new Tuple<string, string>("Zip", SM.Zip));
-                            kvp.Add(new Tuple<string, string>("Country", SM.Country));
-                            kvp.Add(new Tuple<string, string>("Phone", SM.Phone));
-                            kvp.Add(new Tuple<string, string>("Email", SM.Email));
+                            kvp.Add(new Tuple<string, string>("supplier_name", SM.supplier_name));
+                            kvp.Add(new Tuple<string, string>("address", SM.address));
+                            kvp.Add(new Tuple<string, string>("city", SM.city));
+                            kvp.Add(new Tuple<string, string>("state", SM.state));
+                            kvp.Add(new Tuple<string, string>("zip", SM.zip));
+                            kvp.Add(new Tuple<string, string>("country", SM.country));
+                            kvp.Add(new Tuple<string, string>("phone", SM.phone));
+                            kvp.Add(new Tuple<string, string>("email", SM.email));
                             DataBaseOps.IUDTable(sqlparams, kvp, rowcount);
                             changetracker.Dispose();
                         }
@@ -134,12 +134,12 @@ namespace VMSales.ViewModels
                     foreach (SupplierModel SM in SMListDelete)
                     {
 
-                        if (SM.Supplier_pk == null || SM.Supplier_pk == "")
+                        if (SM.supplier_pk == null || SM.supplier_pk == "")
                         {
                             Validated = false;
                         }
                         if (Validated == true)
-                        kvp.Add(new Tuple<string, string>("Supplier_pk", SM.Supplier_pk));
+                        kvp.Add(new Tuple<string, string>("supplier_pk", SM.supplier_pk));
                         DataBaseOps.IUDTable(sqlparams, kvp, rowcount);
                         changetracker.Dispose();
                     }
@@ -165,15 +165,15 @@ namespace VMSales.ViewModels
             {
                 var obj = new SupplierModel()
                 {
-                    Supplier_pk = (string)row["supplier_pk"].ToString(),
-                    Sname = (string)row["sname"],
-                    Address = (string)row["address"],
-                    City = (string)row["city"],
-                    State = (string)row["state"],
-                    Country = (string)row["country"],
-                    Zip = (string)row["zip"],
-                    Phone = (string)row["phone"],
-                    Email = (string)row["email"]
+                    supplier_pk = (string)row["supplier_pk"].ToString(),
+                    supplier_name = (string)row["supplier_name"],
+                    address = (string)row["address"],
+                    city = (string)row["city"],
+                    state = (string)row["state"],
+                    country = (string)row["country"],
+                    zip = (string)row["zip"],
+                    phone = (string)row["phone"],
+                    email = (string)row["email"]
                 };
                 ObservableCollectionSupplierModel.Add(obj);
             }
@@ -193,15 +193,15 @@ namespace VMSales.ViewModels
             {
                 var obj = new SupplierModel()
                 {
-                    Supplier_pk = (string)row["supplier_pk"].ToString(),
-                    Sname = (string)row["sname"],
-                    Address = (string)row["address"],
-                    City = (string)row["city"],
-                    State = (string)row["state"],
-                    Country = (string)row["country"],
-                    Zip = (string)row["zip"],
-                    Phone = (string)row["phone"],
-                    Email = (string)row["email"]
+                    supplier_pk = (string)row["supplier_pk"].ToString(),
+                    supplier_name = (string)row["supplier_name"],
+                    address = (string)row["address"],
+                    city = (string)row["city"],
+                    state = (string)row["state"],
+                    country = (string)row["country"],
+                    zip = (string)row["zip"],
+                    phone = (string)row["phone"],
+                    email = (string)row["email"]
                 };
                 ObservableCollectionSupplierModel.Add(obj);
             }

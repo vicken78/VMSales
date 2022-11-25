@@ -1,21 +1,10 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Data;
 using System.Data.SQLite;
 using System.Collections.Generic;
-using Dapper;
-using VMSales.Models;
-using System.Linq;
-using System.Reflection;
 using System.Text;
-using System.Threading.Tasks;
-using System.Data.Common;
-using System.Configuration;
 using System.Windows;
 using VMSales.Logic;
-using System.Windows.Forms;
-using Dapper;
-using Dapper.Contrib.Extensions;
 
 
 namespace VMSales.Database
@@ -51,9 +40,9 @@ namespace VMSales.Database
                 {
                     case "category":
                         dataBaseParams.Add(new Tuple<string, string>("category_pk", "@category_pk"));
-                        dataBaseParams.Add(new Tuple<string, string>("cname", "@cname"));
+                        dataBaseParams.Add(new Tuple<string, string>("category_name", "@category_name"));
                         dataBaseParams.Add(new Tuple<string, string>("description", "@description"));
-                        dataBaseParams.Add(new Tuple<string, string>("creationdate", "@creationdate"));
+                        dataBaseParams.Add(new Tuple<string, string>("creation_date", "@creation_date"));
                         break;
                     case "customer":
                         dataBaseParams.Add(new Tuple<string, string>("customer_pk", "@customer_pk"));
@@ -98,18 +87,18 @@ namespace VMSales.Database
                         break;
                     case "product":
                         dataBaseParams.Add(new Tuple<string, string>("product_pk", "@product_pk"));
-                        dataBaseParams.Add(new Tuple<string, string>("bname", "@bname"));
-                        dataBaseParams.Add(new Tuple<string, string>("pname", "@pname"));
+                        dataBaseParams.Add(new Tuple<string, string>("brand_name", "@brand_name"));
+                        dataBaseParams.Add(new Tuple<string, string>("product_name", "@product_name"));
                         dataBaseParams.Add(new Tuple<string, string>("description", "@description"));
                         dataBaseParams.Add(new Tuple<string, string>("quantity", "@quantity"));
                         dataBaseParams.Add(new Tuple<string, string>("cost", "@cost"));
                         dataBaseParams.Add(new Tuple<string, string>("sku", "@sku"));
-                        dataBaseParams.Add(new Tuple<string, string>("soldprice", "@soldprice"));
+                        dataBaseParams.Add(new Tuple<string, string>("sold_price", "@sold_price"));
                         dataBaseParams.Add(new Tuple<string, string>("instock", "@instock"));
                         dataBaseParams.Add(new Tuple<string, string>("condition", "@condition"));
-                        dataBaseParams.Add(new Tuple<string, string>("listingurl", "@listingurl"));
-                        dataBaseParams.Add(new Tuple<string, string>("listingnum", "@listingnum"));
-                        dataBaseParams.Add(new Tuple<string, string>("listingdate", "@listingdate"));
+                        dataBaseParams.Add(new Tuple<string, string>("listing_url", "@listing_url"));
+                        dataBaseParams.Add(new Tuple<string, string>("listing_number", "@listing_number"));
+                        dataBaseParams.Add(new Tuple<string, string>("listing_date", "@listing_date"));
                         break;
                     case "product_category":
                         dataBaseParams.Add(new Tuple<string, string>("pcategory_pk", "@pcategory_pk"));
@@ -214,11 +203,11 @@ namespace VMSales.Database
                 //        sqlquery.Remove(sqlquery.Length - 1, 1);
                 //        sqlquery += whereParam;
                         //cmd.CommandText = sqlquery;
-                 //       MessageBox.Show(sqlquery);
+                 //       MessageBoxMessage.Show(sqlquery);
                     }
                     catch (SQLiteException e)
                     {
-                        System.Windows.MessageBox.Show(e.ToString());
+                        MessageBox.Show(e.ToString());
                     }
                 }
                 //conn.Close();
@@ -282,7 +271,7 @@ namespace VMSales.Database
                     }
                     catch (SQLiteException e)
                     {
-                        System.Windows.MessageBox.Show(e.ToString());
+                        MessageBox.Show(e.ToString());
                     }
                 }
              }
@@ -316,7 +305,7 @@ namespace VMSales.Database
                 {
                     transaction.Rollback();
                     con.Close();
-                    System.Windows.MessageBox.Show("An Error has occured.  No rows were updated." + ex);              
+                    MessageBox.Show("An Error has occured.  No rows were updated." + ex);              
                 }
             }
         }

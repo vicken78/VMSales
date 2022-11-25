@@ -58,12 +58,12 @@ namespace VMSales.ViewModels
             {
                 case FilterField.InvoiceNumber:
                     AddInvoiceNumberFilter();
-                    PurchaseOrderView.Filter = new Predicate<object>(x => ((PurchaseOrderModel)x).invoicenum.ToString() == _selectedinvoicenumber);
+                    PurchaseOrderView.Filter = new Predicate<object>(x => ((PurchaseOrderModel)x).invoice_number.ToString() == _selectedinvoicenumber);
                     RaisePropertyChanged("PurchaseOrderView");
                     break;
                 case FilterField.PurchaseDate:
                     AddPurchaseDateFilter();
-                    PurchaseOrderView.Filter = new Predicate<object>(x => ((PurchaseOrderModel)x).Purchasedate.ToString() == _selectedpurchasedate);
+                    PurchaseOrderView.Filter = new Predicate<object>(x => ((PurchaseOrderModel)x).purchase_date.ToString() == _selectedpurchasedate);
                 
                     break;
                 default:
@@ -133,7 +133,7 @@ namespace VMSales.ViewModels
             {
                 _selectedsname = value;
                 RaisePropertyChanged("SelectedSname");
-                SelectedSupplier_pk = _selectedsname.Supplier_pk.ToString();
+                SelectedSupplier_pk = _selectedsname.supplier_pk.ToString();
                 LoadPurchaseOrder(SelectedSupplier_pk);
             }
         }
@@ -332,7 +332,7 @@ namespace VMSales.ViewModels
             var src = e.Item as PurchaseOrderModel;
             if (src == null)
                 e.Accepted = false;
-            else if (string.Compare(SelectedInvoiceNumber, src.invoicenum.ToString()) != 0)
+            else if (string.Compare(SelectedInvoiceNumber, src.invoice_number.ToString()) != 0)
                 e.Accepted = false;
         }
         private void FilterByPurchaseDate(object sender, FilterEventArgs e)
@@ -340,7 +340,7 @@ namespace VMSales.ViewModels
             var src = e.Item as PurchaseOrderModel;
             if (src == null)
                 e.Accepted = false;
-            else if (string.Compare(SelectedPurchaseDate, src.Purchasedate.ToString()) != 0)
+            else if (string.Compare(SelectedPurchaseDate, src.purchase_date.ToString()) != 0)
                 e.Accepted = false;     
         }
 
@@ -387,8 +387,8 @@ namespace VMSales.ViewModels
                    //         Lotcost = (decimal)row["Lotcost"],
                    //         Salestax = (decimal)row["Salestax"],
                    //         Shippingcost = (decimal)row["Shippingcost"],
-                            invoicenum = (string)row["Invoicenum"],
-                            Purchasedate = (DateTime)row["Purchasedate"],
+                            invoice_number = (string)row["invoice_number"],
+                            purchase_date = (DateTime)row["purchase_date"],
                         };
                    //     Totallotcost = Totallotcost + obj.Lotcost;
                    //     Totalsalestax = Totalsalestax + obj.Salestax;
@@ -436,15 +436,15 @@ namespace VMSales.ViewModels
             {
                 var obj = new SupplierModel()
                 {
-                    Supplier_pk = (string)row["Supplier_pk"].ToString(),
-                    Sname = (string)row["Sname"],
-                    Address = (string)row["Address"],
-                    City = (string)row["City"],
-                    State = (string)row["State"],
-                    Zip = (string)row["Zip"],
-                    Country = (string)row["Country"],
-                    Phone = (string)row["Phone"],
-                    Email = (string)row["Email"]
+                    supplier_pk = (string)row["Supplier_pk"].ToString(),
+                    supplier_name = (string)row["supplier_name"],
+                    address = (string)row["address"],
+                    city = (string)row["city"],
+                    state = (string)row["state"],
+                    zip = (string)row["zip"],
+                    country = (string)row["country"],
+                    phone = (string)row["phone"],
+                    email = (string)row["email"]
                 };
                 Supplier.Add(obj);
             };

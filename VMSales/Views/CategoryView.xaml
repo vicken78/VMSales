@@ -3,12 +3,15 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:VMSales.ViewModels"         
-             xmlns:cal="http://www.caliburnproject.org"
+             xmlns:viewmodels="clr-namespace:VMSales.ViewModels" 
+             d:DataContext="{d:DesignInstance Type=viewmodels:CategoryViewModel}"
              mc:Ignorable="d" 
              Height="800" Width="1400" VerticalAlignment="Top" MinHeight="400" MinWidth="800">
     <DockPanel LastChildFill="True">
-        <Grid Margin="10" DockPanel.Dock="Bottom">
+
+        <Grid x:Name="ObservableCollectionCategoryModel" Margin="10" DockPanel.Dock="Bottom">
+            
+            
             <Grid.ColumnDefinitions>
                 <ColumnDefinition />
                 <ColumnDefinition />
@@ -35,22 +38,33 @@
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="Auto" />
                     </Grid.RowDefinitions>
+
+                    
+                    
                     <!-- Header -->
                     <TextBlock Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="2" TextWrapping="Wrap" FontFamily="Arial" FontWeight="Bold">
                        Category Form
                     </TextBlock>
+
                     <!-- Name -->
-                    <Label Content="Name" Grid.Column="0" Grid.Row="1" />
-                    <TextBox Text="{Binding Path=SelectedItem.categoryName, ElementName=CategoryDataGrid, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}" 
+                    <Label Content="Category ID" Grid.Column="0" Grid.Row="1" />
+                    <TextBox IsReadOnly="True" Text="{Binding Path=SelectedItem.category_pk, ElementName=categorydatagrid, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}" 
                     Grid.Column="1" Grid.Row="1"/>
+
+
+                    <!-- Name -->
+                    <Label Content="Name" Grid.Column="0" Grid.Row="2" />
+                    <TextBox Text="{Binding Path=SelectedItem.category_name, ElementName=categorydatagrid, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}" 
+                    Grid.Column="1" Grid.Row="2"/>
                     <!-- Description -->
-                    <Label Content="Description" Grid.Column="0" Grid.Row="2" />
-                    <TextBox TextWrapping="Wrap" AcceptsReturn="True" VerticalScrollBarVisibility="Auto" Text="{Binding SelectedItem.Description, ElementName=CategoryDataGrid, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}" Grid.Column="1" Grid.Row="2" />
+                    <Label Content="Description" Grid.Column="0" Grid.Row="3" />
+                    <TextBox TextWrapping="Wrap" AcceptsReturn="True" VerticalScrollBarVisibility="Auto" Text="{Binding SelectedItem.description, ElementName=categorydatagrid,Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}" Grid.Column="1" Grid.Row="3" />
                     <!-- Created Date -->
-                    <Label Content="Created Date" Grid.Column="0" Grid.Row="3" />
-                    <TextBox
-                        Text="{Binding Path=SelectedItem.CreationDate, ElementName=CategoryDataGrid, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}"
-                        Grid.Column="1" Grid.Row="3" />
+                    <Label Content="Created Date" Grid.Column="0" Grid.Row="4" />
+                    <TextBox Text="{Binding Path=SelectedItem.creation_date, ElementName=categorydatagrid, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}"
+                        Grid.Column="1" Grid.Row="4" />
+                    
+                    
                     <!--  Save Button -->
                     <Button x:Name="SaveCommand" Grid.Row="9"
                             Grid.Column="1"
@@ -74,33 +88,36 @@
                             Margin="270,5,153,-27"
                             Content="Reset"
                             Width="75"/>
+           
                 </Grid>
             </GroupBox>
             <GroupBox Grid.Column="1" Grid.Row="0" Header="Categories" Grid.RowSpan="2">
-                <DataGrid x:Name="CategoryDataGrid"  AutoGenerateColumns="False" Margin="-10,1,10.778,-0.778"
-                   ItemsSource="{Binding ObservableCollectionCategoryModel}"       
-                          IsSynchronizedWithCurrentItem="True" 
-                          EnableRowVirtualization="True" Width="800" IsReadOnly="False">
+                <DataGrid x:Name="categorydatagrid" AutoGenerateColumns="False" 
+                          ItemsSource="{Binding ObservableCollectionCategoryModel}"
+                          IsSynchronizedWithCurrentItem="True"
+                          CanUserReorderColumns="False"
+                          CanUserAddRows="False"
+                          EnableRowVirtualization="True" IsReadOnly="False" Grid.Row="10" 
+                          Height="Auto" Width="1400">
                     <DataGrid.Columns>
-                        <!-- category_pk -->
-                        <DataGridTemplateColumn Header="Category ID" Width="100">
-                            <DataGridTemplateColumn.CellTemplate>
-                                <DataTemplate>
-                                    <DataGridTextColumn Header="ID" Width="Auto" x:Name="Category_pk"
-                            Binding="{Binding category_pk, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}" IsReadOnly="True" />
-                                </DataTemplate>
-                            </DataGridTemplateColumn.CellTemplate>
-                        </DataGridTemplateColumn>
-                        <!--category name -->
-                        <DataGridTextColumn Header="Category Name" Width="140" Binding="{Binding category_name, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}">
+                        <!--Category ID -->
+                        <DataGridTextColumn Header="Category ID" IsReadOnly="true" Width="100" Binding="{Binding category_pk, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}">
                             <DataGridTextColumn.ElementStyle>
                                 <Style TargetType="TextBlock">
                                     <Setter Property="TextWrapping" Value="Wrap"/>
                                 </Style>
                             </DataGridTextColumn.ElementStyle>
                         </DataGridTextColumn>
-                        <!-- Category Description -->
-                        <DataGridTextColumn Header="Description" Width="300" Binding="{Binding description, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}">
+                        <!-- Category Name -->
+                        <DataGridTextColumn Header="Category Name" Width="150" Binding="{Binding category_name, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}">
+                            <DataGridTextColumn.ElementStyle>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="TextWrapping" Value="Wrap"/>
+                                </Style>
+                            </DataGridTextColumn.ElementStyle>
+                        </DataGridTextColumn>
+                        <!-- Description -->
+                        <DataGridTextColumn Header="Description" Width="200" Binding="{Binding description, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}"  >
                             <DataGridTextColumn.ElementStyle>
                                 <Style TargetType="TextBlock">
                                     <Setter Property="TextWrapping" Value="Wrap"/>
@@ -108,14 +125,14 @@
                             </DataGridTextColumn.ElementStyle>
                         </DataGridTextColumn>
                         <!-- Creation Date -->
-                        <DataGridTextColumn Header="Creation Date" Width="150" IsReadOnly="True" Binding="{Binding creation_date, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}"  >
+                        <DataGridTextColumn Header="Creation Date" IsReadOnly="True" Width="130" Binding="{Binding creation_date, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}">
                             <DataGridTextColumn.ElementStyle>
                                 <Style TargetType="TextBlock">
                                     <Setter Property="TextWrapping" Value="Wrap"/>
                                 </Style>
                             </DataGridTextColumn.ElementStyle>
                         </DataGridTextColumn>
-                    </DataGrid.Columns>
+                     </DataGrid.Columns>
                 </DataGrid>
             </GroupBox>
         </Grid>

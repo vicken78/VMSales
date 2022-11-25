@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 
 namespace VMSales.Logic
@@ -18,5 +19,16 @@ namespace VMSales.Logic
             List<string> myList = (myString).Split(',').ToList();
             return myList;
         }
+
+
+        public static ObservableCollection<T> ToObservable<T>(
+    this IEnumerable<T> source)
+        {
+            return new ObservableCollection<T>(source);
+        }
+
+
+
+
     }
 }

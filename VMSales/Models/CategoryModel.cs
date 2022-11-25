@@ -11,13 +11,13 @@ using Dapper.Contrib.Extensions;
         public int categorynameLength = 255;
         public int DescriptionLength = 255;
 
-        private string _category_pk;
+        private int _category_pk;
         private string _category_name;
         private string _description;
         private DateTime _creation_date;
-    
+   
         [ExplicitKey]
-        public string category_pk
+        public int category_pk
         {
             get { return _category_pk; }
             set

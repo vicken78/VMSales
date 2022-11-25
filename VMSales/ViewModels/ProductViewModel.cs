@@ -1,16 +1,15 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using System.Data;
-using System.Windows.Data;
 using VMSales.Database;
 using VMSales.Models;
 using System.Collections.Generic;
 using System.ComponentModel;
 using VMSales.ChangeTrack;
-using System.Windows;
+using System.Windows.Forms;
+using System.Windows.Data;
 
-
-namespace VMSales.ViewModels 
+namespace VMSales.ViewModels
 {
     public class ProductViewModel : BaseViewModel
     {
@@ -225,19 +224,19 @@ namespace VMSales.ViewModels
             {
                 if (PO.selectedCategory.ToString() != null || PO.selectedCondition.ToString() != null || PO.productName.ToString() != null || PO.productSKU.ToString() != null)
                 {
-                    kvp.Add(new Tuple<string, string>("cname", PO.selectedCategory.ToString()));
-                    kvp.Add(new Tuple<string, string>("bname", PO.productBrandName.ToString()));
-                    kvp.Add(new Tuple<string, string>("pname", PO.productName.ToString()));
+                    kvp.Add(new Tuple<string, string>("category_name", PO.selectedCategory.ToString()));
+                    kvp.Add(new Tuple<string, string>("brand_name", PO.productBrandName.ToString()));
+                    kvp.Add(new Tuple<string, string>("product_name", PO.productName.ToString()));
                     kvp.Add(new Tuple<string, string>("description", PO.productDescription.ToString()));
-                    kvp.Add(new Tuple<string, string>("quantity", PO.productQuantity.ToString()));
+                    kvp.Add(new Tuple<string, string>("qty", PO.productQuantity.ToString()));
                     kvp.Add(new Tuple<string, string>("cost", PO.productCost.ToString()));
                     kvp.Add(new Tuple<string, string>("sku", PO.productSKU.ToString()));
-                    kvp.Add(new Tuple<string, string>("soldprice", PO.productSoldPrice.ToString()));
+                    kvp.Add(new Tuple<string, string>("sold_price", PO.productSoldPrice.ToString()));
                     kvp.Add(new Tuple<string, string>("instock", PO.productStock.ToString()));
                     kvp.Add(new Tuple<string, string>("condition", PO.selectedCondition.ToString()));
-                    kvp.Add(new Tuple<string, string>("listingurl", PO.productListingURL.ToString()));
-                    kvp.Add(new Tuple<string, string>("listingnum", PO.productListingNumber.ToString()));
-                    kvp.Add(new Tuple<string, string>("listingdate", PO.productListingDate.ToString()));
+                    kvp.Add(new Tuple<string, string>("listing_url", PO.productListingURL.ToString()));
+                    kvp.Add(new Tuple<string, string>("listing_num", PO.productListingNumber.ToString()));
+                    kvp.Add(new Tuple<string, string>("listing_date", PO.productListingDate.ToString()));
                     DataBaseOps.update("product", kvp, "", "");
                 }
 
@@ -299,7 +298,7 @@ namespace VMSales.ViewModels
             DataTable myDataTable = DataBaseOps.SQLiteDataTableWithQuery(parameter);
             foreach (DataRow row in myDataTable.Rows)
             {
-                listName.Add(row[stringtablename].ToString());
+                //listName.Add(row[stringtablename].ToString());
             }
 
             return listName;
