@@ -1,5 +1,6 @@
 ﻿using Dapper;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Threading.Tasks;
 using VMSales.Models;
 // Example implementation of the rRepository
@@ -9,11 +10,19 @@ using VMSales.Models;
 namespace VMSales.Logic
 {
 
-    public class DataBaseLayer
+    public class DataBaseLayer : INotifyPropertyChanged
     {
 
-        public class CategoryRepository : Repository<CategoryModel>
+        public event PropertyChangedEventHandler PropertyChanged;
+        protected void RaisePropertyChanged(string property)
         {
+            if (PropertyChanged != null)
+                PropertyChanged(this, new PropertyChangedEventArgs(property));
+        }
+
+        public class CategoryRepository : Repository<CategoryModel> 
+        {
+
             public CategoryRepository(IDatabaseProvider dbProvider) : base(dbProvider) { }
 
             public override async Task<bool> Insert(CategoryModel entity)
@@ -32,7 +41,7 @@ namespace VMSales.Logic
 
             public override async Task<CategoryModel> Get(int id)
             {
-                return await Connection.QuerySingleAsync<CategoryModel>("SELECT category_pk, category_name, description, creation_date FROM category WHERE category_pk = @id", new { id }, Transaction);
+                return await Connection.QuerySingleAsync<CategoryModel>("SELECT category_pk FROM category WHERE category_pk = @id", new { id }, Transaction);
             }
 
             public override async Task<IEnumerable<CategoryModel>> GetAll()

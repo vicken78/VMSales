@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace VMSales.Logic
 {
@@ -32,10 +33,10 @@ namespace VMSales.Logic
             {
                 Revert(false);
             }
-            finally
-            {
-                Transaction = Connection.BeginTransaction();
-            }
+        //    finally
+        //    {
+        //        Transaction = Connection.BeginTransaction();
+        //    }
         }
 
         /// <summary>
@@ -75,24 +76,27 @@ namespace VMSales.Logic
 
         public void Dispose()
         {
-            Dispose(true);
+              if (Connection.State.ToString() == "Open")
+              {
+                Dispose(true);
+              }
             GC.SuppressFinalize(this);
         }
 
         protected virtual void Dispose(bool disposing)
         {
-            if (disposed)
-                return;
-
-            if (disposing)
-            {
-                Transaction.Dispose();
+            if (disposing == true)
+            {   Transaction.Dispose();
                 Connection.Dispose();
+                return;
             }
-
+            if (disposed)
+            {
+                Connection.Dispose();
+                return;
+            }
             disposed = true;
         }
-
         #endregion
 
     }

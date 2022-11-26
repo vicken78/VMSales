@@ -11,7 +11,6 @@
 
         <Grid x:Name="ObservableCollectionCategoryModel" Margin="10" DockPanel.Dock="Bottom">
             
-            
             <Grid.ColumnDefinitions>
                 <ColumnDefinition />
                 <ColumnDefinition />
@@ -91,10 +90,14 @@
            
                 </Grid>
             </GroupBox>
+           <!-- SelectionChanged="categoryDataGridSelectionChanged" -->
+
             <GroupBox Grid.Column="1" Grid.Row="0" Header="Categories" Grid.RowSpan="2">
                 <DataGrid x:Name="categorydatagrid" AutoGenerateColumns="False" 
                           ItemsSource="{Binding ObservableCollectionCategoryModel}"
-                          IsSynchronizedWithCurrentItem="True"
+                          SelectedItem="{Binding Select_Request, Mode=TwoWay}" 
+                           IsSynchronizedWithCurrentItem="True"
+                          SelectionMode="Single"
                           CanUserReorderColumns="False"
                           CanUserAddRows="False"
                           EnableRowVirtualization="True" IsReadOnly="False" Grid.Row="10" 
@@ -132,7 +135,7 @@
                                 </Style>
                             </DataGridTextColumn.ElementStyle>
                         </DataGridTextColumn>
-                     </DataGrid.Columns>
+                    </DataGrid.Columns>
                 </DataGrid>
             </GroupBox>
         </Grid>

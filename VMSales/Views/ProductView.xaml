@@ -265,7 +265,7 @@
                         </DataTemplate>
                     </DataGridTemplateColumn.CellEditingTemplate>
                 </DataGridTemplateColumn>
-<!-- Add Button-->
+<!-- Add Row Button-->
                 <DataGridTemplateColumn Header="Add">
                 <DataGridTemplateColumn.CellTemplate>
                     <DataTemplate>

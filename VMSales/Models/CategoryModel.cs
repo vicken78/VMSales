@@ -1,16 +1,15 @@
 ﻿using VMSales.ViewModels;
 using System;
+using VMSales.Logic;
 using System.Collections.Generic;
 using Dapper.Contrib.Extensions;
+using System.Collections.ObjectModel;
 
-    namespace VMSales.Models
+namespace VMSales.Models
 {
     [Table("category")]
-    public class CategoryModel : BaseViewModel 
+    public class CategoryModel : DataBaseLayer 
     {
-        public int categorynameLength = 255;
-        public int DescriptionLength = 255;
-
         private int _category_pk;
         private string _category_name;
         private string _description;
