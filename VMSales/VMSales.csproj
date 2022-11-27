@@ -229,9 +229,9 @@
     <Compile Include="Logic\ChangeTracker.cs" />
     <Compile Include="Bootstrapper.cs" />
     <Compile Include="Logic\DataBaseLayerold.cs" />
+    <Compile Include="Logic\DataChecker.cs" />
     <Compile Include="Logic\DataConversion.cs" />
     <Compile Include="Logic\DataBaseOps.cs" />
-    <Compile Include="Logic\DataValidator.cs" />
     <Compile Include="Logic\IRepository.cs" />
     <Compile Include="Logic\Repository.cs" />
     <Compile Include="Logic\SQLiteDataBaseProvider.cs" />

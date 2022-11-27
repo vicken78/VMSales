@@ -44,17 +44,19 @@ namespace VMSales.ViewModels
                 MessageBox.Show("No Changes Were Made.");
                 return;
             }
-            if (Select_Request.supplier_name.ToString() == "" 
-                || Select_Request.address.ToString() == "" 
-                || Select_Request.city.ToString() == "" 
-                || Select_Request.state.ToString() == "" 
-                || Select_Request.country.ToString() == "" 
-                || Select_Request.zip.ToString() == "" 
-                || Select_Request.phone.ToString() == "")
+
+            if (DataChecker.IsEmptyOrAllSpaces(Select_Request.supplier_name?.ToString() ?? "") == true ||
+                DataChecker.IsEmptyOrAllSpaces(Select_Request.address?.ToString() ?? "") == true ||
+                DataChecker.IsEmptyOrAllSpaces(Select_Request.city?.ToString() ?? "") == true ||
+                DataChecker.IsEmptyOrAllSpaces(Select_Request.state?.ToString() ?? "") == true ||
+                DataChecker.IsEmptyOrAllSpaces(Select_Request.country?.ToString() ?? "") == true ||
+                DataChecker.IsEmptyOrAllSpaces(Select_Request.zip?.ToString() ?? "") == true ||
+                DataChecker.IsEmptyOrAllSpaces(Select_Request.phone?.ToString() ?? "") == true)
             {
                 MessageBox.Show("Only Email can be blank.");
                 return;
             }
+
             // all values good, now we must update or insert, get primary key.
             dataBaseProvider = BaseViewModel.getprovider();
             DataBaseLayer.SupplierRepository SupplierRepo = new DataBaseLayer.SupplierRepository(dataBaseProvider);
@@ -65,25 +67,21 @@ namespace VMSales.ViewModels
             catch (AggregateException e) // primary key does not exist
             {
                 // insert
-                Task<bool> insertSupplier = SupplierRepo.Insert(Select_Request);
-                if (insertSupplier.Result == true)
+                try
                 {
-                    SupplierRepo.Commit();
-                    SupplierRepo.Dispose();
+                    Task<bool> insertSupplier = SupplierRepo.Insert(Select_Request);
+                    if (insertSupplier.Result == true)
+                    {
+                        SupplierRepo.Commit();
+                        SupplierRepo.Dispose();
+                    }
                 }
-                else
+                catch (Exception ex)
                 {
-                    MessageBox.Show("An Error has occured with inserting.  Insertion Rejected");
+                    MessageBox.Show("An Error has occured with inserting.  Insertion Rejected" + ex);
                     SupplierRepo.Revert();
                     SupplierRepo.Dispose();
                 }
-                return;
-            }
-            catch (Exception e)
-            {  // any other error
-                MessageBox.Show(e.ToString());
-                SupplierRepo.Revert();
-                SupplierRepo.Dispose();
                 return;
             }
             // if id match UPDATE
@@ -114,13 +112,13 @@ namespace VMSales.ViewModels
             var obj = new SupplierModel()
             {
                 supplier_pk = 0,
-                supplier_name = "",
-                address = "",
-                city = "",
-                state = "",
-                country = "",
-                zip = "",
-                phone = "",
+                supplier_name = null,
+                address = null,
+                city = null,
+                state = null,
+                country = null,
+                zip = null,
+                phone = null,
                 email = ""
 
             };

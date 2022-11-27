@@ -120,6 +120,7 @@
                            IsSynchronizedWithCurrentItem="True"
                           SelectionMode="Single"
                           CanUserReorderColumns="False"
+                          CanUserDeleteRows ="False"
                           CanUserAddRows="False"
                           EnableRowVirtualization="True" IsReadOnly="False" Grid.Row="10" 
                           Height="Auto" Width="1400">
