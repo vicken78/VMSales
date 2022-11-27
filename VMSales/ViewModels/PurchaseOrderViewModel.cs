@@ -436,7 +436,7 @@ namespace VMSales.ViewModels
             {
                 var obj = new SupplierModel()
                 {
-                    supplier_pk = (string)row["Supplier_pk"].ToString(),
+                    //supplier_pk = (string)row["Supplier_pk"].ToString(),
                     supplier_name = (string)row["supplier_name"],
                     address = (string)row["address"],
                     city = (string)row["city"],

@@ -1,20 +1,14 @@
-﻿using Dapper.Contrib.Extensions;
-using VMSales.ViewModels;
+﻿using System;
+using VMSales.Logic;
+using Dapper.Contrib.Extensions;
+
 
 namespace VMSales.Models
 {
     [Table("supplier")]
-    public class SupplierModel : BaseViewModel 
+    public class SupplierModel : DataBaseLayer
     {
-        public int SnameLength = 255;
-        public int AddressLength = 255;
-        public int CityLength = 255;
-        public int StateLength = 50;
-        public int ZipLength = 9;
-        public int CountryLength = 50;
-        public int PhoneLength = 25;
-
-        private string _supplier_pk;
+        private int _supplier_pk;
         private string _supplier_name;
         private string _address;
         private string _city;
@@ -25,7 +19,7 @@ namespace VMSales.Models
         private string _email;
 
         [ExplicitKey]
-        public string supplier_pk
+        public int supplier_pk
         {
             get { return _supplier_pk; }
             set

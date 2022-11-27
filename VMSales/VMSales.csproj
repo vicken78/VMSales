@@ -254,7 +254,9 @@
     <Compile Include="ViewModels\PurchaseOrderViewModel.cs" />
     <Compile Include="ViewModels\ShellViewModel.cs" />
     <Compile Include="ViewModels\SupplierViewModel.cs" />
-    <Compile Include="ViewModels\TestDatabaseOps.cs" />
+    <Compile Include="Views\SupplierView.xaml.cs">
+      <DependentUpon>SupplierView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\ProductView.xaml.cs">
       <DependentUpon>ProductView.xaml</DependentUpon>
     </Compile>
@@ -263,9 +265,6 @@
     </Compile>
     <Compile Include="Views\ShellView.xaml.cs">
       <DependentUpon>ShellView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\SupplierView.xaml.cs">
-      <DependentUpon>SupplierView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\CategoryView.xaml.cs">
       <DependentUpon>CategoryView.xaml</DependentUpon>
@@ -303,6 +302,10 @@
     <Resource Include="App.ico" />
   </ItemGroup>
   <ItemGroup>
+    <Page Include="Views\SupplierView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Views\ProductView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -316,10 +319,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\ShellView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\SupplierView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

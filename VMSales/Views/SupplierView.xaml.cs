@@ -1,6 +1,5 @@
 ﻿using System.Windows.Controls;
 
-
 namespace VMSales.Views
 {
     /// <summary>

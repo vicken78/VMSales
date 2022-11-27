@@ -1,9 +1,6 @@
-﻿using VMSales.ViewModels;
-using System;
+﻿using System;
 using VMSales.Logic;
-using System.Collections.Generic;
 using Dapper.Contrib.Extensions;
-using System.Collections.ObjectModel;
 
 namespace VMSales.Models
 {

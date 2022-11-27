@@ -30,7 +30,6 @@ namespace VMSales.ViewModels
 
         public void LoadCustomerOrder()
         {
-            ActivateItemAsync(new TestDatabaseOps());
         }
 
 
