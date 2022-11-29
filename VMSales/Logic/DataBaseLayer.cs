@@ -66,6 +66,11 @@ namespace VMSales.Logic
                 // Could check for unset id, and throw exception.
                 return (await Connection.ExecuteAsync("DELETE FROM category WHERE category_pk = @id", new { id = entity.category_pk }, Transaction)) == 1;
             }
+
+            public override Task<IEnumerable<CategoryModel>> GetAll(int id)
+            {
+                throw new System.NotImplementedException();
+            }
         }
         #endregion
 
@@ -127,8 +132,70 @@ namespace VMSales.Logic
                 // Could check for unset id, and throw exception.
                 return (await Connection.ExecuteAsync("DELETE FROM supplier WHERE supplier_pk = @id", new { id = entity.supplier_pk }, Transaction)) == 1;
             }
+            public override Task<IEnumerable<SupplierModel>> GetAll(int id)
+            {
+                throw new System.NotImplementedException();
+            }
+
+        }
+        #endregion
+        #region PurchaseOrder
+        //string sqlquery = "purchase_order, purchase_order_detail, supplier WHERE purchase_order.purchaseorder_pk = purchase_order_detail.purchaseorder_fk AND supplier.supplier_pk = purchase_order.supplier_fk AND supplier.supplier_pk='" + supplier_pk + "'";
+        public class PurchaseOrderRepository : Repository<PurchaseOrderModel>
+        {
+            public PurchaseOrderRepository(IDatabaseProvider dbProvider) : base(dbProvider) { }
+
+            public override async Task<bool> Insert(PurchaseOrderModel entity)
+            {
+                int newId = await Connection.QuerySingleAsync<int>("INSERT INTO category (category_name, description, creation_date) VALUES (@category_name, @description, @creation_date); SELECT last_insert_rowid()", new
+                {
+                    //category_name = entity.category_name,
+                    //description = entity.description,
+                    //creation_date = System.DateTime.Now
+                }, Transaction);
+
+                //entity.category_pk = newId;
+
+                return true;
+            }
+
+            public override async Task<PurchaseOrderModel> Get(int id)
+            {
+                return await Connection.QuerySingleAsync<PurchaseOrderModel>("SELECT category_p FROM category WHERE category_pk = @id", new { id }, Transaction);
+            }
+            public override async Task<IEnumerable<PurchaseOrderModel>> GetAll()
+            {
+                return await Connection.QueryAsync<PurchaseOrderModel>("SELECT", null, Transaction);
+            }
+
+            public override async Task<IEnumerable<PurchaseOrderModel>> GetAll(int id)
+            {
+                return await Connection.QueryAsync<PurchaseOrderModel>("SELECT " +
+                    "purchase_order.invoice_number, purchase_order.purchase_date " +
+                    "FROM purchase_order, supplier " +
+                    "WHERE supplier.supplier_pk = purchase_order.supplier_fk " +
+                    "AND supplier.supplier_pk=@id",new { id }, Transaction);
+            }
+            
+            public override async Task<bool> Update(PurchaseOrderModel entity)
+            {
+                // Could check for unset id, and throw exception.
+                return (await Connection.ExecuteAsync("UPDATE category SET category_name = @category_name, description = @description WHERE category_pk = @id", new
+                {
+                    //id = entity.category_pk,
+                    //category_name = entity.category_name,
+                    //description = entity.description
+
+                }, Transaction)) == 1;
+            }
+
+            public override async Task<bool> Delete(PurchaseOrderModel entity)
+            {
+                // Could check for unset id, and throw exception.
+                return (await Connection.ExecuteAsync("DELETE FROM catego WHERE category_pk = @id", new { id = entity.supplier_fk }, Transaction)) == 1;
+            }
         }
 
-        #endregion
     }
+            #endregion
 }

@@ -45,13 +45,13 @@ namespace VMSales.ViewModels
                 return;
             }
 
-            if (DataChecker.IsEmptyOrAllSpaces(Select_Request.supplier_name?.ToString() ?? "") == true ||
-                DataChecker.IsEmptyOrAllSpaces(Select_Request.address?.ToString() ?? "") == true ||
-                DataChecker.IsEmptyOrAllSpaces(Select_Request.city?.ToString() ?? "") == true ||
-                DataChecker.IsEmptyOrAllSpaces(Select_Request.state?.ToString() ?? "") == true ||
-                DataChecker.IsEmptyOrAllSpaces(Select_Request.country?.ToString() ?? "") == true ||
-                DataChecker.IsEmptyOrAllSpaces(Select_Request.zip?.ToString() ?? "") == true ||
-                DataChecker.IsEmptyOrAllSpaces(Select_Request.phone?.ToString() ?? "") == true)
+            if (DataConversion.IsEmptyOrAllSpaces(Select_Request.supplier_name?.ToString() ?? "") == true ||
+                DataConversion.IsEmptyOrAllSpaces(Select_Request.address?.ToString() ?? "") == true ||
+                DataConversion.IsEmptyOrAllSpaces(Select_Request.city?.ToString() ?? "") == true ||
+                DataConversion.IsEmptyOrAllSpaces(Select_Request.state?.ToString() ?? "") == true ||
+                DataConversion.IsEmptyOrAllSpaces(Select_Request.country?.ToString() ?? "") == true ||
+                DataConversion.IsEmptyOrAllSpaces(Select_Request.zip?.ToString() ?? "") == true ||
+                DataConversion.IsEmptyOrAllSpaces(Select_Request.phone?.ToString() ?? "") == true)
             {
                 MessageBox.Show("Only Email can be blank.");
                 return;

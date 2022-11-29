@@ -10,6 +10,7 @@ namespace VMSales.Logic
         Task<bool> Insert(T entity);
         Task<T> Get(int id);
         Task<IEnumerable<T>> GetAll();
+        Task<IEnumerable<T>> GetAll(int id);
         Task<bool> Update(T entity);
         Task<bool> Delete(T entity);
         void Commit();

@@ -228,10 +228,9 @@
     </ApplicationDefinition>
     <Compile Include="Logic\ChangeTracker.cs" />
     <Compile Include="Bootstrapper.cs" />
-    <Compile Include="Logic\DataBaseLayerold.cs" />
-    <Compile Include="Logic\DataChecker.cs" />
     <Compile Include="Logic\DataConversion.cs" />
     <Compile Include="Logic\DataBaseOps.cs" />
+    <Compile Include="Logic\DataValidator.cs" />
     <Compile Include="Logic\IRepository.cs" />
     <Compile Include="Logic\Repository.cs" />
     <Compile Include="Logic\SQLiteDataBaseProvider.cs" />
@@ -254,6 +253,7 @@
     <Compile Include="ViewModels\PurchaseOrderViewModel.cs" />
     <Compile Include="ViewModels\ShellViewModel.cs" />
     <Compile Include="ViewModels\SupplierViewModel.cs" />
+    <Compile Include="ViewModels\Temp.cs" />
     <Compile Include="Views\SupplierView.xaml.cs">
       <DependentUpon>SupplierView.xaml</DependentUpon>
     </Compile>

@@ -8,15 +8,16 @@ namespace VMSales.Models
     [Table("supplier")]
     public class SupplierModel : DataBaseLayer
     {
-        private int _supplier_pk;
-        private string _supplier_name;
-        private string _address;
-        private string _city;
-        private string _state;
-        private string _zip;
-        private string _country;
-        private string _phone;
-        private string _email;
+        public string selected_supplier_pk { get; set; }
+        private int _supplier_pk { get; set; }
+        private string _supplier_name { get; set; }
+        private string _address { get; set; }
+        private string _city { get; set; }
+        private string _state { get; set; }
+        private string _zip { get; set; }
+        private string _country { get; set; }
+        private string _phone { get; set; }
+        private string _email { get; set; }
 
         [ExplicitKey]
         public int supplier_pk

@@ -38,12 +38,6 @@ namespace VMSales.Database
         {
                 switch (name)
                 {
-                    case "category":
-                        dataBaseParams.Add(new Tuple<string, string>("category_pk", "@category_pk"));
-                        dataBaseParams.Add(new Tuple<string, string>("category_name", "@category_name"));
-                        dataBaseParams.Add(new Tuple<string, string>("description", "@description"));
-                        dataBaseParams.Add(new Tuple<string, string>("creation_date", "@creation_date"));
-                        break;
                     case "customer":
                         dataBaseParams.Add(new Tuple<string, string>("customer_pk", "@customer_pk"));
                         dataBaseParams.Add(new Tuple<string, string>("username", "@username"));
@@ -131,17 +125,6 @@ namespace VMSales.Database
                         dataBaseParams.Add(new Tuple<string, string>("lotdescription", "@lotdescription"));
                         dataBaseParams.Add(new Tuple<string, string>("salestax", "@salestax"));
                         dataBaseParams.Add(new Tuple<string, string>("shippingcost", "@shippingcost"));
-                        break;
-                    case "supplier":
-                        dataBaseParams.Add(new Tuple<string, string>("supplier_pk", "@supplier_pk"));
-                        dataBaseParams.Add(new Tuple<string, string>("sname", "@sname"));
-                        dataBaseParams.Add(new Tuple<string, string>("address", "@address"));
-                        dataBaseParams.Add(new Tuple<string, string>("city", "@city"));
-                        dataBaseParams.Add(new Tuple<string, string>("zip", "@zip"));
-                        dataBaseParams.Add(new Tuple<string, string>("state", "@state"));
-                        dataBaseParams.Add(new Tuple<string, string>("country", "@country"));
-                        dataBaseParams.Add(new Tuple<string, string>("phone", "@phone"));
-                        dataBaseParams.Add(new Tuple<string, string>("email", "@email"));
                         break;
                 }
             
@@ -327,30 +310,5 @@ namespace VMSales.Database
             return dt;
         }
 
-
-
-        // unused for future customization.
-        /*
-        public static bool isColumnExist(String tableName, String columnName)
-        {
-            SQLiteConnection con;
-            con = new SQLiteConnection(getConnectionString());
-            con.Open();
-            var sql = "SELECT name FROM sqlite_master WHERE type='table' AND name='" + tableName + "';";
-            SQLiteCommand command = new SQLiteCommand(sql,con);
-            SQLiteDataReader dataReader = command.ExecuteReader();
-                if (dataReader.HasRows)
-                {
-                bool hascol = dataReader.GetString(0).Contains(String.Format("\"{0}\"", columnName));
-                con.Close();
-                return hascol;
-                }    
-            else
-            {
-                con.Close();
-                return false;
-            }  
-        }
-        */
     }
 }

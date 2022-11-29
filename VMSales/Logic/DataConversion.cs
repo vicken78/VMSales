@@ -1,11 +1,19 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Globalization;
 using System.Linq;
 
 namespace VMSales.Logic
 {
-    public static class DataConversion
+    public static class DataConversion 
     {
+        public static bool IsEmptyOrAllSpaces(this string str)
+        {
+            return null != str && str.All(c => c.Equals(' '));
+        }
+
+
         // so far not needed.
         public static string listToString(List<string> myList)
         {
@@ -26,9 +34,6 @@ namespace VMSales.Logic
         {
             return new ObservableCollection<T>(source);
         }
-
-
-
 
     }
 }
