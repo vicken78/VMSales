@@ -7,28 +7,18 @@ using System.Collections.ObjectModel;
 namespace VMSales.Models
 {
     
-[Table("purchase_order")]
-public class PurchaseOrderModel : BaseViewModel
+public partial class PurchaseOrderModel : BaseViewModel
     {
 
         private ObservableCollection<SupplierModel> ObservableCollectionSupplierModelclean { get; set; }
         public ObservableCollection<SupplierModel> ObservableCollectionSupplierModel { get; set; }
 
-        public int selected_supplier_pk { get; set; }
-        public int supplier_fk { get; set; }
-
-
-
-        public int invoiceNumberLength = 255;
-        public int lotNumberLength = 10;
-        public int lotNameLength = 255;
-        public int lotDescriptionLength = 255;
-        public List<PurchaseOrderDetailModel> OrderDetails { get; set; }
-
+        public List<PurchaseOrderModel> OrderDetails { get; set; }
         private string _purchase_order_pk { get; set; }
-        private int _supplier_fk { get; set; }
         private string _invoice_number { get; set; }
         private DateTime _purchase_date { get; set; }
+        public int supplier_fk { get; set; }
+
         [ExplicitKey]
         public string purchase_order_pk
         {
@@ -40,16 +30,6 @@ public class PurchaseOrderModel : BaseViewModel
                 RaisePropertyChanged("purchase_order_pk");
             }
         }
-      /*    public int supplier_fk
-          {
-              get { return _supplier_fk; }
-             set
-             {
-                  if (_supplier_fk == value) return;
-                  _supplier_fk = value;
-             }
-         }*/
-
         public string invoice_number
         {
             get { return _invoice_number; }

@@ -67,7 +67,7 @@ namespace VMSales.Logic
                 return (await Connection.ExecuteAsync("DELETE FROM category WHERE category_pk = @id", new { id = entity.category_pk }, Transaction)) == 1;
             }
 
-            public override Task<IEnumerable<CategoryModel>> GetAll(int id)
+            public override Task<IEnumerable<CategoryModel>> GetAllWithID(int id)
             {
                 throw new System.NotImplementedException();
             }
@@ -132,7 +132,7 @@ namespace VMSales.Logic
                 // Could check for unset id, and throw exception.
                 return (await Connection.ExecuteAsync("DELETE FROM supplier WHERE supplier_pk = @id", new { id = entity.supplier_pk }, Transaction)) == 1;
             }
-            public override Task<IEnumerable<SupplierModel>> GetAll(int id)
+            public override Task<IEnumerable<SupplierModel>> GetAllWithID(int id)
             {
                 throw new System.NotImplementedException();
             }
@@ -163,12 +163,20 @@ namespace VMSales.Logic
             {
                 return await Connection.QuerySingleAsync<PurchaseOrderModel>("SELECT category_p FROM category WHERE category_pk = @id", new { id }, Transaction);
             }
-            public override async Task<IEnumerable<PurchaseOrderModel>> GetAll()
+  
+            // get all purchase_order and purchase_order_detail
+             public override async Task<IEnumerable<PurchaseOrderModel>> GetAll()
             {
-                return await Connection.QueryAsync<PurchaseOrderModel>("SELECT", null, Transaction);
+                return await Connection.QueryAsync<PurchaseOrderModel>("SELECT " +
+                    "distinct po.purchase_date, po.invoice_number, pod.lot_number, pod.lot_cost, pod.lot_qty," +
+                    "pod.lot_name, pod.lot_description, pod.sales_tax, pod.shipping_cost " +
+                    "FROM purchase_order as po, purchase_order_detail as pod, supplier as sup " +
+                    "INNER JOIN purchase_order_detail on po.purchase_order_pk = pod.purchase_order_fk " +
+                    "INNER JOIN supplier on sup.supplier_pk = po.supplier_fk;", null, Transaction);
             }
-
-            public override async Task<IEnumerable<PurchaseOrderModel>> GetAll(int id)
+   
+            // get all purchase_order and purchase_order_detail
+            public override async Task<IEnumerable<PurchaseOrderModel>> GetAllWithID(int id)
             {
                 return await Connection.QueryAsync<PurchaseOrderModel>("SELECT " +
                     "purchase_order.invoice_number, purchase_order.purchase_date " +

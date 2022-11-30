@@ -62,7 +62,7 @@ namespace VMSales.Logic
         public abstract Task<bool> Insert(T entity);
         public abstract Task<T> Get(int id);
         public abstract Task<IEnumerable<T>> GetAll();
-        public abstract Task<IEnumerable<T>> GetAll(int id);
+        public abstract Task<IEnumerable<T>> GetAllWithID(int id);
         public abstract Task<bool> Update(T entity);
         public abstract Task<bool> Delete(T entity);
 

@@ -3,115 +3,111 @@ using VMSales.ViewModels;
 
 namespace VMSales.Models
 {
-    [Table("purchase_order_detail")]
-    public class PurchaseOrderDetailModel : BaseViewModel
+    public partial class PurchaseOrderModel : BaseViewModel
     {
-        private string _porder_pk { get; set; }
-        private string _purchaseorder_id { get; set; }
-        private decimal _lotcost { get; set; }
-        private int _lotqty { get; set; }
-        private string _lotname { get; set; }
-        private string _lotnum { get; set; }
-        private string _lotdescription { get; set; }
-        private decimal _salestax { get; set; }
-        private decimal _shippingcost { get; set; }
+        private string _purchase_order_detail_pk { get; set; }
+        private string _purchase_order_fk { get; set; }
+        private decimal _lot_cost { get; set; }
+        private int _lot_qty { get; set; }
+        private string _lot_name { get; set; }
+        private string _lot_number { get; set; }
+        private string _lot_description { get; set; }
+        private decimal _sales_tax { get; set; }
+        private decimal _shipping_cost { get; set; }
 
         // purchase order detail
         [ExplicitKey]
         public string Porder_pk
         {
-            get { return _porder_pk; }
+            get { return _purchase_order_detail_pk; }
             set
             {
-                if (_porder_pk == value) return;
-                _porder_pk = value;
-                RaisePropertyChanged("Porder_pk");
+                if (_purchase_order_detail_pk == value) return;
+                _purchase_order_detail_pk = value;
+                RaisePropertyChanged("purchase_order_detail_pk");
             }
         }
-        public string Purchaseorder_fk
+        public string purchase_order_fk
         {
-            get { return _purchaseorder_id; }
+            get { return _purchase_order_fk; }
             set
             {
-                if (_purchaseorder_id == value) return;
-                _purchaseorder_id = value;
-                RaisePropertyChanged("Purchaseorder_id");
+                if (_purchase_order_fk == value) return;
+                _purchase_order_fk = value;
+                RaisePropertyChanged("purchase_order_fk");
             }
         }
-        public string lotnum
+        public string lot_number
         {
-            get { return _lotnum; }
+            get { return _lot_number; }
             set
             {
-                if (_lotnum == value) return;
-                _lotnum = value;
-                RaisePropertyChanged("lotnum");
+                if (_lot_number == value) return;
+                _lot_number = value;
+                RaisePropertyChanged("lot_number");
             }
         }
-        public decimal Lotcost
+        public decimal lot_cost
         {
-            get { return _lotcost; }
+            get { return _lot_cost; }
             set
             {
-                if (_lotcost == value) return;
-                _lotcost = value;
-                RaisePropertyChanged("Lotcost");
+                if (_lot_cost == value) return;
+                _lot_cost = value;
+                RaisePropertyChanged("lot_cost");
             }
         }
-        public int Lotqty
+        public int lot_qty
         {
-            get { return _lotqty; }
+            get { return _lot_qty; }
             set
             {
-                if (_lotqty == value) return;
-                _lotqty = value;
-                RaisePropertyChanged("Lotqty");
+                if (_lot_qty == value) return;
+                _lot_qty = value;
+                RaisePropertyChanged("lot_qty");
             }
         }
 
-        public string Lotname
+        public string lot_name
         {
-            get { return _lotname; }
+            get { return _lot_name; }
             set
             {
-                if (_lotname == value) return;
-                _lotname = value;
-                RaisePropertyChanged("Lotname");
+                if (_lot_name == value) return;
+                _lot_name = value;
+                RaisePropertyChanged("lot_name");
             }
         }
 
-        public string Lotdescription
+        public string lot_description
         {
-            get { return _lotdescription; }
+            get { return _lot_description; }
             set
             {
-                if (_lotdescription == value) return;
-                _lotdescription = value;
-                RaisePropertyChanged("Lotdescription");
+                if (_lot_description == value) return;
+                _lot_description = value;
+                RaisePropertyChanged("lot_description");
             }
         }
-        public decimal Salestax
+        public decimal sales_tax
         {
-            get { return _salestax; }
+            get { return _sales_tax; }
             set
             {
-                if (_salestax == value) return;
-                _salestax = value;
-                RaisePropertyChanged("Salestax");
+                if (_sales_tax == value) return;
+                _sales_tax = value;
+                RaisePropertyChanged("sales_tax");
             }
         }
-        public decimal Shippingcost
+        public decimal shipping_cost
         {
-            get { return _shippingcost; }
+            get { return _shipping_cost; }
             set
             {
-                if (_shippingcost == value) return;
-                _shippingcost = value;
-                RaisePropertyChanged("Shippingcost");
+                if (_shipping_cost == value) return;
+                _shipping_cost = value;
+                RaisePropertyChanged("shipping_cost");
             }
         }
-
-
-
     }
 }

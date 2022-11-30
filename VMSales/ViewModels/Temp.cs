@@ -1,4 +1,5 @@
 ﻿using System;
+
 using System.Collections.ObjectModel;
 using System.Data;
 using System.Windows.Data;
@@ -32,7 +33,7 @@ product category
  
  */
 
-
+/*
 namespace VMSales.ViewModels
 {
         public class Temp : BaseViewModel
@@ -77,7 +78,10 @@ namespace VMSales.ViewModels
             #region collectionmodel
             public ObservableCollection<PurchaseOrderModel> ocPurchaseOrderView { get; set; } = new ObservableCollection<PurchaseOrderModel>();
 
-            private CollectionViewSource cvsPurchaseOrderView { get; set; } = new CollectionViewSource();
+            //private CollectionViewSource cvsPurchaseOrderView { get; set; } = new CollectionViewSource();
+           
+
+
             public ICollectionView PurchaseOrderView
             {
                 get { return CollectionViewSource.GetDefaultView(ocPurchaseOrderView); }
@@ -122,6 +126,9 @@ namespace VMSales.ViewModels
             }
             #endregion
             #region publicfilters
+   
+
+
             public bool CanRemoveInvoiceNumberFilter
             {
                 get { return _cancanremoveinvoicenumberfilter; }
@@ -131,9 +138,6 @@ namespace VMSales.ViewModels
                     RaisePropertyChanged("CanRemoveInvoiceNumberFilter");
                 }
             }
-            /// <summary>
-            /// Gets or sets a flag indicating if the PurchaseDate filter, if applied, can be removed.
-            /// </summary>
             public bool CanRemovePurchaseDateFilter
             {
                 get { return _cancanremovepurchasedatefilter; }
@@ -278,11 +282,11 @@ namespace VMSales.ViewModels
                        MessageBox.Show(PO.Salestax.ToString());
                        MessageBox.Show(PO.Shippingcost.ToString());
                     */
-                }
+                //}
                 //}
 
-            }
-
+            //}
+/*
             public void AddCommand()
             {
             }
@@ -339,6 +343,8 @@ namespace VMSales.ViewModels
             *   This does not completey Reset the filter, just allows it to be changed to another filter value. 
             */
 
+
+    /*
             public void AddInvoiceNumberFilter()
             {
                 // see Notes on Adding Filters:
@@ -375,6 +381,9 @@ namespace VMSales.ViewModels
             * clears out any previous filters applied to it.  
             */
             // This is where purchase data is filtered.
+
+
+/*
             private void FilterByInvoiceNumber(object sender, FilterEventArgs e)
             {
                 var src = e.Item as PurchaseOrderModel;
@@ -491,4 +500,4 @@ namespace VMSales.ViewModels
         }
         #endregion
     }
-
+*/
