@@ -1,26 +1,65 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using System.Data;
-using System.Runtime.CompilerServices;
 using System.Windows.Data;
-using VMSales.Database;
 using VMSales.Models;
 using System.Linq;
 using System.Collections.Generic;
 using System.ComponentModel;
+using VMSales.Logic;
+using VMSales.Database;
 using VMSales.ChangeTrack;
 using System.Windows;
+using System.Runtime.CompilerServices;
 using VMSales.Models;
-using VMSales.Logic;
 using System.Threading.Tasks;
 using System.Collections.ObjectModel;
-using System.Windows;
 using System;
 
 namespace VMSales.ViewModels
 {
+
     public class PurchaseOrderViewModel : BaseViewModel
     {
+
+        #region Collections
+        public ObservableCollection<string> InvoiceNumber
+        {
+            get { return _invoicenumber; }
+            set
+            {
+                if (_invoicenumber == value)
+                    return;
+                _invoicenumber = value;
+                RaisePropertyChanged("InvoiceNumber");
+            }
+        }
+        public ObservableCollection<DateTime> PurchaseDate
+        {
+            get { return _purchasedate; }
+            set
+            {
+                if (_purchasedate == value)
+                    return;
+                _purchasedate = value;
+                RaisePropertyChanged("PurchaseDate");
+            }
+        }
+
+        public ObservableCollection<SupplierModel> ObservableCollectionSupplierModel { get; set; }
+        private ObservableCollection<PurchaseOrderModel> ObservableCollectionPurchaseOrderModelclean { get; set; }
+        public ObservableCollection<PurchaseOrderModel> ObservableCollectionPurchaseOrderModel
+        {
+            get { return ObservableCollectionPurchaseOrderModelclean; }
+            set
+            {
+                if (ObservableCollectionPurchaseOrderModelclean == value) return;
+                ObservableCollectionPurchaseOrderModelclean = value;
+                RaisePropertyChanged("ObservableCollectionPurchaseOrderModel");
+            }
+        }
+        #endregion
+
         #region Selected
         private string _selectedinvoicenumber;
         private string _selectedpurchasedate;
@@ -59,7 +98,7 @@ namespace VMSales.ViewModels
         private CollectionViewSource cvsPurchaseOrderView { get; set; } = new CollectionViewSource();
         //may have to add supplier_name to this.
         #endregion
-  
+
         #region filter methods
         private bool _cancanremoveinvoicenumberfilter;
         private bool _cancanremovepurchasedatefilter;
@@ -87,10 +126,8 @@ namespace VMSales.ViewModels
                     break;
             }
         }
-
         public void AddInvoiceNumberFilter()
         {
-            // see Notes on Adding Filters:
             if (CanRemoveInvoiceNumberFilter)
             {
                 cvsPurchaseOrderView.Filter -= new FilterEventHandler(FilterByInvoiceNumber);
@@ -131,7 +168,6 @@ namespace VMSales.ViewModels
             else if (string.Compare(SelectedPurchaseDate, src.purchase_date.ToString()) != 0)
                 e.Accepted = false;
         }
-
         public bool CanRemoveInvoiceNumberFilter
         {
             get { return _cancanremoveinvoicenumberfilter; }
@@ -184,65 +220,77 @@ namespace VMSales.ViewModels
                 _supplier_fk = value;
                 RaisePropertyChanged("supplier_fk");
                 LoadPurchaseOrder(supplier_fk);
-    }
-}
-
-        #region Collections
-        public ObservableCollection<string> InvoiceNumber
-        {
-            get { return _invoicenumber; }
-            set
-            {
-                if (_invoicenumber == value)
-                    return;
-                _invoicenumber = value;
-                RaisePropertyChanged("InvoiceNumber");
-            }
-        }
-        public ObservableCollection<DateTime> PurchaseDate
-        {
-            get { return _purchasedate; }
-            set
-            {
-                if (_purchasedate == value)
-                    return;
-                _purchasedate = value;
-                RaisePropertyChanged("PurchaseDate");
             }
         }
 
-        public ObservableCollection<SupplierModel> ObservableCollectionSupplierModel { get; set; }
-        private ObservableCollection<PurchaseOrderModel> ObservableCollectionPurchaseOrderModelclean { get; set; }
-        public ObservableCollection<PurchaseOrderModel> ObservableCollectionPurchaseOrderModel
-        {
-            get { return ObservableCollectionPurchaseOrderModelclean; }
-            set
-            {
-                if (ObservableCollectionPurchaseOrderModelclean == value) return;
-                ObservableCollectionPurchaseOrderModelclean = value;
-                RaisePropertyChanged("ObservableCollectionPurchaseOrderModel");
-            }
-        }
-        #endregion
         public List<string> InvoiceNumberList { get; set; }
         public List<DateTime> PurchaseDateList { get; set; }
 
         IDatabaseProvider dataBaseProvider;
 
+        #region ButtonCommands
+        public void AddCommand()
+        {
+            var obj = new PurchaseOrderModel()
+            {
+                purchase_order_pk = "0",
+                supplier_fk = this.supplier_fk,
+                invoice_number = "0",
+                purchase_date = DateTime.MinValue,
+                purchase_order_detail_pk = "0",
+                purchase_order_fk = "0",
+                lot_cost = 0,
+                lot_qty = 0,
+                lot_number = "0",
+                lot_name = "Name",
+                lot_description = "",
+                sales_tax = 0,
+                shipping_cost = 0
+            };
+            ObservableCollectionPurchaseOrderModel.Add(obj);
+            RaisePropertyChanged("ObservableCollectionPurchaseOrderModel");
+
+        }
+        public void DeleteCommand()
+        {
+            
+        }
+        public void ResetCommand()
+        {
+
+        }
+        public void SaveCommand()
+        { 
+        
+        }
+        #endregion
+
         public void LoadPurchaseOrder(int supplier_fk)
         {
+            InvoiceNumber.Clear();
+            PurchaseDate.Clear();
+
             InvoiceNumberList = new List<string>();
             PurchaseDateList = new List<DateTime>();
             dataBaseProvider = BaseViewModel.getprovider();
             DataBaseLayer.PurchaseOrderRepository PurchaseOrderRepo = new DataBaseLayer.PurchaseOrderRepository(dataBaseProvider);
             var Result = PurchaseOrderRepo.GetAllWithID(supplier_fk).Result;
-            PurchaseOrderRepo.Commit();
-            PurchaseOrderRepo.Dispose();
+            ObservableCollectionPurchaseOrderModel = new ObservableCollection<PurchaseOrderModel>();
+            ObservableCollectionPurchaseOrderModel = Result.ToObservable();
+            
+            CollectionViewSource.GetDefaultView(ObservableCollectionPurchaseOrderModel).Refresh();
+                PurchaseOrderRepo.Commit();
+              PurchaseOrderRepo.Dispose();
+            RaisePropertyChanged("PurchaseOrderView");
 
             foreach (var item in Result)
             {
-                InvoiceNumberList.Add(item.invoice_number);
-                PurchaseDateList.Add(item.purchase_date);
+    //            MessageBox.Show(item.invoice_number);
+                if (item.invoice_number != null || item.purchase_date != null)
+                    if (!InvoiceNumberList.Contains(item.invoice_number))
+                        InvoiceNumberList.Add(item.invoice_number);
+                if (!PurchaseDateList.Contains(item.purchase_date))
+                    PurchaseDateList.Add(item.purchase_date);
             }
             if (InvoiceNumberList.Count > 0 || PurchaseDateList.Count > 0)
             {
@@ -254,13 +302,32 @@ namespace VMSales.ViewModels
         #region pageload
         public PurchaseOrderViewModel()
         {
+            InvoiceNumberList = new List<string>();
+            PurchaseDateList = new List<DateTime>();
+
             // Get All Purchase Order
             ObservableCollectionPurchaseOrderModel = new ObservableCollection<PurchaseOrderModel>();
             dataBaseProvider = BaseViewModel.getprovider();
-            DataBaseLayer.PurchaseOrderRepository PurchaseRepo = new DataBaseLayer.PurchaseOrderRepository(dataBaseProvider);
-            ObservableCollectionPurchaseOrderModel = PurchaseRepo.GetAll().Result.ToObservable();
-            PurchaseRepo.Commit();
-            PurchaseRepo.Dispose();
+            DataBaseLayer.PurchaseOrderRepository PurchaseOrderRepo = new DataBaseLayer.PurchaseOrderRepository(dataBaseProvider);
+            var Result = PurchaseOrderRepo.GetAll().Result;
+            ObservableCollectionPurchaseOrderModel = PurchaseOrderRepo.GetAll().Result.ToObservable();
+            PurchaseOrderRepo.Commit();
+            PurchaseOrderRepo.Dispose();
+            RaisePropertyChanged("ObservableCollectionPurchaseOrderModel");
+
+            foreach (var item in Result)
+            {
+                if (item.invoice_number != null || item.purchase_date != null)
+                    if (!InvoiceNumberList.Contains(item.invoice_number)) 
+                      InvoiceNumberList.Add(item.invoice_number);
+                    if (!PurchaseDateList.Contains(item.purchase_date))
+                      PurchaseDateList.Add(item.purchase_date);
+                }
+           if (InvoiceNumberList.Count > 0 || PurchaseDateList.Count > 0)
+           {
+               InvoiceNumber = new ObservableCollection<string>(InvoiceNumberList.Cast<String>());
+               PurchaseDate = new ObservableCollection<DateTime>(PurchaseDateList.Cast<DateTime>());
+           }
 
             // Get Suppliers
             ObservableCollectionSupplierModel = new ObservableCollection<SupplierModel>();

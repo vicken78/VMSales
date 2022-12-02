@@ -17,7 +17,7 @@ namespace VMSales.Models
 
         // purchase order detail
         [ExplicitKey]
-        public string Porder_pk
+        public string purchase_order_detail_pk
         {
             get { return _purchase_order_detail_pk; }
             set

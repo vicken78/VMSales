@@ -179,10 +179,12 @@ namespace VMSales.Logic
             public override async Task<IEnumerable<PurchaseOrderModel>> GetAllWithID(int id)
             {
                 return await Connection.QueryAsync<PurchaseOrderModel>("SELECT " +
-                    "purchase_order.invoice_number, purchase_order.purchase_date " +
-                    "FROM purchase_order, supplier " +
-                    "WHERE supplier.supplier_pk = purchase_order.supplier_fk " +
-                    "AND supplier.supplier_pk=@id",new { id }, Transaction);
+                    "distinct po.purchase_date, po.invoice_number, pod.lot_number, pod.lot_cost, pod.lot_qty," +
+                    "pod.lot_name, pod.lot_description, pod.sales_tax, pod.shipping_cost " +
+                    "FROM purchase_order as po, purchase_order_detail as pod, supplier as sup " +
+                    "INNER JOIN purchase_order_detail on po.purchase_order_pk = pod.purchase_order_fk " +
+                    "INNER JOIN supplier on sup.supplier_pk = po.supplier_fk " +
+                    "AND po.supplier_fk=@id", new { id }, Transaction);
             }
             
             public override async Task<bool> Update(PurchaseOrderModel entity)

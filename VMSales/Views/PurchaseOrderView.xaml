@@ -48,7 +48,7 @@
             <Label Grid.Row="2" Grid.Column="0">Supplier</Label>
 
             <ComboBox x:Name="cmbSupplier" ItemsSource="{Binding Path=ObservableCollectionSupplierModel}" DisplayMemberPath="supplier_name" SelectedValue="{Binding supplier_fk, Mode=TwoWay}" SelectedValuePath="supplier_pk" Grid.Row="2" Grid.Column="1"/>
-
+  
             <!-- Address -->
             <Label Content="Address" Grid.Column="0" Grid.Row="4" />
             <TextBox Name="Address" IsReadOnly="True" Background="WhiteSmoke"  Text="{Binding SelectedItem.address, ElementName=cmbSupplier}" 
@@ -80,7 +80,7 @@
             <TextBlock Grid.Row="2" Grid.Column="4" FontSize="14" HorizontalAlignment="Center" FontWeight="Bold">Invoice No.</TextBlock>
         
                 <ComboBox IsEditable="False" Background="White" Grid.Row="3" Grid.Column="4" 
-                ItemsSource="{Binding InvoiceNumber}" 
+                ItemsSource="{Binding InvoiceNumber, Mode=TwoWay}" 
                 SelectedItem="{Binding SelectedInvoiceNumber, 
                 Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
                 Width="100" HorizontalAlignment="Left"/>
@@ -147,10 +147,16 @@
             <DataGrid x:Name="purchaseorderdatagrid" AutoGenerateColumns="False" 
                           ItemsSource="{Binding PurchaseOrderView}"       
                           IsSynchronizedWithCurrentItem="True" 
+                          CanUserDeleteRows ="False"
+                          CanUserAddRows="False"
                           EnableRowVirtualization="True" IsReadOnly="False" Grid.Row="10" 
                           Height="Auto" Width="1280"  HorizontalAlignment="Center" >
 
             <DataGrid.Columns>
+
+                <DataGridTextColumn x:Name="supplier_fk" Header="Supplier FK" Width="90"
+                            Visibility="Visible"  Binding="{Binding Path=SelectedValue, ElementName=cmbSupplier, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}"/>
+
                 <DataGridTextColumn Header="Lot Number" Width="90"
                             Binding="{Binding lot_number, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}"/>
                 <DataGridTextColumn Header="Quantity" Width="60" 

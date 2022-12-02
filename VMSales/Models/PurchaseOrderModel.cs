@@ -6,8 +6,8 @@ using System.Collections.ObjectModel;
 
 namespace VMSales.Models
 {
-    
-public partial class PurchaseOrderModel : BaseViewModel
+
+    public partial class PurchaseOrderModel : BaseViewModel
     {
 
         private ObservableCollection<SupplierModel> ObservableCollectionSupplierModelclean { get; set; }
