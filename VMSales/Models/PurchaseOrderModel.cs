@@ -30,6 +30,7 @@ namespace VMSales.Models
                 RaisePropertyChanged("purchase_order_pk");
             }
         }
+   
         public string invoice_number
         {
             get { return _invoice_number; }

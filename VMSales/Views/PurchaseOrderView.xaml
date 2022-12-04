@@ -143,25 +143,33 @@
                             HorizontalAlignment="Left"
                             Content="Reset"/>
         </Grid>
+        <!-- OLD   ItemsSource="{Binding PurchaseOrderView}" -->
 
-            <DataGrid x:Name="purchaseorderdatagrid" AutoGenerateColumns="False" 
-                          ItemsSource="{Binding PurchaseOrderView}"       
-                          IsSynchronizedWithCurrentItem="True" 
+        <DataGrid x:Name="purchaseorderdatagrid" AutoGenerateColumns="False" 
+                      ItemsSource="{Binding ObservableCollectionPurchaseOrderModel}"
+                      IsSynchronizedWithCurrentItem="True" 
                           CanUserDeleteRows ="False"
-                          CanUserAddRows="False"
+                          SelectionMode="Single"
+                          CanUserAddRows="True"
                           EnableRowVirtualization="True" IsReadOnly="False" Grid.Row="10" 
                           Height="Auto" Width="1280"  HorizontalAlignment="Center" >
 
             <DataGrid.Columns>
-
-                <DataGridTextColumn x:Name="supplier_fk" Header="Supplier FK" Width="90"
+                
+                <DataGridTextColumn x:Name="supplier_fk" Header="SUP FK" Width="90"
                             Visibility="Visible"  Binding="{Binding Path=SelectedValue, ElementName=cmbSupplier, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}"/>
+
+                <DataGridTextColumn x:Name="selected_purchase_order_pk" Header="PO PK" Width="90"
+                            Visibility="Visible"  Binding="{Binding purchase_order_pk, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}"/>
+
+                <DataGridTextColumn x:Name="selected_purchase_order_detail_pk" Header="POD PK" Width="90"
+                            Visibility="Visible" Binding="{Binding purchase_order_detail_pk,  Mode=TwoWay, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}"/>
 
                 <DataGridTextColumn Header="Lot Number" Width="90"
                             Binding="{Binding lot_number, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}"/>
                 <DataGridTextColumn Header="Quantity" Width="60" 
-                            Binding="{Binding lot_qty, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}" />
-                <DataGridTextColumn Header="Lot Name" Width="Auto" 
+                            Binding="{Binding lot_quantity, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}" />
+                <DataGridTextColumn Header="Lot Name" Width="Auto"
                             Binding="{Binding lot_name, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}" />
                 <DataGridTextColumn Header="Lot Description" Width="Auto" 
                             Binding="{Binding lot_description, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}" />

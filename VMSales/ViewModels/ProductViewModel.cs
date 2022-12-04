@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using System.Data;
-using VMSales.Database;
 using VMSales.Models;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -237,7 +236,6 @@ namespace VMSales.ViewModels
                     kvp.Add(new Tuple<string, string>("listing_url", PO.productListingURL.ToString()));
                     kvp.Add(new Tuple<string, string>("listing_num", PO.productListingNumber.ToString()));
                     kvp.Add(new Tuple<string, string>("listing_date", PO.productListingDate.ToString()));
-                    DataBaseOps.update("product", kvp, "", "");
                 }
 
                 MessageBox.Show(PO.selectedCategory.ToString());
@@ -295,11 +293,11 @@ namespace VMSales.ViewModels
             List<string> listName = new List<string>();
 
             // populate Supplier Filter DropDown
-            DataTable myDataTable = DataBaseOps.SQLiteDataTableWithQuery(parameter);
-            foreach (DataRow row in myDataTable.Rows)
-            {
+            //DataTable myDataTable = DataBaseOps.SQLiteDataTableWithQuery(parameter);
+            //foreach (DataRow row in myDataTable.Rows)
+            //{
                 //listName.Add(row[stringtablename].ToString());
-            }
+           // }
 
             return listName;
         }
@@ -311,9 +309,9 @@ namespace VMSales.ViewModels
 
             // populate any existing products
             string productParameter = "product";
-            DataTable productDataTable = DataBaseOps.SQLiteDataTableWithQuery(productParameter);
+        //    DataTable productDataTable = DataBaseOps.SQLiteDataTableWithQuery(productParameter);
 
-            if (productDataTable == null || productDataTable.Rows.Count < 1)
+          /*  if (productDataTable == null || productDataTable.Rows.Count < 1)
             {
                     var obj = new ProductModel()
                     {
@@ -335,9 +333,9 @@ namespace VMSales.ViewModels
                     };
                     ocProductView.Add(obj);
             }
+          */
 
-
-            foreach (DataRow row in productDataTable.Rows)
+          /*  foreach (DataRow row in productDataTable.Rows)
             {
 
                  // need to get category too
@@ -359,7 +357,7 @@ namespace VMSales.ViewModels
                 };
                 ocProductView.Add(obj);
             };
-
+          */
             /*
                      ocProductView.Add(new ProductModel()
                    {

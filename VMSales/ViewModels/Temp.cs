@@ -3,7 +3,6 @@
 using System.Collections.ObjectModel;
 using System.Data;
 using System.Windows.Data;
-using VMSales.Database;
 using VMSales.Models;
 using System.Linq;
 using System.Collections.Generic;

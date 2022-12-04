@@ -33,10 +33,10 @@ namespace VMSales.Logic
             {
                 Revert(false);
             }
-        //    finally
-        //    {
-        //        Transaction = Connection.BeginTransaction();
-        //    }
+          //  finally
+          //   {
+          //       Transaction = Connection.BeginTransaction();
+          //   }
         }
 
         /// <summary>

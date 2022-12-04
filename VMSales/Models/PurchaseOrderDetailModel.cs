@@ -8,7 +8,7 @@ namespace VMSales.Models
         private string _purchase_order_detail_pk { get; set; }
         private string _purchase_order_fk { get; set; }
         private decimal _lot_cost { get; set; }
-        private int _lot_qty { get; set; }
+        private int _lot_quantity { get; set; }
         private string _lot_name { get; set; }
         private string _lot_number { get; set; }
         private string _lot_description { get; set; }
@@ -57,14 +57,14 @@ namespace VMSales.Models
                 RaisePropertyChanged("lot_cost");
             }
         }
-        public int lot_qty
+        public int lot_quantity
         {
-            get { return _lot_qty; }
+            get { return _lot_quantity; }
             set
             {
-                if (_lot_qty == value) return;
-                _lot_qty = value;
-                RaisePropertyChanged("lot_qty");
+                if (_lot_quantity == value) return;
+                _lot_quantity = value;
+                RaisePropertyChanged("lot_quantity");
             }
         }
 
