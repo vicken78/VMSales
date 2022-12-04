@@ -191,11 +191,7 @@ namespace VMSales.Logic
 
             public override async Task<bool> Update(PurchaseOrderModel entity)
             {
-                MessageBox.Show("shipcost" + entity.shipping_cost + "\n");
-
-                // fix
-
-                // we are not passing entity supplier_fk.  temp set to 1 for testing others.
+   
                 bool updaterow = (await Connection.ExecuteAsync("UPDATE purchase_order SET " +
                     "purchase_order_pk = @id, " +
                     "supplier_fk = @supplier_fk, " +
@@ -203,7 +199,7 @@ namespace VMSales.Logic
                     "purchase_date = @purchase_date " +
                     "WHERE EXISTS (SELECT 1 FROM purchase_order WHERE purchase_order_pk = @id)", new { 
                     id = entity.purchase_order_pk,
-                    supplier_fk = "1",
+                    supplier_fk = entity.supplier_fk,
                     invoice_number = entity.invoice_number,
                     purchase_date = entity.purchase_date
                 }, null)) == 1;

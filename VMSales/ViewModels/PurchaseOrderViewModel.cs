@@ -316,7 +316,7 @@ namespace VMSales.ViewModels
                 selectedrow = item;
                 RaisePropertyChanged("selectedrow");
             }
-
+            selectedrow.supplier_fk = supplier_fk;
 
             if (supplier_fk.ToString() == null || supplier_fk == 0)
             { MessageBox.Show("Please select a supplier."); }
