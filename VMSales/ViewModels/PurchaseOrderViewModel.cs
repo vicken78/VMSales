@@ -14,6 +14,8 @@ using VMSales.Models;
 using System.Threading.Tasks;
 using System.Collections.ObjectModel;
 using System;
+using System.Collections.Specialized;
+using System.Collections;
 
 namespace VMSales.ViewModels
 {
@@ -23,6 +25,7 @@ namespace VMSales.ViewModels
 
     public class PurchaseOrderViewModel : BaseViewModel
     {
+        private BaseViewModel baseViewModel;
 
         #region Collections
         public ObservableCollection<string> InvoiceNumber
@@ -243,9 +246,9 @@ namespace VMSales.ViewModels
         {
             var obj = new PurchaseOrderModel()
             {
-                purchase_order_pk = "0",
-                purchase_order_fk = "0",
-                purchase_order_detail_pk = "0",
+                purchase_order_pk = 0,
+                purchase_order_fk = '0',
+                purchase_order_detail_pk = 0,
                 supplier_fk = this.supplier_fk,
                 invoice_number = "0",
                 purchase_date = DateTime.MinValue,
@@ -270,12 +273,12 @@ namespace VMSales.ViewModels
             }
             else
             {
-                if (selectedrow.purchase_order_detail_pk == "0" || selectedrow.purchase_order_fk == "0")
+                if (selectedrow.purchase_order_detail_pk == 0 || selectedrow.purchase_order_fk == 0)
                 {
                     // delete from screen only.
                     return;
                 }
-                if (selectedrow.purchase_order_pk != "0" && selectedrow.purchase_order_fk != "0" && selectedrow.purchase_order_detail_pk != "0")
+                if (selectedrow.purchase_order_pk != 0 && selectedrow.purchase_order_fk != 0 && selectedrow.purchase_order_detail_pk != 0)
                 {
                     dataBaseProvider = BaseViewModel.getprovider();
                     DataBaseLayer.PurchaseOrderRepository PurchaseOrderRepo = new DataBaseLayer.PurchaseOrderRepository(dataBaseProvider);
@@ -309,26 +312,53 @@ namespace VMSales.ViewModels
         {
 
         }
-        public void SaveCommand()
+        public void SaveCommand(object sender, RoutedEventArgs e)
         {
-            foreach (var item in ObservableCollectionPurchaseOrderModel)
-            {
-                selectedrow = item;
-                RaisePropertyChanged("selectedrow");
-            }
-            selectedrow.supplier_fk = supplier_fk;
-
+   
             if (supplier_fk.ToString() == null || supplier_fk == 0)
-            { MessageBox.Show("Please select a supplier."); }
-              if (selectedrow.purchase_order_detail_pk == "0" || selectedrow.purchase_order_fk == "0" || selectedrow.purchase_order_detail_pk == "0")
-              {
-                // insert new row
-                MessageBox.Show("Insert");
-              }
-            else
+            { 
+                MessageBox.Show("Please select a supplier.");
+                return;
+            }
+
+            if (selectedrow.purchase_order_detail_pk == 0 || selectedrow.purchase_order_fk == 0 || selectedrow.purchase_order_detail_pk == 0)
             {
-                // update row
-                  dataBaseProvider = BaseViewModel.getprovider();
+                // insert new row
+                dataBaseProvider = BaseViewModel.getprovider();
+                DataBaseLayer.PurchaseOrderRepository PurchaseOrderRepo = new DataBaseLayer.PurchaseOrderRepository(dataBaseProvider);
+                try
+                {
+                    // we need to check for default values here. better checks later.
+                    if (selectedrow.lot_name == "Name")
+                    {
+                        MessageBox.Show("Default Values must not be used.");
+                        return;
+                    }
+                    Task<bool> insertPurchase_Order = PurchaseOrderRepo.Insert(selectedrow);
+                    if (insertPurchase_Order.Result == true)
+                    {
+                        
+                        PurchaseOrderRepo.Commit();
+                        PurchaseOrderRepo.Dispose();
+                        MessageBox.Show("Data Inserted");
+                        return;
+                    }
+                    else { MessageBox.Show("Insert failed to commit."); }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("An Error has occured." + ex);
+                    PurchaseOrderRepo.Revert();
+                    PurchaseOrderRepo.Dispose();
+                }
+                return;
+        }
+            // update
+              if (selectedrow.purchase_order_detail_pk != 0)
+              {
+              
+               
+                dataBaseProvider = BaseViewModel.getprovider();
                   DataBaseLayer.PurchaseOrderRepository PurchaseOrderRepo = new DataBaseLayer.PurchaseOrderRepository(dataBaseProvider);
                 try
                 {
@@ -351,33 +381,66 @@ namespace VMSales.ViewModels
         }
         #endregion
 
+     
+
+
         public void LoadPurchaseOrder(int supplier_fk)
         {
-            InvoiceNumber.Clear();
-            PurchaseDate.Clear();
 
+            ObservableCollectionPurchaseOrderModel = new ObservableCollection<PurchaseOrderModel>();
+
+            //clear and reload invoicedate and purchasedate
+            if (InvoiceNumber.Count > 0 && PurchaseDate.Count > 0)
+            {
+                InvoiceNumber.Clear();
+                PurchaseDate.Clear();
+            }
+         
             InvoiceNumberList = new List<string>();
             PurchaseDateList = new List<DateTime>();
             dataBaseProvider = BaseViewModel.getprovider();
             DataBaseLayer.PurchaseOrderRepository PurchaseOrderRepo = new DataBaseLayer.PurchaseOrderRepository(dataBaseProvider);
             var Result = PurchaseOrderRepo.GetAllWithID(supplier_fk).Result;
-            ObservableCollectionPurchaseOrderModel = new ObservableCollection<PurchaseOrderModel>();
-            ObservableCollectionPurchaseOrderModel = Result.ToObservable();
-            
-            CollectionViewSource.GetDefaultView(ObservableCollectionPurchaseOrderModel).Refresh();
+
+            if (Result.Count() == 0)
+            {
+                selectedrow = null;
+                ObservableCollectionPurchaseOrderModel.Add(new PurchaseOrderModel()
+                {
+                    purchase_order_pk = 0,
+                    purchase_order_fk = 0,
+                    purchase_order_detail_pk = 0,
+                    supplier_fk = this.supplier_fk,
+                    invoice_number = "0",
+                    purchase_date = DateTime.MinValue,
+                    lot_cost = 0,
+                    lot_quantity = 0,
+                    lot_number = "0",
+                    lot_name = "Name",
+                    lot_description = "",
+                    sales_tax = 0,
+                    shipping_cost = 0
+                });
+            }
+            else
+            {
+                ObservableCollectionPurchaseOrderModel = Result.ToObservable();
+            }
+            RaisePropertyChanged("ObservableCollectionPurchaseOrderModel");
             PurchaseOrderRepo.Commit();
             PurchaseOrderRepo.Dispose();
-            RaisePropertyChanged("PurchaseOrderView");
 
-            foreach (var item in Result)
+            foreach (var item in ObservableCollectionPurchaseOrderModel)
             {
-    //            MessageBox.Show(item.invoice_number);
+                selectedrow = item;
+                    
                 if (item.invoice_number != null || item.purchase_date != null)
                     if (!InvoiceNumberList.Contains(item.invoice_number))
                         InvoiceNumberList.Add(item.invoice_number);
                 if (!PurchaseDateList.Contains(item.purchase_date))
                     PurchaseDateList.Add(item.purchase_date);
             }
+
             if (InvoiceNumberList.Count > 0 || PurchaseDateList.Count > 0)
             {
                 InvoiceNumber = new ObservableCollection<string>(InvoiceNumberList.Cast<String>());
@@ -385,17 +448,39 @@ namespace VMSales.ViewModels
             }
 
         }
-        #region pageload
-        public PurchaseOrderViewModel()
+
+    #region pageload
+    public PurchaseOrderViewModel()
         {
+            //Initial Page Load
             InvoiceNumberList = new List<string>();
             PurchaseDateList = new List<DateTime>();
 
             // Get All Purchase Order
             ObservableCollectionPurchaseOrderModel = new ObservableCollection<PurchaseOrderModel>();
+
             dataBaseProvider = BaseViewModel.getprovider();
             DataBaseLayer.PurchaseOrderRepository PurchaseOrderRepo = new DataBaseLayer.PurchaseOrderRepository(dataBaseProvider);
             var Result = PurchaseOrderRepo.GetAll().Result;
+            if (Result.Count() == 0)
+            {
+                Result.DefaultIfEmpty(new PurchaseOrderModel()
+                {
+                    purchase_order_pk = 0,
+                    purchase_order_fk = 0,
+                    purchase_order_detail_pk = 0,
+                    supplier_fk = this.supplier_fk,
+                    invoice_number = "0",
+                    purchase_date = DateTime.MinValue,
+                    lot_cost = 0,
+                    lot_quantity = 0,
+                    lot_number = "0",
+                    lot_name = "Name",
+                    lot_description = "",
+                    sales_tax = 0,
+                    shipping_cost = 0
+                });
+            }
             ObservableCollectionPurchaseOrderModel = PurchaseOrderRepo.GetAll().Result.ToObservable();
             cvs.Source = ObservableCollectionPurchaseOrderModel;
             PurchaseOrderRepo.Commit();

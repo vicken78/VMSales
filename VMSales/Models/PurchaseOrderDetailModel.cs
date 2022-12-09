@@ -5,8 +5,8 @@ namespace VMSales.Models
 {
     public partial class PurchaseOrderModel : BaseViewModel
     {
-        private string _purchase_order_detail_pk { get; set; }
-        private string _purchase_order_fk { get; set; }
+        private int _purchase_order_detail_pk { get; set; }
+        private int _purchase_order_fk { get; set; }
         private decimal _lot_cost { get; set; }
         private int _lot_quantity { get; set; }
         private string _lot_name { get; set; }
@@ -15,9 +15,10 @@ namespace VMSales.Models
         private decimal _sales_tax { get; set; }
         private decimal _shipping_cost { get; set; }
 
+    
         // purchase order detail
         [ExplicitKey]
-        public string purchase_order_detail_pk
+        public int purchase_order_detail_pk
         {
             get { return _purchase_order_detail_pk; }
             set
@@ -25,9 +26,10 @@ namespace VMSales.Models
                 if (_purchase_order_detail_pk == value) return;
                 _purchase_order_detail_pk = value;
                 RaisePropertyChanged("purchase_order_detail_pk");
+            
             }
         }
-        public string purchase_order_fk
+        public int purchase_order_fk
         {
             get { return _purchase_order_fk; }
             set

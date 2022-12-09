@@ -1,4 +1,5 @@
 ﻿using Dapper;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Threading.Tasks;
@@ -145,23 +146,44 @@ namespace VMSales.Logic
         {
             public PurchaseOrderRepository(IDatabaseProvider dbProvider) : base(dbProvider) { }
 
+            // Insert
             public override async Task<bool> Insert(PurchaseOrderModel entity)
             {
-                int newId = await Connection.QuerySingleAsync<int>("INSERT INTO category (category_name, description, creation_date) VALUES (@category_name, @description, @creation_date); SELECT last_insert_rowid()", new
-                {
-                    //category_name = entity.category_name,
-                    //description = entity.description,
-                    //creation_date = System.DateTime.Now
-                }, Transaction);
+                // I need to insert into purchase_order and purchase_order_detail
+                // first, purchase_order, then purchase_order_detail
+                  int newId = await Connection.QuerySingleAsync<int>("INSERT INTO purchase_order (supplier_fk, invoice_number, purchase_date) VALUES (@supplier_fk, @invoice_number, @purchase_date); SELECT last_insert_rowid()", new
+                  {
+                     supplier_fk = entity.supplier_fk,
+                      invoice_number = entity.invoice_number,
+                      purchase_date = entity.purchase_date
+                  }, Transaction) ;
 
-                //entity.category_pk = newId;
+                 entity.purchase_order_fk = newId;
+             
+            
+                // now for purchase_order_detail
+                bool insertrow = (await Connection.ExecuteAsync("INSERT INTO purchase_order_detail " +
+                    "(purchase_order_fk, lot_cost, lot_quantity, lot_number, lot_name, lot_description, sales_tax, shipping_cost) " +
+                      "VALUES (@purchase_order_fk, @lot_cost, @lot_quantity, @lot_number, @lot_name, @lot_description, @sales_tax, @shipping_cost)", 
+                      new {
+                      purchase_order_fk = entity.purchase_order_fk,
+                      lot_cost = entity.lot_cost,
+                      lot_quantity = entity.lot_quantity,
+                      lot_number = entity.lot_number,
+                      lot_name = entity.lot_name,
+                      lot_description = entity.lot_description,
+                      sales_tax = entity.sales_tax,
+                      shipping_cost = entity.shipping_cost
+                      }, Transaction)) == 1;
+                  return insertrow;
+                
+              
+        }
 
-                return true;
-            }
-
+    
             public override async Task<PurchaseOrderModel> Get(int id)
             {
-                return await Connection.QuerySingleAsync<PurchaseOrderModel>("SELECT category_p FROM category WHERE category_pk = @id", new { id }, Transaction);
+                return await Connection.QuerySingleAsync<PurchaseOrderModel>("SELECT purchase_order_detail_pk FROM purchase_order_detail as pod INNER JOIN purchase_order on purchase_order.purchase_order_pk = pod.purchase_order_fk WHERE supplier_fk = @id;", new { id }, Transaction);
             }
   
             // get all purchase_order and purchase_order_detail
@@ -206,7 +228,7 @@ namespace VMSales.Logic
 
                 return (await Connection.ExecuteAsync("UPDATE purchase_order_detail SET " +
                     "purchase_order_detail_pk = @id, " +
-                    "purchase_order_fk = @purchase_order_fk, " +
+                    "purchase_order_id = @purchase_order_id, " +
                     "lot_cost = @lot_cost, " +
                     "lot_quantity = @lot_quantity, " +
                     "lot_number = @lot_number," +
@@ -217,7 +239,7 @@ namespace VMSales.Logic
                     "WHERE EXISTS (SELECT 1 FROM purchase_order_detail WHERE " +
                     "purchase_order_detail_pk = @id)" , new {
                      id = entity.purchase_order_detail_pk,
-                     purchase_order_fk = entity.purchase_order_fk,
+                     purchase_order_id = entity.purchase_order_fk,
                      lot_cost = entity.lot_cost, 
                      lot_quantity = entity.lot_quantity, 
                      lot_number = entity.lot_number,
@@ -231,7 +253,7 @@ namespace VMSales.Logic
             public override async Task<bool> Delete(PurchaseOrderModel entity)
             { 
                 //
-
+                // check and fix.  we need to delete purchase_order_detail pk, then delete purchase_order_pk IF its the last one.
                 //
 
 
