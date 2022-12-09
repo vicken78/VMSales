@@ -10,10 +10,7 @@ using VMSales.Logic;
 using VMSales.ChangeTrack;
 using System.Windows;
 using System.Runtime.CompilerServices;
-using VMSales.Models;
 using System.Threading.Tasks;
-using System.Collections.ObjectModel;
-using System;
 using System.Collections.Specialized;
 using System.Collections;
 
@@ -323,17 +320,18 @@ namespace VMSales.ViewModels
 
             if (selectedrow.purchase_order_detail_pk == 0 || selectedrow.purchase_order_fk == 0 || selectedrow.purchase_order_detail_pk == 0)
             {
+                if (selectedrow.lot_name == "Name")
+                {
+                    MessageBox.Show("Default Values must not be used.");
+                    return;
+                }
+
                 // insert new row
                 dataBaseProvider = BaseViewModel.getprovider();
                 DataBaseLayer.PurchaseOrderRepository PurchaseOrderRepo = new DataBaseLayer.PurchaseOrderRepository(dataBaseProvider);
                 try
                 {
                     // we need to check for default values here. better checks later.
-                    if (selectedrow.lot_name == "Name")
-                    {
-                        MessageBox.Show("Default Values must not be used.");
-                        return;
-                    }
                     Task<bool> insertPurchase_Order = PurchaseOrderRepo.Insert(selectedrow);
                     if (insertPurchase_Order.Result == true)
                     {
@@ -356,19 +354,20 @@ namespace VMSales.ViewModels
             // update
               if (selectedrow.purchase_order_detail_pk != 0)
               {
-              
-               
+                selectedrow.supplier_fk = this.supplier_fk;
+
                 dataBaseProvider = BaseViewModel.getprovider();
-                  DataBaseLayer.PurchaseOrderRepository PurchaseOrderRepo = new DataBaseLayer.PurchaseOrderRepository(dataBaseProvider);
+                DataBaseLayer.PurchaseOrderRepository PurchaseOrderRepo = new DataBaseLayer.PurchaseOrderRepository(dataBaseProvider);
                 try
                 {
                       Task<bool> updatePurchase_Order = PurchaseOrderRepo.Update(selectedrow);
-                      if (updatePurchase_Order.Result == true)
-                      {
+     
+                        if (updatePurchase_Order.Result.Equals(true))
+                        {
                           PurchaseOrderRepo.Commit();
                           PurchaseOrderRepo.Dispose();
-                      }
-                      else { MessageBox.Show("Update failed to commit."); }
+                        }
+                        else { MessageBox.Show("Update failed to commit."); }
                 }
                 catch (Exception ex)
                 {

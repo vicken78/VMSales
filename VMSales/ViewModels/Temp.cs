@@ -9,12 +9,8 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using VMSales.ChangeTrack;
 using System.Windows;
-using VMSales.Models;
 using VMSales.Logic;
 using System.Threading.Tasks;
-using System.Collections.ObjectModel;
-using System.Windows;
-using System;
 
 /*
 this is purchase order detail

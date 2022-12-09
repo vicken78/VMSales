@@ -213,41 +213,50 @@ namespace VMSales.Logic
 
             public override async Task<bool> Update(PurchaseOrderModel entity)
             {
-   
-                bool updaterow = (await Connection.ExecuteAsync("UPDATE purchase_order SET " +
-                    "purchase_order_pk = @id, " +
-                    "supplier_fk = @supplier_fk, " +
-                    "invoice_number = @invoice_number, " +
-                    "purchase_date = @purchase_date " +
-                    "WHERE EXISTS (SELECT 1 FROM purchase_order WHERE purchase_order_pk = @id)", new { 
-                    id = entity.purchase_order_pk,
-                    supplier_fk = entity.supplier_fk,
-                    invoice_number = entity.invoice_number,
-                    purchase_date = entity.purchase_date
-                }, null)) == 1;
 
+               //     Task<bool> select = (await Connection.QuerySingleAsync("SELECT 1 FROM purchase_order_detail WHERE purchase_order_fk = @id", new { id = entity.purchase_order_fk }, Transaction)) == 1;
+               //     MessageBox.Show(select.Result.ToString());
+              //  if (select.Result > 0)
+              //  {
+                    
+                    
+                    bool updaterow = (await Connection.ExecuteAsync("UPDATE purchase_order SET " +
+                        "purchase_order_pk = @id, " +
+                        "supplier_fk = @supplier_fk, " +
+                        "invoice_number = @invoice_number, " +
+                        "purchase_date = @purchase_date " +
+                        "WHERE purchase_order_pk = @id", new
+                        {
+                            id = entity.purchase_order_pk,
+                            supplier_fk = entity.supplier_fk,
+                            invoice_number = entity.invoice_number,
+                            purchase_date = entity.purchase_date
+                        }, null)) == 1;
+
+              
                 return (await Connection.ExecuteAsync("UPDATE purchase_order_detail SET " +
-                    "purchase_order_detail_pk = @id, " +
-                    "purchase_order_id = @purchase_order_id, " +
-                    "lot_cost = @lot_cost, " +
-                    "lot_quantity = @lot_quantity, " +
-                    "lot_number = @lot_number," +
-                    "lot_name = @lot_name, " +
-                    "lot_description = @lot_description, " +
-                    "sales_tax = @sales_tax, " +
-                    "shipping_cost = @shipping_cost " +
-                    "WHERE EXISTS (SELECT 1 FROM purchase_order_detail WHERE " +
-                    "purchase_order_detail_pk = @id)" , new {
-                     id = entity.purchase_order_detail_pk,
-                     purchase_order_id = entity.purchase_order_fk,
-                     lot_cost = entity.lot_cost, 
-                     lot_quantity = entity.lot_quantity, 
-                     lot_number = entity.lot_number,
-                     lot_name = entity.lot_name, 
-                     lot_description = entity.lot_description, 
-                     sales_tax = entity.sales_tax,
-                     shipping_cost = entity.shipping_cost
-                    }, Transaction)) == 1;
+                        "purchase_order_fk = @purchase_order_fk, " +
+                        "lot_cost = @lot_cost, " +
+                        "lot_quantity = @lot_quantity, " +
+                        "lot_number = @lot_number," +
+                        "lot_name = @lot_name, " +
+                        "lot_description = @lot_description, " +
+                        "sales_tax = @sales_tax, " +
+                        "shipping_cost = @shipping_cost " +
+                        "WHERE purchase_order_detail_pk = @purchase_order_detail_pk", new
+                        {
+                            purchase_order_fk = entity.purchase_order_fk,
+                            lot_cost = entity.lot_cost,
+                            lot_quantity = entity.lot_quantity,
+                            lot_number = entity.lot_number,
+                            lot_name = entity.lot_name,
+                            lot_description = entity.lot_description,
+                            sales_tax = entity.sales_tax,
+                            shipping_cost = entity.shipping_cost,
+                            purchase_order_detail_pk = entity.purchase_order_detail_pk,
+                        }, Transaction)) == 1;
+                //}
+                //return false;
             }
 
             public override async Task<bool> Delete(PurchaseOrderModel entity)

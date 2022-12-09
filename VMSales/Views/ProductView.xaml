@@ -50,7 +50,7 @@
             <!-- Supplier -->
             <Label Grid.Row="2" Grid.Column="0">Supplier</Label>
             <ComboBox x:Name="supplierName" IsEditable="False" Background="WhiteSmoke"  
-                ItemsSource="{Binding supplierName}"
+                ItemsSource="{Binding supplier_fk}"
                 SelectedItem="{Binding selectedSupplierName, 
                 UpdateSourceTrigger=PropertyChanged}"  
                 Width="200" Grid.Column="1" Grid.Row="2" />
@@ -58,34 +58,34 @@
             <!-- Lot Number -->
             <Label Content="Lot Number" Grid.Column="0" Grid.Row="4" />
             <ComboBox x:Name="lotNumber" IsEditable="False" Background="WhiteSmoke"  
-                ItemsSource="{Binding lotNumber}"  
+                ItemsSource="{Binding lot_number}"  
                 SelectedItem="{Binding selectedLotNumber, 
                 Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"  
                 Width="200" Grid.Column="1" Grid.Row="4" />
             
             <!-- Lot Name -->
                 <Label Content="Lot Name" Grid.Column="0" Grid.Row="5" />
-            <TextBox Name="lotname" IsReadOnly="True" Background="WhiteSmoke" Text="{Binding SelectedItem.State, ElementName=cmbSupplier}"
+            <TextBox Name="lot_name" IsReadOnly="True" Background="WhiteSmoke" Text="{Binding SelectedItem.State, ElementName=cmbSupplier}"
                         Grid.Column="1" Grid.Row="5"/>
             <!-- Lot Description -->
             <Label Content="Lot Description" Grid.Column="0" Grid.Row="6" />
-            <TextBox Name="lotDescription" IsReadOnly="True" Background="WhiteSmoke" Text="{Binding SelectedItem.Country, ElementName=cmbSupplier}"
+            <TextBox Name="lot_description" IsReadOnly="True" Background="WhiteSmoke" Text="{Binding SelectedItem.Country, ElementName=cmbSupplier}"
                         Grid.Column="1" Grid.Row="6" />
             <!-- Lot Quantity -->
             <Label Content="Lot Quantity" Grid.Column="0" Grid.Row="7" />
-            <TextBox Name="lotQuantity" IsReadOnly="True" Background="WhiteSmoke" Text="{Binding SelectedItem.Zip, ElementName=cmbSupplier}"
+            <TextBox Name="lot_quantity" IsReadOnly="True" Background="WhiteSmoke" Text="{Binding SelectedItem.Zip, ElementName=cmbSupplier}"
                         Grid.Column="1" Grid.Row="7"/>
             <!-- Lot Cost -->
             <Label Content="Lot Cost" Grid.Column="0" Grid.Row="8" />
-            <TextBox Name="lotCost" IsReadOnly="True" Background="WhiteSmoke" Text="{Binding SelectedItem.Phone, ElementName=cmbSupplier}"
+            <TextBox Name="lot_cost" IsReadOnly="True" Background="WhiteSmoke" Text="{Binding SelectedItem.Phone, ElementName=cmbSupplier}"
                         Grid.Column="1" Grid.Row="8"/>
             <!-- Lot Sales Tax -->
             <Label Content="Lot Sales Tax" Grid.Column="0" Grid.Row="9" />
-            <TextBox Name="lotSalesTax" IsReadOnly="True" Background="WhiteSmoke" Text="{Binding SelectedItem.Email, ElementName=cmbSupplier}"
+            <TextBox Name="lot_salestax" IsReadOnly="True" Background="WhiteSmoke" Text="{Binding SelectedItem.Email, ElementName=cmbSupplier}"
                         Grid.Column="1" Grid.Row="9"/>
             <!-- Lot Shipping -->
             <Label Content="Lot Shipping" Grid.Column="0" Grid.Row="10" />
-            <TextBox Name="lotShipping" IsReadOnly="True" Background="WhiteSmoke" Text="{Binding SelectedItem.Email, ElementName=cmbSupplier}"
+            <TextBox Name="lot_shipping" IsReadOnly="True" Background="WhiteSmoke" Text="{Binding SelectedItem.Email, ElementName=cmbSupplier}"
                         Grid.Column="1" Grid.Row="10"/>
 
             <!-- Filter Category -->
