@@ -14,7 +14,8 @@ namespace VMSales.ViewModels
 {
     public class ProductViewModel : BaseViewModel
     {
-        public IList<PurchaseOrderModel> PurchaseOrder = new List<PurchaseOrderModel>();
+        public ProductModel POM = new ProductModel();
+        public IList<PurchaseOrderModel> PurchaseOrder { get; set; }
         private IDatabaseProvider dataBaseProvider;
 
         public void SaveCommand()
@@ -25,18 +26,18 @@ namespace VMSales.ViewModels
         {
             var obj = new ProductModel()
             {
-                productCondition = new List<String> { "New", "Used" },
-                productBrandName = "",
-                productName = "Name",
-                productDescription = "Description",
-                productQuantity = "0",
-                productCost = 0,
-                productSKU = "0",
-                productSoldPrice = 0,
-                productStock = 1,
-                productListingURL = "",
-                productListingNumber = "",
-                productListingDate = DateTime.Now,
+                //productCondition = new List<String> { "New", "Used" },
+                brand_name = "",
+                product_name = "Name",
+                description = "Description",
+                quantity = "0",
+                cost = 0,
+                sku = "0",
+                sold_price = 0,
+                instock = 1,
+                listing_url = "",
+                listing_number = "",
+                listing_date = DateTime.Now,
             };
 
         }
@@ -72,14 +73,18 @@ namespace VMSales.ViewModels
                     lot_description = "",
                     sales_tax = 0,
                     shipping_cost = 0
-                }); 
+                });
+                MessageBox.Show("Please add purchase orders.");
+            }
+            else
+            {
+                foreach (var item in PurchaseOrder)
+                {
+                   // item.lot_name = POM.lotName;
+                }
             }
 
-            foreach (var item in PurchaseOrder)
-            {
-                MessageBox.Show(item.lot_number);
-            }
-   
+          
             /*ObservableCollectionCategoryModel = new ObservableCollection<CategoryModel>();
             ObservableCollectionCategoryModel = CategoryRepo.GetAll().Result.ToObservable();
             ObservableCollectionCategoryModelclean = ObservableCollectionCategoryModel;

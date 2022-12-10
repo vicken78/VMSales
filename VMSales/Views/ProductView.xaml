@@ -50,17 +50,16 @@
             <!-- Supplier -->
             <Label Grid.Row="2" Grid.Column="0">Supplier</Label>
             <ComboBox x:Name="supplierName" IsEditable="False" Background="WhiteSmoke"  
-                ItemsSource="{Binding supplier_fk}"
-                SelectedItem="{Binding selectedSupplierName, 
-                UpdateSourceTrigger=PropertyChanged}"  
+                ItemsSource="{Binding PurchaseOrder}"
+                SelectedValue="{Binding supplier_name}"
                 Width="200" Grid.Column="1" Grid.Row="2" />
 
             <!-- Lot Number -->
             <Label Content="Lot Number" Grid.Column="0" Grid.Row="4" />
             <ComboBox x:Name="lotNumber" IsEditable="False" Background="WhiteSmoke"  
-                ItemsSource="{Binding lot_number}"  
-                SelectedItem="{Binding selectedLotNumber, 
-                Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"  
+                ItemsSource="{Binding PurchaseOrder}"
+                SelectedValue="{Binding lot_number}"
+                SelectedValuePath="{Binding selectedLotNumber}" 
                 Width="200" Grid.Column="1" Grid.Row="4" />
             
             <!-- Lot Name -->

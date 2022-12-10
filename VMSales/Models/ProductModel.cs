@@ -9,151 +9,122 @@ namespace VMSales.Models
     [Table("product")]
     public class ProductModel : BaseViewModel
     {
-        private List<string> _productcondition { get; set; }
+        private List<string> _condition { get; set; }
         private string _product_pk { get; set; }
-        private string _productname { get; set; }
-        private string _productdescription { get; set; }
-        private string _productquantity { get; set; }
-        private decimal _productcost { get; set; }
-        private string _productsku { get; set; }
-        private decimal _productsoldprice { get; set; }
-        private int _productstock { get; set; }
-        private string _productlistingurl { get; set; }
-        private string _productlistingnumber { get; set; }
-        private DateTime _productlistingdate { get; set; }
-        private string _productbrandname { get; set; }
-
+        private string _brand_name { get; set; }
+        private string _product_name { get; set; }
+        private string _description { get; set; }
+        private string _quantity { get; set; }
+        private decimal _cost { get; set; }
+        private string _sku { get; set; }
+        private decimal _sold_price { get; set; }
+        private int _instock { get; set; }
+        private string _listing_url { get; set; }
+        private string _listing_number { get; set; }
+        private DateTime _listing_date { get; set; }
+     
 
         [ExplicitKey]
-        public string product_PK { get; set; }
-        public string productName
+        public string product_pk { get; set; }
+        public string product_name
         {
-            get { return _productname; }
+            get { return _product_name; }
             set
             {
-                _productname = value;
-                RaisePropertyChanged("productName");
+                _product_name = value;
+                RaisePropertyChanged("product_name");
             }
         }
-        public string productDescription 
+        public string description 
         {
-            get { return _productdescription; }
+            get { return _description; }
             set
             {
-                _productdescription = value;
-                RaisePropertyChanged("productDescription");
+                _description = value;
+                RaisePropertyChanged("description");
             }
         }
-        public string productQuantity 
+        public string quantity 
         {
-            get { return _productquantity; }
+            get { return _quantity; }
             set
             {
-                _productquantity = value;
-                RaisePropertyChanged("productQuantity");
+                _quantity = value;
+                RaisePropertyChanged("quantity");
             }
         }
-        public decimal productCost
+        public decimal cost
         {
-            get { return _productcost; }
+            get { return _cost; }
             set
             {
-            _productcost = value;
-            RaisePropertyChanged("productCost");
+            _cost = value;
+            RaisePropertyChanged("cost");
             }
         }
-        public string productSKU
+        public string sku
         {
-            get { return _productsku; }
+            get { return _sku; }
             set
             {
-                _productsku = value;
-                RaisePropertyChanged("productSKU");
+                _sku = value;
+                RaisePropertyChanged("sku");
             }
         }
-        public decimal productSoldPrice 
+        public decimal sold_price 
         {
-            get { return _productsoldprice; }
+            get { return _sold_price; }
             set
             {
-            _productsoldprice = value;
-            RaisePropertyChanged("productSoldPrice");
+            _sold_price = value;
+            RaisePropertyChanged("sold_price");
             }
         }
-        public int productStock 
+        public int instock 
         {
-            get { return _productstock; }
+            get { return _instock; }
             set
             {
-            _productstock = value;
-            RaisePropertyChanged("productStock");
-            }
-        }
-
-        // Lists
-        public List<string> productCondition { get; set; }
-        public List<string> categoryName { get; set; }
-        public List<string> lotName { get; set; }
-
-        // Selected
-        private string _selectedcondition;
-        public string selectedCondition
-        {
-            get { return _selectedcondition; }
-            set
-            {
-                _selectedcondition = value;
-                RaisePropertyChanged("selectedCondition");
+            _instock = value;
+            RaisePropertyChanged("instock");
             }
         }
 
-        private string _selectedcategory;
-        public string selectedCategory
+        public string listing_url 
         {
-            get { return _selectedcategory; }
+            get { return _listing_url; }
             set
             {
-                _selectedcategory = value;
-                RaisePropertyChanged("selectedCategory");
+            _listing_url = value;
+            RaisePropertyChanged("listing_url");
             }
         }
-        // End selected
-
-        public string productListingURL 
+        public string listing_number 
         {
-            get { return _productlistingurl; }
+            get { return _listing_number; }
             set
             {
-            _productlistingurl = value;
-            RaisePropertyChanged("productListingURL");
+            _listing_number = value;
+            RaisePropertyChanged("listing_number");
             }
         }
-        public string productListingNumber 
+        public DateTime listing_date 
         {
-            get { return _productlistingnumber; }
+            get { return _listing_date; }
             set
             {
-            _productlistingnumber = value;
-            RaisePropertyChanged("productListingNumber");
-            }
-        }
-        public DateTime productListingDate 
-        {
-            get { return _productlistingdate; }
-            set
-            {
-            _productlistingdate = value;
-            RaisePropertyChanged("productListingDate");
+            _listing_date = value;
+            RaisePropertyChanged("listing_date");
             }
         }
 
-        public string productBrandName 
+        public string brand_name 
         {
-            get { return _productbrandname; }
+            get { return _brand_name; }
             set
                 {
-                _productbrandname = value;
-                RaisePropertyChanged("productBrandName");
+                _brand_name = value;
+                RaisePropertyChanged("brand_name");
                 }
         }
     }
