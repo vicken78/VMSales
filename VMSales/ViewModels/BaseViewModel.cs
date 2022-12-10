@@ -29,7 +29,8 @@ namespace VMSales.ViewModels
             
             if (dbfilepath == "PROD")
                 {
-                const string filepath = "C:\\Users\\Vicken\\source\\repos\\testsqllite\\testsqllite\\db\\sales.db";
+
+                const string filepath = "C:\\Users\\Vicken\\source\\repos\\VMSales\\VMSales\\sales.db";
                 return filepath;
                 }
             else
