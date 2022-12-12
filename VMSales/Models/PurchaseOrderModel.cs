@@ -11,11 +11,7 @@ namespace VMSales.Models
 
     public partial class PurchaseOrderModel : BaseViewModel
     {
-   
-        private ObservableCollection<SupplierModel> ObservableCollectionSupplierModelclean { get; set; }
-        public ObservableCollection<SupplierModel> ObservableCollectionSupplierModel { get; set; }
 
-        public List<PurchaseOrderModel> OrderDetails { get; set; }
         private int _purchase_order_pk { get; set; }
         private string _invoice_number { get; set; }
         private DateTime _purchase_date { get; set; }
@@ -53,10 +49,5 @@ namespace VMSales.Models
                 RaisePropertyChanged("purchase_date");
             }
         }
-        //totals
-        public decimal Totallotcost { get; set; }
-        public decimal Totalsalestax { get; set; }
-        public decimal Totalshippingcost { get; set; }
-        public decimal Totalcost { get; set; }
     }
 }

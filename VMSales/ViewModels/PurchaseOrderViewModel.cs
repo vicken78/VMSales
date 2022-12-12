@@ -22,8 +22,7 @@ namespace VMSales.ViewModels
 
     public class PurchaseOrderViewModel : BaseViewModel
     {
-        private BaseViewModel baseViewModel;
-
+   
         #region Collections
         public ObservableCollection<string> InvoiceNumber
         {

@@ -1,35 +1,28 @@
 ﻿using Caliburn.Micro;
+using System.Threading.Tasks;
 
 namespace VMSales.ViewModels
 {
     public class ShellViewModel : Conductor<object>
     {
-        public ShellViewModel()
+        public async Task LoadCategory()
         {
-
+            await ActivateItemAsync(new CategoryViewModel());
         }
 
-        public void LoadCategory()
+        public async Task LoadPurchaseOrder()
         {
-            ActivateItemAsync(new CategoryViewModel());
+            await ActivateItemAsync(new PurchaseOrderViewModel());
+        }
+     
+        public async Task LoadSupplier()
+        {
+            await ActivateItemAsync (new SupplierViewModel());
         }
 
-        public void LoadPurchaseOrder()
+        public async Task LoadProduct()
         {
-            ActivateItemAsync(new PurchaseOrderViewModel());
-        }
-        public void LoadProduct()
-        {
-            ActivateItemAsync(new ProductViewModel());
-        }
-
-        public void LoadSupplier()
-        {
-            ActivateItemAsync(new SupplierViewModel());
-        }
-
-        public void LoadCustomerOrder()
-        {
+            await ActivateItemAsync(new ProductViewModel());   
         }
 
 

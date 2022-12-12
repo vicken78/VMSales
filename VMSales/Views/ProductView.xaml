@@ -4,19 +4,21 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:VMSales.ViewModels"         
-             xmlns:cal="http://www.caliburnproject.org"
+             xmlns:cal="http://www.caliburnproject.org" 
+             xmlns:models="clr-namespace:VMSales.ViewModels" 
+             d:DataContext="{d:DesignInstance Type=models:ProductViewModel}"
              mc:Ignorable="d" 
              Height="800" Width="1400" VerticalAlignment="Top" MinHeight="400" MinWidth="800">
-    <UserControl.DataContext>
+    <!--  <UserControl.DataContext>
         <local:ProductViewModel/>
-    </UserControl.DataContext>
+    </UserControl.DataContext>-->
 
     <UserControl.Resources>
         <Style x:Key="CenterGridHeaderStyle" TargetType="DataGridColumnHeader">
             <Setter Property="HorizontalContentAlignment" Value="Center"/>
         </Style>
     </UserControl.Resources>
-    
+
     <DockPanel LastChildFill="True">
         <Grid Margin="10" DockPanel.Dock="Top" Background="Azure">
             <Grid.RowDefinitions>
@@ -48,72 +50,77 @@
             </Grid.ColumnDefinitions>
 
             <!-- Supplier -->
-            <Label Grid.Row="2" Grid.Column="0">Supplier</Label>
+            <!--      <Label Grid.Row="2" Grid.Column="0">Supplier</Label>
             <ComboBox x:Name="supplierName" IsEditable="False" Background="WhiteSmoke"  
                 ItemsSource="{Binding PurchaseOrder}"
                 SelectedValue="{Binding supplier_name}"
-                Width="200" Grid.Column="1" Grid.Row="2" />
-
+                Width="200" Grid.Column="1" Grid.Row="2" />-->
+            <Label Content="Supplier Name" Grid.Column="0" Grid.Row="2"/>
+            <ComboBox x:Name="supplier" ItemsSource="{Binding Path=ObservableCollectionSupplierModel}" DisplayMemberPath="supplier_name" SelectedValue="{Binding supplier_fk, Mode=TwoWay}" SelectedValuePath="supplier_pk" Grid.Row="2" Grid.Column="1"/>
             <!-- Lot Number -->
-            <Label Content="Lot Number" Grid.Column="0" Grid.Row="4" />
-            <ComboBox x:Name="lotNumber" IsEditable="False" Background="WhiteSmoke"  
-                ItemsSource="{Binding PurchaseOrder}"
+            <Label Content="Lot Number" Grid.Column="0" Grid.Row="3"/>
+            <ComboBox x:Name="lot_number" IsEditable="False" Background="WhiteSmoke"  
+                ItemsSource="{Binding Path=ObservableCollectionPurchaseOrderModel}"
+                DisplayMemberPath="lot number"
                 SelectedValue="{Binding lot_number}"
-                SelectedValuePath="{Binding selectedLotNumber}" 
-                Width="200" Grid.Column="1" Grid.Row="4" />
+                SelectedValuePath="{Binding lot_number}"
+                      
+                Grid.Column="1" Grid.Row="3"/>
             
+            
+
             <!-- Lot Name -->
-                <Label Content="Lot Name" Grid.Column="0" Grid.Row="5" />
-            <TextBox Name="lot_name" IsReadOnly="True" Background="WhiteSmoke" Text="{Binding SelectedItem.State, ElementName=cmbSupplier}"
+            <Label Content="Lot Name" Grid.Column="0" Grid.Row="5" />
+            <TextBox Name="lot_name" IsReadOnly="True" Background="WhiteSmoke" Text="{Binding SelectedItem.lot_name, ElementName=PurchaseOrder}"
                         Grid.Column="1" Grid.Row="5"/>
             <!-- Lot Description -->
             <Label Content="Lot Description" Grid.Column="0" Grid.Row="6" />
-            <TextBox Name="lot_description" IsReadOnly="True" Background="WhiteSmoke" Text="{Binding SelectedItem.Country, ElementName=cmbSupplier}"
+            <TextBox Name="lot_description" IsReadOnly="True" Background="WhiteSmoke" Text="{Binding SelectedItem.lot_description, ElementName=PurchaseOrder}"
                         Grid.Column="1" Grid.Row="6" />
             <!-- Lot Quantity -->
             <Label Content="Lot Quantity" Grid.Column="0" Grid.Row="7" />
-            <TextBox Name="lot_quantity" IsReadOnly="True" Background="WhiteSmoke" Text="{Binding SelectedItem.Zip, ElementName=cmbSupplier}"
+            <TextBox Name="lot_quantity" IsReadOnly="True" Background="WhiteSmoke" Text="{Binding SelectedItem.lot_quantity, ElementName=PurchaseOrder}"
                         Grid.Column="1" Grid.Row="7"/>
             <!-- Lot Cost -->
             <Label Content="Lot Cost" Grid.Column="0" Grid.Row="8" />
-            <TextBox Name="lot_cost" IsReadOnly="True" Background="WhiteSmoke" Text="{Binding SelectedItem.Phone, ElementName=cmbSupplier}"
+            <TextBox Name="lot_cost" IsReadOnly="True" Background="WhiteSmoke" Text="{Binding SelectedItem.lot_cost, ElementName=PurchaseOrder}"
                         Grid.Column="1" Grid.Row="8"/>
             <!-- Lot Sales Tax -->
             <Label Content="Lot Sales Tax" Grid.Column="0" Grid.Row="9" />
-            <TextBox Name="lot_salestax" IsReadOnly="True" Background="WhiteSmoke" Text="{Binding SelectedItem.Email, ElementName=cmbSupplier}"
+            <TextBox Name="lot_salestax" IsReadOnly="True" Background="WhiteSmoke" Text="{Binding SelectedItem.sales_tax, ElementName=PurchaseOrder}"
                         Grid.Column="1" Grid.Row="9"/>
             <!-- Lot Shipping -->
             <Label Content="Lot Shipping" Grid.Column="0" Grid.Row="10" />
-            <TextBox Name="lot_shipping" IsReadOnly="True" Background="WhiteSmoke" Text="{Binding SelectedItem.Email, ElementName=cmbSupplier}"
+            <TextBox Name="lot_shipping" IsReadOnly="True" Background="WhiteSmoke" Text="{Binding SelectedItem.shipping_cost, ElementName=PurchaseOrder}"
                         Grid.Column="1" Grid.Row="10"/>
 
             <!-- Filter Category -->
 
-            <TextBlock Grid.Row="2" Grid.Column="6" FontSize="14" HorizontalAlignment="Center" FontWeight="Bold">Category</TextBlock>
-            <ComboBox IsEditable="False" Background="White" Grid.Row="3" Grid.Column="6" 
+            <TextBlock Grid.Row="2" Grid.Column="4" FontSize="14" HorizontalAlignment="Center" FontWeight="Bold">Category</TextBlock>
+            <ComboBox IsEditable="False" Background="White" Grid.Row="3" Grid.Column="4" 
                 ItemsSource="{Binding categoryNameFilter}" 
                 SelectedItem="{Binding selectedCategoryName, 
                 UpdateSourceTrigger=PropertyChanged}" 
-                Width="100" HorizontalAlignment="Left"/>
+                Width="100" HorizontalAlignment="Left" Margin="0.333,2.333,0,23.667" Grid.RowSpan="2"/>
 
-            <Button x:Name="RemoveInvoiceNumberFilterCommand" HorizontalAlignment="Left" Margin="20,0,0,0" Grid.Row="3" Grid.Column="7" Width="16" Height="16" 
+            <Button x:Name="RemoveInvoiceNumberFilterCommand" HorizontalAlignment="Left" Margin="20,0,0,0" Grid.Row="3" Grid.Column="5" Width="16" Height="16" 
             IsEnabled="{Binding canRemoveCategoryFilter, Mode=OneWay}">
                 <Image Width="10" Height="10" Style="{DynamicResource ImageStyleForButtons}"/>
             </Button>
 
             <!-- Filter Supplier -->
 
-            <TextBlock Grid.Row="2" Grid.Column="4" FontSize="14" FontWeight="Bold" HorizontalAlignment="Center">Supplier</TextBlock>
+            <!--   <TextBlock Grid.Row="2" Grid.Column="4" FontSize="14" FontWeight="Bold" HorizontalAlignment="Center" Margin="23.222,2,23.222,19.889" Grid.RowSpan="2">Supplier</TextBlock>
             <ComboBox IsEditable="False" Background="White" Grid.Row="3" Grid.Column="4" 
                 ItemsSource="{Binding supplierNameFilter}"  
                 SelectedItem="{Binding selectedSupplierNameFilter, 
                 Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"  
-                Width="100" HorizontalAlignment="Left"/>
+                Width="100" HorizontalAlignment="Left"/>-->
 
-            <Button x:Name="RemovePurchaseDateFilterCommand" HorizontalAlignment="Left" Margin="20,0,0,0" Grid.Row="3" Grid.Column="5" Width="16" Height="16" 
+            <!--   <Button x:Name="RemovePurchaseDateFilterCommand" HorizontalAlignment="Left" Margin="20,0,0,0" Grid.Row="3" Grid.Column="5" Width="16" Height="16" 
             IsEnabled="{Binding canRemoveSupplierFilter, Mode=OneWay}">
                 <Image Width="10" Height="10" Style="{DynamicResource ImageStyleForButtons}"/>
-            </Button>
+            </Button>-->
 
             <CheckBox FlowDirection="RightToLeft" IsChecked="True" Grid.Column="4" Grid.Row="5" Grid.ColumnSpan="2" HorizontalAlignment="Left" VerticalAlignment="Center">
                 <TextBlock FlowDirection="RightToLeft" FontWeight="Bold" FontSize="14" Text="Show All Products" />
@@ -140,7 +147,7 @@
                             Content="Reset"/>
         </Grid>
 
-<!-- Product DataGrid Start -->
+        <!-- Product DataGrid Start -->
         <DataGrid x:Name="ProductDataGrid"  AutoGenerateColumns="False" 
                           ItemsSource="{Binding ocProductView}"
                           IsSynchronizedWithCurrentItem="True"
@@ -199,12 +206,12 @@
                 </DataGridTemplateColumn>
                 <!-- Quantity -->
                 <DataGridTemplateColumn Header="Qty" Width="50">
-             
+
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <TextBox Text="{Binding productQuantity, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}" PreviewTextInput="NumericInput"/>
                             <!-- <TextBox Text="{Binding productQuanity, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}"/> -->
-               
+
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
@@ -251,7 +258,7 @@
                     </DataGridTextColumn.ElementStyle>
                 </DataGridTextColumn>
                 <!-- Listing Date -->
-               
+
                 <DataGridTemplateColumn Header="Listing Date">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
@@ -264,13 +271,13 @@
                         </DataTemplate>
                     </DataGridTemplateColumn.CellEditingTemplate>
                 </DataGridTemplateColumn>
-<!-- Add Row Button-->
+                <!-- Add Row Button-->
                 <DataGridTemplateColumn Header="Add">
-                <DataGridTemplateColumn.CellTemplate>
-                    <DataTemplate>
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
                             <Button x:Name="addRowCommand" cal:Message.Attach="addRowCommand" Content="Add Row" Width="80" HorizontalAlignment="Center" HorizontalContentAlignment="Center"/>
                         </DataTemplate>
-                </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
 
 

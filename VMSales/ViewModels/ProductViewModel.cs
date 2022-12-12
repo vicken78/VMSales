@@ -1,22 +1,40 @@
-﻿using System;
-using System.Collections.ObjectModel;
-using System.Data;
-using VMSales.Models;
-using VMSales.Logic;
+﻿using Caliburn.Micro;
+using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using VMSales.ChangeTrack;
-using System.Windows.Forms;
-using System.Windows.Data;
+using System.Collections.ObjectModel;
 using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows;
+using VMSales.Logic;
+using VMSales.Models;
 
 namespace VMSales.ViewModels
 {
     public class ProductViewModel : BaseViewModel
     {
-        public ProductModel POM = new ProductModel();
-        public IList<PurchaseOrderModel> PurchaseOrder { get; set; }
-        private IDatabaseProvider dataBaseProvider;
+        #region collections
+        public ObservableCollection<SupplierModel> ObservableCollectionSupplierModel { get; set; }
+        public ObservableCollection<PurchaseOrderModel> ObservableCollectionPurchaseOrderModel { get; set; }
+        private ObservableCollection<ProductModel> ObservableCollectionProductModelclean { get; set; }
+        public ObservableCollection<ProductModel> ObservableCollectionProductModel
+        {
+            get { return ObservableCollectionProductModelclean; }
+            set
+            {
+                if (ObservableCollectionProductModelclean == value) return;
+                ObservableCollectionProductModelclean = value;
+                RaisePropertyChanged("ObservableCollectionProductModel");
+            }
+        }
+
+        #endregion
+        #region selected
+        private ProductModel _selectedrow = null;
+        public ProductModel selectedrow { get => this._selectedrow; set { this._selectedrow = value; RaisePropertyChanged("selectedrow"); } }
+
+        #endregion
+        IDatabaseProvider dataBaseProvider;
 
         public void SaveCommand()
         {
@@ -39,7 +57,6 @@ namespace VMSales.ViewModels
                 listing_number = "",
                 listing_date = DateTime.Now,
             };
-
         }
         public void DeleteCommand()
         {
@@ -48,49 +65,39 @@ namespace VMSales.ViewModels
         {
         }
 
-        public ProductViewModel()
+        public void LoadPurchaseOrder(int supplier_fk)
         {
+            ObservableCollectionPurchaseOrderModel = new ObservableCollection<PurchaseOrderModel>();
             dataBaseProvider = BaseViewModel.getprovider();
-            DataBaseLayer.PurchaseOrderRepository PurchaseRepo = new DataBaseLayer.PurchaseOrderRepository(dataBaseProvider);
-            PurchaseOrder = (IList<PurchaseOrderModel>)PurchaseRepo.GetAll().Result;
-            PurchaseRepo.Commit();
-            PurchaseRepo.Dispose();
+            DataBaseLayer.PurchaseOrderRepository PurchaseOrderRepo = new DataBaseLayer.PurchaseOrderRepository(dataBaseProvider);
+            var Result = PurchaseOrderRepo.GetAllWithID(supplier_fk).Result;
 
-            if (PurchaseOrder.Count() == 0)
+            if (Result.Count() == 0)
             {
-                PurchaseOrder.Add(new PurchaseOrderModel()
-                {
-                    purchase_order_pk = 0,
-                    purchase_order_fk = 0,
-                    purchase_order_detail_pk = 0,
-                    supplier_fk = 0,
-                    invoice_number = "0",
-                    purchase_date = DateTime.MinValue,
-                    lot_cost = 0,
-                    lot_quantity = 0,
-                    lot_number = "0",
-                    lot_name = "Name",
-                    lot_description = "",
-                    sales_tax = 0,
-                    shipping_cost = 0
-                });
-                MessageBox.Show("Please add purchase orders.");
+                MessageBox.Show("You must add purchase orders.");
+                    return;
             }
             else
             {
-                foreach (var item in PurchaseOrder)
-                {
-                   // item.lot_name = POM.lotName;
-                }
+                ObservableCollectionPurchaseOrderModel = Result.ToObservable();
             }
+            RaisePropertyChanged("ObservableCollectionPurchaseOrderModel");
+            PurchaseOrderRepo.Commit();
+            PurchaseOrderRepo.Dispose();
+        }
 
-          
-            /*ObservableCollectionCategoryModel = new ObservableCollection<CategoryModel>();
-            ObservableCollectionCategoryModel = CategoryRepo.GetAll().Result.ToObservable();
-            ObservableCollectionCategoryModelclean = ObservableCollectionCategoryModel;
-            CategoryRepo.Commit();
-            CategoryRepo.Dispose();
-            */
+
+        public ProductViewModel()
+        {
+            // Get Suppliers
+            ObservableCollectionSupplierModel = new ObservableCollection<SupplierModel>();
+            dataBaseProvider = BaseViewModel.getprovider();
+            DataBaseLayer.SupplierRepository SupplierRepo = new DataBaseLayer.SupplierRepository(dataBaseProvider);
+            ObservableCollectionSupplierModel = SupplierRepo.GetAll().Result.ToObservable();
+            SupplierRepo.Commit();
+            SupplierRepo.Dispose();
         }
     }
 }
+
+    

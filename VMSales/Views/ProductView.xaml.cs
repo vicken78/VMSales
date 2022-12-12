@@ -20,16 +20,11 @@ namespace VMSales.Views
     /// Interaction logic for ProductView.xaml
     /// </summary>
     public partial class ProductView : UserControl
-    {
-
+    { 
         private void NumericInput(object sender, TextCompositionEventArgs e)
         {
             e.Handled = new Regex("[^0-9]+").IsMatch(e.Text);
         }
-
-        public ProductView()
-        {
-            InitializeComponent();
-        }
+        
     }
 }
