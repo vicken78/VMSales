@@ -59,39 +59,39 @@
             <ComboBox x:Name="supplier" ItemsSource="{Binding Path=ObservableCollectionSupplierModel}" DisplayMemberPath="supplier_name" SelectedValue="{Binding supplier_fk, Mode=TwoWay}" SelectedValuePath="supplier_pk" Grid.Row="2" Grid.Column="1"/>
             <!-- Lot Number -->
             <Label Content="Lot Number" Grid.Column="0" Grid.Row="3"/>
-            <ComboBox x:Name="lot_number" IsEditable="False" Background="WhiteSmoke"  
+            <ComboBox x:Name="Selected_lot_number" IsEditable="False" Background="WhiteSmoke"  
                 ItemsSource="{Binding Path=ObservableCollectionPurchaseOrderModel}"
-                DisplayMemberPath="lot number"
+                DisplayMemberPath="lot_number"
                 SelectedValue="{Binding lot_number}"
                 SelectedValuePath="{Binding lot_number}"
-                      
+                Height="25" Width="60" HorizontalAlignment="Left"      
                 Grid.Column="1" Grid.Row="3"/>
             
             
 
             <!-- Lot Name -->
             <Label Content="Lot Name" Grid.Column="0" Grid.Row="5" />
-            <TextBox Name="lot_name" IsReadOnly="True" Background="WhiteSmoke" Text="{Binding SelectedItem.lot_name, ElementName=PurchaseOrder}"
+            <TextBox Name="lot_name" IsReadOnly="True" Background="WhiteSmoke" Text="{Binding SelectedItem.lot_name, ElementName=Selected_lot_number}"
                         Grid.Column="1" Grid.Row="5"/>
             <!-- Lot Description -->
             <Label Content="Lot Description" Grid.Column="0" Grid.Row="6" />
-            <TextBox Name="lot_description" IsReadOnly="True" Background="WhiteSmoke" Text="{Binding SelectedItem.lot_description, ElementName=PurchaseOrder}"
+            <TextBox Name="lot_description" IsReadOnly="True" Background="WhiteSmoke" Text="{Binding SelectedItem.lot_description, ElementName=Selected_lot_number}"
                         Grid.Column="1" Grid.Row="6" />
             <!-- Lot Quantity -->
             <Label Content="Lot Quantity" Grid.Column="0" Grid.Row="7" />
-            <TextBox Name="lot_quantity" IsReadOnly="True" Background="WhiteSmoke" Text="{Binding SelectedItem.lot_quantity, ElementName=PurchaseOrder}"
+            <TextBox Name="lot_quantity" IsReadOnly="True" Background="WhiteSmoke" Text="{Binding SelectedItem.lot_quantity, ElementName=Selected_lot_number}"
                         Grid.Column="1" Grid.Row="7"/>
             <!-- Lot Cost -->
             <Label Content="Lot Cost" Grid.Column="0" Grid.Row="8" />
-            <TextBox Name="lot_cost" IsReadOnly="True" Background="WhiteSmoke" Text="{Binding SelectedItem.lot_cost, ElementName=PurchaseOrder}"
+            <TextBox Name="lot_cost" IsReadOnly="True" Background="WhiteSmoke" Text="{Binding SelectedItem.lot_cost, StringFormat='c', ElementName=Selected_lot_number}"
                         Grid.Column="1" Grid.Row="8"/>
             <!-- Lot Sales Tax -->
             <Label Content="Lot Sales Tax" Grid.Column="0" Grid.Row="9" />
-            <TextBox Name="lot_salestax" IsReadOnly="True" Background="WhiteSmoke" Text="{Binding SelectedItem.sales_tax, ElementName=PurchaseOrder}"
+            <TextBox Name="lot_salestax" IsReadOnly="True" Background="WhiteSmoke" Text="{Binding SelectedItem.sales_tax, StringFormat='c',ElementName=Selected_lot_number}"
                         Grid.Column="1" Grid.Row="9"/>
             <!-- Lot Shipping -->
             <Label Content="Lot Shipping" Grid.Column="0" Grid.Row="10" />
-            <TextBox Name="lot_shipping" IsReadOnly="True" Background="WhiteSmoke" Text="{Binding SelectedItem.shipping_cost, ElementName=PurchaseOrder}"
+            <TextBox Name="lot_shipping" IsReadOnly="True" Background="WhiteSmoke" Text="{Binding SelectedItem.shipping_cost, StringFormat='c',ElementName=Selected_lot_number}"
                         Grid.Column="1" Grid.Row="10"/>
 
             <!-- Filter Category -->
@@ -271,17 +271,7 @@
                         </DataTemplate>
                     </DataGridTemplateColumn.CellEditingTemplate>
                 </DataGridTemplateColumn>
-                <!-- Add Row Button-->
-                <DataGridTemplateColumn Header="Add">
-                    <DataGridTemplateColumn.CellTemplate>
-                        <DataTemplate>
-                            <Button x:Name="addRowCommand" cal:Message.Attach="addRowCommand" Content="Add Row" Width="80" HorizontalAlignment="Center" HorizontalContentAlignment="Center"/>
-                        </DataTemplate>
-                    </DataGridTemplateColumn.CellTemplate>
-                </DataGridTemplateColumn>
-
-
-
+      
             </DataGrid.Columns>
         </DataGrid>
     </DockPanel>

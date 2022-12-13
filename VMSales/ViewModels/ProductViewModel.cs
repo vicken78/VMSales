@@ -29,7 +29,22 @@ namespace VMSales.ViewModels
         }
 
         #endregion
-        #region selected
+        #region Members
+        private int _supplier_fk { get; set; }
+        public int supplier_fk
+        {
+            get { return _supplier_fk; }
+            set
+            {
+                if (_supplier_fk == value) return;
+                _supplier_fk = value;
+                RaisePropertyChanged("supplier_fk");
+                LoadPurchaseOrder(supplier_fk);
+            }
+        }
+
+
+
         private ProductModel _selectedrow = null;
         public ProductModel selectedrow { get => this._selectedrow; set { this._selectedrow = value; RaisePropertyChanged("selectedrow"); } }
 
@@ -75,7 +90,9 @@ namespace VMSales.ViewModels
             if (Result.Count() == 0)
             {
                 MessageBox.Show("You must add purchase orders.");
-                    return;
+                PurchaseOrderRepo.Revert();
+                PurchaseOrderRepo.Dispose();
+                return;
             }
             else
             {
