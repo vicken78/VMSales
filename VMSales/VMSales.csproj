@@ -239,6 +239,7 @@
     <Compile Include="Models\CustomerOrderModel.cs" />
     <Compile Include="Models\ProductModel.cs" />
     <Compile Include="Models\ProductPhotoModel.cs" />
+    <Compile Include="Models\ProductPurchaseOrder.cs" />
     <Compile Include="Models\PurchaseOrderDetailModel.cs" />
     <Compile Include="ViewModels\BaseViewModel.cs" />
     <Compile Include="ViewModels\CategoryViewModel.cs" />

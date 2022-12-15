@@ -3,7 +3,7 @@
 namespace VMSales.Models
 {
     [Table("product_photo")]
-    class ProductPhotoModel
+    public class ProductPhotoModel
     {
             [ExplicitKey]
             public string product_photo_pk { get; set; }

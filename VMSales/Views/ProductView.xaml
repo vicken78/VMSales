@@ -96,18 +96,18 @@
 
             <!-- Filter Category -->
 
-            <TextBlock Grid.Row="2" Grid.Column="4" FontSize="14" HorizontalAlignment="Center" FontWeight="Bold">Category</TextBlock>
+         <!--   <TextBlock Grid.Row="2" Grid.Column="4" FontSize="14" HorizontalAlignment="Center" FontWeight="Bold">Category</TextBlock>
             <ComboBox IsEditable="False" Background="White" Grid.Row="3" Grid.Column="4" 
-                ItemsSource="{Binding categoryNameFilter}" 
+                ItemsSource="{Binding category_name}" 
                 SelectedItem="{Binding selectedCategoryName, 
                 UpdateSourceTrigger=PropertyChanged}" 
                 Width="100" HorizontalAlignment="Left" Margin="0.333,2.333,0,23.667" Grid.RowSpan="2"/>
-
-            <Button x:Name="RemoveInvoiceNumberFilterCommand" HorizontalAlignment="Left" Margin="20,0,0,0" Grid.Row="3" Grid.Column="5" Width="16" Height="16" 
+-->
+   <!--         <Button x:Name="RemoveInvoiceNumberFilterCommand" HorizontalAlignment="Left" Margin="20,0,0,0" Grid.Row="3" Grid.Column="5" Width="16" Height="16" 
             IsEnabled="{Binding canRemoveCategoryFilter, Mode=OneWay}">
                 <Image Width="10" Height="10" Style="{DynamicResource ImageStyleForButtons}"/>
             </Button>
-
+-->
             <!-- Filter Supplier -->
 
             <!--   <TextBlock Grid.Row="2" Grid.Column="4" FontSize="14" FontWeight="Bold" HorizontalAlignment="Center" Margin="23.222,2,23.222,19.889" Grid.RowSpan="2">Supplier</TextBlock>
@@ -122,9 +122,9 @@
                 <Image Width="10" Height="10" Style="{DynamicResource ImageStyleForButtons}"/>
             </Button>-->
 
-            <CheckBox FlowDirection="RightToLeft" IsChecked="True" Grid.Column="4" Grid.Row="5" Grid.ColumnSpan="2" HorizontalAlignment="Left" VerticalAlignment="Center">
+     <!--       <CheckBox FlowDirection="RightToLeft" IsChecked="True" Grid.Column="4" Grid.Row="5" Grid.ColumnSpan="2" HorizontalAlignment="Left" VerticalAlignment="Center">
                 <TextBlock FlowDirection="RightToLeft" FontWeight="Bold" FontSize="14" Text="Show All Products" />
-            </CheckBox>
+            </CheckBox>-->
 
             <!--  Save Button -->
             <Button x:Name="SaveCommand" cal:Message.Attach="SaveCommand" Grid.Column="0" Grid.Row="12"
@@ -149,7 +149,7 @@
 
         <!-- Product DataGrid Start -->
         <DataGrid x:Name="ProductDataGrid"  AutoGenerateColumns="False" 
-                          ItemsSource="{Binding ocProductView}"
+                          ItemsSource="{Binding ObservableCollectionProductModel}"
                           IsSynchronizedWithCurrentItem="True"
                           CanUserReorderColumns="False"
                           CanUserAddRows="False"
@@ -160,12 +160,12 @@
                 <DataGridTemplateColumn Header="Category" Width="100">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <ComboBox Margin="2" ItemsSource="{Binding categoryName}" SelectedValue="{Binding selectedCategory, UpdateSourceTrigger=PropertyChanged}"/>
+                            <ComboBox Margin="2" ItemsSource="{Binding category_name}"  SelectedValue="{Binding category_pk}" SelectedValuePath="{Binding selected_category_pk, UpdateSourceTrigger=PropertyChanged}"/>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
                 <!--Product Name -->
-                <DataGridTextColumn Header="Product Name" Width="140" Binding="{Binding productName, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}">
+                <DataGridTextColumn Header="Product Name" Width="140" Binding="{Binding product_name, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}">
                     <DataGridTextColumn.ElementStyle>
                         <Style TargetType="TextBlock">
                             <Setter Property="TextWrapping" Value="Wrap"/>
@@ -173,7 +173,7 @@
                     </DataGridTextColumn.ElementStyle>
                 </DataGridTextColumn>
                 <!-- Product Description -->
-                <DataGridTextColumn Header="Description" Width="230" Binding="{Binding productDescription, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}">
+                <DataGridTextColumn Header="Description" Width="230" Binding="{Binding description, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}">
                     <DataGridTextColumn.ElementStyle>
                         <Style TargetType="TextBlock">
                             <Setter Property="TextWrapping" Value="Wrap"/>
@@ -181,7 +181,7 @@
                     </DataGridTextColumn.ElementStyle>
                 </DataGridTextColumn>
                 <!-- SKU-->
-                <DataGridTextColumn Header="SKU" Width="100" Binding="{Binding productSKU, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}"  >
+                <DataGridTextColumn Header="SKU" Width="100" Binding="{Binding sku, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}"  >
                     <DataGridTextColumn.ElementStyle>
                         <Style TargetType="TextBlock">
                             <Setter Property="TextWrapping" Value="Wrap"/>
@@ -189,7 +189,7 @@
                     </DataGridTextColumn.ElementStyle>
                 </DataGridTextColumn>
                 <!-- Brand Name-->
-                <DataGridTextColumn Header="Brand Name" Width="90" Binding="{Binding productBrandName, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}">
+                <DataGridTextColumn Header="Brand Name" Width="90" Binding="{Binding brand_name, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}">
                     <DataGridTextColumn.ElementStyle>
                         <Style TargetType="TextBlock">
                             <Setter Property="TextWrapping" Value="Wrap"/>
@@ -200,7 +200,7 @@
                 <DataGridTemplateColumn Header="Condition" Width="70">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <ComboBox ItemsSource="{Binding productCondition}" SelectedValue="{Binding selectedCondition, UpdateSourceTrigger=PropertyChanged}"/>
+                            <ComboBox ItemsSource="{Binding condition}" SelectedValue="{Binding selectedCondition, UpdateSourceTrigger=PropertyChanged}"/>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
@@ -209,14 +209,14 @@
 
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <TextBox Text="{Binding productQuantity, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}" PreviewTextInput="NumericInput"/>
+                            <TextBox Text="{Binding quantity, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}" PreviewTextInput="NumericInput"/>
                             <!-- <TextBox Text="{Binding productQuanity, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}"/> -->
 
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
                 <!-- Cost -->
-                <DataGridTextColumn Header="Cost" Width="70" Binding="{Binding productCost, StringFormat='c', ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}">
+                <DataGridTextColumn Header="Cost" Width="70" Binding="{Binding cost, StringFormat='c', ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}">
                     <DataGridTextColumn.ElementStyle>
                         <Style TargetType="TextBlock">
                             <Setter Property="TextWrapping" Value="Wrap"/>
@@ -225,7 +225,7 @@
                     </DataGridTextColumn.ElementStyle>
                 </DataGridTextColumn>
                 <!-- Sold Price -->
-                <DataGridTextColumn Header="Sold Price" Width="70" Binding="{Binding productSoldPrice, StringFormat='c', ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}">
+                <DataGridTextColumn Header="Sold Price" Width="70" Binding="{Binding sold_price, StringFormat='c', ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}">
                     <DataGridTextColumn.ElementStyle>
                         <Style TargetType="TextBlock">
                             <Setter Property="TextWrapping" Value="Wrap"/>
@@ -237,12 +237,12 @@
                 <DataGridTemplateColumn Header="In Stock" Width="50">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <CheckBox HorizontalAlignment="Center" VerticalAlignment="Center" IsChecked="{Binding productStock, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                            <CheckBox HorizontalAlignment="Center" VerticalAlignment="Center" IsChecked="{Binding instock, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
                 <!-- Listing Number -->
-                <DataGridTextColumn Header="Listing Number" Width="120" Binding="{Binding productListingNumber}"  >
+                <DataGridTextColumn Header="Listing Number" Width="120" Binding="{Binding listing_number}"  >
                     <DataGridTextColumn.ElementStyle>
                         <Style TargetType="TextBlock">
                             <Setter Property="TextWrapping" Value="Wrap"/>
@@ -250,7 +250,7 @@
                     </DataGridTextColumn.ElementStyle>
                 </DataGridTextColumn>
                 <!-- Listing URL-->
-                <DataGridTextColumn Header="Listing Url" Width="100" Binding="{Binding productListingURL}">
+                <DataGridTextColumn Header="Listing Url" Width="100" Binding="{Binding listing_url}">
                     <DataGridTextColumn.ElementStyle>
                         <Style TargetType="TextBlock">
                             <Setter Property="TextWrapping" Value="Wrap"/>
@@ -262,12 +262,12 @@
                 <DataGridTemplateColumn Header="Listing Date">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <TextBlock Text="{Binding productListingDate}" />
+                            <TextBlock Text="{Binding listing_date}" />
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                     <DataGridTemplateColumn.CellEditingTemplate>
                         <DataTemplate>
-                            <DatePicker SelectedDate="{Binding productListingDate}" />
+                            <DatePicker SelectedDate="{Binding listing_date}" />
                         </DataTemplate>
                     </DataGridTemplateColumn.CellEditingTemplate>
                 </DataGridTemplateColumn>
