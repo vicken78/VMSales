@@ -12,25 +12,24 @@ namespace VMSales.Models
         // for category
         private ObservableCollection<CategoryModel> ObservableCollectionCategoryModelclean { get; set; }
         public ObservableCollection<CategoryModel> ObservableCollectionCategoryModel { get; set; }
+        private ObservableCollection<ProductModel> ObservableCollectionProductModelClean { get; set; }
 
-        public List<int> category_pk { get; set; }
-        private List<string> _category_name { get; set; }
-        public List<string> category_name
+        public ObservableCollection<ProductModel> ObservableCollectionProductModel 
         {
-            get { return _category_name; }
-            set
-            {
-                _category_name = value;
-                RaisePropertyChanged("category_name");
-            }
+            get { return ObservableCollectionProductModelClean; }
+            set {
+                ObservableCollectionProductModelClean = value;
+                RaisePropertyChanged("ObservableCollectionProductModel");
+                    } 
         }
 
 
+        public Dictionary<int, string> category_dictionary { get; set; }
+        public List<int> category_pk { get; set; }
+        
+        private List<string> _conditionlist { get; set; }
+        private string _condition { get; set; }
 
-        public string selected_category_pk { get; set; }
-        // end
-
-        private List<string> _condition { get; set; }
         private int _product_pk { get; set; }
         private string _brand_name { get; set; }
         private string _product_name { get; set; }
@@ -109,7 +108,18 @@ namespace VMSales.Models
                 RaisePropertyChanged("instock");
             }
         }
-        public List<string> condition
+        public List<string> conditionlist
+        {
+            get { return _conditionlist; }
+
+            set
+            {
+                _conditionlist = value;
+                RaisePropertyChanged("conditionlist");
+            }
+        }
+
+        public string condition
         {
             get { return _condition; }
 
@@ -119,6 +129,8 @@ namespace VMSales.Models
                 RaisePropertyChanged("condition");
             }
         }
+
+
 
         public string listing_url
         {
@@ -160,6 +172,25 @@ namespace VMSales.Models
         [ExplicitKey]
         public int product_category_pk { get; set; }
         public int product_fk { get; set; }
-        public int category_fk { get; set; }
+        private int _category_fk { get; set; }
+        public int category_fk
+        {
+            get { return _category_fk; }
+            set { 
+                _category_fk = value;
+                RaisePropertyChanged("category_fk");
+                }
+        }
+        private int _purchase_order_detail_fk { get; set; }
+        public int purchase_order_detail_fk
+        {
+            get { return _purchase_order_detail_fk; }
+            set
+            {
+                _purchase_order_detail_fk = value;
+                RaisePropertyChanged("purchase_order_detail_fk");
+            }
+        }
+        
     }
 }

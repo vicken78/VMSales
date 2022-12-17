@@ -12,9 +12,10 @@ using VMSales.Models;
 namespace VMSales.ViewModels
 {
     public class ProductViewModel : BaseViewModel
-    {  
-        public string selected_category_pk { get; set; }
-   
+    {
+
+    
+
         #region collections
         private ObservableCollection<SupplierModel> ObservableCollectionSupplierModelClean { get; set; }
         public ObservableCollection<SupplierModel> ObservableCollectionSupplierModel
@@ -54,8 +55,6 @@ namespace VMSales.ViewModels
             }
         }
 
-
-
         private ProductModel _selectedrow = null;
         public ProductModel selectedrow { get => this._selectedrow; set { this._selectedrow = value; RaisePropertyChanged("selectedrow"); } }
 
@@ -64,9 +63,41 @@ namespace VMSales.ViewModels
 
         public void SaveCommand()
         {
-       
+            // check for null values
+            if (selectedrow.category_fk == 0)
+            {
+                MessageBox.Show("Please select a Category.");
+                return;
+            }
+            if (selectedrow.product_name is null)
+            {
+                MessageBox.Show("Please enter a product name.");
+                return;
+            }
 
-
+            try
+            {
+                dataBaseProvider = BaseViewModel.getprovider();
+                DataBaseLayer.ProductRepository ProductRepo = new DataBaseLayer.ProductRepository(dataBaseProvider);
+                Task<bool> insertProduct = ProductRepo.Insert(selectedrow);
+                if (insertProduct.Result == true)
+                {
+                    MessageBox.Show("1 Row Inserted.");
+                    ProductRepo.Commit();
+                    ProductRepo.Dispose();
+                    return;
+                }
+                else
+                {
+                    ProductRepo.Revert();
+                    ProductRepo.Dispose();
+                    return;
+                }
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show("An Error has occured: " + e);
+            }
         }
         public void AddCommand()
         {
@@ -74,43 +105,41 @@ namespace VMSales.ViewModels
             var catResult = CategoryRepo.GetAll().Result;
             if (catResult.Count() == 0)
             {
-                MessageBox.Show("You must add categories.");
+                MessageBox.Show("You must add a category.");
                 CategoryRepo.Revert();
                 CategoryRepo.Dispose();
                 return;
             }
             else
             {
+
                 CategoryRepo.Commit();
                 CategoryRepo.Dispose();
                 ObservableCollectionCategoryModel = catResult.ToObservable();
-                ProductModel ProductModel = new ProductModel();
+                ObservableCollectionProductModel = new ObservableCollection<ProductModel>();
 
-                ProductModel.category_pk = new List<int>();
-                ProductModel.category_name = new List<string>();
+                selectedrow.category_dictionary = new Dictionary<int, String>();
 
                 foreach (var item in ObservableCollectionCategoryModel)
                 {
-                    ProductModel.category_pk.Add(item.category_pk);
-                    ProductModel.category_name.Add(item.category_name);
+                    selectedrow.category_dictionary.Add(item.category_pk, item.category_name);
                 }
 
-                ObservableCollectionProductModel = new ObservableCollection<ProductModel>();
+                selectedrow.conditionlist = new List<String> { "New", "Used" };
+                selectedrow.brand_name = null;
+                selectedrow.product_name = null;
+                selectedrow.description = null;
+                selectedrow.quantity = 0;
+                selectedrow.cost = 0;
+                selectedrow.sku = "0";
+                selectedrow.sold_price = -1;
+                selectedrow.instock = 1;
+                selectedrow.listing_url = null;
+                selectedrow.listing_number = null;
+                selectedrow.listing_date = DateTime.MinValue;
 
-                ProductModel.condition = new List<String> { "New", "Used" };
-                ProductModel.brand_name = null;
-                ProductModel.product_name = null;
-                ProductModel.description = null;
-                ProductModel.quantity = 0;
-                ProductModel.cost = 0;
-                ProductModel.sku = "0";
-                ProductModel.sold_price = -1;
-                ProductModel.instock = 1;
-                ProductModel.listing_url = null;
-                ProductModel.listing_number = null;
-                ProductModel.listing_date = DateTime.MinValue;
-
-                ObservableCollectionProductModel.Add(ProductModel);
+                ObservableCollectionProductModel.Add(selectedrow);
+                RaisePropertyChanged("ObservableCollectionProductModel");
             }
         }
         public void DeleteCommand()
@@ -155,6 +184,12 @@ namespace VMSales.ViewModels
             else
             {
                 ObservableCollectionPurchaseOrderModel = purResult.ToObservable();
+                foreach (var item in ObservableCollectionPurchaseOrderModel)
+                {
+                    selectedrow.purchase_order_detail_fk = item.purchase_order_detail_pk;
+                    if (selectedrow.purchase_order_detail_fk == 0)
+                    { MessageBox.Show("Warning: Purchase Order Key Not found."); }
+                }
             }
             RaisePropertyChanged("ObservableCollectionPurchaseOrderModel");
             PurchaseOrderRepo.Commit();
@@ -164,6 +199,7 @@ namespace VMSales.ViewModels
 
         public ProductViewModel()
         {
+            selectedrow = new ProductModel();
             // Get Suppliers
             ObservableCollectionSupplierModel = new ObservableCollection<SupplierModel>(); 
             dataBaseProvider = BaseViewModel.getprovider();

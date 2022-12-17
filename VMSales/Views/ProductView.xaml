@@ -160,7 +160,9 @@
                 <DataGridTemplateColumn Header="Category" Width="100">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <ComboBox Margin="2" ItemsSource="{Binding category_name}"  SelectedValue="{Binding category_pk}" SelectedValuePath="{Binding selected_category_pk, UpdateSourceTrigger=PropertyChanged}"/>
+                            <ComboBox x:Name="category" Margin="2" ItemsSource="{Binding category_dictionary}" DisplayMemberPath="{Binding Value.category_name}" SelectedValuePath="Key" SelectedValue="{Binding category_fk, UpdateSourceTrigger=PropertyChanged}"/>
+                            <!-- <ComboBox ItemsSource="{Binding conditionlist}" SelectedValue="{Binding condition, UpdateSourceTrigger=PropertyChanged}"/>-->
+
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
@@ -200,7 +202,7 @@
                 <DataGridTemplateColumn Header="Condition" Width="70">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <ComboBox ItemsSource="{Binding condition}" SelectedValue="{Binding selectedCondition, UpdateSourceTrigger=PropertyChanged}"/>
+                            <ComboBox ItemsSource="{Binding conditionlist}" SelectedValue="{Binding condition, UpdateSourceTrigger=PropertyChanged}"/>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>

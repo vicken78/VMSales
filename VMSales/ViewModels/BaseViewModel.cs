@@ -15,10 +15,6 @@ namespace VMSales.ViewModels
                 PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
         }
 
-
-
-
-
         /// <summary>
         /// Database setting, change dbfilepath to TEST or PROD
         /// </summary>
