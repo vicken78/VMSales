@@ -116,7 +116,7 @@ namespace VMSales.Models
         }
         public List<string> conditionlist
         {
-            get { return _conditionlist; }
+            get { return _conditionlist = new List<string> { "New","Used" }; }
             set
             {
                 if (_conditionlist == value) return;

@@ -18,7 +18,17 @@ namespace VMSales.ViewModels
    
         #region collections
         public ObservableCollection<SupplierModel> ObservableCollectionSupplierModel { get; set; }
-        public ObservableCollection<ProductModel> ObservableCollectionProductModel { get; set; }
+        private ObservableCollection<ProductModel> _ObservableCollectionProductModel;
+    
+        public ObservableCollection<ProductModel> ObservableCollectionProductModel
+        {
+            get { return _ObservableCollectionProductModel = _ObservableCollectionProductModel ?? new ObservableCollection<ProductModel>(); }
+            set 
+            {
+                _ObservableCollectionProductModel = value;
+                RaisePropertyChanged("ObservableCollectionProductModel");
+            }
+        }
         private ObservableCollection<PurchaseOrderModel> _ObservableCollectionPurchaseOrderModel;
         public ObservableCollection<PurchaseOrderModel> ObservableCollectionPurchaseOrderModel
         { 
@@ -143,7 +153,6 @@ namespace VMSales.ViewModels
                     ObservableCollectionProductModel = new ObservableCollection<ProductModel>();
                 }
 
-                selectedrow.conditionlist = new List<String> { "New", "Used" };
                 selectedrow.brand_name = null;
                 selectedrow.product_name = null;
                 selectedrow.description = null;
@@ -206,7 +215,6 @@ namespace VMSales.ViewModels
         public ProductViewModel()
         {
             selectedrow = new ProductModel();
-            selectedrow.conditionlist = new List<string>();
             selectedrow.category_dictionary = new Dictionary<int, string>();
             // Get Suppliers
             ObservableCollectionSupplierModel = new ObservableCollection<SupplierModel>();
@@ -247,10 +255,9 @@ namespace VMSales.ViewModels
                 {
                     selectedrow.category_name = item.category_name;
                     selectedrow.condition = item.condition;
-
+         
 
                     //selectedrow.category_dictionary.Add(item.category_pk, item.category_name);
-                    selectedrow.conditionlist.Add(item.condition);
                 }
 
 
