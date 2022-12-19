@@ -2,7 +2,9 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -12,52 +14,62 @@ using VMSales.Models;
 namespace VMSales.ViewModels
 {
     public class ProductViewModel : BaseViewModel
-    {
-
-    
-
+    {  
+   
         #region collections
-        private ObservableCollection<SupplierModel> ObservableCollectionSupplierModelClean { get; set; }
-        public ObservableCollection<SupplierModel> ObservableCollectionSupplierModel
-        {
-            get { return ObservableCollectionSupplierModelClean; }
-            set { 
-                ObservableCollectionSupplierModelClean = value;
-                RaisePropertyChanged("ObservableCollectionSupplierModel");
-                }
-        }
-        
-        public ObservableCollection<PurchaseOrderModel> ObservableCollectionPurchaseOrderModel { get; set; }
-        private ObservableCollection<ProductModel> ObservableCollectionProductModelclean { get; set; }
-        public ObservableCollection<ProductModel> ObservableCollectionProductModel
-        {
-            get { return ObservableCollectionProductModelclean; }
+        public ObservableCollection<SupplierModel> ObservableCollectionSupplierModel { get; set; }
+        public ObservableCollection<ProductModel> ObservableCollectionProductModel { get; set; }
+        private ObservableCollection<PurchaseOrderModel> _ObservableCollectionPurchaseOrderModel;
+        public ObservableCollection<PurchaseOrderModel> ObservableCollectionPurchaseOrderModel
+        { 
+        get { return _ObservableCollectionPurchaseOrderModel = _ObservableCollectionPurchaseOrderModel ?? new ObservableCollection<PurchaseOrderModel>(); }
             set
             {
-                if (ObservableCollectionProductModelclean == value) return;
-                ObservableCollectionProductModelclean = value;
-                RaisePropertyChanged("ObservableCollectionProductModel");
+                _ObservableCollectionPurchaseOrderModel = value;
+                RaisePropertyChanged("ObservableCollectionPurchaseOrderModel");
             }
         }
+
+
 
         #endregion
         #region Members
-        private int _supplier_fk { get; set; }
+        private int _supplier_fk;
         public int supplier_fk
         {
             get { return _supplier_fk; }
-            set
+            set 
             {
-                if (_supplier_fk == value) return;
                 _supplier_fk = value;
                 RaisePropertyChanged("supplier_fk");
-                LoadPurchaseOrder(supplier_fk);
+                LoadPurchaseOrder(supplier_fk);     
             }
         }
 
-        private ProductModel _selectedrow = null;
-        public ProductModel selectedrow { get => this._selectedrow; set { this._selectedrow = value; RaisePropertyChanged("selectedrow"); } }
+        private int _purchase_order_detail_pk;
+        public int purchase_order_detail_pk
+        {
+            get { return _purchase_order_detail_pk; }
+            set
+            {
+                _purchase_order_detail_pk = value;
+                RaisePropertyChanged("purchase_order_detail_pk");
+            }
+        }
 
+
+
+
+        private ProductModel _selectedrow;
+        public ProductModel selectedrow
+        {
+            get => this._selectedrow;
+            set {
+                this._selectedrow = value;
+                RaisePropertyChanged("selectedrow");
+            }
+        }    
+  
         #endregion
         IDatabaseProvider dataBaseProvider;
 
@@ -77,7 +89,7 @@ namespace VMSales.ViewModels
 
             try
             {
-                dataBaseProvider = BaseViewModel.getprovider();
+                dataBaseProvider = getprovider();
                 DataBaseLayer.ProductRepository ProductRepo = new DataBaseLayer.ProductRepository(dataBaseProvider);
                 Task<bool> insertProduct = ProductRepo.Insert(selectedrow);
                 if (insertProduct.Result == true)
@@ -101,7 +113,8 @@ namespace VMSales.ViewModels
         }
         public void AddCommand()
         {
-            ObservableCollection<CategoryModel> ObservableCollectionCategoryModel = new ObservableCollection<CategoryModel>();         DataBaseLayer.CategoryRepository CategoryRepo = new DataBaseLayer.CategoryRepository(dataBaseProvider);
+            ObservableCollection<CategoryModel> ObservableCollectionCategoryModel = new ObservableCollection<CategoryModel>();         
+            DataBaseLayer.CategoryRepository CategoryRepo = new DataBaseLayer.CategoryRepository(dataBaseProvider);
             var catResult = CategoryRepo.GetAll().Result;
             if (catResult.Count() == 0)
             {
@@ -116,13 +129,18 @@ namespace VMSales.ViewModels
                 CategoryRepo.Commit();
                 CategoryRepo.Dispose();
                 ObservableCollectionCategoryModel = catResult.ToObservable();
-                ObservableCollectionProductModel = new ObservableCollection<ProductModel>();
-
-                selectedrow.category_dictionary = new Dictionary<int, String>();
-
-                foreach (var item in ObservableCollectionCategoryModel)
+             
+                // if category dictionary is empty add.
+                if (selectedrow.category_dictionary.Count < 1)
                 {
-                    selectedrow.category_dictionary.Add(item.category_pk, item.category_name);
+                    foreach (var item in ObservableCollectionCategoryModel)
+                    {
+                        selectedrow.category_dictionary.Add(item.category_pk, item.category_name);
+                    }
+                }
+                if (ObservableCollectionProductModel is null)
+                {
+                    ObservableCollectionProductModel = new ObservableCollection<ProductModel>();
                 }
 
                 selectedrow.conditionlist = new List<String> { "New", "Used" };
@@ -139,7 +157,6 @@ namespace VMSales.ViewModels
                 selectedrow.listing_date = DateTime.MinValue;
 
                 ObservableCollectionProductModel.Add(selectedrow);
-                RaisePropertyChanged("ObservableCollectionProductModel");
             }
         }
         public void DeleteCommand()
@@ -151,7 +168,7 @@ namespace VMSales.ViewModels
 
         public void LoadPurchaseOrder(int supplier_fk)
         {
-            dataBaseProvider = BaseViewModel.getprovider();
+            dataBaseProvider = getprovider();
 
             // check for category
 
@@ -170,39 +187,30 @@ namespace VMSales.ViewModels
                 CategoryRepo.Dispose();
             }
 
+            ObservableCollectionPurchaseOrderModel.Clear();
             ObservableCollectionPurchaseOrderModel = new ObservableCollection<PurchaseOrderModel>();
-            DataBaseLayer.PurchaseOrderRepository PurchaseOrderRepo = new DataBaseLayer.PurchaseOrderRepository(dataBaseProvider);
-            var purResult = PurchaseOrderRepo.GetAllWithID(supplier_fk).Result;
 
-            if (purResult.Count() == 0)
-            {
-                MessageBox.Show("You must add purchase orders.");
-                PurchaseOrderRepo.Revert();
-                PurchaseOrderRepo.Dispose();
-                return;
-            }
-            else
-            {
-                ObservableCollectionPurchaseOrderModel = purResult.ToObservable();
-                foreach (var item in ObservableCollectionPurchaseOrderModel)
+            DataBaseLayer.PurchaseOrderRepository PurchaseOrderRepo = new DataBaseLayer.PurchaseOrderRepository(dataBaseProvider);
+            ObservableCollectionPurchaseOrderModel = PurchaseOrderRepo.GetAllWithID(supplier_fk).Result.ToObservable();
+            PurchaseOrderRepo.Commit();
+            PurchaseOrderRepo.Dispose();
+
+            foreach (var item in ObservableCollectionPurchaseOrderModel)
                 {
                     selectedrow.purchase_order_detail_fk = item.purchase_order_detail_pk;
                     if (selectedrow.purchase_order_detail_fk == 0)
                     { MessageBox.Show("Warning: Purchase Order Key Not found."); }
                 }
             }
-            RaisePropertyChanged("ObservableCollectionPurchaseOrderModel");
-            PurchaseOrderRepo.Commit();
-            PurchaseOrderRepo.Dispose();
-        }
-
-
+         
         public ProductViewModel()
         {
             selectedrow = new ProductModel();
+            selectedrow.conditionlist = new List<string>();
+            selectedrow.category_dictionary = new Dictionary<int, string>();
             // Get Suppliers
-            ObservableCollectionSupplierModel = new ObservableCollection<SupplierModel>(); 
-            dataBaseProvider = BaseViewModel.getprovider();
+            ObservableCollectionSupplierModel = new ObservableCollection<SupplierModel>();
+            dataBaseProvider = getprovider();
             DataBaseLayer.SupplierRepository SupplierRepo = new DataBaseLayer.SupplierRepository(dataBaseProvider);
             ObservableCollectionSupplierModel = SupplierRepo.GetAll().Result.ToObservable();
             SupplierRepo.Commit();
@@ -213,15 +221,42 @@ namespace VMSales.ViewModels
                 MessageBox.Show("Please add a supplier first");
                 return;
             }
-      
-            // Load Products
-            ObservableCollection <ProductModel> ObservableCollectionProductModel = new ObservableCollection<ProductModel>();
-            //DataBaseLayer.ProductRepository PurchaseRepo = new DataBaseLayer.ProductRepository(dataBaseProvider);      
-            //ObservableCollectionProductModel = PurchaseRepo.GetAll().Result.ToObservable();
-            //PurchaseRepo.Commit();
-            //PurchaseRepo.Dispose();
+
+            // Load Purchase Order
+            ObservableCollectionPurchaseOrderModel = new ObservableCollection<PurchaseOrderModel>();
+            DataBaseLayer.PurchaseOrderRepository PurchaseOrderRepo = new DataBaseLayer.PurchaseOrderRepository(dataBaseProvider);
+            ObservableCollectionPurchaseOrderModel = PurchaseOrderRepo.GetAll().Result.ToObservable();
+            if (ObservableCollectionPurchaseOrderModel.Count() == 0)
+            {
+                MessageBox.Show("You must add purchase orders.");
+                PurchaseOrderRepo.Revert();
+                PurchaseOrderRepo.Dispose();
+                return;
+            }
+            else
+            {
+                PurchaseOrderRepo.Commit();
+                PurchaseOrderRepo.Dispose();
+
+                // Load Products
+                DataBaseLayer.ProductRepository ProductRepo = new DataBaseLayer.ProductRepository(dataBaseProvider);
+                ObservableCollectionProductModel = ProductRepo.GetAll().Result.ToObservable();
+
+                // set category and condition
+                foreach (var item in ObservableCollectionProductModel)
+                {
+                    selectedrow.category_name = item.category_name;
+                    selectedrow.condition = item.condition;
+
+
+                    //selectedrow.category_dictionary.Add(item.category_pk, item.category_name);
+                    selectedrow.conditionlist.Add(item.condition);
+                }
+
+
+                ProductRepo.Commit();
+                ProductRepo.Dispose();
+            } 
         }
     }
 }
-
-    

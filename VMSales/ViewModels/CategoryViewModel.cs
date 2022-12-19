@@ -7,7 +7,7 @@ using System;
 
 namespace VMSales.ViewModels
 {
-    
+
     public class CategoryViewModel : BaseViewModel
     {
 
@@ -18,19 +18,20 @@ namespace VMSales.ViewModels
             set
             {
                 select_request = value;
-                RaisePropertyChanged("Select_Request"); 
+                RaisePropertyChanged("Select_Request");
             }
         }
- 
+
         private ObservableCollection<CategoryModel> ObservableCollectionCategoryModelclean { get; set; }
         public ObservableCollection<CategoryModel> ObservableCollectionCategoryModel
         {
             get { return ObservableCollectionCategoryModelclean; }
-            set {
+            set
+            {
                 if (ObservableCollectionCategoryModelclean == value) return;
                 ObservableCollectionCategoryModelclean = value;
                 RaisePropertyChanged("ObservableCollectionCategoryModel");
-                }
+            }
         }
 
         IDatabaseProvider dataBaseProvider;
@@ -61,8 +62,8 @@ namespace VMSales.ViewModels
             dataBaseProvider = BaseViewModel.getprovider();
             DataBaseLayer.CategoryRepository CategoryRepo = new DataBaseLayer.CategoryRepository(dataBaseProvider);
             try
-            {   
-                    db_category_pk = CategoryRepo.Get(select_request.category_pk).Result.category_pk.ToString();
+            {
+                db_category_pk = CategoryRepo.Get(select_request.category_pk).Result.category_pk.ToString();
             }
             catch (AggregateException e) // primary key does not exist
             {
@@ -183,6 +184,6 @@ namespace VMSales.ViewModels
             ObservableCollectionCategoryModelclean = ObservableCollectionCategoryModel;
             CategoryRepo.Commit();
             CategoryRepo.Dispose();
-         }
+        }
     }
 }

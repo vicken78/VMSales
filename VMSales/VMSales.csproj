@@ -241,7 +241,6 @@
     <Compile Include="Models\ProductPhotoModel.cs" />
     <Compile Include="Models\ProductPurchaseOrder.cs" />
     <Compile Include="Models\PurchaseOrderDetailModel.cs" />
-    <Compile Include="ViewModels\BaseViewModel.cs" />
     <Compile Include="ViewModels\CategoryViewModel.cs" />
     <Compile Include="Models\PurchaseOrderModel.cs" />
     <Compile Include="App.xaml.cs">
@@ -249,6 +248,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Models\SupplierModel.cs" />
+    <Compile Include="ViewModels\BaseViewModel.cs" />
     <Compile Include="ViewModels\ProductViewModel.cs" />
     <Compile Include="ViewModels\PurchaseOrderViewModel.cs" />
     <Compile Include="ViewModels\ShellViewModel.cs" />

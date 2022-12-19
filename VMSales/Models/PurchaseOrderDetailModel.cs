@@ -1,4 +1,5 @@
 ﻿using Dapper.Contrib.Extensions;
+using System.Collections.Generic;
 using VMSales.ViewModels;
 
 namespace VMSales.Models
@@ -15,7 +16,7 @@ namespace VMSales.Models
         private decimal _sales_tax { get; set; }
         private decimal _shipping_cost { get; set; }
 
-    
+
         // purchase order detail
         [ExplicitKey]
         public int purchase_order_detail_pk
@@ -26,7 +27,7 @@ namespace VMSales.Models
                 if (_purchase_order_detail_pk == value) return;
                 _purchase_order_detail_pk = value;
                 RaisePropertyChanged("purchase_order_detail_pk");
-            
+
             }
         }
         public int purchase_order_fk
@@ -49,6 +50,9 @@ namespace VMSales.Models
                 RaisePropertyChanged("lot_number");
             }
         }
+     
+
+
         public decimal lot_cost
         {
             get { return _lot_cost; }

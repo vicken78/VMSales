@@ -333,13 +333,13 @@ namespace VMSales.Logic
             // get all purchase_order and purchase_order_detail
             public override async Task<IEnumerable<ProductModel>> GetAll()
             {
-                return await Connection.QueryAsync<ProductModel>("SELECT " +
-                    "distinct po.purchase_order_pk, po.purchase_date, po.invoice_number, pod.purchase_order_detail_pk, " +
-                    "pod.purchase_order_fk, pod.lot_number, pod.lot_cost, pod.lot_quantity," +
-                    "pod.lot_name, pod.lot_description, pod.sales_tax, pod.shipping_cost " +
-                    "FROM purchase_order as po, purchase_order_detail as pod, supplier as sup " +
-                    "INNER JOIN purchase_order_detail on po.purchase_order_pk = pod.purchase_order_fk " +
-                    "INNER JOIN supplier on sup.supplier_pk = po.supplier_fk;", null, Transaction);
+                return await Connection.QueryAsync<ProductModel>("SELECT distinct " +
+                "c.category_pk, c.category_name, brand_name, product_name, p.description, quantity, cost, sku, sold_price, instock, condition, listing_url, " +
+                "listing_number, listing_date " +
+                "FROM product as p, product_purchase_order as ppo, product_category as pc, category as c " +
+                "INNER JOIN product_purchase_order on p.product_pk = ppo.product_fk " +
+                "INNER JOIN product_category on p.product_pk = pc.product_fk " +
+                "INNER JOIN category on c.category_pk = pc.category_fk;", null, Transaction);
             }
 
             // get all products with product category

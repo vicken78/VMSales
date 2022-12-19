@@ -22,7 +22,7 @@ namespace VMSales.ViewModels
 
     public class PurchaseOrderViewModel : BaseViewModel
     {
-   
+
         #region Collections
         public ObservableCollection<string> InvoiceNumber
         {
@@ -310,9 +310,9 @@ namespace VMSales.ViewModels
         }
         public void SaveCommand(object sender, RoutedEventArgs e)
         {
-   
+
             if (supplier_fk.ToString() == null || supplier_fk == 0)
-            { 
+            {
                 MessageBox.Show("Please select a supplier.");
                 return;
             }
@@ -334,7 +334,7 @@ namespace VMSales.ViewModels
                     Task<bool> insertPurchase_Order = PurchaseOrderRepo.Insert(selectedrow);
                     if (insertPurchase_Order.Result == true)
                     {
-                        
+
                         PurchaseOrderRepo.Commit();
                         PurchaseOrderRepo.Dispose();
                         MessageBox.Show("Data Inserted");
@@ -349,37 +349,37 @@ namespace VMSales.ViewModels
                     PurchaseOrderRepo.Dispose();
                 }
                 return;
-        }
+            }
             // update
-              if (selectedrow.purchase_order_detail_pk != 0)
-              {
+            if (selectedrow.purchase_order_detail_pk != 0)
+            {
                 selectedrow.supplier_fk = this.supplier_fk;
 
                 dataBaseProvider = BaseViewModel.getprovider();
                 DataBaseLayer.PurchaseOrderRepository PurchaseOrderRepo = new DataBaseLayer.PurchaseOrderRepository(dataBaseProvider);
                 try
                 {
-                      Task<bool> updatePurchase_Order = PurchaseOrderRepo.Update(selectedrow);
-     
-                        if (updatePurchase_Order.Result.Equals(true))
-                        {
-                          PurchaseOrderRepo.Commit();
-                          PurchaseOrderRepo.Dispose();
-                        }
-                        else { MessageBox.Show("Update failed to commit."); }
+                    Task<bool> updatePurchase_Order = PurchaseOrderRepo.Update(selectedrow);
+
+                    if (updatePurchase_Order.Result.Equals(true))
+                    {
+                        PurchaseOrderRepo.Commit();
+                        PurchaseOrderRepo.Dispose();
+                    }
+                    else { MessageBox.Show("Update failed to commit."); }
                 }
                 catch (Exception ex)
                 {
                     MessageBox.Show("An Error has occured." + ex);
-                      PurchaseOrderRepo.Revert();
-                      PurchaseOrderRepo.Dispose();
+                    PurchaseOrderRepo.Revert();
+                    PurchaseOrderRepo.Dispose();
                 }
                 return;
             }
         }
         #endregion
 
-     
+
 
 
         public void LoadPurchaseOrder(int supplier_fk)
@@ -393,7 +393,7 @@ namespace VMSales.ViewModels
                 InvoiceNumber.Clear();
                 PurchaseDate.Clear();
             }
-         
+
             InvoiceNumberList = new List<string>();
             PurchaseDateList = new List<DateTime>();
             dataBaseProvider = BaseViewModel.getprovider();
@@ -431,7 +431,7 @@ namespace VMSales.ViewModels
             foreach (var item in ObservableCollectionPurchaseOrderModel)
             {
                 selectedrow = item;
-                    
+
                 if (item.invoice_number != null || item.purchase_date != null)
                     if (!InvoiceNumberList.Contains(item.invoice_number))
                         InvoiceNumberList.Add(item.invoice_number);
@@ -447,8 +447,8 @@ namespace VMSales.ViewModels
 
         }
 
-    #region pageload
-    public PurchaseOrderViewModel()
+        #region pageload
+        public PurchaseOrderViewModel()
         {
             //Initial Page Load
             InvoiceNumberList = new List<string>();
@@ -489,16 +489,16 @@ namespace VMSales.ViewModels
             {
                 selectedrow = item;
                 if (item.invoice_number != null || item.purchase_date != null)
-                    if (!InvoiceNumberList.Contains(item.invoice_number)) 
-                      InvoiceNumberList.Add(item.invoice_number);
-                    if (!PurchaseDateList.Contains(item.purchase_date))
-                      PurchaseDateList.Add(item.purchase_date);
-                }
-           if (InvoiceNumberList.Count > 0 || PurchaseDateList.Count > 0)
-           {
-               InvoiceNumber = new ObservableCollection<string>(InvoiceNumberList.Cast<String>());
-               PurchaseDate = new ObservableCollection<DateTime>(PurchaseDateList.Cast<DateTime>());
-           }
+                    if (!InvoiceNumberList.Contains(item.invoice_number))
+                        InvoiceNumberList.Add(item.invoice_number);
+                if (!PurchaseDateList.Contains(item.purchase_date))
+                    PurchaseDateList.Add(item.purchase_date);
+            }
+            if (InvoiceNumberList.Count > 0 || PurchaseDateList.Count > 0)
+            {
+                InvoiceNumber = new ObservableCollection<string>(InvoiceNumberList.Cast<String>());
+                PurchaseDate = new ObservableCollection<DateTime>(PurchaseDateList.Cast<DateTime>());
+            }
 
             // Get Suppliers
             ObservableCollectionSupplierModel = new ObservableCollection<SupplierModel>();
