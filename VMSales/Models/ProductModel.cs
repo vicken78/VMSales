@@ -3,13 +3,27 @@ using System.Collections.Generic;
 using VMSales.ViewModels;
 using Dapper.Contrib.Extensions;
 using System.Collections.ObjectModel;
+using System.Windows;
+using System.Linq;
+using Caliburn.Micro;
 
 namespace VMSales.Models
 {
     [Table("product")]
     public class ProductModel : BaseViewModel
     {
-        private List<string> _conditionlist { get; set; }
+        
+        private Dictionary<int, string> _category_dict { get; set; }
+        public Dictionary<int, string> category_dict
+        {
+            get {return _category_dict;}
+            set {
+                if (_category_dict == value) return;
+                _category_dict = value;
+                RaisePropertyChanged("category_dict");
+            }
+        }
+       
         private string _condition { get; set; }
         private string _brand_name;
         private string _product_name;
@@ -22,19 +36,6 @@ namespace VMSales.Models
         private string _listing_url;
         private string _listing_number;
         private DateTime _listing_date;
-
-        private Dictionary<int,string> _category_dictionary {get; set; }
-        public Dictionary<int, string> category_dictionary
-        { 
-            get {return _category_dictionary; } 
-            set { if (_category_dictionary == value) return;
-                _category_dictionary = value;
-                RaisePropertyChanged("category_dictionary");
-            }
-        }
-
-
-
 
         public int category_pk { get; set; }
         [ExplicitKey]
@@ -114,6 +115,7 @@ namespace VMSales.Models
             }
 
         }
+        private List<string> _conditionlist;
         public List<string> conditionlist
         {
             get { return _conditionlist = new List<string> { "New","Used" }; }
@@ -197,16 +199,52 @@ namespace VMSales.Models
                 RaisePropertyChanged("category_fk");
                 }
         }
-        private string _category_name { get; set; }
+
+
+
+
+        private string _category_name;
         public string category_name
         {
             get { return _category_name; }
             set 
             {
-                _category_name = value;
-                RaisePropertyChanged("category_name");
+                if (_category_name == value) return;
+                    _category_name = value;
+                    RaisePropertyChanged("category_name");
+                
             }
-        } 
+        }
+
+
+
+        private ObservableCollection<string> _category { get; set; }
+        public ObservableCollection<string> category
+        {
+            get { return _category ?? new ObservableCollection<string>(); }
+            set
+            {
+                if (_category == value) return;
+                _category = value;
+                RaisePropertyChanged("category");
+            }
+        }
+
+        private List<string> _category_list { get; set; }
+        public List<string> category_list
+        {
+            //get { return _category_list ?? new List<string>(); }
+              get { return _category_list; }
+
+            set
+            {
+                if (_category_list == value) return;
+                _category_list = value;
+                RaisePropertyChanged("category_list");
+            }
+        }
+
+
 
 
         private int _purchase_order_detail_fk { get; set; }

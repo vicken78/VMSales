@@ -3,23 +3,19 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:VMSales.Models"         
              xmlns:cal="http://www.caliburnproject.org" 
-             xmlns:models="clr-namespace:VMSales.ViewModels" 
+             xmlns:models="clr-namespace:VMSales.ViewModels" xmlns:Controls="http://schemas.microsoft.com/netfx/2009/xaml/presentation"
              d:DataContext="{d:DesignInstance Type=models:ProductViewModel}"
              mc:Ignorable="d" 
-             Height="800" Width="1400" VerticalAlignment="Top" MinHeight="400" MinWidth="800">
-    <!--  <UserControl.DataContext>
-        <local:ProductViewModel/>
-    </UserControl.DataContext>-->
+             Height="800" Width="1400" MinHeight="400" MinWidth="800">
 
     <UserControl.Resources>
         <Style x:Key="CenterGridHeaderStyle" TargetType="DataGridColumnHeader">
             <Setter Property="HorizontalContentAlignment" Value="Center"/>
         </Style>
     </UserControl.Resources>
-
     <DockPanel LastChildFill="True">
+
         <Grid Margin="10" DockPanel.Dock="Top" Background="Azure">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
@@ -58,9 +54,9 @@
             <Label Content="Supplier Name" Grid.Column="0" Grid.Row="2"/>
             <ComboBox x:Name="supplier" IsEditable="False" Background="WhiteSmoke" 
                 ItemsSource="{Binding Path=ObservableCollectionSupplierModel}" 
-                DisplayMemberPath="supplier_name" 
-                SelectedValue="{Binding supplier_fk, Mode=TwoWay}" 
-                SelectedValuePath="supplier_pk" 
+                DisplayMemberPath="supplier_name"
+                SelectedItem="{Binding supplier_fk, Mode=TwoWay}"
+               
                 Grid.Row="2" Grid.Column="1"/>
             <!-- Lot Number -->
             <Label Content="Lot Number" Grid.Column="0" Grid.Row="3"/>
@@ -153,24 +149,40 @@
         </Grid>
 
         <!-- Product DataGrid Start -->
+
+
+        <!--SelectedItem="{Binding Select_Request, Mode=TwoWay}"-->
+        <!-- Product DataGrid Start -->
         <DataGrid x:Name="ProductDataGrid"  AutoGenerateColumns="False" 
-                          ItemsSource="{Binding ObservableCollectionProductModel}"
+                          ItemsSource="{Binding BindableCollectionProductModel}"
                           IsSynchronizedWithCurrentItem="True"
                           CanUserReorderColumns="False"
                           CanUserAddRows="False"
                           EnableRowVirtualization="True" IsReadOnly="False" Grid.Row="10" 
                           Height="Auto" Width="1400">
             <DataGrid.Columns>
-                <!-- Category DropDown -->
-                <DataGridTemplateColumn Header="Category" Width="100">
-                    <DataGridTemplateColumn.CellTemplate>
-                        <DataTemplate>
-                            <ComboBox x:Name="category" Margin="2" ItemsSource="{Binding category_dictionary}" DisplayMemberPath="{Binding Value.category_name}" SelectedValuePath="Key" SelectedValue="{Binding category_fk, UpdateSourceTrigger=PropertyChanged}"/>
-                            <!-- <ComboBox ItemsSource="{Binding conditionlist}" SelectedValue="{Binding condition, UpdateSourceTrigger=PropertyChanged}"/>-->
 
+                <!-- Category Combobox -->
+                <Controls:DataGridTemplateColumn Header="Category" Width="100" Visibility="Visible">
+                    <Controls:DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+
+                            <ComboBox Background="white" Foreground="black" Margin="2" IsEnabled="True" IsEditable="False" Visibility="Visible"
+                            ItemsSource="{Binding DataContext.BindableCollectionCategoryModel,RelativeSource={RelativeSource Mode=FindAncestor,AncestorType=Controls:DataGrid}}" Height="30" 
+                            DisplayMemberPath="category_name"
+                            SelectedItem="category_pk"
+                            SelectedValue="Category_name"
+                            SelectedIndex="0"/>
                         </DataTemplate>
-                    </DataGridTemplateColumn.CellTemplate>
-                </DataGridTemplateColumn>
+                            </Controls:DataGridTemplateColumn.CellTemplate>
+                        
+                </Controls:DataGridTemplateColumn>
+
+
+
+
+
+
                 <!--Product Name -->
                 <DataGridTextColumn Header="Product Name" Width="140" Binding="{Binding product_name, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}">
                     <DataGridTextColumn.ElementStyle>

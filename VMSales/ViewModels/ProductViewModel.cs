@@ -8,27 +8,34 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Data;
 using VMSales.Logic;
 using VMSales.Models;
 
 namespace VMSales.ViewModels
 {
+    // read https://stackoverflow.com/questions/9608282/how-to-do-caliburn-micro-binding-of-view-model-to-combobox-selected-value
+
     public class ProductViewModel : BaseViewModel
-    {  
-   
+    {
+        public PurchaseOrderModel purchaseOrderModel { get; set; }
         #region collections
-        public ObservableCollection<SupplierModel> ObservableCollectionSupplierModel { get; set; }
-        private ObservableCollection<ProductModel> _ObservableCollectionProductModel;
-    
-        public ObservableCollection<ProductModel> ObservableCollectionProductModel
+
+        private readonly ICollectionView countryEntries;
+        public ICollectionView CountryEntries
         {
-            get { return _ObservableCollectionProductModel = _ObservableCollectionProductModel ?? new ObservableCollection<ProductModel>(); }
-            set 
+            get
             {
-                _ObservableCollectionProductModel = value;
-                RaisePropertyChanged("ObservableCollectionProductModel");
+                return countryEntries;
             }
         }
+
+
+
+        public ObservableCollection<SupplierModel> ObservableCollectionSupplierModel { get; set; }
+        public BindableCollection<ProductModel> BindableCollectionProductModel { get; set; }
+        public BindableCollection<CategoryModel> BindableCollectionCategoryModel { get; set; }
+
         private ObservableCollection<PurchaseOrderModel> _ObservableCollectionPurchaseOrderModel;
         public ObservableCollection<PurchaseOrderModel> ObservableCollectionPurchaseOrderModel
         { 
@@ -56,25 +63,39 @@ namespace VMSales.ViewModels
             }
         }
 
+        private PurchaseOrderModel _selectedlotnumber;
+        public PurchaseOrderModel selectedlotnumber
+        {
+            get { return _selectedlotnumber; }
+            set
+            {
+                MessageBox.Show("HIT");
+                RaisePropertyChanged("selectedlotnumber");
+            
+                    MessageBox.Show(selectedlotnumber.lot_number.ToString());
+          
+
+            }
+        }
+   
         private int _purchase_order_detail_pk;
         public int purchase_order_detail_pk
         {
             get { return _purchase_order_detail_pk; }
             set
             {
-                _purchase_order_detail_pk = value;
-                RaisePropertyChanged("purchase_order_detail_pk");
+                MessageBox.Show("HIT");
             }
         }
 
 
 
-
-        private ProductModel _selectedrow;
-        public ProductModel selectedrow
+        private ProductModel _selectedrow { get; set; }
+        public ProductModel selectedrow 
         {
             get => this._selectedrow;
             set {
+                if (this.selectedrow == value) return;
                 this._selectedrow = value;
                 RaisePropertyChanged("selectedrow");
             }
@@ -123,36 +144,12 @@ namespace VMSales.ViewModels
         }
         public void AddCommand()
         {
-            ObservableCollection<CategoryModel> ObservableCollectionCategoryModel = new ObservableCollection<CategoryModel>();         
-            DataBaseLayer.CategoryRepository CategoryRepo = new DataBaseLayer.CategoryRepository(dataBaseProvider);
-            var catResult = CategoryRepo.GetAll().Result;
-            if (catResult.Count() == 0)
-            {
-                MessageBox.Show("You must add a category.");
-                CategoryRepo.Revert();
-                CategoryRepo.Dispose();
-                return;
-            }
-            else
-            {
 
-                CategoryRepo.Commit();
-                CategoryRepo.Dispose();
-                ObservableCollectionCategoryModel = catResult.ToObservable();
-             
-                // if category dictionary is empty add.
-                if (selectedrow.category_dictionary.Count < 1)
+            if (BindableCollectionProductModel is null)
                 {
-                    foreach (var item in ObservableCollectionCategoryModel)
-                    {
-                        selectedrow.category_dictionary.Add(item.category_pk, item.category_name);
-                    }
+                    BindableCollectionProductModel = new BindableCollection<ProductModel>();
                 }
-                if (ObservableCollectionProductModel is null)
-                {
-                    ObservableCollectionProductModel = new ObservableCollection<ProductModel>();
-                }
-
+                   
                 selectedrow.brand_name = null;
                 selectedrow.product_name = null;
                 selectedrow.description = null;
@@ -164,9 +161,8 @@ namespace VMSales.ViewModels
                 selectedrow.listing_url = null;
                 selectedrow.listing_number = null;
                 selectedrow.listing_date = DateTime.MinValue;
-
-                ObservableCollectionProductModel.Add(selectedrow);
-            }
+                BindableCollectionProductModel.Add(selectedrow);
+            
         }
         public void DeleteCommand()
         {
@@ -177,12 +173,33 @@ namespace VMSales.ViewModels
 
         public void LoadPurchaseOrder(int supplier_fk)
         {
+
+            ObservableCollectionPurchaseOrderModel.Clear();
+            ObservableCollectionPurchaseOrderModel = new ObservableCollection<PurchaseOrderModel>();
+            dataBaseProvider = getprovider();
+            DataBaseLayer.PurchaseOrderRepository PurchaseOrderRepo = new DataBaseLayer.PurchaseOrderRepository(dataBaseProvider);
+            ObservableCollectionPurchaseOrderModel = PurchaseOrderRepo.GetAllWithID(supplier_fk).Result.ToObservable();
+            PurchaseOrderRepo.Commit();
+            PurchaseOrderRepo.Dispose();
+
+            foreach (var item in ObservableCollectionPurchaseOrderModel)
+                {
+                
+                selectedrow.purchase_order_detail_fk = item.purchase_order_detail_pk;
+          
+                if (selectedrow.purchase_order_detail_fk == 0)
+                    { MessageBox.Show("Warning: Purchase Order Key Not found."); }
+                }
+            }
+         
+        public ProductViewModel()
+        {
             dataBaseProvider = getprovider();
 
             // check for category
 
             DataBaseLayer.CategoryRepository CategoryRepo = new DataBaseLayer.CategoryRepository(dataBaseProvider);
-            var catResult = CategoryRepo.GetAll().Result;
+            var catResult = CategoryRepo.GetCategory().Result;
             if (catResult.Count() == 0)
             {
                 MessageBox.Show("You must add categories.");
@@ -194,28 +211,14 @@ namespace VMSales.ViewModels
             {
                 CategoryRepo.Commit();
                 CategoryRepo.Dispose();
+                BindableCollectionCategoryModel = DataConversion.ToBindableCollection(catResult.ToObservable());
             }
 
-            ObservableCollectionPurchaseOrderModel.Clear();
-            ObservableCollectionPurchaseOrderModel = new ObservableCollection<PurchaseOrderModel>();
-
-            DataBaseLayer.PurchaseOrderRepository PurchaseOrderRepo = new DataBaseLayer.PurchaseOrderRepository(dataBaseProvider);
-            ObservableCollectionPurchaseOrderModel = PurchaseOrderRepo.GetAllWithID(supplier_fk).Result.ToObservable();
-            PurchaseOrderRepo.Commit();
-            PurchaseOrderRepo.Dispose();
-
-            foreach (var item in ObservableCollectionPurchaseOrderModel)
-                {
-                    selectedrow.purchase_order_detail_fk = item.purchase_order_detail_pk;
-                    if (selectedrow.purchase_order_detail_fk == 0)
-                    { MessageBox.Show("Warning: Purchase Order Key Not found."); }
-                }
-            }
-         
-        public ProductViewModel()
-        {
             selectedrow = new ProductModel();
-            selectedrow.category_dictionary = new Dictionary<int, string>();
+            selectedrow.category_list = new List<string>();
+            selectedrow.category_dict = new Dictionary<int, string>();
+
+           
             // Get Suppliers
             ObservableCollectionSupplierModel = new ObservableCollection<SupplierModel>();
             dataBaseProvider = getprovider();
@@ -246,24 +249,33 @@ namespace VMSales.ViewModels
                 PurchaseOrderRepo.Commit();
                 PurchaseOrderRepo.Dispose();
 
-                // Load Products
-                DataBaseLayer.ProductRepository ProductRepo = new DataBaseLayer.ProductRepository(dataBaseProvider);
-                ObservableCollectionProductModel = ProductRepo.GetAll().Result.ToObservable();
-
-                // set category and condition
-                foreach (var item in ObservableCollectionProductModel)
+                
+                PurchaseOrderModel selectedlotnumber = new PurchaseOrderModel(); 
+                foreach (var item in ObservableCollectionPurchaseOrderModel)
                 {
-                    selectedrow.category_name = item.category_name;
-                    selectedrow.condition = item.condition;
-         
+                    selectedlotnumber.lot_number = item.lot_number;
+                    selectedlotnumber.purchase_order_detail_pk = item.purchase_order_detail_pk;
 
-                    //selectedrow.category_dictionary.Add(item.category_pk, item.category_name);
                 }
 
-
+                // Load Products
+                DataBaseLayer.ProductRepository ProductRepo = new DataBaseLayer.ProductRepository(dataBaseProvider);
+                BindableCollectionProductModel = DataConversion.ToBindableCollection(ProductRepo.GetAll().Result.AsEnumerable());
+                
+                //MessageBox.Show(selectedrow.category_name);
+                foreach (var item in BindableCollectionProductModel)
+                {
+                        selectedrow.category_name = item.category_name;
+                      //  MessageBox.Show(item.category_name);
+                }
+                RaisePropertyChanged("category_name");
                 ProductRepo.Commit();
                 ProductRepo.Dispose();
             } 
         }
+
+       
+
+       
     }
 }

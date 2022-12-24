@@ -51,6 +51,12 @@ namespace VMSales.Logic
                 return await Connection.QueryAsync<CategoryModel>("SELECT category_pk, category_name, description, creation_date FROM category", null, Transaction);
             }
 
+            public async Task<IEnumerable<CategoryModel>> GetCategory()
+            {
+                return await Connection.QueryAsync<CategoryModel>("SELECT category_pk, category_name FROM category", null, Transaction);
+            }
+
+
             public override async Task<bool> Update(CategoryModel entity)
             {
                 // Could check for unset id, and throw exception.

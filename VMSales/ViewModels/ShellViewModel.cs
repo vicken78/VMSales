@@ -1,4 +1,5 @@
 ﻿using Caliburn.Micro;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace VMSales.ViewModels
@@ -8,6 +9,11 @@ namespace VMSales.ViewModels
         public async Task LoadCategory()
         {
             await ActivateItemAsync(new CategoryViewModel());
+        }
+
+        protected override Task OnActivateAsync(CancellationToken cancellationToken)
+        {
+            return base.OnActivateAsync(cancellationToken);
         }
 
         public async Task LoadPurchaseOrder()
