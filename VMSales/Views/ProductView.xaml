@@ -53,18 +53,21 @@
                 Width="200" Grid.Column="1" Grid.Row="2" />-->
             <Label Content="Supplier Name" Grid.Column="0" Grid.Row="2"/>
             <ComboBox x:Name="supplier" IsEditable="False" Background="WhiteSmoke" 
-                ItemsSource="{Binding Path=ObservableCollectionSupplierModel}" 
-                DisplayMemberPath="supplier_name"
-                SelectedItem="{Binding supplier_fk, Mode=TwoWay}"
-               
-                Grid.Row="2" Grid.Column="1"/>
+               ItemsSource="{Binding Path=BindableCollectionSupplierModel}" 
+               DisplayMemberPath="supplier_name"
+               SelectedItem="supplier_name"
+               SelectedValue="{Binding supplier_fk, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" 
+               SelectedValuePath="supplier_pk"
+               Grid.Row="2" Grid.Column="1"/>
+
             <!-- Lot Number -->
             <Label Content="Lot Number" Grid.Column="0" Grid.Row="3"/>
             <ComboBox x:Name="Selected_lot_number" IsEditable="False" Background="WhiteSmoke"  
-                ItemsSource="{Binding Path=ObservableCollectionPurchaseOrderModel}"
+                ItemsSource="{Binding Path=BindableCollectionPurchaseOrderModel,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
                 DisplayMemberPath="lot_number"
-                SelectedValue="{Binding purchase_order_detail_pk, Mode=TwoWay}" 
-                SelectedValuePath="purchase_order_detail_fk" 
+                SelectedItem="lot_number"
+                SelectedValue="{Binding purchase_order_detail_pk, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" 
+                SelectedValuePath="purchase_order_detail_pk" 
                 Width="60" HorizontalAlignment="Left"      
                 Grid.Column="1" Grid.Row="3"/>
 

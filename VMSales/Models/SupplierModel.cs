@@ -2,13 +2,12 @@
 using VMSales.Logic;
 using Dapper.Contrib.Extensions;
 
-
 namespace VMSales.Models
 {
     [Table("supplier")]
     public class SupplierModel : DataBaseLayer
     {
-        public string selected_supplier_pk { get; set; }
+        private string _selected_supplier_name { get; set; }
         private int _supplier_pk { get; set; }
         private string _supplier_name { get; set; }
         private string _address { get; set; }
@@ -18,6 +17,18 @@ namespace VMSales.Models
         private string _country { get; set; }
         private string _phone { get; set; }
         private string _email { get; set; }
+
+    /*    public string selected_supplier_name
+        {  remove not needed.
+            get { return _selected_supplier_name; }
+            set
+            {
+                if (_selected_supplier_name == value) return;
+                _selected_supplier_name = value;
+                RaisePropertyChanged("selected_supplier_name");
+            }
+        }
+    */
 
         [ExplicitKey]
         public int supplier_pk

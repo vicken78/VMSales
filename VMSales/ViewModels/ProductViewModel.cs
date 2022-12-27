@@ -19,36 +19,13 @@ namespace VMSales.ViewModels
     public class ProductViewModel : BaseViewModel
     {
         public PurchaseOrderModel purchaseOrderModel { get; set; }
-        #region collections
+        #region collections   
 
-        private readonly ICollectionView countryEntries;
-        public ICollectionView CountryEntries
-        {
-            get
-            {
-                return countryEntries;
-            }
-        }
-
-
-
-        public ObservableCollection<SupplierModel> ObservableCollectionSupplierModel { get; set; }
+        public BindableCollection<SupplierModel> BindableCollectionSupplierModel { get; set; }
         public BindableCollection<ProductModel> BindableCollectionProductModel { get; set; }
         public BindableCollection<CategoryModel> BindableCollectionCategoryModel { get; set; }
-
-        private ObservableCollection<PurchaseOrderModel> _ObservableCollectionPurchaseOrderModel;
-        public ObservableCollection<PurchaseOrderModel> ObservableCollectionPurchaseOrderModel
-        { 
-        get { return _ObservableCollectionPurchaseOrderModel = _ObservableCollectionPurchaseOrderModel ?? new ObservableCollection<PurchaseOrderModel>(); }
-            set
-            {
-                _ObservableCollectionPurchaseOrderModel = value;
-                RaisePropertyChanged("ObservableCollectionPurchaseOrderModel");
-            }
-        }
-
-
-
+        public BindableCollection<PurchaseOrderModel> BindableCollectionPurchaseOrderModel { get; set; }
+    
         #endregion
         #region Members
         private int _supplier_fk;
@@ -57,47 +34,54 @@ namespace VMSales.ViewModels
             get { return _supplier_fk; }
             set 
             {
+                if (_supplier_fk == value) return;
                 _supplier_fk = value;
                 RaisePropertyChanged("supplier_fk");
-                LoadPurchaseOrder(supplier_fk);     
+                LoadPurchaseOrder(supplier_fk);
+                LoadProducts(supplier_fk, 0);
             }
         }
 
-        private PurchaseOrderModel _selectedlotnumber;
-        public PurchaseOrderModel selectedlotnumber
+
+        // not working? is this needed?
+  /*      private PurchaseOrderModel _selected_lot_number;
+        public PurchaseOrderModel Selected_lot_number
         {
-            get { return _selectedlotnumber; }
+            get { return _selected_lot_number; }
             set
             {
-                MessageBox.Show("HIT");
-                RaisePropertyChanged("selectedlotnumber");
-            
-                    MessageBox.Show(selectedlotnumber.lot_number.ToString());
-          
+                if (_selected_lot_number == value) return;
+                _selected_lot_number = value;
 
+                MessageBox.Show("HIT");
+                RaisePropertyChanged("Selected_lot_number");
+            
+                    MessageBox.Show(Selected_lot_number.lot_number.ToString());
             }
         }
-   
+    */
+
         private int _purchase_order_detail_pk;
         public int purchase_order_detail_pk
         {
             get { return _purchase_order_detail_pk; }
             set
             {
-                MessageBox.Show("HIT");
+                if (_purchase_order_detail_pk == value) return;
+                _purchase_order_detail_pk = value;
+                RaisePropertyChanged("purchase_order_detail_pk");
+                LoadProducts(supplier_fk, purchase_order_detail_pk);
             }
         }
 
-
-
-        private ProductModel _selectedrow { get; set; }
-        public ProductModel selectedrow 
+        private ProductModel _productmodel { get; set; }
+        public ProductModel Productmodel 
         {
-            get => this._selectedrow;
+            get => this._productmodel;
             set {
-                if (this.selectedrow == value) return;
-                this._selectedrow = value;
-                RaisePropertyChanged("selectedrow");
+                if (this._productmodel == value) return;
+                this._productmodel = value;
+                RaisePropertyChanged("Productmodel");
             }
         }    
   
@@ -107,12 +91,12 @@ namespace VMSales.ViewModels
         public void SaveCommand()
         {
             // check for null values
-            if (selectedrow.category_fk == 0)
+            if (Productmodel.category_fk == 0)
             {
                 MessageBox.Show("Please select a Category.");
                 return;
             }
-            if (selectedrow.product_name is null)
+            if (Productmodel.product_name is null)
             {
                 MessageBox.Show("Please enter a product name.");
                 return;
@@ -122,7 +106,7 @@ namespace VMSales.ViewModels
             {
                 dataBaseProvider = getprovider();
                 DataBaseLayer.ProductRepository ProductRepo = new DataBaseLayer.ProductRepository(dataBaseProvider);
-                Task<bool> insertProduct = ProductRepo.Insert(selectedrow);
+                Task<bool> insertProduct = ProductRepo.Insert(Productmodel);
                 if (insertProduct.Result == true)
                 {
                     MessageBox.Show("1 Row Inserted.");
@@ -150,18 +134,18 @@ namespace VMSales.ViewModels
                     BindableCollectionProductModel = new BindableCollection<ProductModel>();
                 }
                    
-                selectedrow.brand_name = null;
-                selectedrow.product_name = null;
-                selectedrow.description = null;
-                selectedrow.quantity = 0;
-                selectedrow.cost = 0;
-                selectedrow.sku = "0";
-                selectedrow.sold_price = -1;
-                selectedrow.instock = 1;
-                selectedrow.listing_url = null;
-                selectedrow.listing_number = null;
-                selectedrow.listing_date = DateTime.MinValue;
-                BindableCollectionProductModel.Add(selectedrow);
+                Productmodel.brand_name = null;
+                Productmodel.product_name = null;
+                Productmodel.description = null;
+                Productmodel.quantity = 0;
+                Productmodel.cost = 0;
+                Productmodel.sku = "0";
+                Productmodel.sold_price = -1;
+                Productmodel.instock = 1;
+                Productmodel.listing_url = null;
+                Productmodel.listing_number = null;
+                Productmodel.listing_date = DateTime.MinValue;
+                BindableCollectionProductModel.Add(Productmodel);
             
         }
         public void DeleteCommand()
@@ -169,113 +153,135 @@ namespace VMSales.ViewModels
         }
         public void ResetCommand()
         {
+     
         }
 
         public void LoadPurchaseOrder(int supplier_fk)
-        {
-
-            ObservableCollectionPurchaseOrderModel.Clear();
-            ObservableCollectionPurchaseOrderModel = new ObservableCollection<PurchaseOrderModel>();
+        {  
+            BindableCollectionPurchaseOrderModel.Clear();
+            BindableCollectionPurchaseOrderModel = new BindableCollection<PurchaseOrderModel>();
             dataBaseProvider = getprovider();
             DataBaseLayer.PurchaseOrderRepository PurchaseOrderRepo = new DataBaseLayer.PurchaseOrderRepository(dataBaseProvider);
-            ObservableCollectionPurchaseOrderModel = PurchaseOrderRepo.GetAllWithID(supplier_fk).Result.ToObservable();
+            BindableCollectionPurchaseOrderModel = DataConversion.ToBindableCollection(PurchaseOrderRepo.GetAllWithID(supplier_fk).Result.ToObservable());
+            RaisePropertyChanged("BindableCollectionPurchaseOrderModel");
             PurchaseOrderRepo.Commit();
             PurchaseOrderRepo.Dispose();
+            PurchaseOrderModel Purchaseordermodel = new PurchaseOrderModel(); 
 
-            foreach (var item in ObservableCollectionPurchaseOrderModel)
+            foreach (var item in BindableCollectionPurchaseOrderModel)
                 {
-                
-                selectedrow.purchase_order_detail_fk = item.purchase_order_detail_pk;
-          
-                if (selectedrow.purchase_order_detail_fk == 0)
-                    { MessageBox.Show("Warning: Purchase Order Key Not found."); }
-                }
+                Purchaseordermodel.lot_number = item.lot_number;
+                Purchaseordermodel.purchase_order_detail_pk = item.purchase_order_detail_pk;
+                Productmodel.purchase_order_detail_fk = item.purchase_order_detail_pk;
             }
-         
+        }
+
+        public void LoadProducts(int supplier_fk, int purchase_order_detail_pk)
+        {
+            if (purchase_order_detail_pk == 0)
+            {
+                Productmodel = new ProductModel();
+                BindableCollectionProductModel.Clear();
+                BindableCollectionProductModel = new BindableCollection<ProductModel>();
+                DataBaseLayer.ProductRepository ProductRepo = new DataBaseLayer.ProductRepository(dataBaseProvider);
+                BindableCollectionProductModel = DataConversion.ToBindableCollection(ProductRepo.GetAllWithID(supplier_fk).Result.ToObservable());
+
+                foreach (var item in BindableCollectionProductModel)
+                {
+                    Productmodel.category_name = item.category_name;
+                }
+                RaisePropertyChanged("BindableCollectionProductModel");
+
+                ProductRepo.Commit();
+                ProductRepo.Dispose();
+            }
+            else
+            {
+                Productmodel = new ProductModel();
+                BindableCollectionProductModel.Clear();
+                BindableCollectionProductModel = new BindableCollection<ProductModel>();
+                DataBaseLayer.ProductRepository ProductRepo = new DataBaseLayer.ProductRepository(dataBaseProvider);
+                BindableCollectionProductModel = DataConversion.ToBindableCollection(ProductRepo.GetAllWithID(supplier_fk).Result.ToObservable());
+
+                foreach (var item in BindableCollectionProductModel)
+                {
+                    Productmodel.category_name = item.category_name;
+                }
+                RaisePropertyChanged("BindableCollectionProductModel");
+
+                ProductRepo.Commit();
+                ProductRepo.Dispose();
+            }
+        }
+
+
         public ProductViewModel()
         {
             dataBaseProvider = getprovider();
 
-            // check for category
-
+            // Get Categories
             DataBaseLayer.CategoryRepository CategoryRepo = new DataBaseLayer.CategoryRepository(dataBaseProvider);
-            var catResult = CategoryRepo.GetCategory().Result;
-            if (catResult.Count() == 0)
+            BindableCollectionCategoryModel = DataConversion.ToBindableCollection(CategoryRepo.GetAll().Result.ToObservable());
+            if (BindableCollectionCategoryModel.Count == 0)
             {
-                MessageBox.Show("You must add categories.");
                 CategoryRepo.Revert();
                 CategoryRepo.Dispose();
+                MessageBox.Show("You must add categories.");
                 return;
             }
             else
             {
                 CategoryRepo.Commit();
                 CategoryRepo.Dispose();
-                BindableCollectionCategoryModel = DataConversion.ToBindableCollection(catResult.ToObservable());
             }
 
-            selectedrow = new ProductModel();
-            selectedrow.category_list = new List<string>();
-            selectedrow.category_dict = new Dictionary<int, string>();
-
-           
             // Get Suppliers
-            ObservableCollectionSupplierModel = new ObservableCollection<SupplierModel>();
-            dataBaseProvider = getprovider();
+            BindableCollectionSupplierModel = new BindableCollection<SupplierModel>();
             DataBaseLayer.SupplierRepository SupplierRepo = new DataBaseLayer.SupplierRepository(dataBaseProvider);
-            ObservableCollectionSupplierModel = SupplierRepo.GetAll().Result.ToObservable();
-            SupplierRepo.Commit();
-            SupplierRepo.Dispose();
-
-            if (ObservableCollectionSupplierModel.Count == 0)
+            BindableCollectionSupplierModel = DataConversion.ToBindableCollection(SupplierRepo.GetAll().Result.ToObservable());
+            if (BindableCollectionSupplierModel.Count == 0)
             {
+                CategoryRepo.Revert();
+                CategoryRepo.Dispose();
                 MessageBox.Show("Please add a supplier first");
                 return;
             }
-
-            // Load Purchase Order
-            ObservableCollectionPurchaseOrderModel = new ObservableCollection<PurchaseOrderModel>();
-            DataBaseLayer.PurchaseOrderRepository PurchaseOrderRepo = new DataBaseLayer.PurchaseOrderRepository(dataBaseProvider);
-            ObservableCollectionPurchaseOrderModel = PurchaseOrderRepo.GetAll().Result.ToObservable();
-            if (ObservableCollectionPurchaseOrderModel.Count() == 0)
+            else
             {
-                MessageBox.Show("You must add purchase orders.");
+                SupplierRepo.Commit();
+                SupplierRepo.Dispose();
+            }
+
+
+            // Check for Purchase Order
+            BindableCollectionPurchaseOrderModel = new BindableCollection<PurchaseOrderModel>();
+            DataBaseLayer.PurchaseOrderRepository PurchaseOrderRepo = new DataBaseLayer.PurchaseOrderRepository(dataBaseProvider);
+            BindableCollectionPurchaseOrderModel = DataConversion.ToBindableCollection(PurchaseOrderRepo.GetAll().Result.ToObservable());
+            if (BindableCollectionPurchaseOrderModel.Count() == 0)
+            {
                 PurchaseOrderRepo.Revert();
                 PurchaseOrderRepo.Dispose();
+                MessageBox.Show("You must add purchase orders.");
                 return;
             }
             else
             {
                 PurchaseOrderRepo.Commit();
                 PurchaseOrderRepo.Dispose();
-
-                
-                PurchaseOrderModel selectedlotnumber = new PurchaseOrderModel(); 
-                foreach (var item in ObservableCollectionPurchaseOrderModel)
-                {
-                    selectedlotnumber.lot_number = item.lot_number;
-                    selectedlotnumber.purchase_order_detail_pk = item.purchase_order_detail_pk;
-
-                }
+            }
 
                 // Load Products
                 DataBaseLayer.ProductRepository ProductRepo = new DataBaseLayer.ProductRepository(dataBaseProvider);
-                BindableCollectionProductModel = DataConversion.ToBindableCollection(ProductRepo.GetAll().Result.AsEnumerable());
-                
-                //MessageBox.Show(selectedrow.category_name);
+                BindableCollectionProductModel = DataConversion.ToBindableCollection(ProductRepo.GetAll().Result.ToObservable());
+            
+                Productmodel = new ProductModel();
                 foreach (var item in BindableCollectionProductModel)
-                {
-                        selectedrow.category_name = item.category_name;
-                      //  MessageBox.Show(item.category_name);
-                }
-                RaisePropertyChanged("category_name");
+                    {
+                            Productmodel.category_name = item.category_name;
+                    }
                 ProductRepo.Commit();
                 ProductRepo.Dispose();
+             
             } 
         }
-
-       
-
-       
     }
-}

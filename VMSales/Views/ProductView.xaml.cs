@@ -25,6 +25,7 @@ namespace VMSales.Views
         {
             e.Handled = new Regex("[^0-9]+").IsMatch(e.Text);
         }
-        
+
+     
     }
 }

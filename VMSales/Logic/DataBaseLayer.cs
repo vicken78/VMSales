@@ -336,10 +336,10 @@ namespace VMSales.Logic
                 return await Connection.QuerySingleAsync<ProductModel>("SELECT purchase_order_detail_pk FROM purchase_order_detail as pod INNER JOIN purchase_order on purchase_order.purchase_order_pk = pod.purchase_order_fk WHERE supplier_fk = @id;", new { id }, Transaction);
             }
 
-            // get all purchase_order and purchase_order_detail
+            // get all products
             public override async Task<IEnumerable<ProductModel>> GetAll()
             {
-                return await Connection.QueryAsync<ProductModel>("SELECT distinct " +
+                return await Connection.QueryAsync<ProductModel>("SELECT DISTINCT " +
                 "c.category_pk, c.category_name, brand_name, product_name, p.description, quantity, cost, sku, sold_price, instock, condition, listing_url, " +
                 "listing_number, listing_date " +
                 "FROM product as p, product_purchase_order as ppo, product_category as pc, category as c " +
@@ -348,18 +348,41 @@ namespace VMSales.Logic
                 "INNER JOIN category on c.category_pk = pc.category_fk;", null, Transaction);
             }
 
-            // get all products with product category
-            public override async Task<IEnumerable<ProductModel>> GetAllWithID(int id)
+            // get all products by supplier
+
+            public override async Task<IEnumerable<ProductModel>> GetAllWithID(int supplier_fk)
             {
-                return await Connection.QueryAsync<ProductModel>("SELECT " +
-                    "distinct po.purchase_order_pk, po.purchase_date, po.invoice_number, " +
-                    "pod.purchase_order_detail_pk, pod.purchase_order_fk, pod.lot_number, pod.lot_cost, pod.lot_quantity," +
-                    "pod.lot_name, pod.lot_description, pod.sales_tax, pod.shipping_cost " +
-                    "FROM purchase_order as po, purchase_order_detail as pod, supplier as sup " +
-                    "INNER JOIN purchase_order_detail on po.purchase_order_pk = pod.purchase_order_fk " +
-                    "INNER JOIN supplier on sup.supplier_pk = po.supplier_fk " +
-                    "AND po.supplier_fk=@id", new { id }, Transaction);
+                return await Connection.QueryAsync<ProductModel>("SELECT DISTINCT " +
+                    "c.category_pk, c.category_name, brand_name, product_name, p.description, quantity, " +
+                    "cost, sku, sold_price, instock, condition, listing_url, listing_number, listing_date " +
+                    "FROM product as p, product_category as pc, category as c, product_supplier as ps, supplier s " +
+                    "INNER JOIN product_category on p.product_pk = pc.product_fk " +
+                    "INNER JOIN category on c.category_pk = pc.category_fk " +
+                    "INNER JOIN product_supplier on ps.supplier_fk = s.supplier_pk " +
+                    "INNER JOIN product_supplier on ps.product_fk = p.product_pk " +
+                    "WHERE s.supplier_pk = @supplier_fk", new { supplier_fk }, Transaction);
+
             }
+
+            // get all products by supplier and purchase_order
+            public async Task<IEnumerable<ProductModel>> GetAllWithAllID(int supplier_fk, int purchase_order_detail_pk)
+            {
+                return await Connection.QueryAsync<ProductModel>("SELECT DISTINCT " +
+                    "c.category_pk, c.category_name, brand_name, product_name, p.description, quantity, " +
+                    "cost, sku, sold_price, instock, condition, listing_url, listing_number, listing_date " +
+                    "FROM product_purchase_order as ppo, product as p, product_category as pc, " +
+                    "category as c, product_supplier as ps, supplier s, purchase_order_detail as pod " +
+                    "INNER JOIN product_purchase_order on p.product_pk = ppo.product_fk " +
+                    "INNER JOIN purchase_order_detail on pod.purchase_order_detail_pk = ppo.purchase_order_detail_fk ",
+                    "INNER JOIN product_category on p.product_pk = pc.product_fk " +
+                    "INNER JOIN category on c.category_pk = pc.category_fk " +
+                    "INNER JOIN product_supplier on ps.supplier_fk = s.supplier_pk " +
+                    "INNER JOIN product_supplier on ps.product_fk = p.product_pk " +
+                    "WHERE s.supplier_pk = @supplier_fk AND po.purchase_order_pk = @purchase_order_detail_pk " +
+                    new {supplier_fk, purchase_order_detail_pk}, Transaction);
+            }
+
+
 
             public override async Task<bool> Update(ProductModel entity)
             {
