@@ -26,5 +26,7 @@ namespace VMSales.Views
 
             InitializeComponent();
         }
+
+   
     }
 }

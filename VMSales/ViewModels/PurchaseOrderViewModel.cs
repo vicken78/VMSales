@@ -240,14 +240,19 @@ namespace VMSales.ViewModels
         #region ButtonCommands
         public void AddCommand()
         {
-            var obj = new PurchaseOrderModel()
+            if (supplier_fk == 0)
+            {
+                MessageBox.Show("Please select a supplier."); 
+                return; 
+            }
+            selectedrow = new PurchaseOrderModel()
             {
                 purchase_order_pk = 0,
-                purchase_order_fk = '0',
+                purchase_order_fk = 0,
                 purchase_order_detail_pk = 0,
                 supplier_fk = this.supplier_fk,
                 invoice_number = "0",
-                purchase_date = DateTime.MinValue,
+                purchase_date = DateTime.Now,
                 lot_cost = 0,
                 lot_quantity = 0,
                 lot_number = "0",
@@ -257,7 +262,7 @@ namespace VMSales.ViewModels
                 shipping_cost = 0
             };
 
-            ObservableCollectionPurchaseOrderModel.Add(obj);
+            ObservableCollectionPurchaseOrderModel.Add(selectedrow);
             RaisePropertyChanged("ObservableCollectionPurchaseOrderModel");
         }
         public void DeleteCommand()
@@ -276,7 +281,7 @@ namespace VMSales.ViewModels
                 }
                 if (selectedrow.purchase_order_pk != 0 && selectedrow.purchase_order_fk != 0 && selectedrow.purchase_order_detail_pk != 0)
                 {
-                    dataBaseProvider = BaseViewModel.getprovider();
+                    dataBaseProvider = getprovider();
                     DataBaseLayer.PurchaseOrderRepository PurchaseOrderRepo = new DataBaseLayer.PurchaseOrderRepository(dataBaseProvider);
                     try
                     {
@@ -308,36 +313,55 @@ namespace VMSales.ViewModels
         {
 
         }
-        public void SaveCommand(object sender, RoutedEventArgs e)
+        public void SaveCommand()
         {
-
+            MessageBox.Show(supplier_fk.ToString());
             if (supplier_fk.ToString() == null || supplier_fk == 0)
             {
                 MessageBox.Show("Please select a supplier.");
                 return;
             }
-
-            if (selectedrow.purchase_order_detail_pk == 0 || selectedrow.purchase_order_fk == 0 || selectedrow.purchase_order_detail_pk == 0)
+            // we need to check for default values here. better checks later.
+            if (selectedrow.lot_name == "Name")
             {
-                if (selectedrow.lot_name == "Name")
-                {
-                    MessageBox.Show("Default Values must not be used.");
-                    return;
-                }
+                MessageBox.Show("Default Values must not be used.");
+                return;
+            }
+
+            // purchase_order detail pk and po fk = 1 when it should be 0.  why is it being set.
+            MessageBox.Show("pod_pk"+selectedrow.purchase_order_detail_pk.ToString());
+            MessageBox.Show("po_fk" + selectedrow.purchase_order_fk.ToString());
+
+            if (selectedrow.purchase_order_detail_pk == 0 || selectedrow.purchase_order_fk == 0)
+            {
 
                 // insert new row
                 dataBaseProvider = BaseViewModel.getprovider();
                 DataBaseLayer.PurchaseOrderRepository PurchaseOrderRepo = new DataBaseLayer.PurchaseOrderRepository(dataBaseProvider);
                 try
                 {
-                    // we need to check for default values here. better checks later.
+                    MessageBox.Show("po_pk" + selectedrow.purchase_order_pk.ToString());
+                    MessageBox.Show("pod_pk" + selectedrow.purchase_order_detail_pk.ToString());
+                    MessageBox.Show("purdate" + selectedrow.purchase_date.ToString());
+                    MessageBox.Show("invnum" + selectedrow.invoice_number);
+                    MessageBox.Show("lotcost" + selectedrow.lot_cost.ToString());
+                    MessageBox.Show("lotname" + selectedrow.lot_name.ToString());
+                    MessageBox.Show("lotdesc" + selectedrow.lot_description.ToString());
+                    MessageBox.Show("salestax" + selectedrow.sales_tax.ToString());
+                    MessageBox.Show("shipcost" + selectedrow.shipping_cost.ToString());
+                    MessageBox.Show("sup_fk" + selectedrow.supplier_fk.ToString());
+
+
+
+
+
                     Task<bool> insertPurchase_Order = PurchaseOrderRepo.Insert(selectedrow);
                     if (insertPurchase_Order.Result == true)
                     {
 
                         PurchaseOrderRepo.Commit();
                         PurchaseOrderRepo.Dispose();
-                        MessageBox.Show("Data Inserted");
+                        MessageBox.Show("1 Row Inserted");
                         return;
                     }
                     else { MessageBox.Show("Insert failed to commit."); }
@@ -353,6 +377,7 @@ namespace VMSales.ViewModels
             // update
             if (selectedrow.purchase_order_detail_pk != 0)
             {
+                MessageBox.Show("in update");
                 selectedrow.supplier_fk = this.supplier_fk;
 
                 dataBaseProvider = BaseViewModel.getprovider();

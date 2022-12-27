@@ -1,20 +1,13 @@
 ﻿using Caliburn.Micro;
 using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.ComponentModel;
 using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Data;
 using VMSales.Logic;
 using VMSales.Models;
 
 namespace VMSales.ViewModels
 {
-    // read https://stackoverflow.com/questions/9608282/how-to-do-caliburn-micro-binding-of-view-model-to-combobox-selected-value
 
     public class ProductViewModel : BaseViewModel
     {
@@ -41,25 +34,6 @@ namespace VMSales.ViewModels
                 LoadProducts(supplier_fk, 0);
             }
         }
-
-
-        // not working? is this needed?
-  /*      private PurchaseOrderModel _selected_lot_number;
-        public PurchaseOrderModel Selected_lot_number
-        {
-            get { return _selected_lot_number; }
-            set
-            {
-                if (_selected_lot_number == value) return;
-                _selected_lot_number = value;
-
-                MessageBox.Show("HIT");
-                RaisePropertyChanged("Selected_lot_number");
-            
-                    MessageBox.Show(Selected_lot_number.lot_number.ToString());
-            }
-        }
-    */
 
         private int _purchase_order_detail_pk;
         public int purchase_order_detail_pk
@@ -178,40 +152,54 @@ namespace VMSales.ViewModels
 
         public void LoadProducts(int supplier_fk, int purchase_order_detail_pk)
         {
-            if (purchase_order_detail_pk == 0)
+            try
             {
-                Productmodel = new ProductModel();
-                BindableCollectionProductModel.Clear();
-                BindableCollectionProductModel = new BindableCollection<ProductModel>();
-                DataBaseLayer.ProductRepository ProductRepo = new DataBaseLayer.ProductRepository(dataBaseProvider);
-                BindableCollectionProductModel = DataConversion.ToBindableCollection(ProductRepo.GetAllWithID(supplier_fk).Result.ToObservable());
+                if (supplier_fk == 0) { return; }
 
-                foreach (var item in BindableCollectionProductModel)
+                if (supplier_fk > 0 && purchase_order_detail_pk == 0)
                 {
-                    Productmodel.category_name = item.category_name;
+                    Productmodel = new ProductModel();
+                    BindableCollectionProductModel.Clear();
+                    BindableCollectionProductModel = new BindableCollection<ProductModel>();
+                    DataBaseLayer.ProductRepository ProductRepo = new DataBaseLayer.ProductRepository(dataBaseProvider);
+                    BindableCollectionProductModel = DataConversion.ToBindableCollection(ProductRepo.GetAllWithID(supplier_fk).Result.ToObservable());
+                    ProductRepo.Commit();
+                    ProductRepo.Dispose();
+                    if (BindableCollectionProductModel.Count > 0)
+                    {
+                        foreach (var item in BindableCollectionProductModel)
+                        {
+                            Productmodel.category_name = item.category_name;
+                        }
+                        RaisePropertyChanged("BindableCollectionProductModel");
+                        return;
+                    }
                 }
-                RaisePropertyChanged("BindableCollectionProductModel");
-
-                ProductRepo.Commit();
-                ProductRepo.Dispose();
-            }
-            else
-            {
-                Productmodel = new ProductModel();
-                BindableCollectionProductModel.Clear();
-                BindableCollectionProductModel = new BindableCollection<ProductModel>();
-                DataBaseLayer.ProductRepository ProductRepo = new DataBaseLayer.ProductRepository(dataBaseProvider);
-                BindableCollectionProductModel = DataConversion.ToBindableCollection(ProductRepo.GetAllWithID(supplier_fk).Result.ToObservable());
-
-                foreach (var item in BindableCollectionProductModel)
+                else
                 {
-                    Productmodel.category_name = item.category_name;
+                    Productmodel = new ProductModel();
+                    BindableCollectionProductModel.Clear();
+                    RaisePropertyChanged("BindableCollectionProductModel");
+                    BindableCollectionProductModel = new BindableCollection<ProductModel>();
+                    DataBaseLayer.ProductRepository ProductRepo = new DataBaseLayer.ProductRepository(dataBaseProvider);
+                    BindableCollectionProductModel = DataConversion.ToBindableCollection(ProductRepo.GetAllWithAllID(supplier_fk, purchase_order_detail_pk).Result.ToObservable());
+                    ProductRepo.Commit();
+                    ProductRepo.Dispose();
+                    if (BindableCollectionProductModel.Count > 0)
+                    {
+                          foreach (var item in BindableCollectionProductModel)
+                          {
+                              Productmodel.category_name = item.category_name;
+                          }
+                          RaisePropertyChanged("BindableCollectionProductModel");
+                          return;
+                          }
+                       }
                 }
-                RaisePropertyChanged("BindableCollectionProductModel");
-
-                ProductRepo.Commit();
-                ProductRepo.Dispose();
-            }
+            catch (Exception ex)
+                {
+                MessageBox.Show("A Database Error has occured. " + ex);
+                }
         }
 
 

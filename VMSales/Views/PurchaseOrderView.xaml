@@ -6,13 +6,6 @@
              xmlns:local="clr-namespace:VMSales.ViewModels"
              mc:Ignorable="d" 
              Height="800" Width="1300" VerticalAlignment="Top" MinHeight="400" MinWidth="800">
-   <!-- <UserControl.DataContext>
-        <local:PurchaseOrderViewModel/>
-    </UserControl.DataContext>-->
-
-   <!-- <UserControl.Resources>
-        <local:BaseViewModel x:Key="DataValidator"/>
-    </UserControl.Resources>-->
    
     <DockPanel LastChildFill="True">
         <Grid Margin="10" DockPanel.Dock="Top" Background="Azure">
@@ -148,9 +141,9 @@
         <DataGrid x:Name="purchaseorderdatagrid" AutoGenerateColumns="False" 
                       ItemsSource="{Binding ObservableCollectionPurchaseOrderModel}"
                       IsSynchronizedWithCurrentItem="True" 
-                          CanUserDeleteRows ="False"
+                          CanUserDeleteRows="False"
                           SelectionMode="Single"
-                          CanUserAddRows="True"
+                          CanUserAddRows="False"
                           EnableRowVirtualization="True" IsReadOnly="False" Grid.Row="10" 
                           Height="Auto" Width="1280"  HorizontalAlignment="Center" >
 
