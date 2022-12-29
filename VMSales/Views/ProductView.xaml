@@ -173,12 +173,12 @@
                             <ComboBox Background="white" Foreground="black" Margin="2" IsEnabled="True" IsEditable="False" Visibility="Visible"
                             ItemsSource="{Binding DataContext.BindableCollectionCategoryModel,RelativeSource={RelativeSource Mode=FindAncestor,AncestorType=Controls:DataGrid}}" Height="30" 
                             DisplayMemberPath="category_name"
-                            SelectedItem="category_pk"
-                            SelectedValue="Category_name"
-                            SelectedIndex="0"/>
+                            SelectedIndex="{Binding DataContext.selected_category,RelativeSource={RelativeSource Mode=FindAncestor,AncestorType=Controls:DataGrid}}"/>
                         </DataTemplate>
                             </Controls:DataGridTemplateColumn.CellTemplate>
-                        
+
+
+
                 </Controls:DataGridTemplateColumn>
 
 

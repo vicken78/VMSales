@@ -3,27 +3,15 @@ using System.Collections.Generic;
 using VMSales.ViewModels;
 using Dapper.Contrib.Extensions;
 using System.Collections.ObjectModel;
-using System.Windows;
-using System.Linq;
-using Caliburn.Micro;
 
 namespace VMSales.Models
 {
     [Table("product")]
     public class ProductModel : BaseViewModel
     {
-        
-        private Dictionary<int, string> _category_dict { get; set; }
-        public Dictionary<int, string> category_dict
-        {
-            get {return _category_dict;}
-            set {
-                if (_category_dict == value) return;
-                _category_dict = value;
-                RaisePropertyChanged("category_dict");
-            }
-        }
-       
+        private int _product_category_pk { get; set; }
+        private int _product_pk { get; set; }
+        private int _product_fk { get; set; }
         private string _condition { get; set; }
         private string _brand_name;
         private string _product_name;
@@ -39,7 +27,28 @@ namespace VMSales.Models
 
         public int category_pk { get; set; }
         [ExplicitKey]
-        public int product_pk { get; set; }
+        public int product_pk
+        {
+            get { return _product_pk; }
+            set
+            {
+                if (_product_pk == value) return;
+                _product_pk = value;
+                RaisePropertyChanged("product_pk");
+            }
+        }
+        public int product_fk
+        {
+            get { return _product_fk; }
+            set
+            {
+                if (_product_fk == value) return;
+                _product_fk = value;
+                RaisePropertyChanged("product_fk");
+            }
+        }
+
+
         public string product_name
         {
             get { return _product_name; }
@@ -188,13 +197,22 @@ namespace VMSales.Models
 
         }
         [ExplicitKey]
-        public int product_category_pk { get; set; }
-        public int product_fk { get; set; }
+        public int product_category_pk
+        { 
+        get { return _product_category_pk; }
+        set {
+                if (_product_category_pk == value) return;
+                _product_category_pk = value;
+                RaisePropertyChanged("product_category_pk");
+            }
+        }
+        
         private int _category_fk { get; set; }
         public int category_fk
         {
             get { return _category_fk; }
-            set { 
+            set {
+                if (_category_fk == value) return;
                 _category_fk = value;
                 RaisePropertyChanged("category_fk");
                 }
@@ -211,12 +229,9 @@ namespace VMSales.Models
             {
                 if (_category_name == value) return;
                     _category_name = value;
-                    RaisePropertyChanged("category_name");
-                
+                    RaisePropertyChanged("category_name");   
             }
         }
-
-
 
         private ObservableCollection<string> _category { get; set; }
         public ObservableCollection<string> category
@@ -243,9 +258,6 @@ namespace VMSales.Models
                 RaisePropertyChanged("category_list");
             }
         }
-
-
-
 
         private int _purchase_order_detail_fk { get; set; }
         public int purchase_order_detail_fk

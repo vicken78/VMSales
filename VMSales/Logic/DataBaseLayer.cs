@@ -40,6 +40,30 @@ namespace VMSales.Logic
 
                 return true;
             }
+            // keep for now, may not be needed.
+            public async Task<CategoryModel> Get_by_category_name(string category_name)
+            {
+                return await Connection.QuerySingleAsync<CategoryModel>("SELECT category_pk FROM category WHERE category_name = @category_name", new { category_name }, Transaction);
+            }
+            // keep for now, may not be needed.
+            public async Task<CategoryModel> Get_by_category_pk(int category_pk)
+            {
+                return await Connection.QuerySingleAsync<CategoryModel>("SELECT category_name FROM category WHERE category_pk = @category_pk", new { category_pk }, Transaction);
+            }
+
+            public async Task<IEnumerable<CategoryModel>> Get_Product_Category(int product_pk)
+            {
+                return await Connection.QueryAsync<CategoryModel>(
+                  "SELECT DISTINCT category_pk, category_name, (category_pk - 1) as selected_category  FROM category as c, product_category as pc " +
+                  "INNER JOIN product_category on pc.category_fk = c.category_pk " +
+                  "WHERE pc.product_fk = @product_pk " +
+                  "UNION " +
+                  "SELECT DISTINCT category_pk, category_name, null  FROM category as c, product_category as pc " +
+                  "INNER JOIN product_category on pc.category_fk != c.category_pk"
+                   , new { product_pk }, Transaction);
+  
+            }
+
 
             public override async Task<CategoryModel> Get(int id)
             {
@@ -339,30 +363,36 @@ namespace VMSales.Logic
             // get all products
             public override async Task<IEnumerable<ProductModel>> GetAll()
             {
+                /*    
+                    old --- return await Connection.QueryAsync<ProductModel>("SELECT DISTINCT " +
+                    "c.category_pk, c.category_name, brand_name, product_name, p.description, quantity, cost, sku, sold_price, instock, condition, listing_url, " +
+                    "listing_number, listing_date " +
+                    "FROM product as p, product_purchase_order as ppo, product_category as pc, category as c " +
+                    "INNER JOIN product_purchase_order on p.product_pk = ppo.product_fk " +
+                    "INNER JOIN product_category on p.product_pk = pc.product_fk " +
+                    "INNER JOIN category on c.category_pk = pc.category_fk;", null, Transaction);
+                */
                 return await Connection.QueryAsync<ProductModel>("SELECT DISTINCT " +
-                "c.category_pk, c.category_name, brand_name, product_name, p.description, quantity, cost, sku, sold_price, instock, condition, listing_url, " +
-                "listing_number, listing_date " +
+                "ppo.*, p.*, c.category_pk, c.category_name, pc.* " +
                 "FROM product as p, product_purchase_order as ppo, product_category as pc, category as c " +
                 "INNER JOIN product_purchase_order on p.product_pk = ppo.product_fk " +
                 "INNER JOIN product_category on p.product_pk = pc.product_fk " +
-                "INNER JOIN category on c.category_pk = pc.category_fk;", null, Transaction);
+                "INNER JOIN category on c.category_pk = pc.category_fk;", null, Transaction);            
             }
 
             // get all products by supplier
 
             public override async Task<IEnumerable<ProductModel>> GetAllWithID(int supplier_fk)
             {
-                MessageBox.Show("sup_fk" + supplier_fk.ToString());
-
-                return await Connection.QueryAsync<ProductModel>("SELECT DISTINCT " +
-                "c.category_pk, c.category_name, brand_name, product_name, p.description, quantity, " +
-                "cost, sku, sold_price, instock, condition, listing_url, listing_number, listing_date " +
-                "FROM product as p, category as c, supplier as s, product_supplier as ps, product_category as pc " +
-                "INNER JOIN product_supplier on s.supplier_pk = ps.supplier_fk " +
-                "INNER JOIN product_supplier on p.product_pk = ps.product_fk " +
-                "INNER JOIN product_category on p.product_pk = pc.product_fk " +
-                "INNER JOIN category on c.category_pk = pc.category_fk " +
-                "WHERE s.supplier_pk = @supplier_fk", new { supplier_fk }, Transaction);
+                    return await Connection.QueryAsync<ProductModel>("SELECT DISTINCT " +
+                    "c.category_pk, c.category_name, p.*, ps.* " +
+                    "FROM product as p, category as c, supplier as s, product_supplier as ps, product_category as pc " +
+                    "INNER JOIN product_supplier on s.supplier_pk = ps.supplier_fk " +
+                    "INNER JOIN product_supplier on p.product_pk = ps.product_fk " +
+                    "INNER JOIN product_category on p.product_pk = pc.product_fk " +
+                    "INNER JOIN category on c.category_pk = pc.category_fk " +
+                    "WHERE s.supplier_pk = @supplier_fk", new { supplier_fk }, Transaction);
+                
             }
 
             // get all products by supplier and purchase_order
@@ -370,7 +400,7 @@ namespace VMSales.Logic
             {
             
                 return await Connection.QueryAsync<ProductModel>("SELECT DISTINCT " +
-                    "c.category_pk, c.category_name, p.brand_name, p.product_name, p.description, p.quantity, " +
+                    "ppo.*, c.category_pk, c.category_name, p.product_pk, p.brand_name, p.product_name, p.description, p.quantity, " +
                     "p.cost, p.sku, p.sold_price, p.instock, p.condition, p.listing_url, p.listing_number, p.listing_date " +
                     "FROM product_purchase_order as ppo, product as p, product_category as pc, " +
                     "category as c, product_supplier as ps, supplier as s, purchase_order_detail as pod " +
