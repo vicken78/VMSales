@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using VMSales.ViewModels;
 using Dapper.Contrib.Extensions;
 using System.Collections.ObjectModel;
+using Caliburn.Micro;
 
 namespace VMSales.Models
 {
@@ -124,6 +125,7 @@ namespace VMSales.Models
             }
 
         }
+
         private List<string> _conditionlist;
         public List<string> conditionlist
         {
@@ -146,7 +148,6 @@ namespace VMSales.Models
                 _condition = value;
                 RaisePropertyChanged("condition");
             }
-
         }
 
         public string listing_url
@@ -218,46 +219,47 @@ namespace VMSales.Models
                 }
         }
 
+        private BindableCollection<CategoryModel> _category_name_list { get; set; }
+        public BindableCollection<CategoryModel> category_name_list
+        {
+            get { return _category_name_list; }
+
+            set
+            {
+                if (_category_name_list == value) return;
+                _category_name_list = value;
+                RaisePropertyChanged("category_name_list");
+            }
+        }
+
+        public List<string> _categorylist { get; set; }
+        public List<string> categorylist
+        {
+            get { return _categorylist; }
+            set
+            {
+                if (_categorylist == value) return;
+                _categorylist = value;
+                RaisePropertyChanged("categorylist");
+            }
+
+        }
+
+  
 
 
-
-        private string _category_name;
+        private string _category_name { get;  set; }
         public string category_name
         {
             get { return _category_name; }
-            set 
+            set
             {
                 if (_category_name == value) return;
-                    _category_name = value;
-                    RaisePropertyChanged("category_name");   
+                _category_name = value;
+                RaisePropertyChanged("category_name");
             }
         }
-
-        private ObservableCollection<string> _category { get; set; }
-        public ObservableCollection<string> category
-        {
-            get { return _category ?? new ObservableCollection<string>(); }
-            set
-            {
-                if (_category == value) return;
-                _category = value;
-                RaisePropertyChanged("category");
-            }
-        }
-
-        private List<string> _category_list { get; set; }
-        public List<string> category_list
-        {
-            //get { return _category_list ?? new List<string>(); }
-              get { return _category_list; }
-
-            set
-            {
-                if (_category_list == value) return;
-                _category_list = value;
-                RaisePropertyChanged("category_list");
-            }
-        }
+    
 
         private int _purchase_order_detail_fk { get; set; }
         public int purchase_order_detail_fk

@@ -51,6 +51,28 @@ namespace VMSales.Logic
                 return await Connection.QuerySingleAsync<CategoryModel>("SELECT category_name FROM category WHERE category_pk = @category_pk", new { category_pk }, Transaction);
             }
 
+
+            public async Task<IEnumerable<CategoryModel>> Get_all_category()
+            {
+                return await Connection.QueryAsync <CategoryModel>("SELECT category_name FROM category ORDER BY category_name", null, Transaction);
+            }
+
+
+            public async Task<IEnumerable<CategoryModel>> Get_all_category_name()
+            {
+                return await Connection.QueryAsync <CategoryModel> ("SELECT category_name FROM category ORDER BY category_name", null, Transaction);
+            }
+
+            public async Task<IEnumerable<CategoryModel>> Get_Product_Category_Name(int product_pk)
+            {
+                return await Connection.QueryAsync<CategoryModel>(
+                  "SELECT category_name FROM category as c, product_category as pc " +
+                  "INNER JOIN product_category on pc.category_fk = c.category_pk " +
+                  "WHERE pc.product_fk = @product_pk "
+                   , new { product_pk }, Transaction);
+
+            }
+
             public async Task<IEnumerable<CategoryModel>> Get_Product_Category(int product_pk)
             {
                 return await Connection.QueryAsync<CategoryModel>(
@@ -63,6 +85,8 @@ namespace VMSales.Logic
                    , new { product_pk }, Transaction);
   
             }
+
+
 
 
             public override async Task<CategoryModel> Get(int id)

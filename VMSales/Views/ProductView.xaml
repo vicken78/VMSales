@@ -158,28 +158,32 @@
         <!-- Product DataGrid Start -->
         <DataGrid x:Name="ProductDataGrid"  AutoGenerateColumns="False" 
                           ItemsSource="{Binding BindableCollectionProductModel}"
-                          IsSynchronizedWithCurrentItem="True"
                           CanUserReorderColumns="False"
                           CanUserAddRows="False"
                           EnableRowVirtualization="True" IsReadOnly="False" Grid.Row="10" 
-                          Height="Auto" Width="1400">
+                          Height="Auto" Width="1400" Margin="0,0.333,0,0">
             <DataGrid.Columns>
 
                 <!-- Category Combobox -->
-                <Controls:DataGridTemplateColumn Header="Category" Width="100" Visibility="Visible">
-                    <Controls:DataGridTemplateColumn.CellTemplate>
+                
+                <DataGridTemplateColumn Header="Category" Width="100">
+                    <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
+                            <ComboBox  
+                                IsSynchronizedWithCurrentItem="False" 
+                                ItemsSource="{Binding DataContext.categorylist,RelativeSource={RelativeSource Mode=FindAncestor,AncestorType=Controls:DataGrid}}"
+                                SelectedItem="{Binding DataContext.selected_category, Mode=OneWay,UpdateSourceTrigger=PropertyChanged,RelativeSource={RelativeSource Mode=FindAncestor,AncestorType=Controls:DataGrid}}"/>
 
-                            <ComboBox Background="white" Foreground="black" Margin="2" IsEnabled="True" IsEditable="False" Visibility="Visible"
-                            ItemsSource="{Binding DataContext.BindableCollectionCategoryModel,RelativeSource={RelativeSource Mode=FindAncestor,AncestorType=Controls:DataGrid}}" Height="30" 
-                            DisplayMemberPath="category_name"
-                            SelectedIndex="{Binding DataContext.selected_category,RelativeSource={RelativeSource Mode=FindAncestor,AncestorType=Controls:DataGrid}}"/>
                         </DataTemplate>
-                            </Controls:DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+
+                <!--    ItemsSource="{Binding DataContext.category_list,RelativeSource={RelativeSource Mode=FindAncestor,AncestorType=Controls:DataGrid}}" Height="30"-->
+                    <!--          SelectedIndex="{Binding DataContext.category_name,RelativeSource={RelativeSource Mode=FindAncestor,AncestorType=Controls:DataGrid}}"/> -->
+                <!--SelectedValue="{Binding DataContext.selected_category, UpdateSourceTrigger=PropertyChanged,RelativeSource={RelativeSource Mode=FindAncestor,AncestorType=Controls:DataGrid}}"/>-->
 
 
 
-                </Controls:DataGridTemplateColumn>
 
 
 

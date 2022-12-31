@@ -1,5 +1,7 @@
 ﻿using Caliburn.Micro;
 using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
@@ -8,9 +10,10 @@ using VMSales.Models;
 
 namespace VMSales.ViewModels
 {
-
     public class ProductViewModel : BaseViewModel
     {
+        public List<string> categorylist { get; set; }
+
         public PurchaseOrderModel purchaseOrderModel { get; set; }
         #region collections   
 
@@ -48,17 +51,18 @@ namespace VMSales.ViewModels
             }
         }
 
-        private int _selected_category;
-        public int selected_category
-        {
-            get { return _selected_category; }
-            set
-            {
-                if (_selected_category == value) return;
-                _selected_category = value;
-                RaisePropertyChanged("selected_category");
-            }
-        }
+               private string _selected_category { get; set; }
+               public string selected_category
+               {
+                   get { return _selected_category; }
+                   set
+                   {
+                       if (_selected_category == value) return;
+                       _selected_category = value;
+                       RaisePropertyChanged("selected_category");
+                   }
+               }
+        
 
 
 
@@ -77,56 +81,6 @@ namespace VMSales.ViewModels
 
         #endregion
         IDatabaseProvider dataBaseProvider;
-
-        public void loadproductmodel(BindableCollection<ProductModel> productmodel)
-        {
-
-            foreach (var item in productmodel)
-            {
-                /*     item.category_pk = Productmodel.category_pk;
-                     item.category_list = Productmodel.category_list;
-                     item.product_category_pk = Productmodel.product_category_pk;
-                     item.product_pk = Productmodel.product_pk;
-                     item.product_pk = Productmodel.product_fk;
-                     item.brand_name = Productmodel.brand_name;
-                     item.product_name = Productmodel.product_name;
-                     item.description = Productmodel.description;
-                     item.quantity = Productmodel.quantity;
-                     item.sku = Productmodel.sku;
-                     item.sold_price = Productmodel.sold_price;
-                     item.instock = Productmodel.instock;
-                     item.listing_date = Productmodel.listing_date;
-                     item.listing_url = Productmodel.listing_url;
-                     item.listing_number = Productmodel.listing_number;
-                     item.cost = Productmodel.cost;
-                     item.condition = Productmodel.condition;
-                     item.category_name = Productmodel.category_name;          
-                 */
-                MessageBox.Show("brandname" + item.brand_name);
-                MessageBox.Show("catfk" + item.category_fk.ToString());
-                MessageBox.Show("catname" + item.category_name);
-                MessageBox.Show("catpk" + item.category_pk.ToString());
-                MessageBox.Show("prodname" + item.product_name);
-                MessageBox.Show("cond" + item.condition);
-                MessageBox.Show("cost" + item.cost.ToString());
-                MessageBox.Show("desc" + item.description);
-                MessageBox.Show("instock" + item.instock);
-                MessageBox.Show("listdate" + item.listing_date);
-                MessageBox.Show("listnum" + item.listing_number);
-                MessageBox.Show("listurl" + item.listing_url);
-                MessageBox.Show("pc" + item.product_category_pk.ToString());
-                MessageBox.Show("pod_fk" + item.purchase_order_detail_fk);
-                MessageBox.Show("qty" + item.quantity);
-                MessageBox.Show("sku" + item.sku);
-                MessageBox.Show("soldprice" + item.sold_price.ToString());
-                MessageBox.Show("productpk" + item.product_pk.ToString());
-
-            }
-        }
-
-
-
-
 
         public void SaveCommand()
         {
@@ -147,9 +101,37 @@ namespace VMSales.ViewModels
             //      return;
             //  }
 
+        /*    foreach (var item in BindableCollectionProductModel)
+            {
+                item.category_pk = Productmodel.category_pk;
+                item.category_list = Productmodel.category_list;
+                item.product_category_pk = Productmodel.product_category_pk;
+                item.product_pk = Productmodel.product_pk;
+                item.product_pk = Productmodel.product_fk;
+                item.brand_name = Productmodel.brand_name;
+                item.product_name = Productmodel.product_name;
+                item.description = Productmodel.description;
+                item.quantity = Productmodel.quantity;
+                item.sku = Productmodel.sku;
+                item.sold_price = Productmodel.sold_price;
+                item.instock = Productmodel.instock;
+                item.listing_date = Productmodel.listing_date;
+                item.listing_url = Productmodel.listing_url;
+                item.listing_number = Productmodel.listing_number;
+                item.cost = Productmodel.cost;
+                item.condition = Productmodel.condition;
+                item.category_name = Productmodel.category_name;
+            }
+        */
+            //Insert or Update
+            MessageBox.Show(Productmodel.product_pk.ToString());
+
+
+            //product key present?
+            /*
             MessageBox.Show("supplier_fk" + supplier_fk.ToString());
             MessageBox.Show("purchase_order_detail_pk" + purchase_order_detail_pk.ToString());
-
+       
             MessageBox.Show("prod cat_pk" + Productmodel.product_category_pk.ToString());
             MessageBox.Show("cat_pk" + Productmodel.category_pk.ToString());
             //MessageBox.Show("catlist"+Productmodel.category_list.ToString());
@@ -168,9 +150,8 @@ namespace VMSales.ViewModels
             MessageBox.Show("cost" + Productmodel.cost.ToString());
             MessageBox.Show("condition" + Productmodel.condition);
             MessageBox.Show("catname" + Productmodel.category_name);
-
-            loadproductmodel(BindableCollectionProductModel);
-
+            */
+            
 
 
 
@@ -201,26 +182,28 @@ namespace VMSales.ViewModels
         }
         public void AddCommand()
         {
-
+            
             if (BindableCollectionProductModel is null)
             {
                 BindableCollectionProductModel = new BindableCollection<ProductModel>();
             }
 
+          
+            Productmodel.product_pk = 0;
             Productmodel.brand_name = null;
             Productmodel.product_name = null;
             Productmodel.description = null;
             Productmodel.quantity = 0;
             Productmodel.cost = 0;
             Productmodel.sku = "0";
-            Productmodel.sold_price = -1;
+            Productmodel.sold_price = 0;
+            Productmodel.condition = "New";
             Productmodel.instock = 1;
             Productmodel.listing_url = null;
             Productmodel.listing_number = null;
             Productmodel.listing_date = DateTime.MinValue;
             BindableCollectionProductModel.Add(Productmodel);
-            //            loadproductmodel(BindableCollectionProductModel);
-
+        
         }
         public void DeleteCommand()
         {
@@ -265,16 +248,6 @@ namespace VMSales.ViewModels
                     BindableCollectionProductModel = DataConversion.ToBindableCollection(ProductRepo.GetAllWithID(supplier_fk).Result.ToObservable());
                     ProductRepo.Commit();
                     ProductRepo.Dispose();
-                    if (BindableCollectionProductModel.Count > 0)
-                    {
-                        foreach (var item in BindableCollectionProductModel)
-                        {
-                            Productmodel.category_name = item.category_name;
-                        }
-                        RaisePropertyChanged("BindableCollectionProductModel");
-                        //  loadproductmodel(BindableCollectionProductModel);
-                        return;
-                    }
                 }
                 else
                 {
@@ -286,17 +259,8 @@ namespace VMSales.ViewModels
                     BindableCollectionProductModel = DataConversion.ToBindableCollection(ProductRepo.GetAllWithAllID(supplier_fk, purchase_order_detail_pk).Result.ToObservable());
                     ProductRepo.Commit();
                     ProductRepo.Dispose();
-                    if (BindableCollectionProductModel.Count > 0)
-                    {
-                        foreach (var item in BindableCollectionProductModel)
-                        {
-                            Productmodel.category_name = item.category_name;
-                        }
-                        RaisePropertyChanged("BindableCollectionProductModel");
-                        //  loadproductmodel(BindableCollectionProductModel);
-                        return;
-                    }
                 }
+                RaisePropertyChanged("BindableCollectionProductModel");
             }
             catch (Exception ex)
             {
@@ -370,28 +334,23 @@ namespace VMSales.ViewModels
             foreach (var item in BindableCollectionProductModel)
             {
                 Productmodel.product_pk = item.product_pk;
-                Productmodel.category_name = item.category_name;
+                selected_category = item.category_name;
             }
-
             // Load Category
             {
                 try
                 {
+                    categorylist = new List<string>();
                     BindableCollectionCategoryModel = new BindableCollection<CategoryModel>();
                     DataBaseLayer.CategoryRepository CategoryRepos = new DataBaseLayer.CategoryRepository(dataBaseProvider);
                     BindableCollectionCategoryModel = DataConversion.ToBindableCollection(CategoryRepos.Get_Product_Category(Productmodel.product_pk).Result.ToObservable());
+        
                     CategoryRepos.Commit();
                     CategoryRepos.Dispose();
-
                     foreach (var item in BindableCollectionCategoryModel)
                     {
-                        selected_category = item.selected_category;
-                        MessageBox.Show("sel"+item.selected_category.ToString());
-                        MessageBox.Show("catpk"+item.category_pk.ToString());
-                        MessageBox.Show("catname"+item.category_name);
-
+                        categorylist.Add(item.category_name);
                     }
-
                 }
                 catch (Exception ext)
                 {
@@ -399,7 +358,9 @@ namespace VMSales.ViewModels
                 }
   
             }
+
         }
+           
     }
 }
     
