@@ -340,7 +340,7 @@ namespace VMSales.ViewModels
                 DataBaseLayer.PurchaseOrderRepository PurchaseOrderRepo = new DataBaseLayer.PurchaseOrderRepository(dataBaseProvider);
                 try
                 {
-                    MessageBox.Show("po_pk" + selectedrow.purchase_order_pk.ToString());
+              /*      MessageBox.Show("po_pk" + selectedrow.purchase_order_pk.ToString());
                     MessageBox.Show("pod_pk" + selectedrow.purchase_order_detail_pk.ToString());
                     MessageBox.Show("purdate" + selectedrow.purchase_date.ToString());
                     MessageBox.Show("invnum" + selectedrow.invoice_number);
@@ -350,10 +350,7 @@ namespace VMSales.ViewModels
                     MessageBox.Show("salestax" + selectedrow.sales_tax.ToString());
                     MessageBox.Show("shipcost" + selectedrow.shipping_cost.ToString());
                     MessageBox.Show("sup_fk" + selectedrow.supplier_fk.ToString());
-
-
-
-
+              */
 
                     Task<bool> insertPurchase_Order = PurchaseOrderRepo.Insert(selectedrow);
                     if (insertPurchase_Order.Result == true)
@@ -377,7 +374,7 @@ namespace VMSales.ViewModels
             // update
             if (selectedrow.purchase_order_detail_pk != 0)
             {
-                MessageBox.Show("in update");
+                MessageBox.Show("Updating");
                 selectedrow.supplier_fk = this.supplier_fk;
 
                 dataBaseProvider = BaseViewModel.getprovider();

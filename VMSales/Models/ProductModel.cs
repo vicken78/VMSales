@@ -4,6 +4,7 @@ using VMSales.ViewModels;
 using Dapper.Contrib.Extensions;
 using System.Collections.ObjectModel;
 using Caliburn.Micro;
+using System.ComponentModel;
 
 namespace VMSales.Models
 {
@@ -28,6 +29,7 @@ namespace VMSales.Models
 
         public int category_pk { get; set; }
         [ExplicitKey]
+        [DefaultValue(0)]
         public int product_pk
         {
             get { return _product_pk; }

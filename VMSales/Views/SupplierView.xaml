@@ -123,7 +123,7 @@
                           CanUserDeleteRows ="False"
                           CanUserAddRows="False"
                           EnableRowVirtualization="True" IsReadOnly="False" Grid.Row="10" 
-                          Height="Auto" Width="1400">
+                          Height="Auto" Width="1400" Margin="0,1,-722.222,-1.111">
                     <DataGrid.Columns>
                         <!--Supplier ID -->
                         <DataGridTextColumn Header="Supplier ID" IsReadOnly="true" Width="Auto" Binding="{Binding supplier_pk, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}">
@@ -166,7 +166,7 @@
                             </DataGridTextColumn.ElementStyle>
                         </DataGridTextColumn>
                         <!-- Country -->
-                        <DataGridTextColumn Header="City" Width="Auto" Binding="{Binding country, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}">
+                        <DataGridTextColumn Header="Country" Width="Auto" Binding="{Binding country, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}">
                             <DataGridTextColumn.ElementStyle>
                                 <Style TargetType="TextBlock">
                                     <Setter Property="TextWrapping" Value="Wrap"/>
@@ -174,7 +174,7 @@
                             </DataGridTextColumn.ElementStyle>
                         </DataGridTextColumn>
                         <!-- Zip -->
-                        <DataGridTextColumn Header="City" Width="Auto" Binding="{Binding zip, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}">
+                        <DataGridTextColumn Header="Zip" Width="Auto" Binding="{Binding zip, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}">
                             <DataGridTextColumn.ElementStyle>
                                 <Style TargetType="TextBlock">
                                     <Setter Property="TextWrapping" Value="Wrap"/>

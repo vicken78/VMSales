@@ -40,6 +40,8 @@ namespace VMSales.Logic
 
                 return true;
             }
+
+            // begin cleanup
             // keep for now, may not be needed.
             public async Task<CategoryModel> Get_by_category_name(string category_name)
             {
@@ -51,18 +53,18 @@ namespace VMSales.Logic
                 return await Connection.QuerySingleAsync<CategoryModel>("SELECT category_name FROM category WHERE category_pk = @category_pk", new { category_pk }, Transaction);
             }
 
-
+            // keep for now, may not be needed.
             public async Task<IEnumerable<CategoryModel>> Get_all_category()
             {
                 return await Connection.QueryAsync <CategoryModel>("SELECT category_name FROM category ORDER BY category_name", null, Transaction);
             }
 
-
+            // keep for now, may not be needed.
             public async Task<IEnumerable<CategoryModel>> Get_all_category_name()
             {
                 return await Connection.QueryAsync <CategoryModel> ("SELECT category_name FROM category ORDER BY category_name", null, Transaction);
             }
-
+            // keep for now, may not be needed.
             public async Task<IEnumerable<CategoryModel>> Get_Product_Category_Name(int product_pk)
             {
                 return await Connection.QueryAsync<CategoryModel>(
@@ -86,7 +88,7 @@ namespace VMSales.Logic
   
             }
 
-
+            // end
 
 
             public override async Task<CategoryModel> Get(int id)
@@ -496,7 +498,7 @@ namespace VMSales.Logic
         #endregion
        
         
-        
+        // needs fixing here
         /*
         #region Product_Purchase_Order
         public class ProductPurchaseOrderRepository : Repository<ProductPurchaseOrder>

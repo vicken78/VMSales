@@ -12,9 +12,6 @@ namespace VMSales.ViewModels
 {
     public class ProductViewModel : BaseViewModel
     {
-        public List<string> categorylist { get; set; }
-
-        public PurchaseOrderModel purchaseOrderModel { get; set; }
         #region collections   
 
         public BindableCollection<SupplierModel> BindableCollectionSupplierModel { get; set; }
@@ -24,6 +21,8 @@ namespace VMSales.ViewModels
 
         #endregion
         #region Members
+        public List<string> categorylist { get; set; }
+
         private int _supplier_fk;
         public int supplier_fk
         {
@@ -51,30 +50,26 @@ namespace VMSales.ViewModels
             }
         }
 
-               private string _selected_category { get; set; }
-               public string selected_category
-               {
-                   get { return _selected_category; }
-                   set
-                   {
-                       if (_selected_category == value) return;
-                       _selected_category = value;
-                       RaisePropertyChanged("selected_category");
-                   }
-               }
-        
-
-
-
+        private string _selected_category { get; set; }
+        public string selected_category
+        {
+            get { return _selected_category; }
+            set
+            {
+                if (_selected_category == value) return;
+                _selected_category = value;
+                RaisePropertyChanged("selected_category");
+            }
+        }
 
         private ProductModel _productmodel { get; set; }
         public ProductModel Productmodel
         {
-            get => this._productmodel;
+            get { return _productmodel; }
             set
             {
-                if (this._productmodel == value) return;
-                this._productmodel = value;
+                if (_productmodel == value) return;
+                _productmodel = value;
                 RaisePropertyChanged("Productmodel");
             }
         }
@@ -85,75 +80,72 @@ namespace VMSales.ViewModels
         public void SaveCommand()
         {
             // check for null values
-            //if (supplier_fk == 0)
-            //{
-            //    MessageBox.Show("Please select a Supplier.");
-            //    return;
-            //}
-            //   if (Productmodel.category_name is null)
-            //  {
-            //      MessageBox.Show("Please select a Category.");
-            //      return;
-            //  }
-            //  if (purchase_order_detail_pk == 0)
-            //  {
-            //      MessageBox.Show("Please select a Lot Number.");
-            //      return;
-            //  }
-
-        /*    foreach (var item in BindableCollectionProductModel)
+            if (supplier_fk == 0)
             {
-                item.category_pk = Productmodel.category_pk;
-                item.category_list = Productmodel.category_list;
-                item.product_category_pk = Productmodel.product_category_pk;
-                item.product_pk = Productmodel.product_pk;
-                item.product_pk = Productmodel.product_fk;
-                item.brand_name = Productmodel.brand_name;
-                item.product_name = Productmodel.product_name;
-                item.description = Productmodel.description;
-                item.quantity = Productmodel.quantity;
-                item.sku = Productmodel.sku;
-                item.sold_price = Productmodel.sold_price;
-                item.instock = Productmodel.instock;
-                item.listing_date = Productmodel.listing_date;
-                item.listing_url = Productmodel.listing_url;
-                item.listing_number = Productmodel.listing_number;
-                item.cost = Productmodel.cost;
-                item.condition = Productmodel.condition;
-                item.category_name = Productmodel.category_name;
+                MessageBox.Show("Please select a Supplier.");
+                return;
             }
+            if (purchase_order_detail_pk == 0)
+            {
+                MessageBox.Show("Please select a Lot Number.");
+                return;
+            }
+
+            List<string>  hat;
+            hat = BindableCollectionProductModel.Select(item => item.product_pk.ToString()).ToList();
+            // get last row?
+         
+            foreach (var item in hat)
+            {
+                MessageBox.Show(item);
+            }
+        
+
+        // MessageBox.Show(Productmodel.product_pk.ToString());
+        //Insert or Update
+
+        // Check for Product Key
+        /*            if (Productmodel.product_pk == 0)
+                    {
+                        // Insert
+                        MessageBox.Show("Insert");
+                    }
+                    else
+                    {
+                        // Update
+                        MessageBox.Show("Update");
+                    }
         */
-            //Insert or Update
-            MessageBox.Show(Productmodel.product_pk.ToString());
 
 
-            //product key present?
-            /*
-            MessageBox.Show("supplier_fk" + supplier_fk.ToString());
-            MessageBox.Show("purchase_order_detail_pk" + purchase_order_detail_pk.ToString());
-       
-            MessageBox.Show("prod cat_pk" + Productmodel.product_category_pk.ToString());
-            MessageBox.Show("cat_pk" + Productmodel.category_pk.ToString());
-            //MessageBox.Show("catlist"+Productmodel.category_list.ToString());
-            MessageBox.Show("product_pk" + Productmodel.product_pk.ToString());
-            MessageBox.Show("product_fk" + Productmodel.product_fk.ToString());
-            MessageBox.Show("brandname" + Productmodel.brand_name);
-            MessageBox.Show("prodname" + Productmodel.product_name);
-            MessageBox.Show("desc" + Productmodel.description);
-            MessageBox.Show("qty" + Productmodel.quantity.ToString());
-            MessageBox.Show("sku" + Productmodel.sku);
-            MessageBox.Show("soldprice" + Productmodel.sold_price.ToString());
-            MessageBox.Show("instock" + Productmodel.instock.ToString());
-            MessageBox.Show("listdate" + Productmodel.listing_date.ToString());
-            MessageBox.Show("listurl" + Productmodel.listing_url);
-            MessageBox.Show("listnum" + Productmodel.listing_number);
-            MessageBox.Show("cost" + Productmodel.cost.ToString());
-            MessageBox.Show("condition" + Productmodel.condition);
-            MessageBox.Show("catname" + Productmodel.category_name);
-            */
-            
 
 
+
+        //product key present?
+        /*
+        MessageBox.Show("supplier_fk" + supplier_fk.ToString());
+        MessageBox.Show("purchase_order_detail_pk" + purchase_order_detail_pk.ToString());
+        MessageBox.Show("prod cat_pk" + Productmodel.product_category_pk.ToString());
+        MessageBox.Show("cat_pk" + Productmodel.category_pk.ToString());
+        MessageBox.Show("product_pk" + Productmodel.product_pk.ToString());
+        MessageBox.Show("product_fk" + Productmodel.product_fk.ToString());
+        MessageBox.Show("brandname" + Productmodel.brand_name);
+        MessageBox.Show("prodname" + Productmodel.product_name);
+        MessageBox.Show("desc" + Productmodel.description);
+        MessageBox.Show("qty" + Productmodel.quantity.ToString());
+        MessageBox.Show("sku" + Productmodel.sku);
+        MessageBox.Show("soldprice" + Productmodel.sold_price.ToString());
+        MessageBox.Show("instock" + Productmodel.instock.ToString());
+        MessageBox.Show("listdate" + Productmodel.listing_date.ToString());
+        MessageBox.Show("listurl" + Productmodel.listing_url);
+        MessageBox.Show("listnum" + Productmodel.listing_number);
+        MessageBox.Show("cost" + Productmodel.cost.ToString());
+        MessageBox.Show("condition" + Productmodel.condition);
+        MessageBox.Show("catname" + Productmodel.category_name);
+        */
+
+    }
+    
 
 
             /*      try
@@ -179,17 +171,17 @@ namespace VMSales.ViewModels
                   {
                       MessageBox.Show("An Error has occured: " + e);
                   }*/
-        }
+        //} 
         public void AddCommand()
         {
             
-            if (BindableCollectionProductModel is null)
+            if (BindableCollectionProductModel.Count == 0)
             {
                 BindableCollectionProductModel = new BindableCollection<ProductModel>();
             }
 
-          
             Productmodel.product_pk = 0;
+            Productmodel.product_fk = 0;
             Productmodel.brand_name = null;
             Productmodel.product_name = null;
             Productmodel.description = null;
@@ -203,7 +195,7 @@ namespace VMSales.ViewModels
             Productmodel.listing_number = null;
             Productmodel.listing_date = DateTime.MinValue;
             BindableCollectionProductModel.Add(Productmodel);
-        
+            RaisePropertyChanged("BindableCollectionProductModel");
         }
         public void DeleteCommand()
         {
@@ -331,11 +323,16 @@ namespace VMSales.ViewModels
             ProductRepo.Commit();
             ProductRepo.Dispose();
             Productmodel = new ProductModel();
-            foreach (var item in BindableCollectionProductModel)
+            if (BindableCollectionProductModel.Count > 0)
             {
-                Productmodel.product_pk = item.product_pk;
-                selected_category = item.category_name;
+                foreach (var item in BindableCollectionProductModel)
+                {
+                    Productmodel.product_pk = item.product_pk;
+                    selected_category = item.category_name;
+                }
+        
             }
+        
             // Load Category
             {
                 try
@@ -356,11 +353,7 @@ namespace VMSales.ViewModels
                 {
                     MessageBox.Show(ext.ToString());
                 }
-  
             }
-
         }
-           
     }
 }
-    
