@@ -6,10 +6,10 @@
              xmlns:viewmodels="clr-namespace:VMSales.ViewModels" 
              d:DataContext="{d:DesignInstance Type=viewmodels:SupplierViewModel}"
              mc:Ignorable="d" 
-             Height="800" Width="1400" VerticalAlignment="Top" MinHeight="400" MinWidth="800">
+             Height="800" Width="Auto" VerticalAlignment="Top" MinHeight="400" MinWidth="1725">
     <DockPanel LastChildFill="True">
 
-        <Grid x:Name="ObservableCollectionSupplierModel" Margin="10" DockPanel.Dock="Bottom">
+        <Grid x:Name="ObservableCollectionSupplierModel" Margin="10" DockPanel.Dock="Bottom" HorizontalAlignment="Left">
             
             <Grid.ColumnDefinitions>
                 <ColumnDefinition />
@@ -19,7 +19,7 @@
                 <RowDefinition Height="Auto" />
                 <RowDefinition />
             </Grid.RowDefinitions>
-            <GroupBox Grid.Column="0" Grid.Row="1" Background="Azure">
+            <GroupBox Grid.Column="0" HorizontalAlignment="Left" Width="400" Grid.Row="1" Background="Azure">
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="100" />
@@ -113,20 +113,23 @@
                 </Grid>
             </GroupBox>
        
-            <GroupBox Grid.Column="1" Grid.Row="0" Header="Suppliers" Grid.RowSpan="2">
+            <GroupBox Grid.Column="1" Grid.Row="0" Header="Suppliers" Grid.RowSpan="2" Width="2000" HorizontalAlignment="Left">
                 <DataGrid x:Name="supplierdatagrid" AutoGenerateColumns="False" 
                           ItemsSource="{Binding ObservableCollectionSupplierModel}"
                           SelectedItem="{Binding Select_Request, Mode=TwoWay}" 
-                           IsSynchronizedWithCurrentItem="True"
+                           ScrollViewer.CanContentScroll="True" 
+                           ScrollViewer.VerticalScrollBarVisibility="Auto"
+                           ScrollViewer.HorizontalScrollBarVisibility="Auto"
+                          IsSynchronizedWithCurrentItem="True"
                           SelectionMode="Single"
                           CanUserReorderColumns="False"
                           CanUserDeleteRows ="False"
                           CanUserAddRows="False"
                           EnableRowVirtualization="True" IsReadOnly="False" Grid.Row="10" 
-                          Height="Auto" Width="1400" Margin="0,1,-722.222,-1.111">
+                          Height="Auto" Width="2000">
                     <DataGrid.Columns>
                         <!--Supplier ID -->
-                        <DataGridTextColumn Header="Supplier ID" IsReadOnly="true" Width="Auto" Binding="{Binding supplier_pk, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}">
+                        <DataGridTextColumn Header="ID" IsReadOnly="true" Width="30" Binding="{Binding supplier_pk, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}">
                             <DataGridTextColumn.ElementStyle>
                                 <Style TargetType="TextBlock">
                                     <Setter Property="TextWrapping" Value="Wrap"/>
