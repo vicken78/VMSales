@@ -9,8 +9,8 @@
              Height="800" Width="Auto" VerticalAlignment="Top" MinHeight="400" MinWidth="1725">
     <DockPanel LastChildFill="True">
 
-        <Grid x:Name="ObservableCollectionSupplierModel" Margin="10" DockPanel.Dock="Bottom" HorizontalAlignment="Left">
-            
+        <Grid x:Name="ObservableCollectionSupplierModel" Margin="10" DockPanel.Dock="Bottom">
+
             <Grid.ColumnDefinitions>
                 <ColumnDefinition />
                 <ColumnDefinition />
@@ -19,7 +19,7 @@
                 <RowDefinition Height="Auto" />
                 <RowDefinition />
             </Grid.RowDefinitions>
-            <GroupBox Grid.Column="0" HorizontalAlignment="Left" Width="400" Grid.Row="1" Background="Azure">
+            <GroupBox Grid.Column="0" Grid.Row="1" Background="Azure" HorizontalAlignment="Left" >
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="100" />
@@ -85,8 +85,8 @@
                     <TextBox
                         Text="{Binding SelectedItem.email, ElementName=supplierdatagrid, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}"
                         Grid.Column="1" Grid.Row="9" />
-         
-            <!--  Save Button -->
+
+                    <!--  Save Button -->
                     <Button x:Name="SaveCommand" Grid.Row="10"
                             Grid.Column="1"
                             Margin="0,5,453,-27"
@@ -109,11 +109,11 @@
                             Margin="270,5,153,-27"
                             Content="Reset"
                             Width="75"/>
-           
+
                 </Grid>
             </GroupBox>
-       
-            <GroupBox Grid.Column="1" Grid.Row="0" Header="Suppliers" Grid.RowSpan="2" Width="2000" HorizontalAlignment="Left">
+
+            <GroupBox Grid.Row="0" Header="Suppliers" Grid.RowSpan="2" Grid.ColumnSpan="2" Margin="640,0,0,0">
                 <DataGrid x:Name="supplierdatagrid" AutoGenerateColumns="False" 
                           ItemsSource="{Binding ObservableCollectionSupplierModel}"
                           SelectedItem="{Binding Select_Request, Mode=TwoWay}" 
@@ -126,10 +126,10 @@
                           CanUserDeleteRows ="False"
                           CanUserAddRows="False"
                           EnableRowVirtualization="True" IsReadOnly="False" Grid.Row="10" 
-                          Height="Auto" Width="2000">
+                          Height="Auto" Width="Auto">
                     <DataGrid.Columns>
                         <!--Supplier ID -->
-                        <DataGridTextColumn Header="ID" IsReadOnly="true" Width="30" Binding="{Binding supplier_pk, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}">
+                        <DataGridTextColumn Header="Supplier ID" IsReadOnly="true" Width="Auto" Binding="{Binding supplier_pk, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}">
                             <DataGridTextColumn.ElementStyle>
                                 <Style TargetType="TextBlock">
                                     <Setter Property="TextWrapping" Value="Wrap"/>
