@@ -401,21 +401,18 @@ namespace VMSales.ViewModels
         }
         #endregion
 
-
-
-
         public void LoadPurchaseOrder(int supplier_fk)
         {
 
             ObservableCollectionPurchaseOrderModel = new ObservableCollection<PurchaseOrderModel>();
 
             //clear and reload invoicedate and purchasedate
-            if (InvoiceNumber.Count > 0 && PurchaseDate.Count > 0)
+       /*     if (InvoiceNumber.Count > 0 && PurchaseDate.Count > 0)
             {
                 InvoiceNumber.Clear();
                 PurchaseDate.Clear();
             }
-
+       */
             InvoiceNumberList = new List<string>();
             PurchaseDateList = new List<DateTime>();
             dataBaseProvider = BaseViewModel.getprovider();

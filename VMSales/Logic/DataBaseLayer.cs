@@ -11,7 +11,6 @@ using VMSales.Models;
 
 namespace VMSales.Logic
 {
-
     public class DataBaseLayer : INotifyPropertyChanged
     {
 
@@ -164,7 +163,7 @@ namespace VMSales.Logic
 
             public override async Task<IEnumerable<SupplierModel>> GetAll()
             {
-                return await Connection.QueryAsync<SupplierModel>("SELECT supplier_pk, supplier_name, address, city, zip, state, country, phone, email FROM supplier", null, Transaction);
+                return await Connection.QueryAsync<SupplierModel>("SELECT supplier_pk, supplier_name, address, city, zip, state, country, phone, email FROM supplier ORDER BY supplier_name", null, Transaction);
             }
 
             public override async Task<bool> Update(SupplierModel entity)
