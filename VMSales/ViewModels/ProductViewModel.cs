@@ -8,6 +8,8 @@ using System.Windows;
 using VMSales.Logic;
 using VMSales.Models;
 
+
+
 namespace VMSales.ViewModels
 {
     public class ProductViewModel : BaseViewModel

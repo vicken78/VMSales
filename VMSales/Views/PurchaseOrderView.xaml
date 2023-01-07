@@ -172,21 +172,22 @@
             <DataGrid.Columns>
                 
                 <DataGridTextColumn x:Name="supplier_fk" Header="SUP FK" Width="90"
-                            Visibility="Visible" IsReadOnly="True" Binding="{Binding Path=SelectedValue, ElementName=cmbSupplier, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}"/>
+                            Visibility="Hidden"  IsReadOnly="True" Binding="{Binding Path=SelectedValue, ElementName=cmbSupplier, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}"/>
 
                 <DataGridTextColumn x:Name="selected_purchase_order_pk" Header="PO PK" Width="90"
-                            Visibility="Visible" IsReadOnly="True" Binding="{Binding purchase_order_pk, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}"/>
+                            Visibility="Hidden" IsReadOnly="True" Binding="{Binding purchase_order_pk, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}"/>
 
                 <DataGridTextColumn x:Name="selected_purchase_order_fk" Header="PO FK" Width="90"
-                            Visibility="Visible" IsReadOnly="True" Binding="{Binding purchase_order_fk, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}"/>
+                            Visibility="Hidden" IsReadOnly="True" Binding="{Binding purchase_order_fk, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}"/>
 
                 <DataGridTextColumn x:Name="selected_purchase_order_detail_pk" Header="POD PK" Width="90"
-                            Visibility="Visible" IsReadOnly="True" Binding="{Binding purchase_order_detail_pk,  Mode=TwoWay, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}"/>
+                            Visibility="Hidden" IsReadOnly="True" Binding="{Binding purchase_order_detail_pk,  Mode=TwoWay, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}"/>
+
+                <DataGridTextColumn Header="Quantity" Width="60" 
+                            Binding="{Binding lot_quantity, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}" />
 
                 <DataGridTextColumn Header="Lot Number" Width="90"
                             Binding="{Binding lot_number, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}"/>
-                <DataGridTextColumn Header="Quantity" Width="60" 
-                            Binding="{Binding lot_quantity, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}" />
                 <DataGridTextColumn Header="Lot Name" Width="Auto"
                             Binding="{Binding lot_name, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}" />
                 <DataGridTextColumn Header="Lot Description" Width="Auto" 
@@ -197,11 +198,11 @@
                             Binding="{Binding sales_tax, StringFormat='c', ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}" />
                 <DataGridTextColumn Header="Shipping Cost" Width="100" 
                             Binding="{Binding shipping_cost, StringFormat='c', ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}" />
-          <!--      <DataGridTextColumn Header="Invoice Number" Width="100" 
+                <DataGridTextColumn Header="Invoice Number" Width="100" 
                             Binding="{Binding invoice_number, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}" />
                 <DataGridTextColumn Header="Purchase Date" Width="100" 
                             Binding="{Binding purchase_date, StringFormat='MM-dd-yyyy', ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}" />
--->
+
 
 
             </DataGrid.Columns>
