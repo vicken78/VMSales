@@ -24,7 +24,7 @@ namespace VMSales.ViewModels
     /// <returns></returns>
     protected static string SetDataBase()
         {
-            string dbfilepath = "PROD";
+            string dbfilepath = "TEST";
 
             if (dbfilepath == "PROD")
             {

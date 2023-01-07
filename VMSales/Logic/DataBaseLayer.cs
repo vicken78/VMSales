@@ -55,13 +55,13 @@ namespace VMSales.Logic
             // keep for now, may not be needed.
             public async Task<IEnumerable<CategoryModel>> Get_all_category()
             {
-                return await Connection.QueryAsync <CategoryModel>("SELECT category_name FROM category ORDER BY category_name", null, Transaction);
+                return await Connection.QueryAsync<CategoryModel>("SELECT category_name FROM category ORDER BY category_name", null, Transaction);
             }
 
             // keep for now, may not be needed.
             public async Task<IEnumerable<CategoryModel>> Get_all_category_name()
             {
-                return await Connection.QueryAsync <CategoryModel> ("SELECT category_name FROM category ORDER BY category_name", null, Transaction);
+                return await Connection.QueryAsync<CategoryModel>("SELECT category_name FROM category ORDER BY category_name", null, Transaction);
             }
             // keep for now, may not be needed.
             public async Task<IEnumerable<CategoryModel>> Get_Product_Category_Name(int product_pk)
@@ -84,7 +84,7 @@ namespace VMSales.Logic
                   "SELECT DISTINCT category_pk, category_name, null  FROM category as c, product_category as pc " +
                   "INNER JOIN product_category on pc.category_fk != c.category_pk"
                    , new { product_pk }, Transaction);
-  
+
             }
 
             // end
@@ -201,39 +201,78 @@ namespace VMSales.Logic
         {
             public PurchaseOrderRepository(IDatabaseProvider dbProvider) : base(dbProvider) { }
 
-            // Insert
             public override async Task<bool> Insert(PurchaseOrderModel entity)
             {
-                // I need to insert into purchase_order and purchase_order_detail
-                // first, purchase_order, then purchase_order_detail
-                int newId = await Connection.QuerySingleAsync<int>("INSERT INTO purchase_order (supplier_fk, invoice_number, purchase_date) VALUES (@supplier_fk, @invoice_number, @purchase_date); SELECT last_insert_rowid()", new
+                // get invoice number
+                try
                 {
-                    supplier_fk = entity.supplier_fk,
-                    invoice_number = entity.invoice_number,
-                    purchase_date = entity.purchase_date
-                }, Transaction);
+                    string invoice_number = await Connection.QuerySingleOrDefaultAsync<string>("SELECT invoice_number FROM purchase_order WHERE invoice_number = @invoice_number", new { entity.invoice_number }, Transaction);
 
-                entity.purchase_order_fk = newId;
+                    if (invoice_number == entity.invoice_number)
+                    {
+                        /// <summary>
+                        /// scenerio 1
+                        /// same invoice number, INSERT purchase_order_detail using existing po_fk
 
+                        // get purchase_order_fk
 
-                // now for purchase_order_detail
-                bool insertrow = (await Connection.ExecuteAsync("INSERT INTO purchase_order_detail " +
-                    "(purchase_order_fk, lot_cost, lot_quantity, lot_number, lot_name, lot_description, sales_tax, shipping_cost) " +
-                      "VALUES (@purchase_order_fk, @lot_cost, @lot_quantity, @lot_number, @lot_name, @lot_description, @sales_tax, @shipping_cost)",
-                      new
-                      {
-                          purchase_order_fk = entity.purchase_order_fk,
-                          lot_cost = entity.lot_cost,
-                          lot_quantity = entity.lot_quantity,
-                          lot_number = entity.lot_number,
-                          lot_name = entity.lot_name,
-                          lot_description = entity.lot_description,
-                          sales_tax = entity.sales_tax,
-                          shipping_cost = entity.shipping_cost
-                      }, Transaction)) == 1;
-                return insertrow;
+                        int db_purchase_order_fk = await Connection.QuerySingleOrDefaultAsync<int>("SELECT purchase_order_pk FROM purchase_order WHERE invoice_number = @invoice_number", new { entity.invoice_number }, Transaction);
+                        bool insertrow = (await Connection.ExecuteAsync("INSERT INTO purchase_order_detail " +
+                        "(purchase_order_fk, lot_cost, lot_quantity, lot_number, lot_name, lot_description, sales_tax, shipping_cost) " +
+                        "VALUES (@db_purchase_order_fk, @lot_cost, @lot_quantity, @lot_number, @lot_name, @lot_description, @sales_tax, @shipping_cost)",
+                         new
+                         {
+                             db_purchase_order_fk,
+                             lot_cost = entity.lot_cost,
+                             lot_quantity = entity.lot_quantity,
+                             lot_number = entity.lot_number,
+                             lot_name = entity.lot_name,
+                             lot_description = entity.lot_description,
+                             sales_tax = entity.sales_tax,
+                             shipping_cost = entity.shipping_cost
+                         }, Transaction)) == 1;
+                        return insertrow;
+                    }
 
+                    if (invoice_number != entity.invoice_number && entity.invoice_number != "0" && entity.invoice_number != null)
+                    {
+                        //  scenerio 2
+                        // INSERT new invoice number, INSERT new purchase_order detail pod_pk = 0
+                        // insert into purchase_order and purchase_order_detail using new purchase_order_fk
+                        int newId = await Connection.QuerySingleAsync<int>("INSERT INTO purchase_order (supplier_fk, invoice_number, purchase_date) VALUES (@supplier_fk, @invoice_number, @purchase_date); SELECT last_insert_rowid()", new
+                        {
+                            supplier_fk = entity.supplier_fk,
+                            invoice_number = entity.invoice_number,
+                            purchase_date = entity.purchase_date
+                        }, Transaction);
+                        entity.purchase_order_fk = newId;
+                        // now for purchase_order_detail
+
+                        bool insertrow = (await Connection.ExecuteAsync("INSERT INTO purchase_order_detail " +
+                          "(purchase_order_fk, lot_cost, lot_quantity, lot_number, lot_name, lot_description, sales_tax, shipping_cost) " +
+                            "VALUES (@purchase_order_fk, @lot_cost, @lot_quantity, @lot_number, @lot_name, @lot_description, @sales_tax, @shipping_cost)",
+                            new
+                            {
+                                purchase_order_fk = entity.purchase_order_fk,
+                                lot_cost = entity.lot_cost,
+                                lot_quantity = entity.lot_quantity,
+                                lot_number = entity.lot_number,
+                                lot_name = entity.lot_name,
+                                lot_description = entity.lot_description,
+                                sales_tax = entity.sales_tax,
+                                shipping_cost = entity.shipping_cost
+                            }, Transaction)) == 1;
+                        return insertrow;
+                    }
+                    return false;
+                }
+                catch (Exception e)
+                {
+                    MessageBox.Show(e.ToString());
+                    return false;
+                }
             }
+
 
             public override async Task<PurchaseOrderModel> Get(int id)
             {
@@ -265,64 +304,70 @@ namespace VMSales.Logic
                     "AND po.supplier_fk=@id", new { id }, Transaction);
             }
 
+            // scenerio 3 (UPDATE)
+            // same invoice number, UPDATE purchase_order_detail.
+
+
+
+
+
+            // scenerio 4  (may not be needed)
+            // INSERT new invoice number, UPDATE purchase_order_details to that invoice number.
+
             public override async Task<bool> Update(PurchaseOrderModel entity)
             {
+                // check if purchase_order really exists
+                bool result = await Connection.QueryFirstAsync<bool>("SELECT CASE WHEN EXISTS (SELECT purchase_order_fk FROM purchase_order_detail WHERE purchase_order_fk = @id) THEN 1 ELSE 0 END as result", new { id = entity.purchase_order_fk }, null);
+       
+                if (result)
+                {
 
-                //     Task<bool> select = (await Connection.QuerySingleAsync("SELECT 1 FROM purchase_order_detail WHERE purchase_order_fk = @id", new { id = entity.purchase_order_fk }, Transaction)) == 1;
-                //     MessageBox.Show(select.Result.ToString());
-                //  if (select.Result > 0)
-                //  {
-
-
-                bool updaterow = (await Connection.ExecuteAsync("UPDATE purchase_order SET " +
-                    "purchase_order_pk = @id, " +
-                    "supplier_fk = @supplier_fk, " +
-                    "invoice_number = @invoice_number, " +
-                    "purchase_date = @purchase_date " +
-                    "WHERE purchase_order_pk = @id", new
-                    {
-                        id = entity.purchase_order_pk,
-                        supplier_fk = entity.supplier_fk,
-                        invoice_number = entity.invoice_number,
-                        purchase_date = entity.purchase_date
-                    }, null)) == 1;
-
-
-                return (await Connection.ExecuteAsync("UPDATE purchase_order_detail SET " +
-                        "purchase_order_fk = @purchase_order_fk, " +
-                        "lot_cost = @lot_cost, " +
-                        "lot_quantity = @lot_quantity, " +
-                        "lot_number = @lot_number," +
-                        "lot_name = @lot_name, " +
-                        "lot_description = @lot_description, " +
-                        "sales_tax = @sales_tax, " +
-                        "shipping_cost = @shipping_cost " +
-                        "WHERE purchase_order_detail_pk = @purchase_order_detail_pk", new
+                    // getting fk constraint fialed here, why.
+                    bool updaterow = (await Connection.ExecuteAsync("UPDATE purchase_order SET " +
+                        "purchase_order_pk = @id, " +
+                        "supplier_fk = @supplier_fk, " +
+                        "invoice_number = @invoice_number, " +
+                        "purchase_date = @purchase_date " +
+                        "WHERE purchase_order_pk = @id", new
                         {
-                            purchase_order_fk = entity.purchase_order_fk,
-                            lot_cost = entity.lot_cost,
-                            lot_quantity = entity.lot_quantity,
-                            lot_number = entity.lot_number,
-                            lot_name = entity.lot_name,
-                            lot_description = entity.lot_description,
-                            sales_tax = entity.sales_tax,
-                            shipping_cost = entity.shipping_cost,
-                            purchase_order_detail_pk = entity.purchase_order_detail_pk,
-                        }, Transaction)) == 1;
-                //}
-                //return false;
-            }
+                            id = entity.purchase_order_pk,
+                            supplier_fk = entity.supplier_fk,
+                            invoice_number = entity.invoice_number,
+                            purchase_date = entity.purchase_date
+                        }, null)) == 1;
+                    return (await Connection.ExecuteAsync("UPDATE purchase_order_detail SET " +
+                            "purchase_order_fk = @purchase_order_fk, " +
+                            "lot_cost = @lot_cost, " +
+                            "lot_quantity = @lot_quantity, " +
+                            "lot_number = @lot_number," +
+                            "lot_name = @lot_name, " +
+                            "lot_description = @lot_description, " +
+                            "sales_tax = @sales_tax, " +
+                            "shipping_cost = @shipping_cost " +
+                            "WHERE purchase_order_detail_pk = @purchase_order_detail_pk", new
+                            {
+                                purchase_order_fk = entity.purchase_order_fk,
+                                lot_cost = entity.lot_cost,
+                                lot_quantity = entity.lot_quantity,
+                                lot_number = entity.lot_number,
+                                lot_name = entity.lot_name,
+                                lot_description = entity.lot_description,
+                                sales_tax = entity.sales_tax,
+                                shipping_cost = entity.shipping_cost,
+                                purchase_order_detail_pk = entity.purchase_order_detail_pk,
+                            }, Transaction)) == 1;
+                    }
+                    return false;
+                }
 
             public override async Task<bool> Delete(PurchaseOrderModel entity)
             {
                 //
                 // check and fix.  we need to delete purchase_order_detail pk, then delete purchase_order_pk IF its the last one.
                 //
-
-
-                bool deleterow = (await Connection.ExecuteAsync("DELETE FROM purchase_order_detail WHERE purchase_order_fk = @id", new { id = entity.purchase_order_fk }, null)) == 1;
-                return (await Connection.ExecuteAsync("DELETE FROM purchase_order WHERE purchase_order_pk = @id", new { id = entity.purchase_order_pk }, Transaction)) == 1;
-
+                //         bool deleterow = (await Connection.ExecuteAsync("DELETE FROM purchase_order_detail WHERE purchase_order_fk = @id", new { id = entity.purchase_order_fk }, null)) == 1;
+                //         return (await Connection.ExecuteAsync("DELETE FROM purchase_order WHERE purchase_order_pk = @id", new { id = entity.purchase_order_pk }, Transaction)) == 1;
+                return false;
             }
         }
 
@@ -332,40 +377,39 @@ namespace VMSales.Logic
         public class ProductRepository : Repository<ProductModel>
         {
             public ProductRepository(IDatabaseProvider dbProvider) : base(dbProvider) { }
-
             // Insert
             public override async Task<bool> Insert(ProductModel entity)
             {
                 // insert into product
 
-                    int product_id = await Connection.QuerySingleAsync<int>("INSERT INTO product " +
-                      "(brand_name, product_name, description, quantity, cost, sku, sold_price, instock, condition, listing_url, listing_number, listing_date) " +
-                      "VALUES (@brand_name, @product_name, @description, @quantity, @cost, @sku, @sold_price, @instock, @condition, @listing_url, @listing_number, @listing_date); SELECT last_insert_rowid()",
-                      new
-                      {
-                          brand_name = entity.brand_name,
-                          product_name = entity.product_name,
-                          description = entity.description,
-                          quantity = entity.quantity,
-                          cost = entity.cost,
-                          sku = entity.sku,
-                          sold_price = entity.sold_price,
-                          instock = entity.instock,
-                          condition = entity.condition,
-                          listing_url = entity.listing_url,
-                          listing_number = entity.listing_number,
-                          listing_date = entity.listing_date
+                int product_id = await Connection.QuerySingleAsync<int>("INSERT INTO product " +
+                  "(brand_name, product_name, description, quantity, cost, sku, sold_price, instock, condition, listing_url, listing_number, listing_date) " +
+                  "VALUES (@brand_name, @product_name, @description, @quantity, @cost, @sku, @sold_price, @instock, @condition, @listing_url, @listing_number, @listing_date); SELECT last_insert_rowid()",
+                  new
+                  {
+                      brand_name = entity.brand_name,
+                      product_name = entity.product_name,
+                      description = entity.description,
+                      quantity = entity.quantity,
+                      cost = entity.cost,
+                      sku = entity.sku,
+                      sold_price = entity.sold_price,
+                      instock = entity.instock,
+                      condition = entity.condition,
+                      listing_url = entity.listing_url,
+                      listing_number = entity.listing_number,
+                      listing_date = entity.listing_date
 
-                      }, Transaction);
-                      entity.product_fk = product_id;
-                if (product_id == 0) { return false; } 
+                  }, Transaction);
+                entity.product_fk = product_id;
+                if (product_id == 0) { return false; }
 
-                    // insert into product_category
+                // insert into product_category
                 bool insertrow = (await Connection.ExecuteAsync("INSERT INTO product_category (product_fk, category_fk) VALUES (@product_fk, @category_fk);", new
                 {
                     product_fk = entity.product_fk,
                     category_fk = entity.category_fk
-                }, Transaction)) == 1 ;
+                }, Transaction)) == 1;
 
                 if (insertrow == true)
                 {
@@ -374,7 +418,7 @@ namespace VMSales.Logic
                     {
                         purchase_order_detail_fk = entity.purchase_order_detail_fk,
                         product_fk = entity.product_fk,
-                    }, Transaction)) == 1 ;
+                    }, Transaction)) == 1;
                     return insertpurchaserow;
                 }
                 else return false;
@@ -402,28 +446,28 @@ namespace VMSales.Logic
                 "FROM product as p, product_purchase_order as ppo, product_category as pc, category as c " +
                 "INNER JOIN product_purchase_order on p.product_pk = ppo.product_fk " +
                 "INNER JOIN product_category on p.product_pk = pc.product_fk " +
-                "INNER JOIN category on c.category_pk = pc.category_fk;", null, Transaction);            
+                "INNER JOIN category on c.category_pk = pc.category_fk;", null, Transaction);
             }
 
             // get all products by supplier
 
             public override async Task<IEnumerable<ProductModel>> GetAllWithID(int supplier_fk)
             {
-                    return await Connection.QueryAsync<ProductModel>("SELECT DISTINCT " +
-                    "c.category_pk, c.category_name, p.*, ps.* " +
-                    "FROM product as p, category as c, supplier as s, product_supplier as ps, product_category as pc " +
-                    "INNER JOIN product_supplier on s.supplier_pk = ps.supplier_fk " +
-                    "INNER JOIN product_supplier on p.product_pk = ps.product_fk " +
-                    "INNER JOIN product_category on p.product_pk = pc.product_fk " +
-                    "INNER JOIN category on c.category_pk = pc.category_fk " +
-                    "WHERE s.supplier_pk = @supplier_fk", new { supplier_fk }, Transaction);
-                
+                return await Connection.QueryAsync<ProductModel>("SELECT DISTINCT " +
+                "c.category_pk, c.category_name, p.*, ps.* " +
+                "FROM product as p, category as c, supplier as s, product_supplier as ps, product_category as pc " +
+                "INNER JOIN product_supplier on s.supplier_pk = ps.supplier_fk " +
+                "INNER JOIN product_supplier on p.product_pk = ps.product_fk " +
+                "INNER JOIN product_category on p.product_pk = pc.product_fk " +
+                "INNER JOIN category on c.category_pk = pc.category_fk " +
+                "WHERE s.supplier_pk = @supplier_fk", new { supplier_fk }, Transaction);
+
             }
 
             // get all products by supplier and purchase_order
             public async Task<IEnumerable<ProductModel>> GetAllWithAllID(int supplier_fk, int purchase_order_detail_pk)
             {
-            
+
                 return await Connection.QueryAsync<ProductModel>("SELECT DISTINCT " +
                     "ppo.*, c.category_pk, c.category_name, p.product_pk, p.brand_name, p.product_name, p.description, p.quantity, " +
                     "p.cost, p.sku, p.sold_price, p.instock, p.condition, p.listing_url, p.listing_number, p.listing_date " +
@@ -436,7 +480,7 @@ namespace VMSales.Logic
                     "INNER JOIN product_supplier on ps.supplier_fk = s.supplier_pk " +
                     "INNER JOIN product_supplier on ps.product_fk = p.product_pk " +
                     "WHERE s.supplier_pk = @supplier_fk AND pod.purchase_order_detail_pk = @purchase_order_detail_pk",
-                    new {supplier_fk, purchase_order_detail_pk}, Transaction);
+                    new { supplier_fk, purchase_order_detail_pk }, Transaction);
             }
 
 
@@ -495,8 +539,8 @@ namespace VMSales.Logic
             }
         }
         #endregion
-       
-        
+
+
         // needs fixing here
         /*
         #region Product_Purchase_Order

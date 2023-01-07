@@ -11,6 +11,7 @@ namespace VMSales.Models
 
     public partial class PurchaseOrderModel : BaseViewModel
     {
+
         private int _purchase_order_pk { get; set; }
         private string _invoice_number { get; set; }
         private DateTime _purchase_date { get; set; }
@@ -48,5 +49,17 @@ namespace VMSales.Models
                 RaisePropertyChanged("purchase_date");
             }
         }
+
+        private bool _IsSelected;
+        public bool IsSelected
+        {
+            get { return _IsSelected; }
+            set
+            {
+                _IsSelected = value;
+                RaisePropertyChanged("IsSelected");
+            }
+        }
+
     }
 }

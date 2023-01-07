@@ -7,24 +7,16 @@ using System.Linq;
 using System.Collections.Generic;
 using System.ComponentModel;
 using VMSales.Logic;
-using VMSales.ChangeTrack;
 using System.Windows;
-using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
-using System.Collections.Specialized;
-using System.Collections;
 
 namespace VMSales.ViewModels
 {
-
-    // The way I am doing filtering is read only. This is no good.  
-    // changed binding of purchaseorder to the observable collection.
-
     public class PurchaseOrderViewModel : BaseViewModel
     {
 
         #region Collections
-        public ObservableCollection<string> InvoiceNumber
+        public ObservableCollection<string> FilterInvoiceNumber
         {
             get { return _invoicenumber; }
             set
@@ -35,7 +27,7 @@ namespace VMSales.ViewModels
                 RaisePropertyChanged("InvoiceNumber");
             }
         }
-        public ObservableCollection<DateTime> PurchaseDate
+        public ObservableCollection<DateTime> FilterPurchaseDate
         {
             get { return _purchasedate; }
             set
@@ -206,17 +198,24 @@ namespace VMSales.ViewModels
 
         #endregion 
 
-        private PurchaseOrderModel _selectedrow = null;
-        public PurchaseOrderModel selectedrow { get => this._selectedrow; set { this._selectedrow = value; RaisePropertyChanged("selectedrow"); } }
+        private PurchaseOrderModel _SelectedItem { get; set; }
+        public PurchaseOrderModel SelectedItem
+        {
+            get { return _SelectedItem; }
+            set
+            {
+                _SelectedItem = value;
+                RaisePropertyChanged("SelectedItem");
+            }
+        }
 
-        public ICollectionView PurchaseOrderView
+        public CollectionView PurchaseOrderView
         {
             get
 
             {
-                cvs.View.CurrentChanged += (sender, e) => selectedrow = cvs.View.CurrentItem as PurchaseOrderModel;
-                //return CollectionViewSource.GetDefaultView(ObservableCollectionPurchaseOrderModel); 
-                return cvs.View;
+                cvs.View.CurrentChanged += (sender, e) => SelectedItem = cvs.View.CurrentItem as PurchaseOrderModel;
+                return (CollectionView)CollectionViewSource.GetDefaultView(ObservableCollectionPurchaseOrderModel);
             }
         }
 
@@ -242,10 +241,10 @@ namespace VMSales.ViewModels
         {
             if (supplier_fk == 0)
             {
-                MessageBox.Show("Please select a supplier."); 
-                return; 
+                MessageBox.Show("Please select a supplier.");
+                return;
             }
-            selectedrow = new PurchaseOrderModel()
+            SelectedItem = new PurchaseOrderModel()
             {
                 purchase_order_pk = 0,
                 purchase_order_fk = 0,
@@ -262,7 +261,7 @@ namespace VMSales.ViewModels
                 shipping_cost = 0
             };
 
-            ObservableCollectionPurchaseOrderModel.Add(selectedrow);
+            ObservableCollectionPurchaseOrderModel.Add(SelectedItem);
             RaisePropertyChanged("ObservableCollectionPurchaseOrderModel");
         }
         public void DeleteCommand()
@@ -274,20 +273,19 @@ namespace VMSales.ViewModels
             }
             else
             {
-                if (selectedrow.purchase_order_detail_pk == 0 || selectedrow.purchase_order_fk == 0)
+                if (SelectedItem.purchase_order_detail_pk == 0 || SelectedItem.purchase_order_fk == 0)
                 {
                     // delete from screen only.
                     return;
                 }
-                if (selectedrow.purchase_order_pk != 0 && selectedrow.purchase_order_fk != 0 && selectedrow.purchase_order_detail_pk != 0)
+                if (SelectedItem.purchase_order_pk != 0 && SelectedItem.purchase_order_fk != 0 && SelectedItem.purchase_order_detail_pk != 0)
                 {
                     dataBaseProvider = getprovider();
                     DataBaseLayer.PurchaseOrderRepository PurchaseOrderRepo = new DataBaseLayer.PurchaseOrderRepository(dataBaseProvider);
                     try
                     {
 
-                        // fix
-                        Task<bool> deletePurchase_Order = PurchaseOrderRepo.Delete(selectedrow);
+                        Task<bool> deletePurchase_Order = PurchaseOrderRepo.Delete(SelectedItem);
                         if (deletePurchase_Order.Result == true)
                         {
                             PurchaseOrderRepo.Commit();
@@ -295,6 +293,8 @@ namespace VMSales.ViewModels
                         }
                         else
                         {
+                            PurchaseOrderRepo.Revert();
+                            PurchaseOrderRepo.Dispose();
                             throw new Exception();
                         }
                     }
@@ -302,7 +302,6 @@ namespace VMSales.ViewModels
                     {
                         PurchaseOrderRepo.Revert();
                         PurchaseOrderRepo.Dispose();
-
                         MessageBox.Show("An Error has occured, no changes were made. Error:" + e);
                         return;
                     }
@@ -315,91 +314,104 @@ namespace VMSales.ViewModels
         }
         public void SaveCommand()
         {
-            MessageBox.Show(supplier_fk.ToString());
+
+            //   MessageBox.Show(supplier_fk.ToString());
             if (supplier_fk.ToString() == null || supplier_fk == 0)
             {
                 MessageBox.Show("Please select a supplier.");
                 return;
             }
             // we need to check for default values here. better checks later.
-            if (selectedrow.lot_name == "Name")
+            if (SelectedItem.lot_name == "Name")
             {
                 MessageBox.Show("Default Values must not be used.");
                 return;
             }
 
-            // purchase_order detail pk and po fk = 1 when it should be 0.  why is it being set.
-            MessageBox.Show("pod_pk"+selectedrow.purchase_order_detail_pk.ToString());
-            MessageBox.Show("po_fk" + selectedrow.purchase_order_fk.ToString());
-
-            if (selectedrow.purchase_order_detail_pk == 0 || selectedrow.purchase_order_fk == 0)
+            var selectedRows = ObservableCollectionPurchaseOrderModel.Where(i => i.IsSelected);
+            foreach (var item in selectedRows)
             {
-
-                // insert new row
-                dataBaseProvider = BaseViewModel.getprovider();
-                DataBaseLayer.PurchaseOrderRepository PurchaseOrderRepo = new DataBaseLayer.PurchaseOrderRepository(dataBaseProvider);
-                try
-                {
-              /*      MessageBox.Show("po_pk" + selectedrow.purchase_order_pk.ToString());
-                    MessageBox.Show("pod_pk" + selectedrow.purchase_order_detail_pk.ToString());
-                    MessageBox.Show("purdate" + selectedrow.purchase_date.ToString());
-                    MessageBox.Show("invnum" + selectedrow.invoice_number);
-                    MessageBox.Show("lotcost" + selectedrow.lot_cost.ToString());
-                    MessageBox.Show("lotname" + selectedrow.lot_name.ToString());
-                    MessageBox.Show("lotdesc" + selectedrow.lot_description.ToString());
-                    MessageBox.Show("salestax" + selectedrow.sales_tax.ToString());
-                    MessageBox.Show("shipcost" + selectedrow.shipping_cost.ToString());
-                    MessageBox.Show("sup_fk" + selectedrow.supplier_fk.ToString());
-              */
-
-                    Task<bool> insertPurchase_Order = PurchaseOrderRepo.Insert(selectedrow);
-                    if (insertPurchase_Order.Result == true)
-                    {
-
-                        PurchaseOrderRepo.Commit();
-                        PurchaseOrderRepo.Dispose();
-                        MessageBox.Show("1 Row Inserted");
-                        return;
-                    }
-                    else { MessageBox.Show("Insert failed to commit."); }
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show("An Error has occured." + ex);
-                    PurchaseOrderRepo.Revert();
-                    PurchaseOrderRepo.Dispose();
-                }
-                return;
+                SelectedItem.supplier_fk = supplier_fk;
+                SelectedItem.invoice_number = item.invoice_number;
+                SelectedItem.purchase_date = item.purchase_date;
+                SelectedItem.purchase_order_pk = item.purchase_order_pk;
+                SelectedItem.purchase_order_fk = item.purchase_order_fk;
+                SelectedItem.purchase_order_detail_pk = item.purchase_order_detail_pk;
+                SelectedItem.sales_tax = item.sales_tax;
+                SelectedItem.shipping_cost = item.shipping_cost;
+                SelectedItem.lot_cost = item.lot_cost;
+                SelectedItem.lot_name = item.lot_name;
+                SelectedItem.lot_description = item.lot_description;
+                SelectedItem.lot_quantity = item.lot_quantity;
+                SelectedItem.lot_number = item.lot_number;
             }
-            // update
-            if (selectedrow.purchase_order_detail_pk != 0)
+
+            // scenerio 4 not programmed
+            // INSERT new invoice number, UPDATE purchase_order_details to that invoice number.
+
+
+            // scenerio 1
+            // same invoice number, UPDATE purchase_order_detail.
+
+            try
             {
-                MessageBox.Show("Updating");
-                selectedrow.supplier_fk = this.supplier_fk;
-
-                dataBaseProvider = BaseViewModel.getprovider();
-                DataBaseLayer.PurchaseOrderRepository PurchaseOrderRepo = new DataBaseLayer.PurchaseOrderRepository(dataBaseProvider);
-                try
+                if (SelectedItem.purchase_order_detail_pk != 0)
                 {
-                    Task<bool> updatePurchase_Order = PurchaseOrderRepo.Update(selectedrow);
-
+                    dataBaseProvider = getprovider();
+                    DataBaseLayer.PurchaseOrderRepository PurchaseOrderRepo = new DataBaseLayer.PurchaseOrderRepository(dataBaseProvider);
+                    Task<bool> updatePurchase_Order = PurchaseOrderRepo.Update(SelectedItem);
                     if (updatePurchase_Order.Result.Equals(true))
                     {
                         PurchaseOrderRepo.Commit();
                         PurchaseOrderRepo.Dispose();
                     }
-                    else { MessageBox.Show("Update failed to commit."); }
+                    else
+                    {
+                        PurchaseOrderRepo.Revert();
+                        PurchaseOrderRepo.Dispose();
+                        MessageBox.Show("Update failed to commit.");
+                    }
                 }
-                catch (Exception ex)
-                {
-                    MessageBox.Show("An Error has occured." + ex);
-                    PurchaseOrderRepo.Revert();
-                    PurchaseOrderRepo.Dispose();
-                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("An Error has occured" + ex.ToString());
                 return;
             }
+
+            //         SelectedItem.supplier_fk = this.supplier_fk;
+
+            // scenerio 3
+            // INSERT new invoice number, INSERT new purchase_order detail pod_pk = 0
+            try
+            {
+                if (SelectedItem.purchase_order_detail_pk == 0)
+                {
+                    dataBaseProvider = getprovider();
+                    DataBaseLayer.PurchaseOrderRepository PurchaseOrderRepo = new DataBaseLayer.PurchaseOrderRepository(dataBaseProvider);
+                    Task<bool> insertPurchase_Order = PurchaseOrderRepo.Insert(SelectedItem);
+                    if (insertPurchase_Order.Result.Equals(true))
+                    {
+                        PurchaseOrderRepo.Commit();
+                        PurchaseOrderRepo.Dispose();
+                        MessageBox.Show("1 Row Inserted");
+                    }
+                    else
+                    {
+                        PurchaseOrderRepo.Revert();
+                        PurchaseOrderRepo.Dispose();
+                        MessageBox.Show("An error has occured.  No changes were made");
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show("An Error has occured, no changes were made. Error:" + e);
+                return;
+            }
+
+            #endregion
         }
-        #endregion
 
         public void LoadPurchaseOrder(int supplier_fk)
         {
@@ -407,12 +419,12 @@ namespace VMSales.ViewModels
             ObservableCollectionPurchaseOrderModel = new ObservableCollection<PurchaseOrderModel>();
 
             //clear and reload invoicedate and purchasedate
-       /*     if (InvoiceNumber.Count > 0 && PurchaseDate.Count > 0)
-            {
-                InvoiceNumber.Clear();
-                PurchaseDate.Clear();
-            }
-       */
+            /*     if (InvoiceNumber.Count > 0 && PurchaseDate.Count > 0)
+                 {
+                     InvoiceNumber.Clear();
+                     PurchaseDate.Clear();
+                 }
+            */
             InvoiceNumberList = new List<string>();
             PurchaseDateList = new List<DateTime>();
             dataBaseProvider = BaseViewModel.getprovider();
@@ -421,7 +433,7 @@ namespace VMSales.ViewModels
 
             if (Result.Count() == 0)
             {
-                selectedrow = null;
+                SelectedItem = null;
                 ObservableCollectionPurchaseOrderModel.Add(new PurchaseOrderModel()
                 {
                     purchase_order_pk = 0,
@@ -449,7 +461,7 @@ namespace VMSales.ViewModels
 
             foreach (var item in ObservableCollectionPurchaseOrderModel)
             {
-                selectedrow = item;
+                SelectedItem = item;
 
                 if (item.invoice_number != null || item.purchase_date != null)
                     if (!InvoiceNumberList.Contains(item.invoice_number))
@@ -460,8 +472,8 @@ namespace VMSales.ViewModels
 
             if (InvoiceNumberList.Count > 0 || PurchaseDateList.Count > 0)
             {
-                InvoiceNumber = new ObservableCollection<string>(InvoiceNumberList.Cast<String>());
-                PurchaseDate = new ObservableCollection<DateTime>(PurchaseDateList.Cast<DateTime>());
+                FilterInvoiceNumber = new ObservableCollection<string>(InvoiceNumberList.Cast<String>());
+                FilterPurchaseDate = new ObservableCollection<DateTime>(PurchaseDateList.Cast<DateTime>());
             }
 
         }
@@ -506,7 +518,7 @@ namespace VMSales.ViewModels
 
             foreach (var item in Result)
             {
-                selectedrow = item;
+                SelectedItem = item;
                 if (item.invoice_number != null || item.purchase_date != null)
                     if (!InvoiceNumberList.Contains(item.invoice_number))
                         InvoiceNumberList.Add(item.invoice_number);
@@ -515,8 +527,8 @@ namespace VMSales.ViewModels
             }
             if (InvoiceNumberList.Count > 0 || PurchaseDateList.Count > 0)
             {
-                InvoiceNumber = new ObservableCollection<string>(InvoiceNumberList.Cast<String>());
-                PurchaseDate = new ObservableCollection<DateTime>(PurchaseDateList.Cast<DateTime>());
+                FilterInvoiceNumber = new ObservableCollection<string>(InvoiceNumberList.Cast<String>());
+                FilterPurchaseDate = new ObservableCollection<DateTime>(PurchaseDateList.Cast<DateTime>());
             }
 
             // Get Suppliers
