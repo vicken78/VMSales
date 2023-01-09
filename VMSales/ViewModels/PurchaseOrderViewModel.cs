@@ -340,8 +340,8 @@ namespace VMSales.ViewModels
                 SelectedItem.sales_tax = item.sales_tax;
                 SelectedItem.shipping_cost = item.shipping_cost;
                 SelectedItem.lot_cost = item.lot_cost;
-                SelectedItem.lot_name = item.lot_name;
-                SelectedItem.lot_description = item.lot_description;
+                SelectedItem.lot_name = item.lot_name.Trim();
+                SelectedItem.lot_description = item.lot_description.Trim();
                 SelectedItem.lot_quantity = item.lot_quantity;
                 SelectedItem.lot_number = item.lot_number;
             }
