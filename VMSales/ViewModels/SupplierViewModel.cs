@@ -58,7 +58,7 @@ namespace VMSales.ViewModels
             }
 
             // all values good, now we must update or insert, get primary key.
-            dataBaseProvider = BaseViewModel.getprovider();
+            dataBaseProvider = getprovider();
             DataBaseLayer.SupplierRepository SupplierRepo = new DataBaseLayer.SupplierRepository(dataBaseProvider);
             try
             {
@@ -143,7 +143,7 @@ namespace VMSales.ViewModels
             String db_supplier_pk = null;
 
             // get primary key.
-            dataBaseProvider = BaseViewModel.getprovider();
+            dataBaseProvider = getprovider();
             DataBaseLayer.SupplierRepository SupplierRepo = new DataBaseLayer.SupplierRepository(dataBaseProvider);
             try
             {
@@ -179,7 +179,7 @@ namespace VMSales.ViewModels
         public SupplierViewModel()
         {
             ObservableCollectionSupplierModel = new ObservableCollection<SupplierModel>();
-            dataBaseProvider = BaseViewModel.getprovider();
+            dataBaseProvider = getprovider();
             DataBaseLayer.SupplierRepository SupplierRepo = new DataBaseLayer.SupplierRepository(dataBaseProvider);
             ObservableCollectionSupplierModel = SupplierRepo.GetAll().Result.ToObservable();
             ObservableCollectionSupplierModelclean = ObservableCollectionSupplierModel;

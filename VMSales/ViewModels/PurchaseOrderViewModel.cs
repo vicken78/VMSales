@@ -9,11 +9,25 @@ using System.ComponentModel;
 using VMSales.Logic;
 using System.Windows;
 using System.Threading.Tasks;
+using System.Text.RegularExpressions;
 
 namespace VMSales.ViewModels
 {
     public class PurchaseOrderViewModel : BaseViewModel
     {
+        private string invoicetemp;
+        private DateTime purchase_datetemp;
+
+        private PurchaseOrderModel _SelectedItem { get; set; }
+        public PurchaseOrderModel SelectedItem
+        {
+            get { return _SelectedItem; }
+            set
+            {
+                _SelectedItem = value;
+                RaisePropertyChanged("SelectedItem");
+            }
+        }
 
         #region Collections
         public ObservableCollection<string> FilterInvoiceNumber
@@ -56,6 +70,22 @@ namespace VMSales.ViewModels
         #region Selected
         private string _selectedinvoicenumber;
         private string _selectedpurchasedate;
+
+        private bool _keep_last;
+        public bool keep_last
+        {
+            get { return _keep_last; }
+            set
+            {
+                if (_keep_last == value)
+                    return;
+                _keep_last = value;
+                RaisePropertyChanged("keep_last");
+            }
+        }
+
+
+
 
         public string SelectedInvoiceNumber
         {
@@ -198,17 +228,7 @@ namespace VMSales.ViewModels
 
         #endregion 
 
-        private PurchaseOrderModel _SelectedItem { get; set; }
-        public PurchaseOrderModel SelectedItem
-        {
-            get { return _SelectedItem; }
-            set
-            {
-                _SelectedItem = value;
-                RaisePropertyChanged("SelectedItem");
-            }
-        }
-
+        
         public CollectionView PurchaseOrderView
         {
             get
@@ -239,28 +259,60 @@ namespace VMSales.ViewModels
         #region ButtonCommands
         public void AddCommand()
         {
+   
             if (supplier_fk == 0)
             {
                 MessageBox.Show("Please select a supplier.");
                 return;
             }
-            SelectedItem = new PurchaseOrderModel()
-            {
-                purchase_order_pk = 0,
-                purchase_order_fk = 0,
-                purchase_order_detail_pk = 0,
-                supplier_fk = this.supplier_fk,
-                invoice_number = "0",
-                purchase_date = DateTime.Now,
-                lot_cost = 0,
-                lot_quantity = 0,
-                lot_number = "0",
-                lot_name = "Name",
-                lot_description = "",
-                sales_tax = 0,
-                shipping_cost = 0
-            };
 
+            
+        
+            var selectedRows = ObservableCollectionPurchaseOrderModel.Where(i => i.IsSelected);
+            foreach (var item in selectedRows)
+            {
+                invoicetemp = item.invoice_number;
+                purchase_datetemp = item.purchase_date;
+            }
+
+            if (keep_last == false)
+            {
+                SelectedItem = new PurchaseOrderModel()
+                {
+                    invoice_number = "0",
+                    purchase_date = DateTime.MinValue,
+                    purchase_order_pk = 0,
+                    purchase_order_fk = 0,
+                    purchase_order_detail_pk = 0,
+                    supplier_fk = this.supplier_fk,
+                    lot_cost = 0,
+                    lot_quantity = 0,
+                    lot_number = "0",
+                    lot_name = "Name",
+                    lot_description = "",
+                    sales_tax = 0,
+                    shipping_cost = 0
+                };
+            }
+            else
+            {
+                SelectedItem = new PurchaseOrderModel()
+                {
+                    invoice_number = invoicetemp,
+                    purchase_date = purchase_datetemp,
+                    purchase_order_pk = 0,
+                    purchase_order_fk = 0,
+                    purchase_order_detail_pk = 0,
+                    supplier_fk = this.supplier_fk,
+                    lot_cost = 0,
+                    lot_quantity = 0,
+                    lot_number = "0",
+                    lot_name = "Name",
+                    lot_description = "",
+                    sales_tax = 0,
+                    shipping_cost = 0
+                };
+            }
             ObservableCollectionPurchaseOrderModel.Add(SelectedItem);
             RaisePropertyChanged("ObservableCollectionPurchaseOrderModel");
         }
@@ -364,6 +416,7 @@ namespace VMSales.ViewModels
                     {
                         PurchaseOrderRepo.Commit();
                         PurchaseOrderRepo.Dispose();
+                        MessageBox.Show("Updated");
                     }
                     else
                     {
@@ -427,21 +480,23 @@ namespace VMSales.ViewModels
             */
             InvoiceNumberList = new List<string>();
             PurchaseDateList = new List<DateTime>();
-            dataBaseProvider = BaseViewModel.getprovider();
+            dataBaseProvider = getprovider();
             DataBaseLayer.PurchaseOrderRepository PurchaseOrderRepo = new DataBaseLayer.PurchaseOrderRepository(dataBaseProvider);
             var Result = PurchaseOrderRepo.GetAllWithID(supplier_fk).Result;
 
             if (Result.Count() == 0)
             {
-                SelectedItem = null;
-                ObservableCollectionPurchaseOrderModel.Add(new PurchaseOrderModel()
+                SelectedItem = null;  
+                    ObservableCollectionPurchaseOrderModel.Add(new PurchaseOrderModel()
                 {
+                    
+                    invoice_number = "0",
+                    purchase_date = DateTime.MinValue,
+
                     purchase_order_pk = 0,
                     purchase_order_fk = 0,
                     purchase_order_detail_pk = 0,
                     supplier_fk = this.supplier_fk,
-                    invoice_number = "0",
-                    purchase_date = DateTime.MinValue,
                     lot_cost = 0,
                     lot_quantity = 0,
                     lot_number = "0",
@@ -488,7 +543,7 @@ namespace VMSales.ViewModels
             // Get All Purchase Order
             ObservableCollectionPurchaseOrderModel = new ObservableCollection<PurchaseOrderModel>();
 
-            dataBaseProvider = BaseViewModel.getprovider();
+            dataBaseProvider = getprovider();
             DataBaseLayer.PurchaseOrderRepository PurchaseOrderRepo = new DataBaseLayer.PurchaseOrderRepository(dataBaseProvider);
             var Result = PurchaseOrderRepo.GetAll().Result;
             if (Result.Count() == 0)
@@ -533,7 +588,7 @@ namespace VMSales.ViewModels
 
             // Get Suppliers
             ObservableCollectionSupplierModel = new ObservableCollection<SupplierModel>();
-            dataBaseProvider = BaseViewModel.getprovider();
+            dataBaseProvider = getprovider();
             DataBaseLayer.SupplierRepository SupplierRepo = new DataBaseLayer.SupplierRepository(dataBaseProvider);
             ObservableCollectionSupplierModel = SupplierRepo.GetAll().Result.ToObservable();
             SupplierRepo.Commit();

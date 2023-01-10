@@ -59,7 +59,7 @@ namespace VMSales.ViewModels
                 return;
             }
             // all values good, now we must update or insert, get primary key.
-            dataBaseProvider = BaseViewModel.getprovider();
+            dataBaseProvider = getprovider();
             DataBaseLayer.CategoryRepository CategoryRepo = new DataBaseLayer.CategoryRepository(dataBaseProvider);
             try
             {
@@ -141,7 +141,7 @@ namespace VMSales.ViewModels
             String db_category_pk = null;
 
             // get primary key.
-            dataBaseProvider = BaseViewModel.getprovider();
+            dataBaseProvider = getprovider();
             DataBaseLayer.CategoryRepository CategoryRepo = new DataBaseLayer.CategoryRepository(dataBaseProvider);
             try
             {
@@ -178,7 +178,7 @@ namespace VMSales.ViewModels
         public CategoryViewModel()
         {
             ObservableCollectionCategoryModel = new ObservableCollection<CategoryModel>();
-            dataBaseProvider = BaseViewModel.getprovider();
+            dataBaseProvider = getprovider();
             DataBaseLayer.CategoryRepository CategoryRepo = new DataBaseLayer.CategoryRepository(dataBaseProvider);
             ObservableCollectionCategoryModel = CategoryRepo.GetAll().Result.ToObservable();
             ObservableCollectionCategoryModelclean = ObservableCollectionCategoryModel;

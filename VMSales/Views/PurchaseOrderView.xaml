@@ -93,8 +93,9 @@
             <TextBox x:Name="purchase_date" Background="White" Text="{Binding SelectedItem.purchase_date, StringFormat='MM/dd/yyyy', ElementName=purchaseorderdatagrid, UpdateSourceTrigger=PropertyChanged}"
                         Grid.Column="7" Grid.Row="10"/>
             <!-- Purchase Date ComboBox-->
+            <CheckBox Content="Keep Last" IsChecked="{Binding keep_last, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Column="8" Grid.Row="10" HorizontalAlignment="Center" VerticalAlignment="Center"/>
 
-       
+
             <TextBlock Grid.Row="3" Grid.Column="6" FontSize="12" FontWeight="Bold" HorizontalAlignment="Center">Purchase Date</TextBlock>
 
             <ComboBox Background="White" Grid.Row="3" Grid.Column="7" 
@@ -161,7 +162,7 @@
                           CanUserDeleteRows="False"
                           SelectionMode="Single"
                           SelectedItem="{Binding SelectedItem, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                          CanUserAddRows="False"
+                          CanUserAddRows="False" 
                           EnableRowVirtualization="True" IsReadOnly="False" Grid.Row="10" 
                           Height="Auto" Width="1280"  HorizontalAlignment="Center" >
             <DataGrid.RowStyle>
@@ -184,27 +185,25 @@
                             Visibility="Hidden" IsReadOnly="True" Binding="{Binding purchase_order_detail_pk,  Mode=TwoWay, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}"/>
 
                 <DataGridTextColumn Header="Qty" Width="40" 
-                            Binding="{Binding lot_quantity, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}" />
+                            Binding="{Binding lot_quantity, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}"/>
 
                 <DataGridTextColumn Header="Lot No." Width="45"
-                            Binding="{Binding lot_number, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}"/>
+                            Binding="{Binding lot_number, ValidatesOnNotifyDataErrors=True, UpdateSourceTrigger=PropertyChanged}"/>
                 <DataGridTextColumn Header="Lot Name" Width="Auto"
-                            Binding="{Binding lot_name, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}" />
+                            Binding="{Binding lot_name, ValidatesOnNotifyDataErrors=True, UpdateSourceTrigger=PropertyChanged}" />
                 <DataGridTextColumn Header="Lot Description" Width="Auto" CanUserResize="True" 
-                            Binding="{Binding lot_description, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}" />
-                <DataGridTextColumn Header="Lot Cost" Width="60" 
-                            Binding="{Binding lot_cost, StringFormat='c', ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}" />
+                            Binding="{Binding lot_description, ValidatesOnNotifyDataErrors=True, UpdateSourceTrigger=PropertyChanged}" />
+                <DataGridTextColumn Header="Lot Cost" Width="60"  
+                            Binding="{Binding lot_cost, StringFormat='c', ValidatesOnNotifyDataErrors=True, UpdateSourceTrigger=PropertyChanged}" />
                 <DataGridTextColumn Header="Sales Tax" Width="60" 
-                            Binding="{Binding sales_tax, StringFormat='c', ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}" />
+                            Binding="{Binding sales_tax, StringFormat='c', ValidatesOnNotifyDataErrors=True, UpdateSourceTrigger=PropertyChanged}" />
                 <DataGridTextColumn Header="Ship Cost" Width="60" 
-                            Binding="{Binding shipping_cost, StringFormat='c', ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}" />
+                            Binding="{Binding shipping_cost, StringFormat='c', ValidatesOnNotifyDataErrors=True, UpdateSourceTrigger=PropertyChanged}" />
                 <DataGridTextColumn Header="Inv. No." Width="60" 
-                            Binding="{Binding invoice_number, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}" />
+                            Binding="{Binding invoice_number, ValidatesOnDataErrors=True,  ValidatesOnNotifyDataErrors=True, NotifyOnValidationError=True, UpdateSourceTrigger=PropertyChanged}" />
                 <DataGridTextColumn Header="Purchase Date" Width="70" 
-                            Binding="{Binding purchase_date, StringFormat='MM-dd-yyyy', ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}" />
-
-
-
+                            Binding="{Binding purchase_date, StringFormat='MM-dd-yyyy', ValidatesOnNotifyDataErrors=True, UpdateSourceTrigger=PropertyChanged}" />
+     
             </DataGrid.Columns>
         </DataGrid>
 

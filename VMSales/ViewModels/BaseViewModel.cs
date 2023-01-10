@@ -1,21 +1,58 @@
-﻿using System.Collections.ObjectModel;
-using System.Collections.Specialized;
+﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
+using System.Linq;
+using System.Reflection;
+using System.Runtime.CompilerServices;
 using VMSales.Logic;
+
 namespace VMSales.ViewModels
 {
-    public class BaseViewModel : INotifyPropertyChanged
+    public abstract class BaseViewModel : INotifyPropertyChanged, INotifyDataErrorInfo
     {
-        internal class EntityViewModel<T> 
+        // INotifyDateErrorInfo
+        private readonly Dictionary<string, List<string>> _errorsByPropertyName = new Dictionary<string, List<string>>();
+        public bool HasErrors => _errorsByPropertyName.Any();
+        public event EventHandler<DataErrorsChangedEventArgs> ErrorsChanged;
+        public IEnumerable GetErrors(string propertyName)
         {
-            
+            return _errorsByPropertyName.ContainsKey(propertyName) ?
+                _errorsByPropertyName[propertyName] : null;
         }
-        public event PropertyChangedEventHandler PropertyChanged;
+        private void OnErrorsChanged(string propertyName)
+        {
+            ErrorsChanged?.Invoke(this, new DataErrorsChangedEventArgs(propertyName));
+        }
 
+        public void AddError(string propertyName, string error)
+        {
+            if (!_errorsByPropertyName.ContainsKey(propertyName))
+                _errorsByPropertyName[propertyName] = new List<string>();
+
+            if (!_errorsByPropertyName[propertyName].Contains(error))
+            {
+                _errorsByPropertyName[propertyName].Add(error);
+                OnErrorsChanged(propertyName);
+            }
+        }
+
+        private void ClearErrors(string propertyName)
+        {
+            if (_errorsByPropertyName.ContainsKey(propertyName))
+            {
+                _errorsByPropertyName.Remove(propertyName);
+                OnErrorsChanged(propertyName);
+            }
+        }
+
+    //INotifyPropertyChanged
+    public event PropertyChangedEventHandler PropertyChanged;
         protected void RaisePropertyChanged(string propertyName)
         {
-            if (PropertyChanged == null) return;
-            PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+              if (PropertyChanged == null) return;
+              PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
         }
     
     /// <summary>

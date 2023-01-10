@@ -1,5 +1,6 @@
 ﻿using Dapper.Contrib.Extensions;
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
 using VMSales.ViewModels;
 
 namespace VMSales.Models
@@ -50,17 +51,25 @@ namespace VMSales.Models
                 RaisePropertyChanged("lot_number");
             }
         }
-     
 
-
+      
         public decimal lot_cost
         {
-            get { return _lot_cost; }
+            get 
+            {
+                    return _lot_cost;
+            }
             set
             {
                 if (_lot_cost == value) return;
                 _lot_cost = value;
-                RaisePropertyChanged("lot_cost");
+                var regex = new Regex(@"^\d+\.\d{2}?$"); // ^\d+(\.|\,)\d{2}?$ use this incase your dec separator can be comma or decimal.
+                var flg = regex.IsMatch(_lot_cost.ToString());
+                if (flg)
+                {
+                    RaisePropertyChanged("lot_cost");
+                }
+
             }
         }
         public int lot_quantity
