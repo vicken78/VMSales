@@ -580,6 +580,10 @@ namespace VMSales.ViewModels
                 if (!PurchaseDateList.Contains(item.purchase_date))
                     PurchaseDateList.Add(item.purchase_date);
             }
+
+            InvoiceNumberList.Sort();
+            PurchaseDateList.Sort();
+
             if (InvoiceNumberList.Count > 0 || PurchaseDateList.Count > 0)
             {
                 FilterInvoiceNumber = new ObservableCollection<string>(InvoiceNumberList.Cast<String>());
