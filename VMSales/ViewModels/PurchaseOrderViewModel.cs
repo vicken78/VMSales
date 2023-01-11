@@ -405,6 +405,9 @@ namespace VMSales.ViewModels
             // scenerio 1
             // same invoice number, UPDATE purchase_order_detail.
 
+            //debug
+            MessageBox.Show(SelectedItem.purchase_order_detail_pk.ToString());
+
             try
             {
                 if (SelectedItem.purchase_order_detail_pk != 0)
@@ -471,7 +474,7 @@ namespace VMSales.ViewModels
 
             ObservableCollectionPurchaseOrderModel = new ObservableCollection<PurchaseOrderModel>();
 
-            //clear and reload invoicedate and purchasedate
+            //clear and reload invoicedate and purchasedate based on supplier
             /*     if (InvoiceNumber.Count > 0 && PurchaseDate.Count > 0)
                  {
                      InvoiceNumber.Clear();
@@ -483,33 +486,11 @@ namespace VMSales.ViewModels
             dataBaseProvider = getprovider();
             DataBaseLayer.PurchaseOrderRepository PurchaseOrderRepo = new DataBaseLayer.PurchaseOrderRepository(dataBaseProvider);
             var Result = PurchaseOrderRepo.GetAllWithID(supplier_fk).Result;
-
-            if (Result.Count() == 0)
-            {
-                SelectedItem = null;  
-                    ObservableCollectionPurchaseOrderModel.Add(new PurchaseOrderModel()
-                {
-                    
-                    invoice_number = "0",
-                    purchase_date = DateTime.MinValue,
-
-                    purchase_order_pk = 0,
-                    purchase_order_fk = 0,
-                    purchase_order_detail_pk = 0,
-                    supplier_fk = this.supplier_fk,
-                    lot_cost = 0,
-                    lot_quantity = 0,
-                    lot_number = "0",
-                    lot_name = "Name",
-                    lot_description = "",
-                    sales_tax = 0,
-                    shipping_cost = 0
-                });
-            }
-            else
+            if (Result.Count() > 0)
             {
                 ObservableCollectionPurchaseOrderModel = Result.ToObservable();
             }
+
             RaisePropertyChanged("ObservableCollectionPurchaseOrderModel");
             PurchaseOrderRepo.Commit();
             PurchaseOrderRepo.Dispose();
