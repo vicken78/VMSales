@@ -273,6 +273,11 @@ namespace VMSales.Logic
                 }
             }
 
+            public async Task<PurchaseOrderModel> get_supplier_fk(int id)
+            {
+                return await Connection.QuerySingleAsync<PurchaseOrderModel>("SELECT supplier_fk FROM purchase_order WHERE purchase_order_pk = @id", new { id }, Transaction);
+            }
+
 
             public override async Task<PurchaseOrderModel> Get(int id)
             {

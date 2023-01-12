@@ -327,6 +327,7 @@ namespace VMSales.ViewModels
             {
                 if (SelectedItem.purchase_order_detail_pk == 0 || SelectedItem.purchase_order_fk == 0)
                 {
+                    
                     // delete from screen only.
                     return;
                 }
@@ -367,12 +368,6 @@ namespace VMSales.ViewModels
         public void SaveCommand()
         {
 
-            //   MessageBox.Show(supplier_fk.ToString());
-            if (supplier_fk.ToString() == null || supplier_fk == 0)
-            {
-                MessageBox.Show("Please select a supplier.");
-                return;
-            }
             // we need to check for default values here. better checks later.
             if (SelectedItem.lot_name == "Name")
             {
@@ -398,6 +393,37 @@ namespace VMSales.ViewModels
                 SelectedItem.lot_number = item.lot_number;
             }
 
+            if (supplier_fk.ToString() == null || supplier_fk == 0)
+            {
+                // attempt to get supplier.
+                try
+                {
+                    dataBaseProvider = getprovider();
+                    DataBaseLayer.PurchaseOrderRepository PurchaseOrderRepo = new DataBaseLayer.PurchaseOrderRepository(dataBaseProvider);
+                    Task<PurchaseOrderModel> get_supplier = PurchaseOrderRepo.get_supplier_fk(SelectedItem.purchase_order_pk);
+
+                    if (get_supplier.Result.supplier_fk !=  0)
+                    {
+                        PurchaseOrderRepo.Commit();
+                        PurchaseOrderRepo.Dispose();
+                        SelectedItem.supplier_fk = get_supplier.Result.supplier_fk;
+                        RaisePropertyChanged("supplier_fk");
+                    }
+                    else
+                    {
+                        PurchaseOrderRepo.Revert();
+                        PurchaseOrderRepo.Dispose();
+                        // we could not get a supplier from db.
+                        MessageBox.Show("Please select a supplier.");
+                        return;
+                    }
+                }
+                catch (Exception err)
+                {
+                    MessageBox.Show("An error has occured: " + err);
+                }
+            }
+
             // scenerio 4 not programmed
             // INSERT new invoice number, UPDATE purchase_order_details to that invoice number.
 
@@ -405,8 +431,6 @@ namespace VMSales.ViewModels
             // scenerio 1
             // same invoice number, UPDATE purchase_order_detail.
 
-            //debug
-            MessageBox.Show(SelectedItem.purchase_order_detail_pk.ToString());
 
             try
             {
@@ -420,6 +444,7 @@ namespace VMSales.ViewModels
                         PurchaseOrderRepo.Commit();
                         PurchaseOrderRepo.Dispose();
                         MessageBox.Show("Updated");
+                        RaisePropertyChanged("ObservableCollectionPurchaseOrderModel");
                     }
                     else
                     {
@@ -451,6 +476,8 @@ namespace VMSales.ViewModels
                         PurchaseOrderRepo.Commit();
                         PurchaseOrderRepo.Dispose();
                         MessageBox.Show("1 Row Inserted");
+                        RaisePropertyChanged("ObservableCollectionPurchaseOrderModel");
+
                     }
                     else
                     {

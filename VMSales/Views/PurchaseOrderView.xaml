@@ -191,7 +191,7 @@
                             Binding="{Binding lot_number, ValidatesOnNotifyDataErrors=True, UpdateSourceTrigger=PropertyChanged}"/>
                 <DataGridTextColumn Header="Lot Name" Width="Auto"
                             Binding="{Binding lot_name, ValidatesOnNotifyDataErrors=True, UpdateSourceTrigger=PropertyChanged}" />
-                <DataGridTextColumn Header="Lot Description" Width="Auto" CanUserResize="True" 
+                <DataGridTextColumn Header="Lot Description" MinWidth="500" Width="500" MaxWidth="600" CanUserResize="True" 
                             Binding="{Binding lot_description, ValidatesOnNotifyDataErrors=True, UpdateSourceTrigger=PropertyChanged}" />
                 <DataGridTextColumn Header="Lot Cost" Width="60"  
                             Binding="{Binding lot_cost, StringFormat='c', ValidatesOnNotifyDataErrors=True, UpdateSourceTrigger=PropertyChanged}" />
