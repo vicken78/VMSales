@@ -327,8 +327,11 @@ namespace VMSales.ViewModels
             {
                 if (SelectedItem.purchase_order_detail_pk == 0 || SelectedItem.purchase_order_fk == 0)
                 {
-                    
+
                     // delete from screen only.
+
+                    ObservableCollectionPurchaseOrderModel.Remove(ObservableCollectionPurchaseOrderModel.Where(i => i.purchase_order_detail_pk == SelectedItem.purchase_order_detail_pk).Single());
+                    RaisePropertyChanged("ObservableCollectionPurchaseModel");
                     return;
                 }
                 if (SelectedItem.purchase_order_pk != 0 && SelectedItem.purchase_order_fk != 0 && SelectedItem.purchase_order_detail_pk != 0)
