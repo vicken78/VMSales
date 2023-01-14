@@ -33,10 +33,10 @@ namespace VMSales.Logic
             {
                 Revert(false);
             }
-          //  finally
-          //   {
-          //       Transaction = Connection.BeginTransaction();
-          //   }
+            //  finally
+            //   {
+            //       Transaction = Connection.BeginTransaction();
+            //   }
         }
 
         /// <summary>
@@ -77,17 +77,18 @@ namespace VMSales.Logic
 
         public void Dispose()
         {
-              if (Connection.State.ToString() == "Open")
-              {
+            if (Connection.State.ToString() == "Open")
+            {
                 Dispose(true);
-              }
+            }
             GC.SuppressFinalize(this);
         }
 
         protected virtual void Dispose(bool disposing)
         {
             if (disposing == true)
-            {   Transaction.Dispose();
+            {
+                Transaction.Dispose();
                 Connection.Dispose();
                 return;
             }
@@ -99,7 +100,7 @@ namespace VMSales.Logic
             disposed = true;
         }
         #endregion
-  
+
     }
 
 }

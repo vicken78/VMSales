@@ -284,6 +284,29 @@ namespace VMSales.Logic
                 return await Connection.QuerySingleAsync<PurchaseOrderModel>("SELECT purchase_order_detail_pk FROM purchase_order_detail as pod INNER JOIN purchase_order on purchase_order.purchase_order_pk = pod.purchase_order_fk WHERE supplier_fk = @id;", new { id }, Transaction);
             }
 
+
+
+            public async Task<bool> Get_purchase_order_detail_pk(PurchaseOrderModel entity)
+            {
+                return await Connection.QuerySingleAsync<bool>("SELECT purchase_order_detail_pk FROM purchase_order_detail WHERE purchase_order_detail_pk = @id;", new
+                {
+                    id = entity.purchase_order_detail_pk
+                }, null); 
+            }
+
+ //             }, null)) == 1;
+
+
+
+            //get last insert
+            public async Task<int> Get_last_insert()
+            {
+                var result = await Connection.QuerySingleAsync<int>("SELECT MAX(purchase_order_detail_pk) FROM purchase_order_detail;", Transaction); 
+                return result;
+            }
+
+
+
             // get all purchase_order and purchase_order_detail
             public override async Task<IEnumerable<PurchaseOrderModel>> GetAll()
             {

@@ -157,7 +157,7 @@
         <!-- OLD   ItemsSource="{Binding PurchaseOrderView}" -->
 
         <DataGrid x:Name="purchaseorderdatagrid" AutoGenerateColumns="False" 
-                      ItemsSource="{Binding ObservableCollectionPurchaseOrderModel}"
+                      ItemsSource="{Binding ObservableCollectionPurchaseOrderModel, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                       IsSynchronizedWithCurrentItem="True" 
                           CanUserDeleteRows="False"
                           SelectionMode="Single"
@@ -176,10 +176,10 @@
                             Visibility="Hidden"  IsReadOnly="True" Binding="{Binding Path=SelectedValue, ElementName=cmbSupplier, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}"/>
 
                 <DataGridTextColumn x:Name="selected_purchase_order_pk" Header="PO PK" Width="90"
-                            Visibility="Hidden" IsReadOnly="True" Binding="{Binding purchase_order_pk, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}"/>
+                            Visibility="Hidden" IsReadOnly="True" Binding="{Binding purchase_order_pk, Mode=TwoWay, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}"/>
 
                 <DataGridTextColumn x:Name="selected_purchase_order_fk" Header="PO FK" Width="90"
-                            Visibility="Hidden" IsReadOnly="True" Binding="{Binding purchase_order_fk, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}"/>
+                            Visibility="Hidden" IsReadOnly="True" Binding="{Binding purchase_order_fk, Mode=TwoWay, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}"/>
 
                 <DataGridTextColumn x:Name="selected_purchase_order_detail_pk" Header="POD PK" Width="90"
                             Visibility="Hidden" IsReadOnly="True" Binding="{Binding purchase_order_detail_pk,  Mode=TwoWay, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}"/>
@@ -194,7 +194,7 @@
                 <DataGridTextColumn Header="Lot Description" MinWidth="500" Width="500" MaxWidth="600" CanUserResize="True" 
                             Binding="{Binding lot_description, ValidatesOnNotifyDataErrors=True, UpdateSourceTrigger=PropertyChanged}" />
                 <DataGridTextColumn Header="Lot Cost" Width="60"  
-                            Binding="{Binding lot_cost, StringFormat='c', ValidatesOnNotifyDataErrors=True, UpdateSourceTrigger=PropertyChanged}" />
+                            Binding="{Binding lot_cost, StringFormat='$0.00;;#', ValidatesOnNotifyDataErrors=True, UpdateSourceTrigger=PropertyChanged}" />
                 <DataGridTextColumn Header="Sales Tax" Width="60" 
                             Binding="{Binding sales_tax, StringFormat='c', ValidatesOnNotifyDataErrors=True, UpdateSourceTrigger=PropertyChanged}" />
                 <DataGridTextColumn Header="Ship Cost" Width="60" 
