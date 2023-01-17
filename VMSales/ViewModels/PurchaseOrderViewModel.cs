@@ -26,6 +26,8 @@ namespace VMSales.ViewModels
             get { return _SelectedItem; }
             set
             {
+                if (_SelectedItem == value)
+                    return;
                 _SelectedItem = value;
                 RaisePropertyChanged("SelectedItem");
             }
@@ -369,15 +371,10 @@ namespace VMSales.ViewModels
         }
         public void SaveCommand()
         {
-    
-            // we need to check for default values here. better checks later.
-            if (SelectedItem.lot_name == "Name")
-            {
-                MessageBox.Show("Default Values must not be used.");
-                return;
-            }
+            SelectedItem = new PurchaseOrderModel();
 
             var selectedRows = ObservableCollectionPurchaseOrderModel.Where(i => i.IsSelected);
+            
             foreach (var item in selectedRows)
             {
                 SelectedItem.supplier_fk = supplier_fk;
@@ -394,6 +391,15 @@ namespace VMSales.ViewModels
                 SelectedItem.lot_quantity = item.lot_quantity;
                 SelectedItem.lot_number = item.lot_number;
             }
+
+            //  we need to check for default values here. better checks later.
+                       if (SelectedItem.lot_name == "Name")
+                       {
+                           MessageBox.Show("Default Values must not be used.");
+                        SelectedItem = null;
+                        return;
+                       }
+
 
             if (supplier_fk.ToString() == null || supplier_fk == 0)
             {
@@ -453,7 +459,7 @@ namespace VMSales.ViewModels
                             SavePurchaseOrderRepo.Commit();
                             SavePurchaseOrderRepo.Dispose();
                             MessageBox.Show("Updated");
-                            RaisePropertyChanged("ObservableCollectionPurchaseOrderModel");
+                            SelectedItem = new PurchaseOrderModel();
                             return;
                         }
                         else
@@ -486,7 +492,7 @@ namespace VMSales.ViewModels
                     //DataBaseLayer.PurchaseOrderRepository PurchaseOrderRepo = new DataBaseLayer.PurchaseOrderRepository(dataBaseProvider);
                     Task<bool> insertPurchase_Order = SavePurchaseOrderRepo.Insert(SelectedItem);
                     
-                    // new purchase order_detail_pk must be assigned --- fix ---
+                    // new purchase order_detail_pk must be assigned 
                     if (insertPurchase_Order.Result.Equals(true))
                     {
                         MessageBox.Show("1 Row Inserted");
@@ -496,7 +502,7 @@ namespace VMSales.ViewModels
                         MessageBox.Show(SelectedItem.purchase_order_detail_pk.ToString());
                         SavePurchaseOrderRepo.Commit();
                         SavePurchaseOrderRepo.Dispose();
-                        RaisePropertyChanged("purchase_order_detail_pk");
+                        SelectedItem = new PurchaseOrderModel();
                         return;
                     }
                     else
