@@ -47,14 +47,15 @@
             <TextBox Name="Address" IsReadOnly="True" Background="WhiteSmoke"  Text="{Binding SelectedItem.address, ElementName=cmbSupplier}" 
                         Grid.Column="1" Grid.Row="4"/>
 
+            <!-- City -->
+            <Label Content="City" Grid.Column="0" Grid.Row="5" />
+            <TextBox Name="City" IsReadOnly="True" Background="WhiteSmoke" Text="{Binding SelectedItem.city, ElementName=cmbSupplier}"
+                        Grid.Column="1" Grid.Row="5" />
             <!-- State -->
-            <Label Content="State" Grid.Column="0" Grid.Row="5" />
+            <Label Content="State" Grid.Column="0" Grid.Row="6" />
             <TextBox Name="State" IsReadOnly="True" Background="WhiteSmoke" Text="{Binding SelectedItem.state, ElementName=cmbSupplier}"
-                        Grid.Column="1" Grid.Row="5"/>
-            <!-- Country -->
-            <Label Content="Country" Grid.Column="0" Grid.Row="6" />
-            <TextBox Name="Country" IsReadOnly="True" Background="WhiteSmoke" Text="{Binding SelectedItem.country, ElementName=cmbSupplier}"
-                        Grid.Column="1" Grid.Row="6" />
+                        Grid.Column="1" Grid.Row="6"/>
+
             <!-- Zip -->
             <Label Content="Zip" Grid.Column="0" Grid.Row="7" />
             <TextBox Name="Zip" IsReadOnly="True" Background="WhiteSmoke" Text="{Binding SelectedItem.zip, ElementName=cmbSupplier}"

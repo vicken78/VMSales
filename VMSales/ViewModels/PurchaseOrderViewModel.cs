@@ -495,13 +495,12 @@ namespace VMSales.ViewModels
                     // new purchase order_detail_pk must be assigned 
                     if (insertPurchase_Order.Result.Equals(true))
                     {
-                        MessageBox.Show("1 Row Inserted");
-                        RaisePropertyChanged("ObservableCollectionPurchaseOrderModel");
                         var purchase_order_detail_pk_result = SavePurchaseOrderRepo.Get_last_insert();
                         SelectedItem.purchase_order_detail_pk = purchase_order_detail_pk_result.Result;
-                        MessageBox.Show(SelectedItem.purchase_order_detail_pk.ToString());
                         SavePurchaseOrderRepo.Commit();
                         SavePurchaseOrderRepo.Dispose();
+                        MessageBox.Show("1 Row Inserted, POD_PK " + SelectedItem.purchase_order_detail_pk.ToString());
+                        RaisePropertyChanged("ObservableCollectionPurchaseOrderModel");
                         SelectedItem = new PurchaseOrderModel();
                         return;
                     }
