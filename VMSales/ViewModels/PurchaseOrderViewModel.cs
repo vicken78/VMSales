@@ -16,7 +16,8 @@ namespace VMSales.ViewModels
 {
     public class PurchaseOrderViewModel : BaseViewModel
     {
-
+        private ObservableCollection<PurchaseOrderModel> POM = new ObservableCollection<PurchaseOrderModel>();
+        private List<int> purchase_order_products;
         private string invoicetemp;
         private DateTime purchase_datetemp;
 
@@ -56,7 +57,8 @@ namespace VMSales.ViewModels
                 RaisePropertyChanged("PurchaseDate");
             }
         }
-
+        
+     
         public ObservableCollection<SupplierModel> ObservableCollectionSupplierModel { get; set; }
         private ObservableCollection<PurchaseOrderModel> ObservableCollectionPurchaseOrderModelclean { get; set; }
         public ObservableCollection<PurchaseOrderModel> ObservableCollectionPurchaseOrderModel
@@ -293,7 +295,8 @@ namespace VMSales.ViewModels
                     lot_name = "Name",
                     lot_description = "",
                     sales_tax = 0,
-                    shipping_cost = 0
+                    shipping_cost = 0,
+                    quantity_check = 0
                 };
             }
             else
@@ -385,12 +388,15 @@ namespace VMSales.ViewModels
                 SelectedItem.purchase_order_detail_pk = item.purchase_order_detail_pk;
                 SelectedItem.sales_tax = item.sales_tax;
                 SelectedItem.shipping_cost = item.shipping_cost;
+                SelectedItem.quantity_check = item.quantity_check;
                 SelectedItem.lot_cost = item.lot_cost;
                 SelectedItem.lot_name = item.lot_name.Trim();
                 SelectedItem.lot_description = item.lot_description.Trim();
                 SelectedItem.lot_quantity = item.lot_quantity;
                 SelectedItem.lot_number = item.lot_number;
             }
+
+           
 
             //  we need to check for default values here. better checks later.
                        if (SelectedItem.lot_name == "Name")
@@ -521,6 +527,76 @@ namespace VMSales.ViewModels
             #endregion
         }
 
+        public void GenerateCommand()
+        {
+            // select all without qty check and make sure product does not exist.
+
+            dataBaseProvider = getprovider();
+            DataBaseLayer.PurchaseOrderRepository ProductPurchaseOrderRepo = new DataBaseLayer.PurchaseOrderRepository(dataBaseProvider);
+            try
+            {
+                var result = ProductPurchaseOrderRepo.Eligible_Products();
+                purchase_order_products = new List<int>();
+                purchase_order_products = result.Result.ToList();
+                ProductPurchaseOrderRepo.Commit();
+                ProductPurchaseOrderRepo.Dispose();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("An Error has occured" + ex.ToString());
+                ProductPurchaseOrderRepo.Revert();
+                ProductPurchaseOrderRepo.Dispose();
+                return;
+            }
+
+            //for each purchase_order_pk, get info and insert into product
+     
+            if (purchase_order_products.Count != 0)
+            {
+                ProductModel PM; 
+                foreach (var purchase_order_detail_pk in purchase_order_products)
+                {
+                    //select each purchase_order_detail_pk
+                    DataBaseLayer.PurchaseOrderRepository PurchaseOrder = new DataBaseLayer.PurchaseOrderRepository(dataBaseProvider);
+                    POM.Add(PurchaseOrder.GetAllWithPK(purchase_order_detail_pk).Result);
+                    PurchaseOrder.Commit();
+                    PurchaseOrder.Dispose();
+                }
+
+                MessageBox.Show(POM.Count.ToString());
+                foreach (var item in POM)
+                {
+                    PM = new ProductModel
+                    {
+                        product_name = item.lot_name,
+                        brand_name = null,
+                        description = null,
+                        quantity = 1,
+                        cost = Math.Round((item.lot_cost + item.sales_tax + item.shipping_cost) / item.lot_quantity, 2),
+                        sku = item.lot_number,
+                        instock = 1,
+                        condition = "Used",
+                        listing_date = DateTime.MinValue,
+                        listing_number = null,
+                        listing_url = null,
+                        sold_price = 0
+                    };
+                    
+                    //insert into product
+
+                    //get product insert id
+
+                    //insert purchase_order_fk and product into product_purchase_order
+            
+                    //insert product and supplier_fk into product_supplier
+
+                }
+            }
+
+            
+        }
+
+
         public void LoadPurchaseOrder(int supplier_fk)
         {
 
@@ -595,7 +671,8 @@ namespace VMSales.ViewModels
                     lot_name = "Name",
                     lot_description = "",
                     sales_tax = 0,
-                    shipping_cost = 0
+                    shipping_cost = 0,
+                    quantity_check = 0
                 });
             }
             ObservableCollectionPurchaseOrderModel = PurchaseOrderRepo.GetAll().Result.ToObservable();

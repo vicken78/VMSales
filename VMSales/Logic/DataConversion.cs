@@ -22,6 +22,11 @@ namespace VMSales.Logic
 
 
         // so far not needed.
+        public static ObservableCollection<T> Convert<T>(IEnumerable<T> original)
+        {
+            return new ObservableCollection<T>(original);
+        }
+
         public static string listToString(List<string> myList)
         {
             string myString = string.Join(",", myList);

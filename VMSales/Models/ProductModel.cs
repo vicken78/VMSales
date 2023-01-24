@@ -40,6 +40,8 @@ namespace VMSales.Models
                 RaisePropertyChanged("product_pk");
             }
         }
+        public int supplier_fk { get; set; }
+        
         public int product_fk
         {
             get { return _product_fk; }

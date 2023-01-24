@@ -16,6 +16,7 @@ namespace VMSales.Models
         private string _lot_description { get; set; }
         private decimal _sales_tax { get; set; }
         private decimal _shipping_cost { get; set; }
+        private int _quantity_check {get; set;}
 
 
         // purchase order detail
@@ -124,5 +125,22 @@ namespace VMSales.Models
                 RaisePropertyChanged("shipping_cost");
             }
         }
+        public int quantity_check
+        {
+            get { return _quantity_check; }
+            set
+            {
+                if (_quantity_check == value) return;
+                _quantity_check = value;
+                RaisePropertyChanged("quantity_check");
+            }
+        }
+
+
+
+
+
+
+
     }
 }
