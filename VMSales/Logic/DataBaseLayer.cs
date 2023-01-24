@@ -339,7 +339,7 @@ namespace VMSales.Logic
             {
                 return await Connection.QuerySingleAsync<PurchaseOrderModel>("SELECT DISTINCT " +
                     "pod.purchase_order_detail_pk, pod.lot_number, pod.lot_cost, pod.lot_quantity, " +
-                    "pod.lot_name, pod.sales_tax, pod.shipping_cost, sup.supplier_pk " +
+                    "pod.lot_name, pod.sales_tax, pod.shipping_cost, po.supplier_fk " +
                     "FROM purchase_order as po, purchase_order_detail as pod, supplier as sup " +
                     "INNER JOIN purchase_order_detail on po.purchase_order_pk = pod.purchase_order_fk " +
                     "INNER JOIN supplier on sup.supplier_pk = po.supplier_fk " +
@@ -414,21 +414,33 @@ namespace VMSales.Logic
                 return false;
             }
 
-            // purchase_order_products
+            // generate product command
             public async Task<IEnumerable<int>> Eligible_Products()
             {
-        
-                string sql = "SELECT purchase_order_detail_pk " +
-                "FROM purchase_order_detail as pod " +
-                "LEFT JOIN product_purchase_order as ppo " +
-                "on pod.purchase_order_detail_pk != ppo.product_purchase_order_detail_fk " +
-                "WHERE pod.quantity_check = '0' " +
-                "AND iif(exists(SELECT * FROM product_purchase_order), 1, 0) = 0 " +
-                "UNION SELECT purchase_order_detail_pk FROM purchase_order_detail as pod " +
-                "INNER JOIN product_purchase_order as ppo on pod.purchase_order_detail_pk " +
-                "!= ppo.product_purchase_order_detail_fk " +
-                "WHERE pod.quantity_check = '0' " +
-                "ORDER BY purchase_order_detail_pk";
+
+                /*             string sql = "SELECT purchase_order_detail_pk " +
+                             "FROM purchase_order_detail as pod " +
+                             "LEFT JOIN product_purchase_order as ppo " +
+                             "on pod.purchase_order_detail_pk != ppo.product_purchase_order_detail_fk " +
+                             "WHERE pod.quantity_check = 0 " +
+                             "AND pod.lot_quantity > '0' " +
+                             "AND iif(exists(SELECT * FROM product_purchase_order), 1, 0) = 0 " +
+                             "UNION SELECT purchase_order_detail_pk FROM purchase_order_detail as pod " +
+                             "INNER JOIN product_purchase_order as ppo on pod.purchase_order_detail_pk " +
+                             "!= ppo.product_purchase_order_detail_fk " +
+                             "WHERE pod.quantity_check = 0 " +
+                             "AND pod.lot_quantity > '0' " +
+                             "AND iif(exists(SELECT * FROM product_purchase_order), 1, 0) = 0 " +
+                             "ORDER BY purchase_order_detail_pk";
+                */
+
+                string sql = "SELECT purchase_order_detail_pk FROM purchase_order_detail as pod " +
+                              "WHERE purchase_order_detail_pk NOT IN (SELECT product_purchase_order_detail_fk " +
+                              "FROM product_purchase_order) " +
+                              "AND pod.lot_quantity > '0' " +
+                              "AND pod.quantity_check = 0 " +
+                              "ORDER BY purchase_order_detail_pk";
+
 
                 var result = await Connection.QueryAsync<int>(sql, Transaction);
                 return result;
@@ -471,23 +483,23 @@ namespace VMSales.Logic
                 return product_pk;
             }
 
-
-
-            public override async Task<bool> Insert(ProductModel entity)
+            public async Task<bool> InsertProductCategory(ProductModel entity)
             {
-
-         /*       // insert into product_category -- this needs to be seperated
-                bool insertrow = (await Connection.ExecuteAsync("INSERT INTO product_category (product_fk, category_fk) VALUES (@product_fk, @category_fk);", new
+                bool insertproductcategory = (await Connection.ExecuteAsync("INSERT INTO product_category (product_fk, category_fk) VALUES (@product_fk, @category_fk);", new
                 {
                     product_fk = entity.product_fk,
                     category_fk = entity.category_fk
                 }, Transaction)) == 1;
-         */
+                return insertproductcategory;
+            }
 
-
-                    // insert into product_purchase_order
-                    bool insert_product_purchase_order = (await Connection.ExecuteAsync("INSERT INTO product_purchase_order (purchase_order_detail_fk, product_fk) VALUES (@purchase_order_detail_fk, @product_fk);", new
+            public override async Task<bool> Insert(ProductModel entity)
+            {
+           // insert into product_purchase_order
+                bool insert_product_purchase_order = (await Connection.ExecuteAsync("INSERT INTO product_purchase_order (product_purchase_order_detail_fk, product_fk) VALUES (@purchase_order_detail_fk, @product_fk);", new
                     {
+
+                  
                         purchase_order_detail_fk = entity.purchase_order_detail_fk,
                         product_fk = entity.product_fk,
                     }, Transaction)) == 1;
@@ -500,8 +512,7 @@ namespace VMSales.Logic
                         supplier_fk = entity.supplier_fk,
                         product_fk = entity.product_pk,
                     }, Transaction)) == 1;
-
-                    return true;
+                    return insert_product_supplier;
                 }
                 return false;
             }

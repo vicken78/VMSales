@@ -550,20 +550,33 @@ namespace VMSales.ViewModels
             }
 
             //for each purchase_order_pk, get info and insert into product
-     
-            if (purchase_order_products.Count != 0)
+
+
+            if (purchase_order_products.Count == 0)
+            {
+                MessageBox.Show("No eligible purchase orders are available.");
+            }
+            else
             {
                 ProductModel PM; 
                 foreach (var purchase_order_detail_pk in purchase_order_products)
                 {
                     //select each purchase_order_detail_pk
-                    DataBaseLayer.PurchaseOrderRepository PurchaseOrder = new DataBaseLayer.PurchaseOrderRepository(dataBaseProvider);
-                    POM.Add(PurchaseOrder.GetAllWithPK(purchase_order_detail_pk).Result);
-                    PurchaseOrder.Commit();
-                    PurchaseOrder.Dispose();
+                    try
+                    {
+                        DataBaseLayer.PurchaseOrderRepository PurchaseOrder = new DataBaseLayer.PurchaseOrderRepository(dataBaseProvider);
+                        POM.Add(PurchaseOrder.GetAllWithPK(purchase_order_detail_pk).Result);
+                        PurchaseOrder.Commit();
+                        PurchaseOrder.Dispose();
+                    }
+                    catch (Exception er)
+                    { 
+                        MessageBox.Show("An unexpected error has occured during selection." + er);
+                        return;
+                    }
                 }
+                MessageBox.Show("Step 2: Populated Purchase Orders");
 
-                MessageBox.Show(POM.Count.ToString());
                 foreach (var item in POM)
                 {
                     PM = new ProductModel
@@ -579,21 +592,37 @@ namespace VMSales.ViewModels
                         listing_date = DateTime.MinValue,
                         listing_number = null,
                         listing_url = null,
-                        sold_price = 0
+                        sold_price = 0,
+                        supplier_fk = item.supplier_fk
                     };
-                    
-                    //insert into product
 
-                    //get product insert id
+                    DataBaseLayer.ProductRepository ProductRepo = new DataBaseLayer.ProductRepository(dataBaseProvider);
+                    try
+                    {
+                        // failing here.   
+                        //insert into product
+                        Task<int> insert_product_pk = ProductRepo.InsertProduct(PM);
 
-                    //insert purchase_order_fk and product into product_purchase_order
-            
-                    //insert product and supplier_fk into product_supplier
+                        //insert into product_purchase_order
+                        PM.product_fk = insert_product_pk.Result;
+                        PM.supplier_fk = item.supplier_fk;
+                        PM.purchase_order_detail_fk = item.purchase_order_detail_pk;
+                        Task<bool> insert_product_purchase_order = ProductRepo.Insert(PM);
+                        if (insert_product_purchase_order.Result == false) throw new Exception();
+                        ProductRepo.Commit();
+                        ProductRepo.Dispose();
+                    }
+                    catch (Exception err)
+                    {
+                        MessageBox.Show("An Unexpected Error has occured:" + err);
+                        ProductRepo.Revert();
+                        ProductRepo.Dispose();
+                        return;
+                    }
 
                 }
+                MessageBox.Show("Completed "+ purchase_order_products.Count.ToString() + " Records.  Check Product Page.");
             }
-
-            
         }
 
 
