@@ -537,12 +537,11 @@ namespace VMSales.Logic
                     "INNER JOIN product_category on p.product_pk = pc.product_fk " +
                     "INNER JOIN category on c.category_pk = pc.category_fk;", null, Transaction);
                 */
-                return await Connection.QueryAsync<ProductModel>("SELECT DISTINCT " +
-                "ppo.*, p.*, c.category_pk, c.category_name, pc.* " +
-                "FROM product as p, product_purchase_order as ppo, product_category as pc, category as c " +
-                "INNER JOIN product_purchase_order on p.product_pk = ppo.product_fk " +
-                "INNER JOIN product_category on p.product_pk = pc.product_fk " +
-                "INNER JOIN category on c.category_pk = pc.category_fk;", null, Transaction);
+                return await Connection.QueryAsync<ProductModel>("SELECT DISTINCT * " +
+                "FROM product as p " +
+                "LEFT OUTER JOIN product_category as pc on p.product_pk = pc.product_fk " +
+                "LEFT OUTER JOIN category as c on c.category_pk = pc.category_fk"
+                 , null, Transaction);
             }
 
             // get all products by supplier
