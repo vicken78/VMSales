@@ -265,6 +265,9 @@ namespace VMSales.ViewModels
 
         public ProductViewModel()
         {
+
+            // begin
+
             dataBaseProvider = getprovider();
 
             //  Get Categories count

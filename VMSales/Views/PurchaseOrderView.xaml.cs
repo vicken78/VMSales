@@ -1,4 +1,6 @@
-﻿using System.Windows.Controls;
+﻿using System;
+using System.Windows.Controls;
+using VMSales.ViewModels;
 
 namespace VMSales.Views
 {
@@ -11,6 +13,6 @@ namespace VMSales.Views
         public PurchaseOrderView()
         {
             InitializeComponent();
-        }
+        }    
     }
 }

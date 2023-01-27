@@ -16,7 +16,20 @@ namespace VMSales.ViewModels
 {
     public class PurchaseOrderViewModel : BaseViewModel
     {
-        private ObservableCollection<PurchaseOrderModel> POM = new ObservableCollection<PurchaseOrderModel>();
+        private int _cmbSupplier { get; set; }
+        public int cmbSupplier
+        {
+            get { return _cmbSupplier; }
+            set
+            {
+                if (_cmbSupplier == value)
+                    return;
+                _cmbSupplier = value;
+                RaisePropertyChanged("cmbSupplier");
+            }
+        }
+    
+    private ObservableCollection<PurchaseOrderModel> POM = new ObservableCollection<PurchaseOrderModel>();
         private List<int> purchase_order_products;
         private string invoicetemp;
         private DateTime purchase_datetemp;
@@ -254,6 +267,8 @@ namespace VMSales.ViewModels
                 _supplier_fk = value;
                 RaisePropertyChanged("supplier_fk");
                 LoadPurchaseOrder(supplier_fk);
+                // here we need to limit filter to that supplier.
+                // we also need a way to reset thats supplier.
             }
         }
 
@@ -263,6 +278,16 @@ namespace VMSales.ViewModels
         IDatabaseProvider dataBaseProvider;
 
         #region ButtonCommands
+        public void RemoveSupplier()
+        {
+            cmbSupplier = -1;
+            supplier_fk = 0; 
+            RaisePropertyChanged("supplier_fk");
+            LoadPurchaseOrder(0);
+        }
+
+
+
         public void AddCommand()
         {
    
@@ -646,12 +671,19 @@ namespace VMSales.ViewModels
             PurchaseDateList = new List<DateTime>();
             dataBaseProvider = getprovider();
             DataBaseLayer.PurchaseOrderRepository PurchaseOrderRepo = new DataBaseLayer.PurchaseOrderRepository(dataBaseProvider);
-            var Result = PurchaseOrderRepo.GetAllWithID(supplier_fk).Result;
-            if (Result.Count() > 0)
-            {
-                ObservableCollectionPurchaseOrderModel = Result.ToObservable();
-            }
 
+            if (supplier_fk == 0)
+            {
+                ObservableCollectionPurchaseOrderModel = PurchaseOrderRepo.GetAll().Result.ToObservable();
+            }
+            else
+            {
+                var Result = PurchaseOrderRepo.GetAllWithID(supplier_fk).Result;
+                if (Result.Count() > 0)
+                {
+                    ObservableCollectionPurchaseOrderModel = Result.ToObservable();
+                }
+            }
             RaisePropertyChanged("ObservableCollectionPurchaseOrderModel");
             PurchaseOrderRepo.Commit();
             PurchaseOrderRepo.Dispose();
