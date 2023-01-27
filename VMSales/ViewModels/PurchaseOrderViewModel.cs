@@ -661,20 +661,20 @@ namespace VMSales.ViewModels
             ObservableCollectionPurchaseOrderModel = new ObservableCollection<PurchaseOrderModel>();
 
             //clear and reload invoicedate and purchasedate based on supplier
-            /*     if (InvoiceNumber.Count > 0 && PurchaseDate.Count > 0)
+                 if (InvoiceNumberList.Count > 0 && PurchaseDateList.Count > 0)
                  {
-                     InvoiceNumber.Clear();
-                     PurchaseDate.Clear();
+                     InvoiceNumberList.Clear();
+                     PurchaseDateList.Clear();
                  }
-            */
-            InvoiceNumberList = new List<string>();
-            PurchaseDateList = new List<DateTime>();
+            
             dataBaseProvider = getprovider();
             DataBaseLayer.PurchaseOrderRepository PurchaseOrderRepo = new DataBaseLayer.PurchaseOrderRepository(dataBaseProvider);
+
 
             if (supplier_fk == 0)
             {
                 ObservableCollectionPurchaseOrderModel = PurchaseOrderRepo.GetAll().Result.ToObservable();
+                LoadFilterLists(ObservableCollectionPurchaseOrderModel);
             }
             else
             {
@@ -682,12 +682,17 @@ namespace VMSales.ViewModels
                 if (Result.Count() > 0)
                 {
                     ObservableCollectionPurchaseOrderModel = Result.ToObservable();
+                    LoadFilterLists(ObservableCollectionPurchaseOrderModel);
                 }
             }
             RaisePropertyChanged("ObservableCollectionPurchaseOrderModel");
             PurchaseOrderRepo.Commit();
             PurchaseOrderRepo.Dispose();
 
+
+        
+
+            /*
             foreach (var item in ObservableCollectionPurchaseOrderModel)
             {
                 SelectedItem = item;
@@ -704,8 +709,46 @@ namespace VMSales.ViewModels
                 FilterInvoiceNumber = new ObservableCollection<string>(InvoiceNumberList.Cast<String>());
                 FilterPurchaseDate = new ObservableCollection<DateTime>(PurchaseDateList.Cast<DateTime>());
             }
-
+            */
         }
+
+        public void LoadFilterLists(ObservableCollection<PurchaseOrderModel> ObservableCollectionPurchaseOrderModel)
+        {
+            if (FilterInvoiceNumber != null || FilterPurchaseDate != null)
+            {
+                FilterInvoiceNumber.Clear();
+                FilterPurchaseDate.Clear();
+            }
+
+
+            foreach (var item in ObservableCollectionPurchaseOrderModel)
+            {
+                SelectedItem = item;
+                if (item.invoice_number != null || item.purchase_date != null)
+                    if (!InvoiceNumberList.Contains(item.invoice_number))
+                        InvoiceNumberList.Add(item.invoice_number);
+                if (!PurchaseDateList.Contains(item.purchase_date))
+                    PurchaseDateList.Add(item.purchase_date);
+            }
+
+            InvoiceNumberList.Sort();
+            PurchaseDateList.Sort();
+
+            if (InvoiceNumberList.Count > 0 || PurchaseDateList.Count > 0)
+            {
+                FilterInvoiceNumber = new ObservableCollection<string>(InvoiceNumberList.Cast<String>());
+                FilterPurchaseDate = new ObservableCollection<DateTime>(PurchaseDateList.Cast<DateTime>());
+            }
+            RaisePropertyChanged("FilterInvoiceNumber");
+            RaisePropertyChanged("FilterPurchaseDate");
+
+            if (ObservableCollectionPurchaseOrderModel is null)
+            {
+                throw new ArgumentNullException(nameof(ObservableCollectionPurchaseOrderModel));
+            }
+        }
+
+
 
         #region pageload
         public PurchaseOrderViewModel()
@@ -746,24 +789,7 @@ namespace VMSales.ViewModels
             PurchaseOrderRepo.Dispose();
             RaisePropertyChanged("ObservableCollectionPurchaseOrderModel");
 
-            foreach (var item in Result)
-            {
-                SelectedItem = item;
-                if (item.invoice_number != null || item.purchase_date != null)
-                    if (!InvoiceNumberList.Contains(item.invoice_number))
-                        InvoiceNumberList.Add(item.invoice_number);
-                if (!PurchaseDateList.Contains(item.purchase_date))
-                    PurchaseDateList.Add(item.purchase_date);
-            }
-
-            InvoiceNumberList.Sort();
-            PurchaseDateList.Sort();
-
-            if (InvoiceNumberList.Count > 0 || PurchaseDateList.Count > 0)
-            {
-                FilterInvoiceNumber = new ObservableCollection<string>(InvoiceNumberList.Cast<String>());
-                FilterPurchaseDate = new ObservableCollection<DateTime>(PurchaseDateList.Cast<DateTime>());
-            }
+            LoadFilterLists(ObservableCollectionPurchaseOrderModel);
 
             // Get Suppliers
             ObservableCollectionSupplierModel = new ObservableCollection<SupplierModel>();

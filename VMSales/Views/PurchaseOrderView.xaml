@@ -78,7 +78,7 @@
             <TextBlock Grid.Row="3" Grid.Column="3" FontSize="12" HorizontalAlignment="Center" FontWeight="Bold">Invoice No.</TextBlock>
         
                 <ComboBox Background="White" Grid.Row="3" Grid.Column="4" 
-                ItemsSource="{Binding FilterInvoiceNumber, Mode=TwoWay}" 
+                ItemsSource="{Binding FilterInvoiceNumber, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" 
                 SelectedItem="{Binding SelectedInvoiceNumber, 
                 Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
                 Width="100" HorizontalAlignment="Left"/>
@@ -104,7 +104,7 @@
             <TextBlock Grid.Row="3" Grid.Column="6" FontSize="12" FontWeight="Bold" HorizontalAlignment="Center">Purchase Date</TextBlock>
 
             <ComboBox Background="White" Grid.Row="3" Grid.Column="7" 
-                ItemsSource="{Binding FilterPurchaseDate}"  
+                ItemsSource="{Binding FilterPurchaseDate,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"  
                 SelectedItem="{Binding SelectedPurchaseDate, 
                 Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"  
                 Width="100" HorizontalAlignment="Left"/>
