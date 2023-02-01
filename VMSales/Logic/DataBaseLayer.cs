@@ -53,38 +53,31 @@ namespace VMSales.Logic
                 return await Connection.QuerySingleAsync<CategoryModel>("SELECT category_name FROM category WHERE category_pk = @category_pk", new { category_pk }, Transaction);
             }
 
-            // keep for now, may not be needed.
-            public async Task<IEnumerable<CategoryModel>> Get_all_category()
-            {
-                return await Connection.QueryAsync<CategoryModel>("SELECT category_name FROM category ORDER BY category_name", null, Transaction);
-            }
-
-            // keep for now, may not be needed.
+          
             public async Task<IEnumerable<CategoryModel>> Get_all_category_name()
             {
                 return await Connection.QueryAsync<CategoryModel>("SELECT category_name FROM category ORDER BY category_name", null, Transaction);
             }
             // keep for now, may not be needed.
-            public async Task<IEnumerable<CategoryModel>> Get_Product_Category_Name(int product_pk)
+
+            public async Task<IEnumerable<CategoryModel>> Get_Product_Category()
             {
                 return await Connection.QueryAsync<CategoryModel>(
-                  "SELECT category_name FROM category as c, product_category as pc " +
-                  "INNER JOIN product_category on pc.category_fk = c.category_pk " +
-                  "WHERE pc.product_fk = @product_pk "
-                   , new { product_pk }, Transaction);
+                /*                  "SELECT DISTINCT category_pk, category_name, (category_pk - 1) as selected_category  FROM category as c, product_category as pc " +
+                                  "INNER JOIN product_category on pc.category_fk = c.category_pk " +
+                                  "WHERE pc.product_fk = @product_pk " +
+                                  "UNION " +
+                                  "SELECT DISTINCT category_pk, category_name, null  FROM category as c, product_category as pc " +
+                                  "INNER JOIN product_category on pc.category_fk != c.category_pk"
+                                   , product_pk }, Transaction);
+                */
+                "SELECT DISTINCT category_pk, category_name, (category_pk - 1) as selected_category  " +
+                "FROM category as c, product_category as pc " +
+                "INNER JOIN product_category on pc.category_fk = c.category_pk UNION " +
+                "SELECT category_pk, category_name, null  FROM category as c"
+                ,null,Transaction);
 
-            }
 
-            public async Task<IEnumerable<CategoryModel>> Get_Product_Category(int product_pk)
-            {
-                return await Connection.QueryAsync<CategoryModel>(
-                  "SELECT DISTINCT category_pk, category_name, (category_pk - 1) as selected_category  FROM category as c, product_category as pc " +
-                  "INNER JOIN product_category on pc.category_fk = c.category_pk " +
-                  "WHERE pc.product_fk = @product_pk " +
-                  "UNION " +
-                  "SELECT DISTINCT category_pk, category_name, null  FROM category as c, product_category as pc " +
-                  "INNER JOIN product_category on pc.category_fk != c.category_pk"
-                   , new { product_pk }, Transaction);
 
             }
 
@@ -537,10 +530,13 @@ namespace VMSales.Logic
                     "INNER JOIN product_category on p.product_pk = pc.product_fk " +
                     "INNER JOIN category on c.category_pk = pc.category_fk;", null, Transaction);
                 */
-                return await Connection.QueryAsync<ProductModel>("SELECT DISTINCT * " +
+                return await Connection.QueryAsync<ProductModel>("SELECT DISTINCT " +
+
+                "p.product_pk, p.brand_name, p.product_name, p.description, p.quantity, p.cost, p.sku, p.sold_price, p.instock, p.condition, p.listing_url, p.listing_number, p.listing_date, c.category_pk, c.category_name " +
                 "FROM product as p " +
                 "LEFT OUTER JOIN product_category as pc on p.product_pk = pc.product_fk " +
-                "LEFT OUTER JOIN category as c on c.category_pk = pc.category_fk"
+                "LEFT OUTER JOIN category as c on c.category_pk = pc.category_fk " +
+                "ORDER BY product_pk"
                  , null, Transaction);
             }
 

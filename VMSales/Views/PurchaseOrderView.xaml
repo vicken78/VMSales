@@ -185,6 +185,19 @@
 
                 <DataGridTextColumn Header="Lot No." Width="45"
                             Binding="{Binding lot_number, ValidatesOnNotifyDataErrors=True, UpdateSourceTrigger=PropertyChanged}"/>
+
+         <!--       <DataGridTemplateColumn>
+                    <DataGridTemplateColumn.Header>
+                        <CheckBox Width="50" Name="chkSelectAll" Content="Build" HorizontalAlignment="Left"></CheckBox>
+                    </DataGridTemplateColumn.Header>
+                    <DataGridTemplateColumn.CellTemplate >
+                        <DataTemplate >
+                            <CheckBox x:Name="colchkSelect1" ></CheckBox>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+-->
+
                 <DataGridTextColumn Header="Lot Name" Width="Auto"
                             Binding="{Binding lot_name, ValidatesOnNotifyDataErrors=True, UpdateSourceTrigger=PropertyChanged}" />
                 <DataGridTextColumn Header="Lot Description" MinWidth="500" Width="500" MaxWidth="600" CanUserResize="True" 

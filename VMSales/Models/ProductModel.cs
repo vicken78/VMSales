@@ -11,22 +11,30 @@ namespace VMSales.Models
     [Table("product")]
     public class ProductModel : BaseViewModel
     {
+
+
+        public BindableCollection<ProductModel> BindableCollectionProductModel { get; set; }
+
+
         private int _product_category_pk { get; set; }
         private int _product_pk { get; set; }
         private int _product_fk { get; set; }
         private string _condition { get; set; }
-        private string _brand_name;
-        private string _product_name;
-        private string _description;
-        private int _quantity;
-        private decimal _cost;
-        private string _sku;
-        private decimal _sold_price;
-        private int _instock;
-        private string _listing_url;
-        private string _listing_number;
-        private DateTime _listing_date;
+        private string _brand_name { get; set; }
+        private string _product_name { get; set; }
+        private string _description { get; set; }
+        private int _quantity { get; set; }
+        private decimal _cost { get; set; }
+        private string _sku { get; set; }
+        private decimal _sold_price { get; set; }
+        private int _instock { get; set; }
+        private string _listing_url { get; set; }
+        private string _listing_number { get; set; }
+        private DateTime _listing_date { get; set; }
 
+        private List<string> _category_list { get; set; }
+
+        private string _selected_category { get; set; }
         public int category_pk { get; set; }
         [ExplicitKey]
         [DefaultValue(0)]
@@ -223,36 +231,7 @@ namespace VMSales.Models
                 }
         }
 
-        private BindableCollection<CategoryModel> _category_name_list { get; set; }
-        public BindableCollection<CategoryModel> category_name_list
-        {
-            get { return _category_name_list; }
-
-            set
-            {
-                if (_category_name_list == value) return;
-                _category_name_list = value;
-                RaisePropertyChanged("category_name_list");
-            }
-        }
-
-        public List<string> _categorylist { get; set; }
-        public List<string> categorylist
-        {
-            get { return _categorylist; }
-            set
-            {
-                if (_categorylist == value) return;
-                _categorylist = value;
-                RaisePropertyChanged("categorylist");
-            }
-
-        }
-
-  
-
-
-        private string _category_name { get;  set; }
+        private string _category_name { get; set; }
         public string category_name
         {
             get { return _category_name; }
@@ -263,7 +242,6 @@ namespace VMSales.Models
                 RaisePropertyChanged("category_name");
             }
         }
-    
 
         private int _purchase_order_detail_fk { get; set; }
         public int purchase_order_detail_fk

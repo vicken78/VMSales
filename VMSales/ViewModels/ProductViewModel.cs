@@ -23,7 +23,7 @@ namespace VMSales.ViewModels
 
         #endregion
         #region Members
-        public List<string> categorylist { get; set; }
+        public List<string> category_list { get; set; }
 
         private int _supplier_fk;
         public int supplier_fk
@@ -82,24 +82,35 @@ namespace VMSales.ViewModels
         public void SaveCommand()
         {
             // check for null values
-            if (supplier_fk == 0)
-            {
-                MessageBox.Show("Please select a Supplier.");
-                return;
-            }
-            if (purchase_order_detail_pk == 0)
-            {
-                MessageBox.Show("Please select a Lot Number.");
-                return;
-            }
+            /*          if (supplier_fk == 0)
+                      {
+                          MessageBox.Show("Please select a Supplier.");
+                          return;
+                      }
+                      if (purchase_order_detail_pk == 0)
+                      {
+                          MessageBox.Show("Please select a Lot Number.");
+                          return;
+                      }
+            */
 
+
+           //   var selectedRows = BindableCollectionProductModel.Where(i => i.IsSelected);
+           //   foreach (var item in selectedRows)
+          //    {
+       //           invoicetemp = item.invoice_number;
+       //           purchase_datetemp = item.purchase_date;
+          //    }
+
+
+            // this is getting all, not what we want.
             List<string>  hat;
             hat = BindableCollectionProductModel.Select(item => item.product_pk.ToString()).ToList();
             // get last row?
          
             foreach (var item in hat)
             {
-                MessageBox.Show(item);
+                //MessageBox.Show(item);
             }
         
 
@@ -238,10 +249,10 @@ namespace VMSales.ViewModels
                     Productmodel = new ProductModel();
                     BindableCollectionProductModel.Clear();
                     BindableCollectionProductModel = new BindableCollection<ProductModel>();
-                    DataBaseLayer.ProductRepository ProductRepo = new DataBaseLayer.ProductRepository(dataBaseProvider);
-                    BindableCollectionProductModel = DataConversion.ToBindableCollection(ProductRepo.GetAllWithID(supplier_fk).Result.ToObservable());
-                    ProductRepo.Commit();
-                    ProductRepo.Dispose();
+                    //DataBaseLayer.ProductRepository ProductRepo = new DataBaseLayer.ProductRepository(dataBaseProvider);
+                    //BindableCollectionProductModel = DataConversion.ToBindableCollection(ProductRepo.GetAllWithID(supplier_fk).Result.ToObservable());
+                    //ProductRepo.Commit();
+                    //ProductRepo.Dispose();
                 }
                 else
                 {
@@ -249,10 +260,10 @@ namespace VMSales.ViewModels
                     BindableCollectionProductModel.Clear();
                     RaisePropertyChanged("BindableCollectionProductModel");
                     BindableCollectionProductModel = new BindableCollection<ProductModel>();
-                    DataBaseLayer.ProductRepository ProductRepo = new DataBaseLayer.ProductRepository(dataBaseProvider);
-                    BindableCollectionProductModel = DataConversion.ToBindableCollection(ProductRepo.GetAllWithAllID(supplier_fk, purchase_order_detail_pk).Result.ToObservable());
-                    ProductRepo.Commit();
-                    ProductRepo.Dispose();
+                    //DataBaseLayer.ProductRepository ProductRepo = new DataBaseLayer.ProductRepository(dataBaseProvider);
+                    //BindableCollectionProductModel = DataConversion.ToBindableCollection(ProductRepo.GetAllWithAllID(supplier_fk, purchase_order_detail_pk).Result.ToObservable());
+                    //ProductRepo.Commit();
+                    //ProductRepo.Dispose();
                 }
                 RaisePropertyChanged("BindableCollectionProductModel");
             }
@@ -271,7 +282,7 @@ namespace VMSales.ViewModels
             dataBaseProvider = getprovider();
 
             //  Get Categories count
-                     BindableCollectionCategoryModel = new BindableCollection<CategoryModel>();
+   /*                  BindableCollectionCategoryModel = new BindableCollection<CategoryModel>();
                      DataBaseLayer.CategoryRepository CategoryRepo = new DataBaseLayer.CategoryRepository(dataBaseProvider);
                      var catcount = DataConversion.ToBindableCollection(CategoryRepo.GetAll().Result.ToObservable());
                    if (catcount.Count == 0)
@@ -304,23 +315,23 @@ namespace VMSales.ViewModels
                 SupplierRepo.Dispose();
             }
 
-
+            */
             // Check for Purchase Order
-            BindableCollectionPurchaseOrderModel = new BindableCollection<PurchaseOrderModel>();
-            DataBaseLayer.PurchaseOrderRepository PurchaseOrderRepo = new DataBaseLayer.PurchaseOrderRepository(dataBaseProvider);
-            BindableCollectionPurchaseOrderModel = DataConversion.ToBindableCollection(PurchaseOrderRepo.GetAll().Result.ToObservable());
-            if (BindableCollectionPurchaseOrderModel.Count() == 0)
-            {
-                PurchaseOrderRepo.Revert();
-                PurchaseOrderRepo.Dispose();
-                MessageBox.Show("You must add purchase orders.");
-                return;
-            }
-            else
-            {
-                PurchaseOrderRepo.Commit();
-                PurchaseOrderRepo.Dispose();
-            }
+    //        BindableCollectionPurchaseOrderModel = new BindableCollection<PurchaseOrderModel>();
+    //        DataBaseLayer.PurchaseOrderRepository PurchaseOrderRepo = new DataBaseLayer.PurchaseOrderRepository(dataBaseProvider);
+    //        BindableCollectionPurchaseOrderModel = DataConversion.ToBindableCollection(PurchaseOrderRepo.GetAll().Result.ToObservable());
+    //        if (BindableCollectionPurchaseOrderModel.Count() == 0)
+    //        {
+    //            PurchaseOrderRepo.Revert();
+    //            PurchaseOrderRepo.Dispose();
+    //            MessageBox.Show("You must add purchase orders.");
+    //            return;
+    //        }
+    //        else
+    //        {
+    //            PurchaseOrderRepo.Commit();
+    //            PurchaseOrderRepo.Dispose();
+    //        }
 
             // Load Products
             DataBaseLayer.ProductRepository ProductRepo = new DataBaseLayer.ProductRepository(dataBaseProvider);
@@ -328,36 +339,33 @@ namespace VMSales.ViewModels
             ProductRepo.Commit();
             ProductRepo.Dispose();
             Productmodel = new ProductModel();
-            if (BindableCollectionProductModel.Count > 0)
+            
+
+            // Load product_category
+            foreach (var item in BindableCollectionProductModel)
             {
-                foreach (var item in BindableCollectionProductModel)
-                {
-                    Productmodel.product_pk = item.product_pk;
-                    selected_category = item.category_name;
-                }
-        
+                Productmodel.category_name = item.category_name;
             }
-        
+
             // Load Category
             {
-                try
-                {
-                    categorylist = new List<string>();
-                    BindableCollectionCategoryModel = new BindableCollection<CategoryModel>();
-                    DataBaseLayer.CategoryRepository CategoryRepos = new DataBaseLayer.CategoryRepository(dataBaseProvider);
-                    BindableCollectionCategoryModel = DataConversion.ToBindableCollection(CategoryRepos.Get_Product_Category(Productmodel.product_pk).Result.ToObservable());
-        
-                    CategoryRepos.Commit();
-                    CategoryRepos.Dispose();
-                    foreach (var item in BindableCollectionCategoryModel)
-                    {
-                        categorylist.Add(item.category_name);
-                    }
-                }
-                catch (Exception ext)
-                {
-                    MessageBox.Show(ext.ToString());
-                }
+                  try
+                  {
+                      category_list = new List<string>();
+                      BindableCollectionCategoryModel = new BindableCollection<CategoryModel>();
+                      DataBaseLayer.CategoryRepository CategoryRepos = new DataBaseLayer.CategoryRepository(dataBaseProvider);
+                      BindableCollectionCategoryModel = DataConversion.ToBindableCollection(CategoryRepos.Get_all_category_name().Result.ToObservable());
+                      CategoryRepos.Commit();
+                      CategoryRepos.Dispose();
+                      foreach (var item in BindableCollectionCategoryModel)
+                      {
+                        category_list.Add(item.category_name);
+                      }
+                  }
+                  catch (Exception ext)
+                  {
+                   MessageBox.Show(ext.ToString());
+                  }
             }
         }
     }

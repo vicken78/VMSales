@@ -628,7 +628,7 @@ namespace VMSales.ViewModels
                         DataBaseLayer.ProductRepository ProductRepo = new DataBaseLayer.ProductRepository(dataBaseProvider);
                         try
                         {
-                            // failing here.   
+                           
                             //insert into product
                             Task<int> insert_product_pk = ProductRepo.InsertProduct(PM);
 

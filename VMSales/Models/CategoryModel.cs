@@ -1,13 +1,14 @@
 ﻿using System;
 using VMSales.ViewModels;
 using Dapper.Contrib.Extensions;
+using System.Collections.Generic;
 
 namespace VMSales.Models
 {
     [Table("category")]
     public class CategoryModel : BaseViewModel
     {
-        private int _selected_category;
+        private string _selected_category;
         private int _category_pk;
         private string _category_name;
         private string _description;
@@ -54,7 +55,21 @@ namespace VMSales.Models
                 RaisePropertyChanged("creation_date");
             }
         }
-               public int selected_category
+
+        private List<string> _category_list { get; set; }
+        public List<string> category_list
+        {
+            get { return _category_list; }
+            set
+            {
+                if (_category_list == value) return;
+                _category_list = value;
+                RaisePropertyChanged("selected_category");
+            }
+        }
+
+
+        public string selected_category
         {
             get { return _selected_category; }
             set
