@@ -209,6 +209,17 @@ namespace VMSales.Models
 
 
         }
+
+        private bool _IsSelected;
+        public bool IsSelected
+        {
+            get { return _IsSelected; }
+            set
+            {
+                _IsSelected = value;
+                RaisePropertyChanged("IsSelected");
+            }
+        }
         [ExplicitKey]
         public int product_category_pk
         { 

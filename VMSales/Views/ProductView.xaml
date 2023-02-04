@@ -46,12 +46,12 @@
             </Grid.ColumnDefinitions>
 
             <!-- Supplier -->
-            <!--      <Label Grid.Row="2" Grid.Column="0">Supplier</Label>
-            <ComboBox x:Name="supplierName" IsEditable="False" Background="WhiteSmoke"  
+            <Label Grid.Row="2" Grid.Column="0">Supplier</Label>
+<ComboBox x:Name="supplierName" IsEditable="False" Background="WhiteSmoke"  
                 ItemsSource="{Binding PurchaseOrder}"
                 SelectedValue="{Binding supplier_name}"
-                Width="200" Grid.Column="1" Grid.Row="2" />-->
- <!--           <Label Content="Supplier Name" Grid.Column="0" Grid.Row="2"/>
+                Width="200" Grid.Column="1" Grid.Row="2" />
+                <Label Content="Supplier Name" Grid.Column="0" Grid.Row="2"/>
             <ComboBox x:Name="supplier" IsEditable="False" Background="WhiteSmoke" 
                ItemsSource="{Binding Path=BindableCollectionSupplierModel}" 
                DisplayMemberPath="supplier_name"
@@ -59,9 +59,9 @@
                SelectedValue="{Binding supplier_fk, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" 
                SelectedValuePath="supplier_pk"
                Grid.Row="2" Grid.Column="1"/>
--->
-            <!-- Lot Number -->
-<!--            <Label Content="Lot Number" Grid.Column="0" Grid.Row="3"/>
+
+    <!-- Lot Number -->
+            <Label Content="Lot Number" Grid.Column="0" Grid.Row="3"/>
             <ComboBox x:Name="Selected_lot_number" IsEditable="False" Background="WhiteSmoke"  
                 ItemsSource="{Binding Path=BindableCollectionPurchaseOrderModel,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
                 DisplayMemberPath="lot_number"
@@ -70,34 +70,32 @@
                 SelectedValuePath="purchase_order_detail_pk" 
                 Width="60" HorizontalAlignment="Left"      
                 Grid.Column="1" Grid.Row="3"/>
--->
-
 
             <!-- Lot Name -->
- <!--           <Label Content="Lot Name" Grid.Column="0" Grid.Row="5" />
+            <Label Content="Lot Name" Grid.Column="0" Grid.Row="5" />
             <TextBox Name="lot_name" IsReadOnly="True" Background="WhiteSmoke" Text="{Binding SelectedItem.lot_name, ElementName=Selected_lot_number}"
-                        Grid.Column="1" Grid.Row="5"/>
-            -->
+            Grid.Column="1" Grid.Row="5"/>
+ 
             <!-- Lot Description -->
  <!--           <Label Content="Lot Description" Grid.Column="0" Grid.Row="6" />
             <TextBox Name="lot_description" IsReadOnly="True" Background="WhiteSmoke" Text="{Binding SelectedItem.lot_description, ElementName=Selected_lot_number}"
                         Grid.Column="1" Grid.Row="6" /> -->
             <!-- Lot Quantity -->
-<!--            <Label Content="Lot Quantity" Grid.Column="0" Grid.Row="7" />
+            <Label Content="Lot Quantity" Grid.Column="0" Grid.Row="7" />
             <TextBox Name="lot_quantity" IsReadOnly="True" Background="WhiteSmoke" Text="{Binding SelectedItem.lot_quantity, ElementName=Selected_lot_number}"
-                        Grid.Column="1" Grid.Row="7"/> -->
+                        Grid.Column="1" Grid.Row="7"/> 
             <!-- Lot Cost -->
-       <!--     <Label Content="Lot Cost" Grid.Column="0" Grid.Row="8" />
+            <Label Content="Lot Cost" Grid.Column="0" Grid.Row="8" />
             <TextBox Name="lot_cost" IsReadOnly="True" Background="WhiteSmoke" Text="{Binding SelectedItem.lot_cost, StringFormat='c', ElementName=Selected_lot_number}"
-                        Grid.Column="1" Grid.Row="8"/> -->
+                        Grid.Column="1" Grid.Row="8"/> 
             <!-- Lot Sales Tax -->
-<!--            <Label Content="Lot Sales Tax" Grid.Column="0" Grid.Row="9" />
+            <Label Content="Lot Sales Tax" Grid.Column="0" Grid.Row="9" />
             <TextBox Name="lot_salestax" IsReadOnly="True" Background="WhiteSmoke" Text="{Binding SelectedItem.sales_tax, StringFormat='c',ElementName=Selected_lot_number}"
-                        Grid.Column="1" Grid.Row="9"/>-->
+                        Grid.Column="1" Grid.Row="9"/>
             <!-- Lot Shipping -->
-<!--            <Label Content="Lot Shipping" Grid.Column="0" Grid.Row="10" />
+            <Label Content="Lot Shipping" Grid.Column="0" Grid.Row="10" />
             <TextBox Name="lot_shipping" IsReadOnly="True" Background="WhiteSmoke" Text="{Binding SelectedItem.shipping_cost, StringFormat='c',ElementName=Selected_lot_number}"
-                        Grid.Column="1" Grid.Row="10"/>-->
+                        Grid.Column="1" Grid.Row="10"/>
 
             <!-- Filter Category -->
 
@@ -160,51 +158,28 @@
         <DataGrid x:Name="ProductDataGrid"  AutoGenerateColumns="False" 
                           ItemsSource="{Binding BindableCollectionProductModel}"
                           CanUserReorderColumns="False"
+                          SelectedItem="{Binding SelectedItem, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                           CanUserAddRows="False"
                           EnableRowVirtualization="True" IsReadOnly="False" Grid.Row="10" 
                           Height="Auto" Width="1400" Margin="0,0.333,0,0">
+            <DataGrid.RowStyle>
+                <Style TargetType="{x:Type DataGridRow}">
+                    <Setter Property="IsSelected"  Value="{Binding IsSelected, Mode=TwoWay}"/>
+                </Style>
+            </DataGrid.RowStyle>
             <DataGrid.Columns>
 
                 <!-- Category Combobox -->
-
-<!-- old-->
-               <!-- <ComboBox  
-                                IsSynchronizedWithCurrentItem="False" 
-                                ItemsSource="{Binding DataContext.category_list,RelativeSource={RelativeSource Mode=FindAncestor,AncestorType=Controls:DataGrid}}"
-                                SelectedItem="{Binding DataContext.selected_category, Mode=OneWay,UpdateSourceTrigger=PropertyChanged,RelativeSource={RelativeSource Mode=FindAncestor,AncestorType=Controls:DataGrid}}"/>
--->
-
+                
                 <DataGridTemplateColumn Header="Category" Width="100">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
 
                             <ComboBox ItemsSource="{Binding DataContext.category_list,RelativeSource={RelativeSource Mode=FindAncestor,AncestorType=Controls:DataGrid}}" 
-                            SelectedItem="{Binding category_name,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
-                            
-                                      />
-
-                            <!--                            <ComboBox  
-                                ItemsSource="{Binding DataContext.category_list,RelativeSource={RelativeSource Mode=FindAncestor,AncestorType=Controls:DataGrid}}"
-                              SelectedItem="{Binding DataContext.selected_category, Mode=OneWay,UpdateSourceTrigger=PropertyChanged,RelativeSource={RelativeSource Mode=FindAncestor,AncestorType=Controls:DataGrid}}"/>
--->
-
-
-
+                            SelectedItem="{Binding category_name,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"/>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
-
-                <!--    ItemsSource="{Binding DataContext.category_list,RelativeSource={RelativeSource Mode=FindAncestor,AncestorType=Controls:DataGrid}}" Height="30"-->
-                    <!--          SelectedIndex="{Binding DataContext.category_name,RelativeSource={RelativeSource Mode=FindAncestor,AncestorType=Controls:DataGrid}}"/> -->
-                <!--SelectedValue="{Binding DataContext.selected_category, UpdateSourceTrigger=PropertyChanged,RelativeSource={RelativeSource Mode=FindAncestor,AncestorType=Controls:DataGrid}}"/>-->
-
-
-
-
-
-
-
-
 
                 <!--Product Name -->
                 <DataGridTextColumn Header="Product Name" Width="140" Binding="{Binding product_name, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}">

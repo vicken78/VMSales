@@ -55,29 +55,5 @@ namespace VMSales.Models
                 RaisePropertyChanged("creation_date");
             }
         }
-
-        private List<string> _category_list { get; set; }
-        public List<string> category_list
-        {
-            get { return _category_list; }
-            set
-            {
-                if (_category_list == value) return;
-                _category_list = value;
-                RaisePropertyChanged("selected_category");
-            }
-        }
-
-
-        public string selected_category
-        {
-            get { return _selected_category; }
-            set
-            {
-                if (_selected_category == value) return;
-                _selected_category = value;
-                RaisePropertyChanged("selected_category");
-            }
-        }    
     }
 }
