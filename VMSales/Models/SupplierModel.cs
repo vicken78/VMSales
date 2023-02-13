@@ -1,6 +1,7 @@
 ﻿using System;
 using VMSales.Logic;
 using Dapper.Contrib.Extensions;
+using System.Windows;
 
 namespace VMSales.Models
 {
@@ -18,8 +19,8 @@ namespace VMSales.Models
         private string _phone { get; set; }
         private string _email { get; set; }
 
-    /*    public string selected_supplier_name
-        {  remove not needed.
+        public string selected_supplier_name
+        {  
             get { return _selected_supplier_name; }
             set
             {
@@ -28,7 +29,7 @@ namespace VMSales.Models
                 RaisePropertyChanged("selected_supplier_name");
             }
         }
-    */
+    
 
         [ExplicitKey]
         public int supplier_pk

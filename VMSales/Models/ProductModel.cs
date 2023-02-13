@@ -9,16 +9,11 @@ using System.ComponentModel;
 namespace VMSales.Models
 {
     [Table("product")]
-    public class ProductModel : BaseViewModel
+    public partial class ProductModel : BaseViewModel
     {
-
-
-        public BindableCollection<ProductModel> BindableCollectionProductModel { get; set; }
-
 
         private int _product_category_pk { get; set; }
         private int _product_pk { get; set; }
-        private int _product_fk { get; set; }
         private string _condition { get; set; }
         private string _brand_name { get; set; }
         private string _product_name { get; set; }
@@ -47,21 +42,7 @@ namespace VMSales.Models
                 _product_pk = value;
                 RaisePropertyChanged("product_pk");
             }
-        }
-        public int supplier_fk { get; set; }
-        
-        public int product_fk
-        {
-            get { return _product_fk; }
-            set
-            {
-                if (_product_fk == value) return;
-                _product_fk = value;
-                RaisePropertyChanged("product_fk");
-            }
-        }
-
-
+        }      
         public string product_name
         {
             get { return _product_name; }

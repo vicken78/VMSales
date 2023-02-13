@@ -131,6 +131,25 @@ namespace VMSales.Logic
 
             public SupplierRepository(IDatabaseProvider dbProvider) : base(dbProvider) { }
 
+
+            //get supplier by name
+            public async Task<int> Get_by_supplier_name(string supplier_name)
+            {
+                return await Connection.QuerySingleAsync<int>("SELECT supplier_pk FROM supplier WHERE supplier_name = @supplier_name", new { supplier_name }, Transaction);
+            }
+
+
+            //get product_supplier
+            public async Task<IEnumerable<string>> Selected_Supplier(int product_pk)
+            {
+                return await Connection.QueryAsync<string>("SELECT " +
+                "supplier_name as selected_supplier_name from product_supplier ps " +
+                "INNER JOIN supplier s on s.supplier_pk = ps.supplier_fk " +
+                "WHERE ps.product_fk = @product_pk" 
+                , new {product_pk }, Transaction);
+            }
+
+
             public override async Task<bool> Insert(SupplierModel entity)
             {
                 int newId = await Connection.QuerySingleAsync<int>("INSERT INTO supplier (supplier_name, address, city, zip, state, country, phone, email) VALUES (@supplier_name, @address, @city, @zip, @state, @country, @phone, @email); SELECT last_insert_rowid()", new
@@ -339,6 +358,19 @@ namespace VMSales.Logic
                     "WHERE pod.purchase_order_detail_pk =@purchase_order_detail_pk", new { purchase_order_detail_pk }, Transaction);
             }
 
+
+            // get specific product order detail
+            public async Task<IEnumerable<PurchaseOrderModel>> Get_PurchaseOrderDetail_by_pk(int purchase_order_detail_pk)
+            {
+                return await Connection.QueryAsync<PurchaseOrderModel>("SELECT DISTINCT " +
+                    "pod.purchase_order_detail_pk, pod.lot_number, pod.lot_cost, pod.lot_quantity, " +
+                    "pod.lot_name, pod.sales_tax, pod.shipping_cost " +
+                    "FROM purchase_order_detail as pod " +
+                    "WHERE pod.purchase_order_detail_pk = @purchase_order_detail_pk", new { purchase_order_detail_pk }, Transaction);
+            }
+
+
+
             // scenerio 3 (UPDATE)
             // same invoice number, UPDATE purchase_order_detail.
 
@@ -449,6 +481,13 @@ namespace VMSales.Logic
         public class ProductRepository : Repository<ProductModel>
         {
             public ProductRepository(IDatabaseProvider dbProvider) : base(dbProvider) { }
+            
+            //Get Product Purchase Order
+            public async Task<int> Get_product_purchase_order(int product_fk)
+            {
+                return await Connection.QuerySingleAsync<int>("SELECT product_purchase_order_detail_fk FROM product_purchase_order WHERE product_fk = @product_fk", new { product_fk }, Transaction);
+            }
+
             // Insert
             public async Task<int> InsertProduct(ProductModel entity)
             {
@@ -539,7 +578,8 @@ namespace VMSales.Logic
                 "ORDER BY product_pk"
                  , null, Transaction);
             }
-
+            
+       
             // get all products by supplier
 
             public override async Task<IEnumerable<ProductModel>> GetAllWithID(int supplier_fk)
@@ -628,8 +668,12 @@ namespace VMSales.Logic
                 //return (await Connection.ExecuteAsync("DELETE FROM purchase_order WHERE purchase_order_pk = @id", new { id = entity.purchase_order_pk }, Transaction)) == 1;
                 return false;
             }
+            //product_supplier
         }
         #endregion
+
+
+
 
 
         // needs fixing here
