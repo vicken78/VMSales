@@ -7,6 +7,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Data;
 using VMSales.Logic;
 using VMSales.Models;
 
@@ -45,8 +46,6 @@ namespace VMSales.ViewModels
             Supplier,
             None
         }
-
-
         #endregion
         private string _selected_supplier_name { get; set; }
         public string selected_supplier_name
@@ -74,7 +73,19 @@ namespace VMSales.ViewModels
             }
         }
 
+        private ProductModel _selected_category_name_filter { get; set; }
+        public ProductModel selected_category_name_filter
+        {
+            get { return _selected_category_name_filter; }
+            set
+            {
+                if (_selected_category_name_filter == value) return;
+                _selected_category_name_filter = value;
+                RaisePropertyChanged("selected_category_name_filter");
+                //filter product based on category name.
 
+            }
+        }
 
         #region collections   
 
@@ -139,6 +150,7 @@ namespace VMSales.ViewModels
 
         #endregion
 
+     
         #region SupplierChange
         public void LoadSupplier()
         {
@@ -174,6 +186,88 @@ namespace VMSales.ViewModels
 
         #endregion
         IDatabaseProvider dataBaseProvider;
+
+        #region FilterFunctions
+        private void ApplyFilter(FilterField field)
+        {
+            //switch (field)
+            //{
+                //case FilterField.InvoiceNumber
+                    //AddInvoiceNumberFilter();
+                    //PurchaseOrderView.Filter = new Predicate<object>(x => ((ProductModel)x).invoice_number.ToString() == _selectedinvoicenumber);
+                    //RaisePropertyChanged("PurchaseOrderView");
+                    //break;
+                //case FilterField.PurchaseDate:
+                    //AddPurchaseDateFilter();
+                    //PurchaseOrderView.Filter = new Predicate<object>(x => ((ProductModel)x).purchase_date.ToString() == _selectedpurchasedate);
+                    //RaisePropertyChanged("PurchaseOrderView");
+                    //break;
+                //default:
+                    //break;
+            //}
+        }
+
+        public void RemoveInvoiceNumberFilterCommand()
+        {
+            //cvs.Filter -= new FilterEventHandler(FilterByInvoiceNumber);
+            //SelectedInvoiceNumber = null;
+            //PurchaseOrderView.Filter = null;
+            //CanRemoveInvoiceNumberFilter = false;
+            RaisePropertyChanged("PurchaseOrderView");
+
+        }
+        public void RemovePurchaseDateFilterCommand()
+        {
+            //cvs.Filter -= new FilterEventHandler(FilterByPurchaseDate);
+            //SelectedPurchaseDate = null;
+            //PurchaseOrderView.Filter = null;
+            //CanRemovePurchaseDateFilter = false;
+            RaisePropertyChanged("PurchaseOrderView");
+        }
+        public void AddInvoiceNumberFilter()
+        {
+            //if (CanRemoveInvoiceNumberFilter)
+            //{
+            //    cvs.Filter -= new FilterEventHandler(FilterByInvoiceNumber);
+            //    cvs.Filter += new FilterEventHandler(FilterByInvoiceNumber);
+            //}
+            //else
+            //{
+            //    cvs.Filter += new FilterEventHandler(FilterByInvoiceNumber);
+            //    CanRemoveInvoiceNumberFilter = true;
+            //}
+        }
+        public void AddPurchaseDateFilter()
+        {
+            //if (CanRemovePurchaseDateFilter)
+            //{
+                //cvs.Filter -= new FilterEventHandler(FilterByPurchaseDate);
+                //cvs.Filter += new FilterEventHandler(FilterByPurchaseDate);
+            //}
+            //else
+            //{
+                //cvs.Filter += new FilterEventHandler(FilterByPurchaseDate);
+                //CanRemovePurchaseDateFilter = true;
+            //}
+        }
+        private void FilterByInvoiceNumber(object sender, FilterEventArgs e)
+        {
+            var src = e.Item as PurchaseOrderModel;
+            if (src == null)
+                e.Accepted = false;
+            //else if (string.Compare(SelectedInvoiceNumber, src.invoice_number.ToString()) != 0)
+            //    e.Accepted = false;
+        }
+        private void FilterByPurchaseDate(object sender, FilterEventArgs e)
+        {
+            var src = e.Item as PurchaseOrderModel;
+            if (src == null)
+                e.Accepted = false;
+            //else if (string.Compare(SelectedPurchaseDate, src.purchase_date.ToString()) != 0)
+            //    e.Accepted = false;
+        }
+
+        #endregion
 
         public void SaveCommand()
         {
