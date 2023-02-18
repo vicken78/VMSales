@@ -105,32 +105,38 @@
 
             <!-- Filter Category -->
 
-            <!--   <TextBlock Grid.Row="2" Grid.Column="4" FontSize="14" HorizontalAlignment="Center" FontWeight="Bold">Category</TextBlock>
-            <ComboBox IsEditable="False" Background="White" Grid.Row="3" Grid.Column="4" 
+               <TextBlock Grid.Row="2" Grid.Column="6" FontSize="14" HorizontalAlignment="Center" FontWeight="Bold">Filter Category</TextBlock>
+            <ComboBox IsEditable="False" Background="White" Grid.Row="3" Grid.Column="6" 
                 ItemsSource="{Binding category_name}" 
                 SelectedItem="{Binding selectedCategoryName, 
                 UpdateSourceTrigger=PropertyChanged}" 
-                Width="100" HorizontalAlignment="Left" Margin="0.333,2.333,0,23.667" Grid.RowSpan="2"/>
--->
-            <!--         <Button x:Name="RemoveInvoiceNumberFilterCommand" HorizontalAlignment="Left" Margin="20,0,0,0" Grid.Row="3" Grid.Column="5" Width="16" Height="16" 
+                Width="100" HorizontalAlignment="Left" Grid.RowSpan="2"/>
+
+                     <Button x:Name="RemoveInvoiceNumberFilterCommand" HorizontalAlignment="Left" Margin="20,0,0,0" Grid.Row="3" Grid.Column="7" Width="16" Height="16" 
             IsEnabled="{Binding canRemoveCategoryFilter, Mode=OneWay}">
                 <Image Width="10" Height="10" Style="{DynamicResource ImageStyleForButtons}"/>
             </Button>
--->
+
             <!-- Filter Supplier -->
-
-            <!--   <TextBlock Grid.Row="2" Grid.Column="4" FontSize="14" FontWeight="Bold" HorizontalAlignment="Center" Margin="23.222,2,23.222,19.889" Grid.RowSpan="2">Supplier</TextBlock>
+                
+            <TextBlock Grid.Row="2" Grid.Column="4" FontSize="14" FontWeight="Bold" HorizontalAlignment="Center" Grid.RowSpan="2">Filter Supplier</TextBlock>
             <ComboBox IsEditable="False" Background="White" Grid.Row="3" Grid.Column="4" 
-                ItemsSource="{Binding supplierNameFilter}"  
-                SelectedItem="{Binding selectedSupplierNameFilter, 
+                ItemsSource="{Binding BindableCollectionSupplierModel}"  
+                DisplayMemberPath="supplier_name"
+                SelectedItem="{Binding selected_supplier_name_filter, 
                 Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"  
-                Width="100" HorizontalAlignment="Left"/>-->
+                Width="100" HorizontalAlignment="Left"/>
 
-            <!--   <Button x:Name="RemovePurchaseDateFilterCommand" HorizontalAlignment="Left" Margin="20,0,0,0" Grid.Row="3" Grid.Column="5" Width="16" Height="16" 
+            <Button x:Name="RemovePurchaseDateFilterCommand" HorizontalAlignment="Left" Margin="20,0,0,0" Grid.Row="3" Grid.Column="5" Width="16" Height="16" 
             IsEnabled="{Binding canRemoveSupplierFilter, Mode=OneWay}">
                 <Image Width="10" Height="10" Style="{DynamicResource ImageStyleForButtons}"/>
-            </Button>-->
+            </Button>
 
+            
+            
+            
+            
+            
             <!--       <CheckBox FlowDirection="RightToLeft" IsChecked="True" Grid.Column="4" Grid.Row="5" Grid.ColumnSpan="2" HorizontalAlignment="Left" VerticalAlignment="Center">
                 <TextBlock FlowDirection="RightToLeft" FontWeight="Bold" FontSize="14" Text="Show All Products" />
             </CheckBox>-->

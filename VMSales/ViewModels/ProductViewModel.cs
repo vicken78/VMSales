@@ -16,7 +16,38 @@ namespace VMSales.ViewModels
 {
     public class ProductViewModel : BaseViewModel
     {
+        #region Filters
+        private bool _canRemoveSupplierFilter;
+        public bool canRemoveSupplierFilter
+        {
+            get { return _canRemoveSupplierFilter; }
+            set
+            {
+                if (_canRemoveSupplierFilter == value) return;
+                _canRemoveSupplierFilter = value;
+                RaisePropertyChanged("canRemoveSupplierFilter");
+            }
+        }
+        private bool _canRemoveCategoryFilter;
+        public bool canRemoveCategoryFilter
+        {
+            get { return _canRemoveCategoryFilter; }
+            set
+            {
+                if (_canRemoveCategoryFilter == value) return;
+                _canRemoveCategoryFilter = value;
+                RaisePropertyChanged("canRemoveSupplierFilter");
+            }
+        }
+        private enum FilterField
+        {
+            Category,
+            Supplier,
+            None
+        }
 
+
+        #endregion
         private string _selected_supplier_name { get; set; }
         public string selected_supplier_name
         {
@@ -26,6 +57,20 @@ namespace VMSales.ViewModels
                 if (_selected_supplier_name == value) return;
                 _selected_supplier_name = value;
                 RaisePropertyChanged("selected_supplier_name");
+            }
+        }
+
+        private SupplierModel _selected_supplier_name_filter { get; set; }
+        public SupplierModel selected_supplier_name_filter
+        {
+            get { return _selected_supplier_name_filter; }
+            set
+            {
+                if (_selected_supplier_name_filter == value) return;
+                _selected_supplier_name_filter = value;
+                RaisePropertyChanged("selected_supplier_name_filter");
+                //filter product based on supplier name.
+
             }
         }
 
@@ -155,8 +200,11 @@ namespace VMSales.ViewModels
                 SelectedItem.listing_date = item.listing_date;
             }
         
+            //check for product_purchase_order
+            
+            //check for product_supplier 
 
-
+            //update or insert
 
             // check for null values
             if (supplier_fk != 0 && purchase_order_detail_pk != 0)
