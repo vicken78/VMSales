@@ -41,12 +41,11 @@ namespace VMSales.Logic
                 return true;
             }
 
-            // begin cleanup
-            // keep for now, may not be needed.
-            public async Task<CategoryModel> Get_by_category_name(string category_name)
+            public async Task<int> Get_by_category_name(string category_name)
             {
-                return await Connection.QuerySingleAsync<CategoryModel>("SELECT category_pk FROM category WHERE category_name = @category_name", new { category_name }, Transaction);
+                return await Connection.QuerySingleAsync<int>("SELECT category_pk FROM category WHERE category_name = @category_name", new { category_name }, Transaction);
             }
+
             // keep for now, may not be needed.
             public async Task<CategoryModel> Get_by_category_pk(int category_pk)
             {

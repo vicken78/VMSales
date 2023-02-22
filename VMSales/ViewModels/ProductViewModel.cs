@@ -33,7 +33,7 @@ namespace VMSales.ViewModels
             set
             {
                 _canRemoveCategoryFilter = value;
-                RaisePropertyChanged("canRemoveSupplierFilter");
+                RaisePropertyChanged("canRemoveCategoryFilter");
             }
         }
         private enum FilterField
@@ -69,6 +69,8 @@ namespace VMSales.ViewModels
             }
         }
 
+        /* 
+         * May not be needed.
         private string _selected_category { get; set; }
         public string selected_category
         {
@@ -80,6 +82,7 @@ namespace VMSales.ViewModels
                 RaisePropertyChanged("selected_category");
             }
         }
+        */
 
         private CategoryModel _selected_category_name_filter { get; set; }
         public CategoryModel selected_category_name_filter
@@ -207,6 +210,7 @@ namespace VMSales.ViewModels
         public void RemoveCategoryFilterCommand()
         {
             canRemoveCategoryFilter = false;
+            ApplyFilter(FilterField.None);
         }
         public void RemoveSupplierFilterCommand()
         {
@@ -215,19 +219,59 @@ namespace VMSales.ViewModels
         }
         public void AddCategoryFilter()
         {
-            if (canRemoveCategoryFilter)
-            {
-                  //cvs.Filter -= new FilterEventHandler(FilterByCategoryName);
-                  //cvs.Filter += new FilterEventHandler(FilterByCategoryName);
-            }
-            else
-            {
-                //cvs.Filter += new FilterEventHandler(FilterByCategoryName);
+            if (!canRemoveCategoryFilter)
                 canRemoveCategoryFilter = true;
+            int selected_supplier_fk_filter = 0;
+            int selected_category_fk_filter = 0;
+
+            // Load Supplier
+            try
+            {
+                dataBaseProvider = getprovider();
+                DataBaseLayer.CategoryRepository CategoryRepo = new DataBaseLayer.CategoryRepository(dataBaseProvider);
+                // fix
+                selected_category_fk_filter = CategoryRepo.Get_by_category_name(selected_category_name_filter.category_name).Result;
+                CategoryRepo.Commit();
+                CategoryRepo.Dispose();
             }
+            catch (Exception e)
+            { MessageBox.Show("An Error has occured:" + e); }
+
+            dataBaseProvider = getprovider();
+            DataBaseLayer.ProductRepository ProductRepo = new DataBaseLayer.ProductRepository(dataBaseProvider);
+            BindableCollectionProductModel.Clear();
+            try
+            {
+                BindableCollectionProductModel = DataConversion.ToBindableCollection(ProductRepo.GetAllWithID(selected_supplier_fk_filter, selected_category_fk_filter).Result.ToObservable());
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show("An error has occured" + e);
+            }
+            ProductRepo.Commit();
+            ProductRepo.Dispose();
+            SelectedItem = new ProductModel();
+
+            // Load product_category, product purchase order, product supplier
+            foreach (var item in BindableCollectionProductModel)
+            {
+                SelectedItem.category_name = item.category_name;
+                // product_purchase_order
+                SelectedItem.product_purchase_order_pk = item.product_purchase_order_pk;
+                SelectedItem.product_fk = item.product_fk;
+                SelectedItem.purchase_order_detail_fk = item.product_order_detail_fk;
+                // product_supplier
+                SelectedItem.product_supplier_pk = item.product_supplier_pk;
+                SelectedItem.supplier_fk = item.supplier_fk;
+            }
+            RaisePropertyChanged("SelectedItem");
+            RaisePropertyChanged("BindableCollectionProductModel");
         }
         public void AddSupplierFilter()
         {
+            if (!canRemoveSupplierFilter)
+                canRemoveSupplierFilter = true;
+
             int selected_supplier_fk_filter = 0;
             int selected_category_fk_filter = 0;
 
@@ -246,7 +290,14 @@ namespace VMSales.ViewModels
             dataBaseProvider = getprovider();
             DataBaseLayer.ProductRepository ProductRepo = new DataBaseLayer.ProductRepository(dataBaseProvider);
             BindableCollectionProductModel.Clear();
-            BindableCollectionProductModel = DataConversion.ToBindableCollection(ProductRepo.GetAllWithID(selected_supplier_fk_filter, selected_category_fk_filter).Result.ToObservable());
+            try
+            {
+                BindableCollectionProductModel = DataConversion.ToBindableCollection(ProductRepo.GetAllWithID(selected_supplier_fk_filter, selected_category_fk_filter).Result.ToObservable());
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show("An error has occured" + e);
+            }
             ProductRepo.Commit();
             ProductRepo.Dispose();
             SelectedItem = new ProductModel();
@@ -265,9 +316,6 @@ namespace VMSales.ViewModels
             }
             RaisePropertyChanged("SelectedItem");
             RaisePropertyChanged("BindableCollectionProductModel");
-
-            if (!canRemoveSupplierFilter)
-                canRemoveSupplierFilter = true;
         }
        
         #endregion
@@ -496,11 +544,16 @@ namespace VMSales.ViewModels
 
         public void initial_load()
         {
+            // reset filters
             if (selected_supplier_name_filter != null && selected_supplier_name_filter.supplier_name != null)
             {
                 selected_supplier_name_filter = null;
             }
-            // begin
+            
+            if (selected_category_name_filter != null && selected_category_name_filter.category_name != null)
+            {
+                selected_category_name_filter = null;
+            }
 
             dataBaseProvider = getprovider();
             // Get Suppliers

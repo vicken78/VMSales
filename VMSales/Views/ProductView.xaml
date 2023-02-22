@@ -113,8 +113,8 @@
                 UpdateSourceTrigger=PropertyChanged}" 
                 Width="100" HorizontalAlignment="Left" Grid.RowSpan="3" Grid.ColumnSpan="2" Margin="1.333,0.222,0,25.333"/>
 
-                     <Button x:Name="RemoveInvoiceNumberFilterCommand" HorizontalAlignment="Left" Margin="20,0,0,0" Grid.Row="3" Grid.Column="7" Width="16" Height="16" 
-            IsEnabled="{Binding canRemoveCategoryFilter, Mode=OneWay}">
+            <Button x:Name="RemoveCategoryFilterCommand" HorizontalAlignment="Left" Margin="20,0,0,0" Grid.Row="3" Grid.Column="7" Width="16" Height="16" 
+            IsEnabled="{Binding canRemoveCategoryFilter, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
                 <Image Width="10" Height="10" Style="{DynamicResource ImageStyleForButtons}"/>
             </Button>
 
