@@ -578,21 +578,93 @@ namespace VMSales.Logic
                 "ORDER BY product_pk"
                  , null, Transaction);
             }
-            
-       
+
+/*
+SELECT DISTINCT c.category_pk, c.category_name, p.*, ps.*
+FROM product p
+INNER JOIN product_supplier ps ON p.product_pk = ps.product_fk
+INNER JOIN supplier s ON s.supplier_pk = ps.supplier_fk
+LEFT JOIN product_category pc ON p.product_pk = pc.product_fk
+LEFT JOIN category c ON c.category_pk = pc.category_fk
+WHERE ps.supplier_fk= '2'
+UNION
+SELECT DISTINCT c.category_pk, c.category_name, p.*, ps.*
+FROM product p
+INNER JOIN product_supplier ps ON p.product_pk = ps.product_fk
+INNER JOIN supplier s ON s.supplier_pk = ps.supplier_fk
+INNER JOIN product_category pc ON p.product_pk = pc.product_fk
+INNER JOIN category c ON c.category_pk = pc.category_fk
+WHERE ps.supplier_fk= '2'
+*/
+
+
             // get all products by supplier
 
-            public override async Task<IEnumerable<ProductModel>> GetAllWithID(int supplier_fk)
+            public async Task<IEnumerable<ProductModel>> GetAllWithID(int supplier_fk, int category_fk)
             {
-                return await Connection.QueryAsync<ProductModel>("SELECT DISTINCT " +
-                "c.category_pk, c.category_name, p.*, ps.* " +
-                "FROM product as p, category as c, supplier as s, product_supplier as ps, product_category as pc " +
-                "INNER JOIN product_supplier on s.supplier_pk = ps.supplier_fk " +
-                "INNER JOIN product_supplier on p.product_pk = ps.product_fk " +
-                "INNER JOIN product_category on p.product_pk = pc.product_fk " +
-                "INNER JOIN category on c.category_pk = pc.category_fk " +
-                "WHERE s.supplier_pk = @supplier_fk", new { supplier_fk }, Transaction);
 
+                // category only
+                if (category_fk != 0 && supplier_fk == 0)
+                {
+                    return await Connection.QueryAsync<ProductModel>(
+                    "SELECT DISTINCT c.category_pk, c.category_name, p.*, ps.* " +
+                    "FROM product p " +
+                    "INNER JOIN product_supplier ps ON p.product_pk = ps.product_fk " +
+                    "INNER JOIN supplier s ON s.supplier_pk = ps.supplier_fk " +
+                    "LEFT JOIN product_category pc ON p.product_pk = pc.product_fk " +
+                    "LEFT JOIN category c ON c.category_pk = pc.category_fk " +
+                    "WHERE pc.category_fk = @category_fk " +
+                    "UNION SELECT DISTINCT " +
+                    "c.category_pk, c.category_name, p.*, ps.* " +
+                    "FROM product p " +
+                    "INNER JOIN product_supplier ps ON p.product_pk = ps.product_fk " +
+                    "INNER JOIN supplier s ON s.supplier_pk = ps.supplier_fk " +
+                    "INNER JOIN product_category pc ON p.product_pk = pc.product_fk " +
+                    "INNER JOIN category c ON c.category_pk = pc.category_fk " +
+                    "WHERE pc.category_fk = @category_fk ", new { supplier_fk }, Transaction);
+                }
+                // supplier only
+                if (category_fk == 0 && supplier_fk != 0)
+                {
+                        return await Connection.QueryAsync<ProductModel>(
+                    "SELECT DISTINCT c.category_pk, c.category_name, p.*, ps.* " +
+                    "FROM product p " +
+                    "INNER JOIN product_supplier ps ON p.product_pk = ps.product_fk " +
+                    "INNER JOIN supplier s ON s.supplier_pk = ps.supplier_fk " +
+                    "LEFT JOIN product_category pc ON p.product_pk = pc.product_fk " +
+                    "LEFT JOIN category c ON c.category_pk = pc.category_fk " +
+                    "WHERE ps.supplier_fk = @supplier_fk " +
+                    "UNION SELECT DISTINCT " +
+                    "c.category_pk, c.category_name, p.*, ps.* " +
+                    "FROM product p " +
+                    "INNER JOIN product_supplier ps ON p.product_pk = ps.product_fk " +
+                    "INNER JOIN supplier s ON s.supplier_pk = ps.supplier_fk " +
+                    "INNER JOIN product_category pc ON p.product_pk = pc.product_fk " +
+                    "INNER JOIN category c ON c.category_pk = pc.category_fk " +
+                    "WHERE ps.supplier_fk = @supplier_fk", new { supplier_fk }, Transaction);
+                }
+                // supplier and category
+                if (category_fk != 0 && supplier_fk != 0)
+                {
+                    return await Connection.QueryAsync<ProductModel>(
+                "SELECT DISTINCT c.category_pk, c.category_name, p.*, ps.* " +
+                "FROM product p " +
+                "INNER JOIN product_supplier ps ON p.product_pk = ps.product_fk " +
+                "INNER JOIN supplier s ON s.supplier_pk = ps.supplier_fk " +
+                "LEFT JOIN product_category pc ON p.product_pk = pc.product_fk " +
+                "LEFT JOIN category c ON c.category_pk = pc.category_fk " +
+                "WHERE ps.supplier_fk = @supplier_fk AND pc.category_fk = @category_fk " +
+                "UNION SELECT DISTINCT " +
+                "c.category_pk, c.category_name, p.*, ps.* " +
+                "FROM product p " +
+                "INNER JOIN product_supplier ps ON p.product_pk = ps.product_fk " +
+                "INNER JOIN supplier s ON s.supplier_pk = ps.supplier_fk " +
+                "INNER JOIN product_category pc ON p.product_pk = pc.product_fk " +
+                "INNER JOIN category c ON c.category_pk = pc.category_fk " +
+                "WHERE ps.supplier_fk = @supplier_fk AND pc.category_fk = @category_fk"
+                , new { supplier_fk,category_fk }, Transaction);
+                }
+                return null;
             }
 
             // get all products by supplier and purchase_order
@@ -667,6 +739,11 @@ namespace VMSales.Logic
                 //bool deleterow = (await Connection.ExecuteAsync("DELETE FROM purchase_order_detail WHERE purchase_order_fk = @id", new { id = entity.purchase_order_fk }, null)) == 1;
                 //return (await Connection.ExecuteAsync("DELETE FROM purchase_order WHERE purchase_order_pk = @id", new { id = entity.purchase_order_pk }, Transaction)) == 1;
                 return false;
+            }
+
+            public override Task<IEnumerable<ProductModel>> GetAllWithID(int id)
+            {
+                throw new NotImplementedException();
             }
             //product_supplier
         }

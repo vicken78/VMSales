@@ -128,8 +128,8 @@
                 Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"  
                 Width="100" HorizontalAlignment="Left"/>
 
-            <Button x:Name="RemovePurchaseDateFilterCommand" HorizontalAlignment="Left" Margin="20,0,0,0" Grid.Row="3" Grid.Column="5" Width="16" Height="16" 
-            IsEnabled="{Binding canRemoveSupplierFilter, Mode=OneWay}">
+            <Button x:Name="RemoveSupplierFilterCommand" HorizontalAlignment="Left" Margin="20,0,0,0" Grid.Row="3" Grid.Column="5" Width="16" Height="16" 
+            IsEnabled="{Binding canRemoveSupplierFilter, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
                 <Image Width="10" Height="10" Style="{DynamicResource ImageStyleForButtons}"/>
             </Button>
 
@@ -168,8 +168,8 @@
 
         <!--SelectedItem="{Binding Select_Request, Mode=TwoWay}"-->
         <!-- Product DataGrid Start -->
-        <DataGrid x:Name="ProductDataGrid"  AutoGenerateColumns="False" 
-                          ItemsSource="{Binding BindableCollectionProductModel}"
+        <DataGrid AutoGenerateColumns="False" 
+                          ItemsSource="{Binding BindableCollectionProductModel,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
                           CanUserReorderColumns="False"
                           SelectedItem="{Binding SelectedItem, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                           CanUserAddRows="False"
@@ -195,7 +195,7 @@
                 </DataGridTemplateColumn>
 
                 <!--Product Name -->
-                <DataGridTextColumn Header="Product Name" Width="140" Binding="{Binding product_name, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}">
+                <DataGridTextColumn Header="Product Name" Width="140" Binding="{Binding product_name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
                     <DataGridTextColumn.ElementStyle>
                         <Style TargetType="TextBlock">
                             <Setter Property="TextWrapping" Value="Wrap"/>
@@ -203,7 +203,7 @@
                     </DataGridTextColumn.ElementStyle>
                 </DataGridTextColumn>
                 <!-- Product Description -->
-                <DataGridTextColumn Header="Description" Width="230" Binding="{Binding description, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}">
+                <DataGridTextColumn Header="Description" Width="230" Binding="{Binding description, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
                     <DataGridTextColumn.ElementStyle>
                         <Style TargetType="TextBlock">
                             <Setter Property="TextWrapping" Value="Wrap"/>
@@ -211,7 +211,7 @@
                     </DataGridTextColumn.ElementStyle>
                 </DataGridTextColumn>
                 <!-- SKU-->
-                <DataGridTextColumn Header="SKU" Width="100" Binding="{Binding sku, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}"  >
+                <DataGridTextColumn Header="SKU" Width="100" Binding="{Binding sku, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"  >
                     <DataGridTextColumn.ElementStyle>
                         <Style TargetType="TextBlock">
                             <Setter Property="TextWrapping" Value="Wrap"/>
@@ -219,7 +219,7 @@
                     </DataGridTextColumn.ElementStyle>
                 </DataGridTextColumn>
                 <!-- Brand Name-->
-                <DataGridTextColumn Header="Brand Name" Width="90" Binding="{Binding brand_name, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}">
+                <DataGridTextColumn Header="Brand Name" Width="90" Binding="{Binding brand_name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
                     <DataGridTextColumn.ElementStyle>
                         <Style TargetType="TextBlock">
                             <Setter Property="TextWrapping" Value="Wrap"/>
@@ -230,7 +230,7 @@
                 <DataGridTemplateColumn Header="Condition" Width="70">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <ComboBox ItemsSource="{Binding conditionlist}" SelectedValue="{Binding condition, UpdateSourceTrigger=PropertyChanged}"/>
+                            <ComboBox ItemsSource="{Binding conditionlist}" SelectedValue="{Binding condition, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
@@ -239,9 +239,8 @@
 
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <TextBox Text="{Binding quantity, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}" PreviewTextInput="NumericInput"/>
-                            <!-- <TextBox Text="{Binding productQuanity, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}"/> -->
-
+                            <TextBox Text="{Binding quantity, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" PreviewTextInput="NumericInput"/>
+                   
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
@@ -272,7 +271,7 @@
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
                 <!-- Listing Number -->
-                <DataGridTextColumn Header="Listing Number" Width="120" Binding="{Binding listing_number}"  >
+                <DataGridTextColumn Header="Listing Number" Width="120" Binding="{Binding listing_number, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"  >
                     <DataGridTextColumn.ElementStyle>
                         <Style TargetType="TextBlock">
                             <Setter Property="TextWrapping" Value="Wrap"/>
@@ -280,7 +279,7 @@
                     </DataGridTextColumn.ElementStyle>
                 </DataGridTextColumn>
                 <!-- Listing URL-->
-                <DataGridTextColumn Header="Listing Url" Width="100" Binding="{Binding listing_url}">
+                <DataGridTextColumn Header="Listing Url" Width="100" Binding="{Binding listing_url, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
                     <DataGridTextColumn.ElementStyle>
                         <Style TargetType="TextBlock">
                             <Setter Property="TextWrapping" Value="Wrap"/>
@@ -292,12 +291,12 @@
                 <DataGridTemplateColumn Header="Listing Date">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <TextBlock Text="{Binding listing_date}" />
+                            <TextBlock Text="{Binding listing_date, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                     <DataGridTemplateColumn.CellEditingTemplate>
                         <DataTemplate>
-                            <DatePicker SelectedDate="{Binding listing_date}" />
+                            <DatePicker SelectedDate="{Binding listing_date, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" />
                         </DataTemplate>
                     </DataGridTemplateColumn.CellEditingTemplate>
                 </DataGridTemplateColumn>

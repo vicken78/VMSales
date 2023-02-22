@@ -103,9 +103,6 @@ namespace VMSales.ViewModels
             }
         }
 
-
-
-
         public string SelectedInvoiceNumber
         {
             get { return _selectedinvoicenumber; }
@@ -251,7 +248,6 @@ namespace VMSales.ViewModels
         public CollectionView PurchaseOrderView
         {
             get
-
             {
                 cvs.View.CurrentChanged += (sender, e) => SelectedItem = cvs.View.CurrentItem as PurchaseOrderModel;
                 return (CollectionView)CollectionViewSource.GetDefaultView(ObservableCollectionPurchaseOrderModel);

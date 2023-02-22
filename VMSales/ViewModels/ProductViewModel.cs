@@ -11,8 +11,6 @@ using System.Windows.Data;
 using VMSales.Logic;
 using VMSales.Models;
 
-
-
 namespace VMSales.ViewModels
 {
     public class ProductViewModel : BaseViewModel
@@ -24,7 +22,6 @@ namespace VMSales.ViewModels
             get { return _canRemoveSupplierFilter; }
             set
             {
-                if (_canRemoveSupplierFilter == value) return;
                 _canRemoveSupplierFilter = value;
                 RaisePropertyChanged("canRemoveSupplierFilter");
             }
@@ -35,7 +32,6 @@ namespace VMSales.ViewModels
             get { return _canRemoveCategoryFilter; }
             set
             {
-                if (_canRemoveCategoryFilter == value) return;
                 _canRemoveCategoryFilter = value;
                 RaisePropertyChanged("canRemoveSupplierFilter");
             }
@@ -69,12 +65,24 @@ namespace VMSales.ViewModels
                 _selected_supplier_name_filter = value;
                 RaisePropertyChanged("selected_supplier_name_filter");
                 //filter product based on supplier name.
-
+                ApplyFilter(!string.IsNullOrEmpty(selected_supplier_name_filter?.supplier_name) ? FilterField.Supplier : FilterField.None);
             }
         }
 
-        private ProductModel _selected_category_name_filter { get; set; }
-        public ProductModel selected_category_name_filter
+        private string _selected_category { get; set; }
+        public string selected_category
+        {
+            get { return _selected_category; }
+            set
+            {
+                if (_selected_category == value) return;
+                _selected_category = value;
+                RaisePropertyChanged("selected_category");
+            }
+        }
+
+        private CategoryModel _selected_category_name_filter { get; set; }
+        public CategoryModel selected_category_name_filter
         {
             get { return _selected_category_name_filter; }
             set
@@ -83,7 +91,7 @@ namespace VMSales.ViewModels
                 _selected_category_name_filter = value;
                 RaisePropertyChanged("selected_category_name_filter");
                 //filter product based on category name.
-
+                ApplyFilter(!string.IsNullOrEmpty(_selected_category_name_filter?.category_name) ? FilterField.Category : FilterField.None);
             }
         }
 
@@ -96,6 +104,7 @@ namespace VMSales.ViewModels
 
         #endregion
         #region Members
+ 
         public List<string> category_list { get; set; }
 
         private int _supplier_fk;
@@ -120,18 +129,6 @@ namespace VMSales.ViewModels
                 _purchase_order_detail_pk = value;
                 RaisePropertyChanged("purchase_order_detail_pk");
                 LoadProducts(supplier_fk, purchase_order_detail_pk);
-            }
-        }
-
-        private string _selected_category { get; set; }
-        public string selected_category
-        {
-            get { return _selected_category; }
-            set
-            {
-                if (_selected_category == value) return;
-                _selected_category = value;
-                RaisePropertyChanged("selected_category");
             }
         }
 
@@ -190,83 +187,89 @@ namespace VMSales.ViewModels
         #region FilterFunctions
         private void ApplyFilter(FilterField field)
         {
-            //switch (field)
-            //{
-                //case FilterField.InvoiceNumber
-                    //AddInvoiceNumberFilter();
-                    //PurchaseOrderView.Filter = new Predicate<object>(x => ((ProductModel)x).invoice_number.ToString() == _selectedinvoicenumber);
-                    //RaisePropertyChanged("PurchaseOrderView");
-                    //break;
-                //case FilterField.PurchaseDate:
-                    //AddPurchaseDateFilter();
-                    //PurchaseOrderView.Filter = new Predicate<object>(x => ((ProductModel)x).purchase_date.ToString() == _selectedpurchasedate);
-                    //RaisePropertyChanged("PurchaseOrderView");
-                    //break;
-                //default:
-                    //break;
-            //}
+            switch (field)
+            {
+                case FilterField.Category:
+                    AddCategoryFilter();
+                    break;
+                case FilterField.Supplier:
+                    AddSupplierFilter();
+                    break;
+                case FilterField.None:
+                    initial_load();
+                    break;
+                default:
+                    MessageBox.Show("Error in FilterField");
+                    break;
+            }
         }
 
-        public void RemoveInvoiceNumberFilterCommand()
+        public void RemoveCategoryFilterCommand()
         {
-            //cvs.Filter -= new FilterEventHandler(FilterByInvoiceNumber);
-            //SelectedInvoiceNumber = null;
-            //PurchaseOrderView.Filter = null;
-            //CanRemoveInvoiceNumberFilter = false;
-            RaisePropertyChanged("PurchaseOrderView");
+            canRemoveCategoryFilter = false;
+        }
+        public void RemoveSupplierFilterCommand()
+        {
+            canRemoveSupplierFilter = false;
+            ApplyFilter(FilterField.None);
+        }
+        public void AddCategoryFilter()
+        {
+            if (canRemoveCategoryFilter)
+            {
+                  //cvs.Filter -= new FilterEventHandler(FilterByCategoryName);
+                  //cvs.Filter += new FilterEventHandler(FilterByCategoryName);
+            }
+            else
+            {
+                //cvs.Filter += new FilterEventHandler(FilterByCategoryName);
+                canRemoveCategoryFilter = true;
+            }
+        }
+        public void AddSupplierFilter()
+        {
+            int selected_supplier_fk_filter = 0;
+            int selected_category_fk_filter = 0;
 
-        }
-        public void RemovePurchaseDateFilterCommand()
-        {
-            //cvs.Filter -= new FilterEventHandler(FilterByPurchaseDate);
-            //SelectedPurchaseDate = null;
-            //PurchaseOrderView.Filter = null;
-            //CanRemovePurchaseDateFilter = false;
-            RaisePropertyChanged("PurchaseOrderView");
-        }
-        public void AddInvoiceNumberFilter()
-        {
-            //if (CanRemoveInvoiceNumberFilter)
-            //{
-            //    cvs.Filter -= new FilterEventHandler(FilterByInvoiceNumber);
-            //    cvs.Filter += new FilterEventHandler(FilterByInvoiceNumber);
-            //}
-            //else
-            //{
-            //    cvs.Filter += new FilterEventHandler(FilterByInvoiceNumber);
-            //    CanRemoveInvoiceNumberFilter = true;
-            //}
-        }
-        public void AddPurchaseDateFilter()
-        {
-            //if (CanRemovePurchaseDateFilter)
-            //{
-                //cvs.Filter -= new FilterEventHandler(FilterByPurchaseDate);
-                //cvs.Filter += new FilterEventHandler(FilterByPurchaseDate);
-            //}
-            //else
-            //{
-                //cvs.Filter += new FilterEventHandler(FilterByPurchaseDate);
-                //CanRemovePurchaseDateFilter = true;
-            //}
-        }
-        private void FilterByInvoiceNumber(object sender, FilterEventArgs e)
-        {
-            var src = e.Item as PurchaseOrderModel;
-            if (src == null)
-                e.Accepted = false;
-            //else if (string.Compare(SelectedInvoiceNumber, src.invoice_number.ToString()) != 0)
-            //    e.Accepted = false;
-        }
-        private void FilterByPurchaseDate(object sender, FilterEventArgs e)
-        {
-            var src = e.Item as PurchaseOrderModel;
-            if (src == null)
-                e.Accepted = false;
-            //else if (string.Compare(SelectedPurchaseDate, src.purchase_date.ToString()) != 0)
-            //    e.Accepted = false;
-        }
+            // Load Supplier
+            try
+            {
+                dataBaseProvider = getprovider();
+                DataBaseLayer.SupplierRepository SupplierRepo = new DataBaseLayer.SupplierRepository(dataBaseProvider);
+                selected_supplier_fk_filter = SupplierRepo.Get_by_supplier_name(selected_supplier_name_filter.supplier_name).Result;
+                SupplierRepo.Commit();
+                SupplierRepo.Dispose();
+            }
+            catch (Exception e)
+            { MessageBox.Show("An Error has occured:" + e); }
 
+            dataBaseProvider = getprovider();
+            DataBaseLayer.ProductRepository ProductRepo = new DataBaseLayer.ProductRepository(dataBaseProvider);
+            BindableCollectionProductModel.Clear();
+            BindableCollectionProductModel = DataConversion.ToBindableCollection(ProductRepo.GetAllWithID(selected_supplier_fk_filter, selected_category_fk_filter).Result.ToObservable());
+            ProductRepo.Commit();
+            ProductRepo.Dispose();
+            SelectedItem = new ProductModel();
+           
+            // Load product_category, product purchase order, product supplier
+            foreach (var item in BindableCollectionProductModel)
+            {
+                SelectedItem.category_name = item.category_name;
+                // product_purchase_order
+                SelectedItem.product_purchase_order_pk = item.product_purchase_order_pk;
+                SelectedItem.product_fk = item.product_fk;
+                SelectedItem.purchase_order_detail_fk = item.product_order_detail_fk;
+                // product_supplier
+                SelectedItem.product_supplier_pk = item.product_supplier_pk;
+                SelectedItem.supplier_fk = item.supplier_fk;
+            }
+            RaisePropertyChanged("SelectedItem");
+            RaisePropertyChanged("BindableCollectionProductModel");
+
+            if (!canRemoveSupplierFilter)
+                canRemoveSupplierFilter = true;
+        }
+       
         #endregion
 
         public void SaveCommand()
@@ -491,15 +494,13 @@ namespace VMSales.ViewModels
             }
         }
 
-
-        public ProductViewModel()
+        public void initial_load()
         {
-
+            if (selected_supplier_name_filter != null && selected_supplier_name_filter.supplier_name != null)
+            {
+                selected_supplier_name_filter = null;
+            }
             // begin
-
-
-
-            //BindableCollectionPurchaseOrderModel = DataConversion.ToBindableCollection(PurchaseOrderRepo.GetAll().Result.ToObservable());
 
             dataBaseProvider = getprovider();
             // Get Suppliers
@@ -520,31 +521,37 @@ namespace VMSales.ViewModels
                 SupplierRepo.Dispose();
             }
 
-
             // Check for Purchase Order
-            //        BindableCollectionPurchaseOrderModel = new BindableCollection<PurchaseOrderModel>();
-            //        DataBaseLayer.PurchaseOrderRepository PurchaseOrderRepo = new DataBaseLayer.PurchaseOrderRepository(dataBaseProvider);
-            //        BindableCollectionPurchaseOrderModel = DataConversion.ToBindableCollection(PurchaseOrderRepo.GetAll().Result.ToObservable());
-            //        if (BindableCollectionPurchaseOrderModel.Count() == 0)
-            //        {
-            //            PurchaseOrderRepo.Revert();
-            //            PurchaseOrderRepo.Dispose();
-            //            MessageBox.Show("You must add purchase orders.");
-            //            return;
-            //        }
-            //        else
-            //        {
-            //            PurchaseOrderRepo.Commit();
-            //            PurchaseOrderRepo.Dispose();
-            //        }
+                     BindableCollectionPurchaseOrderModel = new BindableCollection<PurchaseOrderModel>();
+                     DataBaseLayer.PurchaseOrderRepository PurchaseOrderRepo = new DataBaseLayer.PurchaseOrderRepository(dataBaseProvider);
+                     BindableCollectionPurchaseOrderModel = DataConversion.ToBindableCollection(PurchaseOrderRepo.GetAll().Result.ToObservable());
+                     if (BindableCollectionPurchaseOrderModel.Count() == 0)
+                     {
+                          PurchaseOrderRepo.Revert();
+                          PurchaseOrderRepo.Dispose();
+                          MessageBox.Show("You must add purchase orders.");
+                          return;
+                     }
+                      else
+                      {
+                          PurchaseOrderRepo.Commit();
+                          PurchaseOrderRepo.Dispose();
+                      }
 
             // Load Products
             DataBaseLayer.ProductRepository ProductRepo = new DataBaseLayer.ProductRepository(dataBaseProvider);
+
+            if (BindableCollectionProductModel != null)
+            {
+                BindableCollectionProductModel.Clear();
+                BindableCollectionProductModel = new BindableCollection<ProductModel>();
+            }
             BindableCollectionProductModel = DataConversion.ToBindableCollection(ProductRepo.GetAll().Result.ToObservable());
             ProductRepo.Commit();
             ProductRepo.Dispose();
             SelectedItem = new ProductModel();
-
+            RaisePropertyChanged("SelectedItem");
+            RaisePropertyChanged("BindableCollectionProductModel");
 
             // Load product_category, product purchase order, product supplier
             foreach (var item in BindableCollectionProductModel)
@@ -557,7 +564,6 @@ namespace VMSales.ViewModels
                 // product_supplier
                 SelectedItem.product_supplier_pk = item.product_supplier_pk;
                 SelectedItem.supplier_fk = item.supplier_fk;
-
             }
 
             // Load Category
@@ -578,15 +584,12 @@ namespace VMSales.ViewModels
             catch (Exception ext)
             {
                 MessageBox.Show(ext.ToString());
-            }
+            }  
+        }
 
-
-            // if selected refresh Supplier.
-
-         
-
-
-
+        public ProductViewModel()
+        {
+            initial_load();
         }
     }
 }
