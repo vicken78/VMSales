@@ -578,25 +578,6 @@ namespace VMSales.Logic
                  , null, Transaction);
             }
 
-/*
-SELECT DISTINCT c.category_pk, c.category_name, p.*, ps.*
-FROM product p
-INNER JOIN product_supplier ps ON p.product_pk = ps.product_fk
-INNER JOIN supplier s ON s.supplier_pk = ps.supplier_fk
-LEFT JOIN product_category pc ON p.product_pk = pc.product_fk
-LEFT JOIN category c ON c.category_pk = pc.category_fk
-WHERE ps.supplier_fk= '2'
-UNION
-SELECT DISTINCT c.category_pk, c.category_name, p.*, ps.*
-FROM product p
-INNER JOIN product_supplier ps ON p.product_pk = ps.product_fk
-INNER JOIN supplier s ON s.supplier_pk = ps.supplier_fk
-INNER JOIN product_category pc ON p.product_pk = pc.product_fk
-INNER JOIN category c ON c.category_pk = pc.category_fk
-WHERE ps.supplier_fk= '2'
-*/
-
-
             // get all products by supplier
 
             public async Task<IEnumerable<ProductModel>> GetAllWithID(int supplier_fk, int category_fk)
@@ -620,7 +601,7 @@ WHERE ps.supplier_fk= '2'
                     "INNER JOIN supplier s ON s.supplier_pk = ps.supplier_fk " +
                     "INNER JOIN product_category pc ON p.product_pk = pc.product_fk " +
                     "INNER JOIN category c ON c.category_pk = pc.category_fk " +
-                    "WHERE pc.category_fk = @category_fk ", new { supplier_fk }, Transaction);
+                    "WHERE pc.category_fk = @category_fk ", new { category_fk }, Transaction);
                 }
                 // supplier only
                 if (category_fk == 0 && supplier_fk != 0)
