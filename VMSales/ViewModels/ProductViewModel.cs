@@ -1,13 +1,8 @@
 ﻿using Caliburn.Micro;
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.ComponentModel;
 using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Data;
 using VMSales.Logic;
 using VMSales.Models;
 
@@ -131,7 +126,6 @@ namespace VMSales.ViewModels
                 if (_purchase_order_detail_pk == value) return;
                 _purchase_order_detail_pk = value;
                 RaisePropertyChanged("purchase_order_detail_pk");
-                LoadProducts(supplier_fk, purchase_order_detail_pk);
             }
         }
 
@@ -359,7 +353,6 @@ namespace VMSales.ViewModels
             }
 
 
-
             //   var selectedRows = BindableCollectionProductModel.Where(i => i.IsSelected);
             //   foreach (var item in selectedRows)
             //    {
@@ -382,10 +375,6 @@ namespace VMSales.ViewModels
                             MessageBox.Show("Update");
                         }
             */
-
-
-
-
 
             //product key present?
 
@@ -413,8 +402,6 @@ namespace VMSales.ViewModels
 
 
         }
-
-
 
         /*      try
               {
@@ -470,7 +457,7 @@ namespace VMSales.ViewModels
         }
         public void ResetCommand()
         {
-
+            initial_load();
         }
 
         public void LoadPurchaseOrder(int supplier_fk,int purchase_order_detail_pk)
@@ -515,31 +502,6 @@ namespace VMSales.ViewModels
             PurchaseOrderRepo.Commit();
             PurchaseOrderRepo.Dispose();
             return;
-        }
-
-        public void LoadProducts(int supplier_fk, int purchase_order_detail_pk)
-        {
-            if (supplier_fk > 0 && purchase_order_detail_pk != 0)
-            {
-                try
-                {
-                    // check product_supplier and product_purchase_order, if not set don't filter and inform user not set.
-
-                    //Productmodel = new ProductModel();
-                    //BindableCollectionProductModel.Clear();
-                    //RaisePropertyChanged("BindableCollectionProductModel");
-
-                    //DataBaseLayer.ProductRepository ProductRepo = new DataBaseLayer.ProductRepository(dataBaseProvider);
-                    //BindableCollectionProductModel = DataConversion.ToBindableCollection(ProductRepo.GetAllWithAllID(supplier_fk, purchase_order_detail_pk).Result.ToObservable());
-                    //ProductRepo.Commit();
-                    //ProductRepo.Dispose();
-                    //RaisePropertyChanged("BindableCollectionProductModel";
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show("A Database Error has occured. " + ex);
-                }
-            }
         }
 
         public void initial_load()
