@@ -48,28 +48,28 @@
                        Customer Form
                     </TextBlock>
 
-                    <!-- ID -->
+                    <!-- Customer ID -->
                     <Label Content="Customer ID" Grid.Column="0" Grid.Row="1" />
                     <TextBox IsReadOnly="True" Text="{Binding Path=SelectedItem.customer_pk, ElementName=customerdatagrid, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}" 
                     Grid.Column="1" Grid.Row="1"/>
-                    <!-- Name -->
+                    <!-- User Name -->
                     <Label Content="User Name" Grid.Column="0" Grid.Row="2" />
                     <TextBox Text="{Binding Path=SelectedItem.user_name, ElementName=customerdatagrid, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}" 
                     Grid.Column="1" Grid.Row="2"/>
-                    <!-- Address -->
+                    <!-- First Name -->
                     <Label Content="First Name" Grid.Column="0" Grid.Row="3" />
                     <TextBox Text="{Binding SelectedItem.first_name, ElementName=customerdatagrid, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}" Grid.Column="1" Grid.Row="3" />
-                    <!-- City -->
+                    <!-- Last Name -->
                     <Label Content="Last Name" Grid.Column="0" Grid.Row="4" />
                     <TextBox
                         Text="{Binding Path=SelectedItem.last_name, ElementName=customerdatagrid, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}"
                         Grid.Column="1" Grid.Row="4" />
-                    <!-- State -->
+                    <!-- Address -->
                     <Label Content="Address" Grid.Column="0" Grid.Row="5" />
                     <TextBox
                         Text="{Binding SelectedItem.address, ElementName=customerdatagrid, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}"
                         Grid.Column="1" Grid.Row="5" />
-                    <!-- Country -->
+                    <!-- State -->
                     <Label Content="State" Grid.Column="0" Grid.Row="6" />
                     <TextBox
                         Text="{Binding SelectedItem.state, ElementName=customerdatagrid, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}"
@@ -79,56 +79,59 @@
                     <TextBox
                         Text="{Binding SelectedItem.zip, ElementName=customerdatagrid, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}"
                         Grid.Column="1" Grid.Row="7" />
-                    <!-- Phone -->
+                    <!-- Country -->
                     <Label Content="Country" Grid.Column="0" Grid.Row="8" />
                     <TextBox
                         Text="{Binding SelectedItem.country, ElementName=customerdatagrid, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}"
                         Grid.Column="1" Grid.Row="8" />
-                    <!-- Email -->
+                    <!-- Phone -->
                     <Label Content="Phone" Grid.Column="0" Grid.Row="9" />
                     <TextBox
                         Text="{Binding SelectedItem.phone, ElementName=customerdatagrid, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}"
                         Grid.Column="1" Grid.Row="9" />
-                    <!-- Email -->
-                    <Label Content="Shipping Address" Grid.Column="0" Grid.Row="10" />
+                    <!-- Ship Same as Billing-->
+                    <CheckBox Name="SameAddress" Content="Use Billing Address For Shipping" IsChecked="{Binding SelectedItem.use_same_address,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" 
+                    Margin="10" FlowDirection="RightToLeft" HorizontalAlignment="Left" Grid.Column="1" Grid.Row="10"/>
+                    <!-- Shipping Address -->
+                    <Label Content="Shipping Address" Grid.Column="0" Grid.Row="11" />
                     <TextBox
                         Text="{Binding SelectedItem.shipping_address, ElementName=customerdatagrid, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}"
-                        Grid.Column="1" Grid.Row="10" />
-                    <!-- Email -->
-                    <Label Content="Shipping State" Grid.Column="0" Grid.Row="11" />
+                        Grid.Column="1" Grid.Row="11" />
+                    <!-- Shipping State -->
+                    <Label Content="Shipping State" Grid.Column="0" Grid.Row="12" />
                     <TextBox
                         Text="{Binding SelectedItem.shipping_state, ElementName=customerdatagrid, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}"
-                        Grid.Column="1" Grid.Row="11" />
-                    <!-- Email -->
-                    <Label Content="Shipping Zip" Grid.Column="0" Grid.Row="12" />
+                        Grid.Column="1" Grid.Row="12" />
+                    <!-- Shipping Zip -->
+                    <Label Content="Shipping Zip" Grid.Column="0" Grid.Row="13" />
                     <TextBox
                         Text="{Binding SelectedItem.shipping_zip, ElementName=customerdatagrid, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}"
-                        Grid.Column="1" Grid.Row="12" />
-                    <!-- Email -->
-                    <Label Content="Shipping Country" Grid.Column="0" Grid.Row="13" />
+                        Grid.Column="1" Grid.Row="13" />
+                    <!-- Shipping Country -->
+                    <Label Content="Shipping Country" Grid.Column="0" Grid.Row="14" />
                     <TextBox
                         Text="{Binding SelectedItem.shipping_country, ElementName=customerdatagrid, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}"
-                        Grid.Column="1" Grid.Row="13" />
+                        Grid.Column="1" Grid.Row="14" />
          
                     <!--  Save Button -->
-                    <Button x:Name="SaveCommand" Grid.Row="14"
+                    <Button x:Name="SaveCommand" Grid.Row="15"
                             Grid.Column="1"
                             Margin="0,25,453,-27"
                             Content="Save"
                             Width="75"/>
                     <!-- Delete Button -->
-                    <Button x:Name="DeleteCommand" Grid.Row="14"             
+                    <Button x:Name="DeleteCommand" Grid.Row="15"             
                             Margin="90,25,353,-27"
                             Content="Delete"
                             Width="75" Grid.Column="1"/>
                     <!--  Add Button -->
-                    <Button x:Name="AddCommand" Grid.Row="14"
+                    <Button x:Name="AddCommand" Grid.Row="15"
                             Grid.Column="1"
                             Margin="180,25,253,-27"
                             Content="Add"
                             Width="75"/>
                     <!-- Reset Button -->
-                    <Button x:Name="ResetCommand" Grid.Row="14"
+                    <Button x:Name="ResetCommand" Grid.Row="15"
                             Grid.Column="1"
                             Margin="270,25,153,-27"
                             Content="Reset"
@@ -160,48 +163,56 @@
                                 </Style>
                             </DataGridTextColumn.ElementStyle>
                         </DataGridTextColumn>
-                        <!-- Category Name -->
-                        <DataGridTextColumn Header="User Name" Width="Auto" Binding="{Binding user_name, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}">
+                        <!-- User Name -->
+                        <DataGridTextColumn Header="User Name" Width="Auto" Binding="{Binding user_name, Mode=TwoWay, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}">
                             <DataGridTextColumn.ElementStyle>
                                 <Style TargetType="TextBlock">
                                     <Setter Property="TextWrapping" Value="Wrap"/>
                                 </Style>
                             </DataGridTextColumn.ElementStyle>
                         </DataGridTextColumn>
-                        <!-- Address -->
-                        <DataGridTextColumn Header="First Name" Width="Auto" Binding="{Binding first_name, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}"  >
+                        <!-- First Name -->
+                        <DataGridTextColumn Header="First Name" Width="Auto" Binding="{Binding first_name, Mode=TwoWay, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}"  >
                             <DataGridTextColumn.ElementStyle>
                                 <Style TargetType="TextBlock">
                                     <Setter Property="TextWrapping" Value="Wrap"/>
                                 </Style>
                             </DataGridTextColumn.ElementStyle>
                         </DataGridTextColumn>
-                        <!-- City -->
-                        <DataGridTextColumn Header="Last Name" Width="Auto" Binding="{Binding last_name, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}">
+                        <!-- Last Name -->
+                        <DataGridTextColumn Header="Last Name" Width="Auto" Binding="{Binding last_name, Mode=TwoWay, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}">
                             <DataGridTextColumn.ElementStyle>
                                 <Style TargetType="TextBlock">
                                     <Setter Property="TextWrapping" Value="Wrap"/>
                                 </Style>
                             </DataGridTextColumn.ElementStyle>
                         </DataGridTextColumn>
-                        <!-- State -->
-                        <DataGridTextColumn Header="State" Width="Auto" Binding="{Binding state, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}">
+                        <!-- Billing Address -->
+                        <DataGridTextColumn Header="Billing Address" Width="Auto" Binding="{Binding address, Mode=TwoWay, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}">
                             <DataGridTextColumn.ElementStyle>
                                 <Style TargetType="TextBlock">
                                     <Setter Property="TextWrapping" Value="Wrap"/>
                                 </Style>
                             </DataGridTextColumn.ElementStyle>
                         </DataGridTextColumn>
-                        <!-- Country -->
-                        <DataGridTextColumn Header="Country" Width="Auto" Binding="{Binding country, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}">
+                        <!-- Billing State -->
+                        <DataGridTextColumn Header="Billing State" Width="75" Binding="{Binding state, Mode=TwoWay, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}">
                             <DataGridTextColumn.ElementStyle>
                                 <Style TargetType="TextBlock">
                                     <Setter Property="TextWrapping" Value="Wrap"/>
                                 </Style>
                             </DataGridTextColumn.ElementStyle>
                         </DataGridTextColumn>
-                        <!-- Zip -->
-                        <DataGridTextColumn Header="Zip" Width="Auto" Binding="{Binding zip, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}">
+                        <!-- Billing Zip -->
+                        <DataGridTextColumn Header="Billing Zip" Width="Auto" Binding="{Binding zip, Mode=TwoWay, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}">
+                            <DataGridTextColumn.ElementStyle>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="TextWrapping" Value="Wrap"/>
+                                </Style>
+                            </DataGridTextColumn.ElementStyle>
+                        </DataGridTextColumn>
+                        <!-- Billing Country -->
+                        <DataGridTextColumn Header="Billing Country" Width="Auto" Binding="{Binding country, Mode=TwoWay, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}">
                             <DataGridTextColumn.ElementStyle>
                                 <Style TargetType="TextBlock">
                                     <Setter Property="TextWrapping" Value="Wrap"/>
@@ -209,7 +220,31 @@
                             </DataGridTextColumn.ElementStyle>
                         </DataGridTextColumn>
                         <!-- Phone -->
-                        <DataGridTextColumn Header="Phone" Width="Auto" Binding="{Binding phone, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}">
+                        <DataGridTextColumn Header="Phone" Width="75" Binding="{Binding phone, Mode=TwoWay, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}">
+                            <DataGridTextColumn.ElementStyle>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="TextWrapping" Value="Wrap"/>
+                                </Style>
+                            </DataGridTextColumn.ElementStyle>
+                        </DataGridTextColumn>
+                        <!-- Shipping Address -->
+                        <DataGridTextColumn Header="Shipping Address" Width="Auto" Binding="{Binding shipping_address, Mode=TwoWay, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}">
+                            <DataGridTextColumn.ElementStyle>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="TextWrapping" Value="Wrap"/>
+                                </Style>
+                            </DataGridTextColumn.ElementStyle>
+                        </DataGridTextColumn>
+                        <!-- Shipping State -->
+                        <DataGridTextColumn Header="Shipping State" Width="Auto" Binding="{Binding shipping_state, Mode=TwoWay, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}">
+                            <DataGridTextColumn.ElementStyle>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="TextWrapping" Value="Wrap"/>
+                                </Style>
+                            </DataGridTextColumn.ElementStyle>
+                        </DataGridTextColumn>
+                        <!-- Shipping Zip -->
+                        <DataGridTextColumn Header="Shipping Zip" Width="80" Binding="{Binding shipping_zip, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}">
                             <DataGridTextColumn.ElementStyle>
                                 <Style TargetType="TextBlock">
                                     <Setter Property="TextWrapping" Value="Wrap"/>
@@ -217,46 +252,7 @@
                             </DataGridTextColumn.ElementStyle>
                         </DataGridTextColumn>
                         <!-- Email -->
-                        <DataGridTextColumn Header="Email" Width="Auto" Binding="{Binding email, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}">
-                            <DataGridTextColumn.ElementStyle>
-                                <Style TargetType="TextBlock">
-                                    <Setter Property="TextWrapping" Value="Wrap"/>
-                                </Style>
-                            </DataGridTextColumn.ElementStyle>
-                        </DataGridTextColumn>
-                        <DataGridTextColumn Header="Email" Width="Auto" Binding="{Binding email, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}">
-                            <DataGridTextColumn.ElementStyle>
-                                <Style TargetType="TextBlock">
-                                    <Setter Property="TextWrapping" Value="Wrap"/>
-                                </Style>
-                            </DataGridTextColumn.ElementStyle>
-                        </DataGridTextColumn>
-                        <!-- Email -->
-                        <DataGridTextColumn Header="Email" Width="Auto" Binding="{Binding email, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}">
-                            <DataGridTextColumn.ElementStyle>
-                                <Style TargetType="TextBlock">
-                                    <Setter Property="TextWrapping" Value="Wrap"/>
-                                </Style>
-                            </DataGridTextColumn.ElementStyle>
-                        </DataGridTextColumn>
-                        <!-- Email -->
-                        <DataGridTextColumn Header="Email" Width="Auto" Binding="{Binding email, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}">
-                            <DataGridTextColumn.ElementStyle>
-                                <Style TargetType="TextBlock">
-                                    <Setter Property="TextWrapping" Value="Wrap"/>
-                                </Style>
-                            </DataGridTextColumn.ElementStyle>
-                        </DataGridTextColumn>
-                        <!-- Email -->
-                        <DataGridTextColumn Header="Email" Width="Auto" Binding="{Binding email, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}">
-                            <DataGridTextColumn.ElementStyle>
-                                <Style TargetType="TextBlock">
-                                    <Setter Property="TextWrapping" Value="Wrap"/>
-                                </Style>
-                            </DataGridTextColumn.ElementStyle>
-                        </DataGridTextColumn>
-                        <!-- Email -->
-                        <DataGridTextColumn Header="Email" Width="Auto" Binding="{Binding email, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}">
+                        <DataGridTextColumn Header="Shipping Country" Width="Auto" Binding="{Binding shipping_country, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}">
                             <DataGridTextColumn.ElementStyle>
                                 <Style TargetType="TextBlock">
                                     <Setter Property="TextWrapping" Value="Wrap"/>
