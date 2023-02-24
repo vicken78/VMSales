@@ -11,11 +11,6 @@ namespace VMSales.ViewModels
             await ActivateItemAsync(new CategoryViewModel());
         }
 
-        protected override Task OnActivateAsync(CancellationToken cancellationToken)
-        {
-            return base.OnActivateAsync(cancellationToken);
-        }
-
         public async Task LoadPurchaseOrder()
         {
             await ActivateItemAsync(new PurchaseOrderViewModel());
@@ -29,6 +24,15 @@ namespace VMSales.ViewModels
         public async Task LoadProduct()
         {
             await ActivateItemAsync(new ProductViewModel());   
+        }
+        public async Task LoadCustomer()
+        {
+            await ActivateItemAsync(new CustomerViewModel());
+        }
+
+        protected override Task OnActivateAsync(CancellationToken cancellationToken)
+        {
+            return base.OnActivateAsync(cancellationToken);
         }
 
 

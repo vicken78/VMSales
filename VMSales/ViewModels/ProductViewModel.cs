@@ -31,25 +31,13 @@ namespace VMSales.ViewModels
                 RaisePropertyChanged("canRemoveCategoryFilter");
             }
         }
+
         private enum FilterField
         {
             Category,
             Supplier,
             None
         }
-        #endregion
-        private string _selected_supplier_name { get; set; }
-        public string selected_supplier_name
-        {
-            get { return _selected_supplier_name; }
-            set
-            {
-                if (_selected_supplier_name == value) return;
-                _selected_supplier_name = value;
-                RaisePropertyChanged("selected_supplier_name");
-            }
-        }
-
         private SupplierModel _selected_supplier_name_filter { get; set; }
         public SupplierModel selected_supplier_name_filter
         {
@@ -64,21 +52,6 @@ namespace VMSales.ViewModels
             }
         }
 
-        /* 
-         * May not be needed.
-        private string _selected_category { get; set; }
-        public string selected_category
-        {
-            get { return _selected_category; }
-            set
-            {
-                if (_selected_category == value) return;
-                _selected_category = value;
-                RaisePropertyChanged("selected_category");
-            }
-        }
-        */
-
         private CategoryModel _selected_category_name_filter { get; set; }
         public CategoryModel selected_category_name_filter
         {
@@ -92,6 +65,58 @@ namespace VMSales.ViewModels
                 ApplyFilter(!string.IsNullOrEmpty(_selected_category_name_filter?.category_name) ? FilterField.Category : FilterField.None);
             }
         }
+        #endregion
+        #region Associate
+
+        private string _selected_supplier_name { get; set; }
+        public string selected_supplier_name
+        {
+            get { return _selected_supplier_name; }
+            set
+            {
+                if (_selected_supplier_name == value) return;
+                _selected_supplier_name = value;
+                RaisePropertyChanged("selected_supplier_name");
+                if (selected_supplier_name != null)
+                canEnableProductSupplier = true;
+            }
+        }
+     /*   private int _selected_lot_number { get; set; }
+        public int selected_lot_number
+        {
+            get { return _selected_lot_number; }
+            set
+            {
+                if (_selected_lot_number == value) return;
+                _selected_lot_number = value;
+                RaisePropertyChanged("selected_lot_number");
+                canEnableProductPurchase = true;
+                MessageBox.Show(selected_lot_number.ToString());
+            }
+        }
+     */
+        private bool _canEnableProductSupplier;
+        public bool canEnableProductSupplier
+        {
+            get { return _canEnableProductSupplier; }
+            set
+            {
+                _canEnableProductSupplier = value;
+                RaisePropertyChanged("canEnableProductSupplier");
+            }
+        }
+        private bool _canEnableProductPurchase;
+        public bool canEnableProductPurchase
+        {
+            get { return _canEnableProductPurchase; }
+            set
+            {
+                _canEnableProductPurchase = value;
+                RaisePropertyChanged("canEnableProductPurchase");
+            }
+        }
+
+        #endregion
 
         #region collections   
 
@@ -126,6 +151,11 @@ namespace VMSales.ViewModels
                 if (_purchase_order_detail_pk == value) return;
                 _purchase_order_detail_pk = value;
                 RaisePropertyChanged("purchase_order_detail_pk");
+                MessageBox.Show(purchase_order_detail_pk.ToString());
+                if (purchase_order_detail_pk != 0)
+                {
+                    canEnableProductPurchase = true;
+                }
             }
         }
 
@@ -348,6 +378,10 @@ namespace VMSales.ViewModels
             // check for null values
             if (supplier_fk != 0 && purchase_order_detail_pk != 0)
             {
+
+
+
+                // ask to update
                 //          MessageBox.Show("Please select a Supplier.");
                 //          return;
             }
@@ -506,6 +540,13 @@ namespace VMSales.ViewModels
 
         public void initial_load()
         {
+            // reset buttons
+            canEnableProductSupplier = false;
+            canEnableProductPurchase = false;
+            selected_supplier_name = null;
+            purchase_order_detail_pk = 0;
+
+
             // reset filters
             if (selected_supplier_name_filter != null && selected_supplier_name_filter.supplier_name != null)
             {
