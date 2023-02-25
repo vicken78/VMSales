@@ -20,6 +20,7 @@ namespace VMSales.Models
         private string _shipping_state { get; set; }
         private string _shipping_zip { get; set; }
         private string _shipping_country { get; set; }
+        public int use_same_address { get; set;}
 
         public int customer_pk 
         {
@@ -126,8 +127,8 @@ namespace VMSales.Models
             get { return _shipping_state; }
             set
             {
-                if (_shipping_address == value) return;
-                _shipping_address = value;
+                if (_shipping_state == value) return;
+                _shipping_state = value;
                 RaisePropertyChanged("shipping_state");
             }
         }
@@ -151,5 +152,6 @@ namespace VMSales.Models
                 RaisePropertyChanged("shipping_country");
             }
         }
+ 
     }
 }
