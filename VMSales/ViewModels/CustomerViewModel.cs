@@ -3,6 +3,7 @@ using VMSales.Logic;
 using System.Collections.ObjectModel;
 using System.Windows;
 using System;
+using System.Threading.Tasks;
 
 namespace VMSales.ViewModels
 {
@@ -41,69 +42,72 @@ namespace VMSales.ViewModels
                 RaisePropertyChanged("Select_Request");
             }
         }
+
+
         IDatabaseProvider dataBaseProvider;
         //Commands
 
         public void SaveCommand()
         {
-            // set db value to null until checked
-            String db_supplier_pk = null;
-            // nothing selected
+            String cust_pk;
             if (Select_Request == null)
             {
                 MessageBox.Show("No Changes Were Made.");
                 return;
             }
 
-
-            // all values good, now we must update or insert, get primary key.
+            // update or insert, attempt to get primary key.
             dataBaseProvider = getprovider();
-            //DataBaseLayer.SupplierRepository SupplierRepo = new DataBaseLayer.SupplierRepository(dataBaseProvider);
+            DataBaseLayer.CustomerRepository CustomerRepo = new DataBaseLayer.CustomerRepository(dataBaseProvider);
             try
             {
-                //db_supplier_pk = SupplierRepo.Get(select_request.customer_pk).Result.supplier_pk.ToString();
+                cust_pk = CustomerRepo.Get(select_request.customer_pk).Result.ToString();
             }
             catch (AggregateException e) // primary key does not exist
             {
                 // insert
-                try
+                Task<bool> insertCustomer = CustomerRepo.Insert(Select_Request);
+                if (insertCustomer.Result == true)
                 {
-                    //Task<bool> insertSupplier = SupplierRepo.Insert(Select_Request);
-                    //if (insertSupplier.Result == true)
-                    //{
-                    //SupplierRepo.Commit();
-                    //SupplierRepo.Dispose();
-                    //}
+                    CustomerRepo.Commit();
+                    CustomerRepo.Dispose();
                 }
-                catch (Exception ex)
+                else
                 {
-                    MessageBox.Show("An Error has occured with inserting.  Insertion Rejected" + ex);
-                    //SupplierRepo.Revert();
-                    //SupplierRepo.Dispose();
+                    MessageBox.Show("An Error has occured with inserting.  Insertion Rejected");
+                    CustomerRepo.Revert();
+                    CustomerRepo.Dispose();
                 }
+                return;
+            }
+            catch (Exception e)
+            {  // any other error
+                MessageBox.Show(e.ToString());
+                CustomerRepo.Revert();
+                CustomerRepo.Dispose();
                 return;
             }
             // if id match UPDATE
-            if (db_supplier_pk == select_request.customer_pk.ToString())
+            if (cust_pk == select_request.customer_pk.ToString())
             {
-                //Task<bool> updateCategory = SupplierRepo.Update(Select_Request);
-                //if (updateCategory.Result == true)
-                //{
-                //SupplierRepo.Commit();
-                //SupplierRepo.Dispose();
-                //MessageBox.Show("Saved");
-                //}
-                //else
-                //{
-                //MessageBox.Show("An Error has occured with Updating.  Updating Rejected");
-                //SupplierRepo.Revert();
-                //SupplierRepo.Dispose();
-                //}
+                Task<bool> updateCategory = CustomerRepo.Update(Select_Request);
+                if (updateCategory.Result == true)
+                {
+                    CustomerRepo.Commit();
+                    CustomerRepo.Dispose();
+                    MessageBox.Show("Saved");
+                }
+                else
+                {
+                    MessageBox.Show("An Error has occured with Updating.  Updating Rejected");
+                    CustomerRepo.Revert();
+                    CustomerRepo.Dispose();
+                }
                 return;
             }
-        }
+    }
 
-        public void ResetCommand()
+    public void ResetCommand()
         {
             initial_load();
         }
@@ -145,45 +149,59 @@ namespace VMSales.ViewModels
                 return;
             }
             // set db value to null until checked
-            String db_supplier_pk = null;
+            String cust_pk;
+            dataBaseProvider = getprovider();
+            DataBaseLayer.CustomerRepository CustomerRepo = new DataBaseLayer.CustomerRepository(dataBaseProvider);
 
             // get primary key.
-            dataBaseProvider = getprovider();
-            //DataBaseLayer.SupplierRepository SupplierRepo = new DataBaseLayer.SupplierRepository(dataBaseProvider);
             try
             {
-                //db_supplier_pk = SupplierRepo.Get(select_request.customer_pk).Result.supplier_pk.ToString();
+                cust_pk = CustomerRepo.Get(select_request.customer_pk).Result.customer_pk.ToString();
+                CustomerRepo.Revert();
+                CustomerRepo.Dispose();
             }
             catch (Exception e)
             {  // catch all errors
                 MessageBox.Show(e.ToString());
-                //SupplierRepo.Revert();
-                //SupplierRepo.Dispose();
+                CustomerRepo.Revert();
+                CustomerRepo.Dispose();
                 return;
             }
             // if id match DELETE
-            //if (db_supplier_pk == select_request.customer_pk.ToString())
-            //{
-            //Task<bool> deleteCategory = SupplierRepo.Delete(Select_Request);
-            //if (deleteCategory.Result == true)
-            //{
-            //SupplierRepo.Commit();
-            //SupplierRepo.Dispose();
-            //MessageBox.Show("Row Deleted");
-            // we are not refreshing for delete. we need to remove it from observable and refresh.
-            //}
-            //else
-            //{
-            //MessageBox.Show("An Error has occured with Deleting.  Rejected");
-            //SupplierRepo.Revert();
-            //SupplierRepo.Dispose();
-            //}
-            //return;
-            //}
+            if (cust_pk == select_request.customer_pk.ToString())
+            {
+            Task<bool> deleteCustomer = CustomerRepo.Delete(Select_Request);
+            if (deleteCustomer.Result == true)
+            {
+                CustomerRepo.Commit();
+                CustomerRepo.Dispose();
+                MessageBox.Show("Row Deleted");
+                initial_load();
+            }
+            else
+            {
+            MessageBox.Show("An Error has occured with Deleting.  Rejected");
+            CustomerRepo.Revert();
+            CustomerRepo.Dispose();
+            }
+            return;
+            }
         }
         public void initial_load()
         {
             ObservableCollectionCustomerModel = new ObservableCollection<CustomerModel>();
+            try
+            {
+                dataBaseProvider = getprovider();
+                DataBaseLayer.CustomerRepository CustomerRepo = new DataBaseLayer.CustomerRepository(dataBaseProvider);
+                ObservableCollectionCustomerModel = CustomerRepo.GetAll().Result.ToObservable();
+                CustomerRepo.Commit();
+                CustomerRepo.Dispose();
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show("An Expected error has occured. " + e);
+            }
         }
         public CustomerViewModel()
         {

@@ -870,7 +870,7 @@ namespace VMSales.Logic
 
             public override async Task<CustomerModel> Get(int id)
             {
-                return await Connection.QuerySingleAsync<CustomerModel>("SELECT customer_pk FROM supplier WHERE customer_pk = @id", new { id }, Transaction);
+                return await Connection.QuerySingleAsync<CustomerModel>("SELECT customer_pk FROM customer WHERE customer_pk = @id", new { id }, Transaction);
             }
 
             public override async Task<IEnumerable<CustomerModel>> GetAll()
