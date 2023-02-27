@@ -28,9 +28,8 @@ namespace VMSales.ViewModels
                 if (_use_same_address == value) return;
                 _use_same_address = value;
                 RaisePropertyChanged("use_same_address");
+                }
             }
-        }
-
 
         private CustomerModel select_request;
         public CustomerModel Select_Request
@@ -118,6 +117,7 @@ namespace VMSales.ViewModels
                 last_name = null,
                 address = null,
                 state = null,
+                city = null,
                 zip = null,
                 country = null,
                 phone = null,

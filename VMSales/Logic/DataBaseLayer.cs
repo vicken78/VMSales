@@ -52,7 +52,7 @@ namespace VMSales.Logic
                 return await Connection.QuerySingleAsync<CategoryModel>("SELECT category_name FROM category WHERE category_pk = @category_pk", new { category_pk }, Transaction);
             }
 
-          
+
             public async Task<IEnumerable<CategoryModel>> Get_all_category_name()
             {
                 return await Connection.QueryAsync<CategoryModel>("SELECT category_name FROM category ORDER BY category_name", null, Transaction);
@@ -74,7 +74,7 @@ namespace VMSales.Logic
                 "FROM category as c, product_category as pc " +
                 "INNER JOIN product_category on pc.category_fk = c.category_pk UNION " +
                 "SELECT category_pk, category_name, null  FROM category as c"
-                ,null,Transaction);
+                , null, Transaction);
 
 
 
@@ -144,8 +144,8 @@ namespace VMSales.Logic
                 return await Connection.QueryAsync<string>("SELECT " +
                 "supplier_name as selected_supplier_name from product_supplier ps " +
                 "INNER JOIN supplier s on s.supplier_pk = ps.supplier_fk " +
-                "WHERE ps.product_fk = @product_pk" 
-                , new {product_pk }, Transaction);
+                "WHERE ps.product_fk = @product_pk"
+                , new { product_pk }, Transaction);
             }
 
 
@@ -480,7 +480,7 @@ namespace VMSales.Logic
         public class ProductRepository : Repository<ProductModel>
         {
             public ProductRepository(IDatabaseProvider dbProvider) : base(dbProvider) { }
-            
+
             //Get Product Purchase Order
             public async Task<int> Get_product_purchase_order(int product_fk)
             {
@@ -526,14 +526,14 @@ namespace VMSales.Logic
 
             public override async Task<bool> Insert(ProductModel entity)
             {
-           // insert into product_purchase_order
+                // insert into product_purchase_order
                 bool insert_product_purchase_order = (await Connection.ExecuteAsync("INSERT INTO product_purchase_order (product_purchase_order_detail_fk, product_fk) VALUES (@purchase_order_detail_fk, @product_fk);", new
-                    {
+                {
 
-                  
-                        purchase_order_detail_fk = entity.purchase_order_detail_fk,
-                        product_fk = entity.product_fk,
-                    }, Transaction)) == 1;
+
+                    purchase_order_detail_fk = entity.purchase_order_detail_fk,
+                    product_fk = entity.product_fk,
+                }, Transaction)) == 1;
 
                 if (insert_product_purchase_order == true)
                 {
@@ -606,22 +606,22 @@ namespace VMSales.Logic
                 // supplier only
                 if (category_fk == 0 && supplier_fk != 0)
                 {
-                        return await Connection.QueryAsync<ProductModel>(
-                    "SELECT DISTINCT c.category_pk, c.category_name, p.*, ps.* " +
-                    "FROM product p " +
-                    "INNER JOIN product_supplier ps ON p.product_pk = ps.product_fk " +
-                    "INNER JOIN supplier s ON s.supplier_pk = ps.supplier_fk " +
-                    "LEFT JOIN product_category pc ON p.product_pk = pc.product_fk " +
-                    "LEFT JOIN category c ON c.category_pk = pc.category_fk " +
-                    "WHERE ps.supplier_fk = @supplier_fk " +
-                    "UNION SELECT DISTINCT " +
-                    "c.category_pk, c.category_name, p.*, ps.* " +
-                    "FROM product p " +
-                    "INNER JOIN product_supplier ps ON p.product_pk = ps.product_fk " +
-                    "INNER JOIN supplier s ON s.supplier_pk = ps.supplier_fk " +
-                    "INNER JOIN product_category pc ON p.product_pk = pc.product_fk " +
-                    "INNER JOIN category c ON c.category_pk = pc.category_fk " +
-                    "WHERE ps.supplier_fk = @supplier_fk", new { supplier_fk }, Transaction);
+                    return await Connection.QueryAsync<ProductModel>(
+                "SELECT DISTINCT c.category_pk, c.category_name, p.*, ps.* " +
+                "FROM product p " +
+                "INNER JOIN product_supplier ps ON p.product_pk = ps.product_fk " +
+                "INNER JOIN supplier s ON s.supplier_pk = ps.supplier_fk " +
+                "LEFT JOIN product_category pc ON p.product_pk = pc.product_fk " +
+                "LEFT JOIN category c ON c.category_pk = pc.category_fk " +
+                "WHERE ps.supplier_fk = @supplier_fk " +
+                "UNION SELECT DISTINCT " +
+                "c.category_pk, c.category_name, p.*, ps.* " +
+                "FROM product p " +
+                "INNER JOIN product_supplier ps ON p.product_pk = ps.product_fk " +
+                "INNER JOIN supplier s ON s.supplier_pk = ps.supplier_fk " +
+                "INNER JOIN product_category pc ON p.product_pk = pc.product_fk " +
+                "INNER JOIN category c ON c.category_pk = pc.category_fk " +
+                "WHERE ps.supplier_fk = @supplier_fk", new { supplier_fk }, Transaction);
                 }
                 // supplier and category
                 if (category_fk != 0 && supplier_fk != 0)
@@ -642,7 +642,7 @@ namespace VMSales.Logic
                 "INNER JOIN product_category pc ON p.product_pk = pc.product_fk " +
                 "INNER JOIN category c ON c.category_pk = pc.category_fk " +
                 "WHERE ps.supplier_fk = @supplier_fk AND pc.category_fk = @category_fk"
-                , new { supplier_fk,category_fk }, Transaction);
+                , new { supplier_fk, category_fk }, Transaction);
                 }
                 return null;
             }
@@ -816,5 +816,93 @@ namespace VMSales.Logic
         }
         #endregion
         */
+        #region CustomerModel
+        // Customer
+        public class CustomerRepository : Repository<CustomerModel>
+        {
+            public CustomerRepository(IDatabaseProvider dbProvider) : base(dbProvider) { }
+
+            /*
+                //get customer by name
+                public async Task<int> Get_by_customer_name(string supplier_name)
+                {
+                    return await Connection.QuerySingleAsync<int>("SELECT supplier_pk FROM supplier WHERE supplier_name = @supplier_name", new { supplier_name }, Transaction);
+                }
+            */
+            /*
+                //get product_supplier
+                public async Task<IEnumerable<string>> Selected_Supplier(int product_pk)
+                {
+                    return await Connection.QueryAsync<string>("SELECT " +
+                    "supplier_name as selected_supplier_name from product_supplier ps " +
+                    "INNER JOIN supplier s on s.supplier_pk = ps.supplier_fk " +
+                    "WHERE ps.product_fk = @product_pk"
+                    , new { product_pk }, Transaction);
+                }
+            */
+
+            public override async Task<bool> Insert(CustomerModel entity)
+            {
+                int newId = await Connection.QuerySingleAsync<int>("INSERT INTO supplier (supplier_name, address, city, zip, state, country, phone, email) VALUES (@supplier_name, @address, @city, @zip, @state, @country, @phone, @email); SELECT last_insert_rowid()", new
+                {
+                    //supplier_name = entity.supplier_name,
+                    //address = entity.address,
+                    //city = entity.city,
+                    //zip = entity.zip,
+                    //state = entity.state,
+                    //country = entity.country,
+                    //phone = entity.phone,
+                    //email = entity.email
+                }, Transaction);
+
+                //entity.supplier_pk = newId;
+
+                return true;
+            }
+
+            public override async Task<CustomerModel> Get(int id)
+            {
+                //    return await Connection.QuerySingleAsync<SupplierModel>("SELECT supplier_pk FROM supplier WHERE supplier_pk = @id", new { id }, Transaction);
+                return null;
+            }
+
+            public override async Task<IEnumerable<CustomerModel>> GetAll()
+            {
+                //    return await Connection.QueryAsync<SupplierModel>("SELECT supplier_pk, supplier_name, address, city, zip, state, country, phone, email FROM supplier ORDER BY supplier_name", null, Transaction);
+                return null;
+            }
+            public override async Task<IEnumerable<CustomerModel>> GetAllWithID(int id)
+            {
+                //    return await Connection.QueryAsync<SupplierModel>("SELECT supplier_pk, supplier_name, address, city, zip, state, country, phone, email FROM supplier ORDER BY supplier_name", null, Transaction);
+                return null;
+            }
+
+
+
+            public override async Task<bool> Update(CustomerModel entity)
+            {
+                return (await Connection.ExecuteAsync("UPDATE customer SET user_name = @user_name, " +
+                    "first_name= @first_name, last_name= @last_name, address = @address, " +
+                    "state = @state, city = @city, zip = @zip, state = @state, country = @country, phone = @phone, email = @email WHERE supplier_pk = @id", new
+                {
+                    id = entity.customer_pk,
+                    //supplier_name = entity.supplier_name,
+                    address = entity.address,
+                    //city = entity.city,
+                    zip = entity.zip,
+                    state = entity.state,
+                    country = entity.country,
+                    phone = entity.phone,
+                    //email = entity.email
+
+                }, Transaction)) == 1;
+            }
+
+            public override async Task<bool> Delete(CustomerModel entity)
+            {
+                return (await Connection.ExecuteAsync("DELETE FROM customer WHERE customer_pk = @id", new { id = entity.customer_pk }, Transaction)) == 1;
+            }
+        }
+        #endregion
     }
 }

@@ -13,11 +13,13 @@ namespace VMSales.Models
         private string _last_name { get; set; }
         private string _address { get; set; }
         private string _state { get; set; }
+        private string _city { get; set; }
         private string _zip { get; set; }
         private string _country { get; set; }
         private string _phone { get; set; }
         private string _shipping_address { get; set; }
         private string _shipping_state { get; set; }
+        private string _shipping_city { get; set; }
         private string _shipping_zip { get; set; }
         private string _shipping_country { get; set; }
         public int use_same_address { get; set;}
@@ -82,6 +84,17 @@ namespace VMSales.Models
                 RaisePropertyChanged("state");
             }
         }
+        public string city
+        {
+            get { return _city; }
+            set
+            {
+                if (_city == value) return;
+                _city = value;
+                RaisePropertyChanged("city");
+            }
+        }
+
         public string zip 
         {
             get { return _zip; }
@@ -132,6 +145,17 @@ namespace VMSales.Models
                 RaisePropertyChanged("shipping_state");
             }
         }
+        public string shipping_city
+        {
+            get { return _shipping_city; }
+            set
+            {
+                if (_shipping_city == value) return;
+                _shipping_city = value;
+                RaisePropertyChanged("shipping_city");
+            }
+        }
+
         public string shipping_zip 
         {
             get { return _shipping_zip; }
