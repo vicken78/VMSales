@@ -105,15 +105,15 @@
                     <TextBox
                         Text="{Binding SelectedItem.shipping_address, ElementName=customerdatagrid, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                         Grid.Column="1" Grid.Row="12" IsEnabled="{Binding use_same_address, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-                    <!-- Shipping State -->
-                    <Label Content="Shipping State" Grid.Column="0" Grid.Row="13" IsEnabled="{Binding use_same_address_flag, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-                    <TextBox
-                        Text="{Binding SelectedItem.shipping_state, ElementName=customerdatagrid, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                        Grid.Column="1" Grid.Row="13" IsEnabled="{Binding use_same_address, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                     <!-- Shipping City -->
-                    <Label Content="Shipping City" Grid.Column="0" Grid.Row="14" IsEnabled="{Binding use_same_address_flag, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                    <Label Content="Shipping City" Grid.Column="0" Grid.Row="13" IsEnabled="{Binding use_same_address_flag, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                     <TextBox
                         Text="{Binding SelectedItem.shipping_city, ElementName=customerdatagrid, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}"
+                        Grid.Column="1" Grid.Row="13" IsEnabled="{Binding use_same_address, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                    <!-- Shipping State -->
+                    <Label Content="Shipping State" Grid.Column="0" Grid.Row="14" IsEnabled="{Binding use_same_address_flag, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                    <TextBox
+                        Text="{Binding SelectedItem.shipping_state, ElementName=customerdatagrid, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                         Grid.Column="1" Grid.Row="14" IsEnabled="{Binding use_same_address, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                     <!-- Shipping Zip -->
                     <Label Content="Shipping Zip" Grid.Column="0" Grid.Row="15" IsEnabled="{Binding use_same_address_flag, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
