@@ -843,58 +843,77 @@ namespace VMSales.Logic
 
             public override async Task<bool> Insert(CustomerModel entity)
             {
-                int newId = await Connection.QuerySingleAsync<int>("INSERT INTO supplier (supplier_name, address, city, zip, state, country, phone, email) VALUES (@supplier_name, @address, @city, @zip, @state, @country, @phone, @email); SELECT last_insert_rowid()", new
+                int newId = await Connection.QuerySingleAsync<int>("INSERT INTO customer " +
+                    "(user_name, first_name, last_name, address, city, zip, state, country, phone, " +
+                    "shipping address, shipping_city, shipping_zip, shipping_country, same_shipping_address) " +
+                    "VALUES (@user_name, @first_name, @last_name, @address, @city, @state, @zip, @country, @phone, " +
+                    "@shipping_address, @shipping_city, @shipping_zip, @shipping_country, @use_same_shipping_address); SELECT last_insert_rowid()", new
                 {
-                    //supplier_name = entity.supplier_name,
-                    //address = entity.address,
-                    //city = entity.city,
-                    //zip = entity.zip,
-                    //state = entity.state,
-                    //country = entity.country,
-                    //phone = entity.phone,
-                    //email = entity.email
+                    id = entity.customer_pk,
+                    user_name = entity.user_name,
+                    first_name = entity.first_name,
+                    last_name = entity.last_name,
+                    address = entity.address,
+                    city = entity.city,
+                    state = entity.state,
+                    zip = entity.zip,
+                    country = entity.country,
+                    phone = entity.phone,
+                    shipping_address = entity.shipping_address,
+                    shipping_city = entity.shipping_city,
+                    shipping_zip = entity.shipping_zip,
+                    shipping_country = entity.shipping_country,
+                    same_shipping_address = entity.use_same_address
                 }, Transaction);
-
-                //entity.supplier_pk = newId;
-
                 return true;
             }
 
             public override async Task<CustomerModel> Get(int id)
             {
-                //    return await Connection.QuerySingleAsync<SupplierModel>("SELECT supplier_pk FROM supplier WHERE supplier_pk = @id", new { id }, Transaction);
-                return null;
+                return await Connection.QuerySingleAsync<CustomerModel>("SELECT customer_pk FROM supplier WHERE customer_pk = @id", new { id }, Transaction);
             }
 
             public override async Task<IEnumerable<CustomerModel>> GetAll()
             {
-                //    return await Connection.QueryAsync<SupplierModel>("SELECT supplier_pk, supplier_name, address, city, zip, state, country, phone, email FROM supplier ORDER BY supplier_name", null, Transaction);
-                return null;
+                return await Connection.QueryAsync<CustomerModel>("SELECT customer_pk, user_name, first_name, last_name, address, city, state, zip, country, phone, shipping_address, shipping_city, shipping_state, shipping_zip, shipping_country, same_shipping_address FROM customer ORDER BY last_name", null, Transaction);
             }
+
             public override async Task<IEnumerable<CustomerModel>> GetAllWithID(int id)
             {
-                //    return await Connection.QueryAsync<SupplierModel>("SELECT supplier_pk, supplier_name, address, city, zip, state, country, phone, email FROM supplier ORDER BY supplier_name", null, Transaction);
-                return null;
+                return await Connection.QueryAsync<CustomerModel>("SELECT " +
+                "customer_pk, user_name, first_name, last_name, address, city, state, zip, " +
+                "country, phone, shipping_address, shipping_city, shipping_state, shipping_zip, " +
+                "shipping_country, same_shipping_address " +
+                "FROM customer " +
+                "WHERE customer_pk = @id " +
+                "ORDER BY last_name", new { id }, Transaction);
             }
-
-
 
             public override async Task<bool> Update(CustomerModel entity)
             {
                 return (await Connection.ExecuteAsync("UPDATE customer SET user_name = @user_name, " +
-                    "first_name= @first_name, last_name= @last_name, address = @address, " +
-                    "state = @state, city = @city, zip = @zip, state = @state, country = @country, phone = @phone, email = @email WHERE supplier_pk = @id", new
+                    "first_name = @first_name, last_name = @last_name, address = @address, " +
+                    "state = @state, city = @city, zip = @zip, country = @country, phone = @phone, " +
+                    "shipping_address = @shipping_address, shipping_city = @shipping_city, " +
+                    "shipping_state = @shipping_state, shipping_zip = @shipping_zip, " +
+                    "shipping country = @shipping_country, same_shipping_address = @same_shipping_address " +
+                    "WHERE customer_pk = @id", new
                 {
                     id = entity.customer_pk,
-                    //supplier_name = entity.supplier_name,
+                    user_name = entity.user_name,
+                    first_name = entity.first_name,
+                    last_name = entity.last_name,
                     address = entity.address,
-                    //city = entity.city,
-                    zip = entity.zip,
                     state = entity.state,
+                    city = entity.city,
+                    zip = entity.zip,
                     country = entity.country,
                     phone = entity.phone,
-                    //email = entity.email
-
+                    shipping_address = entity.shipping_address,
+                    shipping_city = entity.shipping_city,
+                    shipping_zip = entity.shipping_zip,
+                    shipping_country = entity.shipping_country,
+                    same_shipping_address = entity.use_same_address   
                 }, Transaction)) == 1;
             }
 
