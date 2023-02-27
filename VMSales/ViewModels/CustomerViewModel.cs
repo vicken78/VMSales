@@ -65,6 +65,8 @@ namespace VMSales.ViewModels
             }
             catch (AggregateException e) // primary key does not exist
             {
+
+           
                 // insert
                 Task<bool> insertCustomer = CustomerRepo.Insert(Select_Request);
                 if (insertCustomer.Result == true)
