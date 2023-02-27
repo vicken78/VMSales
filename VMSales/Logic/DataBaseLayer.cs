@@ -845,7 +845,7 @@ namespace VMSales.Logic
             {
                 int newId = await Connection.QuerySingleAsync<int>("INSERT INTO customer " +
                     "(user_name, first_name, last_name, address, city, zip, state, country, phone, " +
-                    "shipping address, shipping_city, shipping_zip, shipping_country, same_shipping_address) " +
+                    "shipping_address, shipping_city, shipping_zip, shipping_country, same_shipping_address) " +
                     "VALUES (@user_name, @first_name, @last_name, @address, @city, @state, @zip, @country, @phone, " +
                     "@shipping_address, @shipping_city, @shipping_zip, @shipping_country, @use_same_shipping_address); SELECT last_insert_rowid()", new
                 {
@@ -896,7 +896,7 @@ namespace VMSales.Logic
                     "state = @state, city = @city, zip = @zip, country = @country, phone = @phone, " +
                     "shipping_address = @shipping_address, shipping_city = @shipping_city, " +
                     "shipping_state = @shipping_state, shipping_zip = @shipping_zip, " +
-                    "shipping country = @shipping_country, same_shipping_address = @same_shipping_address " +
+                    "shipping_country = @shipping_country, same_shipping_address = @same_shipping_address " +
                     "WHERE customer_pk = @id", new
                 {
                     id = entity.customer_pk,
