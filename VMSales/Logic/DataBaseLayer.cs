@@ -861,6 +861,7 @@ namespace VMSales.Logic
                     phone = entity.phone,
                     shipping_address = entity.shipping_address,
                     shipping_city = entity.shipping_city,
+                    shipping_state = entity.shipping_state,
                     shipping_zip = entity.shipping_zip,
                     shipping_country = entity.shipping_country,
                     same_shipping_address = entity.use_same_address
@@ -911,6 +912,7 @@ namespace VMSales.Logic
                     phone = entity.phone,
                     shipping_address = entity.shipping_address,
                     shipping_city = entity.shipping_city,
+                    shipping_state = entity.shipping_state,
                     shipping_zip = entity.shipping_zip,
                     shipping_country = entity.shipping_country,
                     same_shipping_address = entity.use_same_address   
