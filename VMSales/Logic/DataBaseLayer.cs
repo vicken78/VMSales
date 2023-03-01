@@ -843,11 +843,27 @@ namespace VMSales.Logic
 
             public override async Task<bool> Insert(CustomerModel entity)
             {
+
+                entity.user_name = entity.user_name ?? "";
+                entity.first_name = entity.first_name ?? "";
+                entity.last_name = entity.last_name ?? "";
+                entity.address = entity.address ?? "";
+                entity.city = entity.city ?? "";
+                entity.state = entity.state ?? "";
+                entity.zip = entity.zip ?? "";
+                entity.country = entity.country ?? "";
+                entity.phone = entity.phone ?? "";
+                entity.shipping_address = entity.shipping_address ?? "";
+                entity.shipping_city = entity.shipping_city ?? "";
+                entity.shipping_state = entity.shipping_state ?? "";
+                entity.shipping_zip = entity.shipping_zip ?? "";
+                entity.shipping_country = entity.shipping_country ?? "";
+               
                 int newId = await Connection.QuerySingleAsync<int>("INSERT INTO customer " +
-                    "(user_name, first_name, last_name, address, city, zip, state, country, phone, " +
-                    "shipping_address, shipping_city, shipping_zip, shipping_country, same_shipping_address) " +
+                    "(user_name, first_name, last_name, address, city, state, zip, country, phone, " +
+                    "shipping_address, shipping_city, shipping_state, shipping_zip, shipping_country, same_shipping_address) " +
                     "VALUES (@user_name, @first_name, @last_name, @address, @city, @state, @zip, @country, @phone, " +
-                    "@shipping_address, @shipping_city, @shipping_state, @shipping_zip, @shipping_country, @use_same_address); SELECT last_insert_rowid()", new
+                    "@shipping_address, @shipping_city, @shipping_state, @shipping_zip, @shipping_country, @same_shipping_address); SELECT last_insert_rowid()", new
                 {
                     user_name = entity.user_name,
                     first_name = entity.first_name,

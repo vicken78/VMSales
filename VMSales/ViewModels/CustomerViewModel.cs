@@ -28,7 +28,12 @@ namespace VMSales.ViewModels
             {
                 if (_use_same_address == value) return;
                 _use_same_address = value;
+                //if (use_same_address != 0)
+                //Select_Request.use_same_address = 1;
+                //else
+                //Select_Request.use_same_address = 0;
                 RaisePropertyChanged("use_same_address");
+                //MessageBox.Show(Select_Request.use_same_address.ToString());
                 }
             }
 
@@ -50,12 +55,14 @@ namespace VMSales.ViewModels
         public void SaveCommand()
         {
             String cust_pk;
-            if (Select_Request == null)
-            {
-                MessageBox.Show("No Changes Were Made.");
-                return;
-            }
+              if (Select_Request == null)
+              {
+                  MessageBox.Show("No Changes Were Made.");
+                  return;
+              }
 
+            Select_Request.use_same_address = use_same_address;
+  
             // update or insert, attempt to get primary key.
             dataBaseProvider = getprovider();
             DataBaseLayer.CustomerRepository CustomerRepo = new DataBaseLayer.CustomerRepository(dataBaseProvider);
@@ -65,8 +72,7 @@ namespace VMSales.ViewModels
             }
             catch (AggregateException e) // primary key does not exist
             {
-
-           
+                
                 // insert
                 Task<bool> insertCustomer = CustomerRepo.Insert(Select_Request);
                 if (insertCustomer.Result == true)
@@ -128,6 +134,7 @@ namespace VMSales.ViewModels
                 country = null,
                 phone = null,
                 shipping_address = null,
+                shipping_city = null,
                 shipping_state = null,
                 shipping_zip = null,
                 shipping_country = null,
