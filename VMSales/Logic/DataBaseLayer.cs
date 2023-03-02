@@ -884,6 +884,21 @@ namespace VMSales.Logic
                 return true;
             }
 
+
+            public async Task<int> Get_cust_pk(int id)
+            {
+                var result = await Connection.QueryFirstOrDefaultAsync<int?>("SELECT customer_pk FROM customer WHERE customer_pk = @id", new { id }, Transaction);
+
+                if (result.HasValue)
+                {
+                    return result.Value;
+                }
+                else
+                {
+                    return 0;
+                }
+            }
+
             public override async Task<CustomerModel> Get(int id)
             {
                 return await Connection.QuerySingleAsync<CustomerModel>("SELECT customer_pk FROM customer WHERE customer_pk = @id", new { id }, Transaction);

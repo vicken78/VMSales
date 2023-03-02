@@ -64,7 +64,7 @@ namespace VMSales.ViewModels
             {
                 db_supplier_pk = SupplierRepo.Get(select_request.supplier_pk).Result.supplier_pk.ToString();
             }
-            catch (AggregateException e) // primary key does not exist
+            catch (AggregateException) // primary key does not exist
             {
                 // insert
                 try

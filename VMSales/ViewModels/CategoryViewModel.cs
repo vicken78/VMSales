@@ -65,7 +65,7 @@ namespace VMSales.ViewModels
             {
                 db_category_pk = CategoryRepo.Get(select_request.category_pk).Result.category_pk.ToString();
             }
-            catch (AggregateException e) // primary key does not exist
+            catch (AggregateException) // primary key does not exist
             {
                 // insert
                 Task<bool> insertCategory = CategoryRepo.Insert(Select_Request);

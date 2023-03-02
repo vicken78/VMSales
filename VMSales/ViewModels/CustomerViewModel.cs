@@ -51,53 +51,54 @@ namespace VMSales.ViewModels
 
         IDatabaseProvider dataBaseProvider;
         //Commands
+        
 
-        public void SaveCommand()
+        /*
+        public async void SaveCommand()
         {
-            String cust_pk;
-              if (Select_Request == null)
-              {
-                  MessageBox.Show("No Changes Were Made.");
-                  return;
-              }
+            if (Select_Request == null)
+                {
+                    MessageBox.Show("No changes were made.");
+                    return;
+                }
 
             Select_Request.use_same_address = use_same_address;
-  
+            try 
+            { 
+                
             // update or insert, attempt to get primary key.
             dataBaseProvider = getprovider();
-            DataBaseLayer.CustomerRepository CustomerRepo = new DataBaseLayer.CustomerRepository(dataBaseProvider);
-            try
-            {
-                cust_pk = CustomerRepo.Get(select_request.customer_pk).Result.ToString();
-            }
-            catch (AggregateException e) // primary key does not exist
-            {
-                
-                // insert
-                Task<bool> insertCustomer = CustomerRepo.Insert(Select_Request);
-                if (insertCustomer.Result == true)
+            var CustomerRepo = new DataBaseLayer.CustomerRepository(dataBaseProvider);
+            int ? cust_pk = CustomerRepo.Get_cust_pk(select_request.customer_pk).Result;
+            CustomerRepo.Commit();
+            CustomerRepo.Dispose();
+                if (cust_pk == 0)
                 {
-                    CustomerRepo.Commit();
-                    CustomerRepo.Dispose();
+                    // insert
+                    bool result = await CustomerRepo.Insert(Select_Request);
+                    if (result == true)
+                    {
+                        CustomerRepo.Commit();
+                        CustomerRepo.Dispose();
+                        MessageBox.Show("1 Row Inserted.");
+                    }
+                    else
+                    {
+                        CustomerRepo.Revert();
+                        CustomerRepo.Dispose();
+                        MessageBox.Show("An error has occurred with inserting");
+                    }
                 }
                 else
                 {
-                    MessageBox.Show("An Error has occured with inserting.  Insertion Rejected");
-                    CustomerRepo.Revert();
-                    CustomerRepo.Dispose();
+                    if (cust_pk.ToString() == select_request.customer_pk.ToString())
+                    bool result = await customerRepo.Update(Select_Request);
+                    
                 }
                 return;
             }
-            catch (Exception e)
-            {  // any other error
-                MessageBox.Show(e.ToString());
-                CustomerRepo.Revert();
-                CustomerRepo.Dispose();
-                return;
-            }
-            // if id match UPDATE
-            if (cust_pk == select_request.customer_pk.ToString())
-            {
+
+
                 Task<bool> updateCategory = CustomerRepo.Update(Select_Request);
                 if (updateCategory.Result == true)
                 {
@@ -105,17 +106,100 @@ namespace VMSales.ViewModels
                     CustomerRepo.Dispose();
                     MessageBox.Show("Saved");
                 }
-                else
-                {
-                    MessageBox.Show("An Error has occured with Updating.  Updating Rejected");
-                    CustomerRepo.Revert();
-                    CustomerRepo.Dispose();
-                }
+
+
+
+
+            catch (Exception e)
+            {  // any other error
+                MessageBox.Show(e.ToString());
                 return;
             }
-    }
+            // if id match UPDATE
+              if (cust_pk.ToString() == select_request.customer_pk.ToString())
+              {
+                  Task<bool> updateCategory = CustomerRepo.Update(Select_Request);
+                  if (updateCategory.Result == true)
+                  {
+                      CustomerRepo.Commit();
+                      CustomerRepo.Dispose();
+                      MessageBox.Show("Saved");
+                  }
+                  else
+                  {
+                      CustomerRepo.Revert();
+                      CustomerRepo.Dispose();
+                      MessageBox.Show("An Error has occured with Updating.  Updating Rejected");
+                  }
+                    return;
+              }
+        }
+        */
+        public async void SaveCommand()
+        {
+            if (Select_Request == null)
+            {
+                MessageBox.Show("No changes were made.");
+                return;
+            }
 
-    public void ResetCommand()
+            Select_Request.use_same_address = use_same_address;
+            try
+            {
+                var dataBaseProvider = getprovider();
+                var CustomerRepo = new DataBaseLayer.CustomerRepository(dataBaseProvider);
+
+                // Create a new instance of CustomerRepository using the database provider
+
+                // Try to get the primary key
+
+                int cust_pk = await CustomerRepo.Get_cust_pk(select_request.customer_pk);
+                // cust_pk will be 0 if no matching rows are found
+                if (cust_pk == 0)
+                {
+                    // Insert
+                    bool insertResult = await CustomerRepo.Insert(Select_Request);
+                    if (insertResult)
+                    {
+                        MessageBox.Show("Saved.");
+                        CustomerRepo.Commit();
+                        CustomerRepo.Dispose();
+
+                    }
+                    else
+                    {
+                        MessageBox.Show("An error has occurred with inserting. Insertion rejected.");
+                        CustomerRepo.Revert();
+                        CustomerRepo.Dispose();
+                    }
+                }
+                else if (cust_pk == select_request.customer_pk)
+                {
+                    // Update
+                    bool updateResult = await CustomerRepo.Update(Select_Request);
+                    if (updateResult)
+                    {
+                        MessageBox.Show("Saved.");
+                        CustomerRepo.Commit();
+                        CustomerRepo.Dispose();
+                    }
+                    else
+                    {
+                        MessageBox.Show("An error has occurred with updating. Updating rejected.");
+                        CustomerRepo.Revert();
+                        CustomerRepo.Dispose();
+                    }
+                }
+                else
+                {
+                    MessageBox.Show("An error has occurred: primary key mismatch.");
+                }
+                initial_load();
+            }
+            catch (Exception) { }
+        }
+
+        public void ResetCommand()
         {
             initial_load();
         }
