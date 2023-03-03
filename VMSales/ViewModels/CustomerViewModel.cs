@@ -20,23 +20,7 @@ namespace VMSales.ViewModels
                 RaisePropertyChanged("ObservableCollectionCustomerModel");
             }
         }
-        private int _use_same_address { get; set; }
-        public int use_same_address
-        {
-            get { return _use_same_address; }
-            set
-            {
-                if (_use_same_address == value) return;
-                _use_same_address = value;
-                //if (use_same_address != 0)
-                //Select_Request.use_same_address = 1;
-                //else
-                //Select_Request.use_same_address = 0;
-                RaisePropertyChanged("use_same_address");
-                //MessageBox.Show(Select_Request.use_same_address.ToString());
-                }
-            }
-
+      
         private CustomerModel select_request;
         public CustomerModel Select_Request
         {
@@ -48,93 +32,7 @@ namespace VMSales.ViewModels
             }
         }
 
-
         IDatabaseProvider dataBaseProvider;
-        //Commands
-        
-
-        /*
-        public async void SaveCommand()
-        {
-            if (Select_Request == null)
-                {
-                    MessageBox.Show("No changes were made.");
-                    return;
-                }
-
-            Select_Request.use_same_address = use_same_address;
-            try 
-            { 
-                
-            // update or insert, attempt to get primary key.
-            dataBaseProvider = getprovider();
-            var CustomerRepo = new DataBaseLayer.CustomerRepository(dataBaseProvider);
-            int ? cust_pk = CustomerRepo.Get_cust_pk(select_request.customer_pk).Result;
-            CustomerRepo.Commit();
-            CustomerRepo.Dispose();
-                if (cust_pk == 0)
-                {
-                    // insert
-                    bool result = await CustomerRepo.Insert(Select_Request);
-                    if (result == true)
-                    {
-                        CustomerRepo.Commit();
-                        CustomerRepo.Dispose();
-                        MessageBox.Show("1 Row Inserted.");
-                    }
-                    else
-                    {
-                        CustomerRepo.Revert();
-                        CustomerRepo.Dispose();
-                        MessageBox.Show("An error has occurred with inserting");
-                    }
-                }
-                else
-                {
-                    if (cust_pk.ToString() == select_request.customer_pk.ToString())
-                    bool result = await customerRepo.Update(Select_Request);
-                    
-                }
-                return;
-            }
-
-
-                Task<bool> updateCategory = CustomerRepo.Update(Select_Request);
-                if (updateCategory.Result == true)
-                {
-                    CustomerRepo.Commit();
-                    CustomerRepo.Dispose();
-                    MessageBox.Show("Saved");
-                }
-
-
-
-
-            catch (Exception e)
-            {  // any other error
-                MessageBox.Show(e.ToString());
-                return;
-            }
-            // if id match UPDATE
-              if (cust_pk.ToString() == select_request.customer_pk.ToString())
-              {
-                  Task<bool> updateCategory = CustomerRepo.Update(Select_Request);
-                  if (updateCategory.Result == true)
-                  {
-                      CustomerRepo.Commit();
-                      CustomerRepo.Dispose();
-                      MessageBox.Show("Saved");
-                  }
-                  else
-                  {
-                      CustomerRepo.Revert();
-                      CustomerRepo.Dispose();
-                      MessageBox.Show("An Error has occured with Updating.  Updating Rejected");
-                  }
-                    return;
-              }
-        }
-        */
         public async void SaveCommand()
         {
             if (Select_Request == null)
@@ -143,7 +41,6 @@ namespace VMSales.ViewModels
                 return;
             }
 
-            Select_Request.use_same_address = use_same_address;
             try
             {
                 var dataBaseProvider = getprovider();
@@ -222,7 +119,7 @@ namespace VMSales.ViewModels
                 shipping_state = null,
                 shipping_zip = null,
                 shipping_country = null,
-                use_same_address = 0
+                same_shipping_address = 0
             };
             ObservableCollectionCustomerModel.Add(obj);
             RaisePropertyChanged("ObservableCollectionCustomerModel");
@@ -285,11 +182,19 @@ namespace VMSales.ViewModels
             ObservableCollectionCustomerModel = new ObservableCollection<CustomerModel>();
             try
             {
+                Select_Request = new CustomerModel();
                 dataBaseProvider = getprovider();
                 DataBaseLayer.CustomerRepository CustomerRepo = new DataBaseLayer.CustomerRepository(dataBaseProvider);
                 ObservableCollectionCustomerModel = CustomerRepo.GetAll().Result.ToObservable();
                 CustomerRepo.Commit();
                 CustomerRepo.Dispose();
+
+                foreach (var item in ObservableCollectionCustomerModel)
+                {
+                    MessageBox.Show(item.same_shipping_address.ToString());
+
+                }
+
             }
             catch (Exception e)
             {

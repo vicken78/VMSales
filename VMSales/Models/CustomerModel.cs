@@ -22,8 +22,7 @@ namespace VMSales.Models
         private string _shipping_city { get; set; }
         private string _shipping_zip { get; set; }
         private string _shipping_country { get; set; }
-        private int _use_same_address { get; set; } = 0;
-
+       
         public int customer_pk 
         {
             get { return _customer_pk; }
@@ -175,7 +174,18 @@ namespace VMSales.Models
                 RaisePropertyChanged("shipping_country");
             }
         }
-        public int use_same_address { get; set; } = 0;
+        private int _same_shipping_address { get; set; }
+        public int same_shipping_address
+        {
+            get { return _same_shipping_address; }
+            set
+            {
+                if (_same_shipping_address == value) return;
+                _same_shipping_address = value;
+                RaisePropertyChanged("same_shipping_address");
+            }
+        }
+
 
     }
 }

@@ -879,7 +879,7 @@ namespace VMSales.Logic
                     shipping_state = entity.shipping_state,
                     shipping_zip = entity.shipping_zip,
                     shipping_country = entity.shipping_country,
-                    same_shipping_address = entity.use_same_address
+                    same_shipping_address = entity.same_shipping_address
                 }, Transaction);
                 return true;
             }
@@ -945,7 +945,7 @@ namespace VMSales.Logic
                     shipping_state = entity.shipping_state,
                     shipping_zip = entity.shipping_zip,
                     shipping_country = entity.shipping_country,
-                    same_shipping_address = entity.use_same_address   
+                    same_shipping_address = entity.same_shipping_address   
                 }, Transaction)) == 1;
             }
 

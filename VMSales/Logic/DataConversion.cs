@@ -21,6 +21,9 @@ namespace VMSales.Logic
         }
 
 
+   
+
+
         // so far not needed.
         public static ObservableCollection<T> Convert<T>(IEnumerable<T> original)
         {
