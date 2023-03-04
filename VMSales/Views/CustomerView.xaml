@@ -4,19 +4,12 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:viewmodels="clr-namespace:VMSales.ViewModels" 
-             xmlns:converters="clr-namespace:VMSales.Logic"
              d:DataContext="{d:DesignInstance Type=viewmodels:CustomerViewModel}"
              mc:Ignorable="d" 
              Height="800" Width="Auto" VerticalAlignment="Top" MinHeight="400" MinWidth="1725">
-
-    <!--<UserControl.Resources>
-        <converters:DataValidator x:Key="DataValidator"/>
-    </UserControl.Resources>
-    -->
     <DockPanel LastChildFill="True">
-        
-        <Grid x:Name="ObservableCollectionCustomerModel" Margin="10" DockPanel.Dock="Bottom">
 
+        <Grid Margin="10" DockPanel.Dock="Bottom">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition />
                 <ColumnDefinition />
@@ -28,7 +21,7 @@
             <GroupBox Grid.Column="0" Grid.Row="1" Background="Azure" HorizontalAlignment="Left" >
                 <Grid>
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="105" />
+                        <ColumnDefinition Width="100" />
                         <ColumnDefinition />
                     </Grid.ColumnDefinitions>
                     <Grid.RowDefinitions>
@@ -103,7 +96,7 @@
                     <TextBox
                         Text="{Binding SelectedItem.phone, ElementName=customerdatagrid, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}"
                         Grid.Column="1" Grid.Row="10" />
-                    <!-- Ship Same as Billing-->
+                    <!-- Ship Same as Billing Checkbox-->
 
                     <CheckBox x:Name="SameAddress" Content="Use Separate Shipping Address" 
                     IsChecked="{Binding SelectedItem.same_shipping_address, ElementName=customerdatagrid, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
@@ -165,10 +158,10 @@
             <GroupBox Grid.Row="0" Header="Customers" Grid.RowSpan="2" Grid.ColumnSpan="2" Margin="640,0,0,0">
                 <DataGrid x:Name="customerdatagrid" AutoGenerateColumns="False" 
                           ItemsSource="{Binding ObservableCollectionCustomerModel}"
-                          SelectedItem="{Binding Select_Request, Mode=TwoWay}" 
+                           SelectedItem="{Binding Select_Request, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
                            ScrollViewer.CanContentScroll="True" 
-                           ScrollViewer.VerticalScrollBarVisibility="Auto"
-                           ScrollViewer.HorizontalScrollBarVisibility="Auto"
+                           ScrollViewer.VerticalScrollBarVisibility="Visible"
+                           ScrollViewer.HorizontalScrollBarVisibility="Visible"
                           IsSynchronizedWithCurrentItem="True"
                           SelectionMode="Single"
                           CanUserReorderColumns="False"
@@ -178,7 +171,7 @@
                           Height="Auto" Width="Auto">
                     <DataGrid.Columns>
                         <!--Customer ID -->
-                        <DataGridTextColumn Header="Customer ID" IsReadOnly="true" Width="Auto" Binding="{Binding customer_pk, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}">
+                        <DataGridTextColumn Header="Customer ID" IsReadOnly="true" Width="Auto" Binding="{Binding customer_pk}">
                             <DataGridTextColumn.ElementStyle>
                                 <Style TargetType="TextBlock">
                                     <Setter Property="TextWrapping" Value="Wrap"/>
@@ -242,7 +235,7 @@
                             </DataGridTextColumn.ElementStyle>
                         </DataGridTextColumn>
                         <!-- Billing Country -->
-                        <DataGridTextColumn Header="Billing Country" Width="Auto" Binding="{Binding country, Mode=TwoWay, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}">
+                        <DataGridTextColumn Header="Billing Country" Width="Auto" Binding="{Binding country, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
                             <DataGridTextColumn.ElementStyle>
                                 <Style TargetType="TextBlock">
                                     <Setter Property="TextWrapping" Value="Wrap"/>
@@ -250,7 +243,7 @@
                             </DataGridTextColumn.ElementStyle>
                         </DataGridTextColumn>
                         <!-- Phone -->
-                        <DataGridTextColumn Header="Phone" Width="75" Binding="{Binding phone, Mode=TwoWay, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}">
+                        <DataGridTextColumn Header="Phone" Width="75" Binding="{Binding phone, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
                             <DataGridTextColumn.ElementStyle>
                                 <Style TargetType="TextBlock">
                                     <Setter Property="TextWrapping" Value="Wrap"/>

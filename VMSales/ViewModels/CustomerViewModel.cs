@@ -189,12 +189,6 @@ namespace VMSales.ViewModels
                 CustomerRepo.Commit();
                 CustomerRepo.Dispose();
 
-                foreach (var item in ObservableCollectionCustomerModel)
-                {
-                    MessageBox.Show(item.same_shipping_address.ToString());
-
-                }
-
             }
             catch (Exception e)
             {
