@@ -1,6 +1,8 @@
 ﻿using VMSales.Logic;
 using Dapper.Contrib.Extensions;
 
+
+
 namespace VMSales.Models
 {
     [Table("customer")]

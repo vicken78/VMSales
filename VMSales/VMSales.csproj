@@ -236,6 +236,7 @@
     <Compile Include="Logic\DataBaseLayer.cs" />
     <Compile Include="Models\CategoryModel.cs" />
     <Compile Include="Models\CustomerModel.cs" />
+    <Compile Include="Models\CustomerOrderDetailModel.cs" />
     <Compile Include="Models\CustomerOrderModel.cs" />
     <Compile Include="Models\ProductModel.cs" />
     <Compile Include="Models\ProductPhotoModel.cs" />
