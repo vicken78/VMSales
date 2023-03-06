@@ -8,7 +8,7 @@
              Height="800" Width="1400" VerticalAlignment="Top" MinHeight="400" MinWidth="800">
    
     <DockPanel LastChildFill="True">
-        <Grid Margin="10" DockPanel.Dock="Top" Background="Azure">
+        <Grid Margin="5" DockPanel.Dock="Top" Background="Azure">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
@@ -22,10 +22,14 @@
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="25" />
                 <RowDefinition Height="Auto" />
+                <RowDefinition Height="25" />
+                <RowDefinition Height="Auto" />
+       
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="100"/>
                 <ColumnDefinition Width="200"/>
+                <ColumnDefinition Width="100"/>
                 <ColumnDefinition Width="100"/>
                 <ColumnDefinition Width="100"/>
                 <ColumnDefinition Width="100"/>
@@ -46,32 +50,39 @@
                 <Image Width="10" Height="10" Style="{DynamicResource ImageStyleForButtons}"/>
             </Button>
 
-            <!-- Address -->
-            <Label Content="Address" Grid.Column="0" Grid.Row="4" />
-            <TextBox Name="Address" IsReadOnly="True" Background="WhiteSmoke"  Text="{Binding SelectedItem.address, ElementName=cmbSupplier}" 
+            <!-- User Name -->
+            <Label Content="User Name" Grid.Column="0" Grid.Row="4" />
+            <TextBox Name="Addressa" IsReadOnly="True" Background="WhiteSmoke"  Text="{Binding SelectedItem.address, ElementName=cmbSupplier}" 
                         Grid.Column="1" Grid.Row="4"/>
 
+
+
+            <!-- Address -->
+            <Label Content="Ship Address" Grid.Column="0" Grid.Row="5" />
+            <TextBox Name="Address" IsReadOnly="True" Background="WhiteSmoke"  Text="{Binding SelectedItem.address, ElementName=cmbSupplier}" 
+                        Grid.Column="1" Grid.Row="5"/>
+
             <!-- City -->
-            <Label Content="City" Grid.Column="0" Grid.Row="5" />
+            <Label Content="City" Grid.Column="0" Grid.Row="6" />
             <TextBox Name="City" IsReadOnly="True" Background="WhiteSmoke" Text="{Binding SelectedItem.city, ElementName=cmbSupplier}"
-                        Grid.Column="1" Grid.Row="5" />
+                        Grid.Column="1" Grid.Row="6" />
             <!-- State -->
-            <Label Content="State" Grid.Column="0" Grid.Row="6" />
+            <Label Content="State" Grid.Column="0" Grid.Row="7" />
             <TextBox Name="State" IsReadOnly="True" Background="WhiteSmoke" Text="{Binding SelectedItem.state, ElementName=cmbSupplier}"
-                        Grid.Column="1" Grid.Row="6"/>
+                        Grid.Column="1" Grid.Row="7"/>
 
             <!-- Zip -->
-            <Label Content="Zip" Grid.Column="0" Grid.Row="7" />
+            <Label Content="Zip" Grid.Column="0" Grid.Row="8" />
             <TextBox Name="Zip" IsReadOnly="True" Background="WhiteSmoke" Text="{Binding SelectedItem.zip, ElementName=cmbSupplier}"
-                        Grid.Column="1" Grid.Row="7"/>
-            <!-- Phone -->
-            <Label Content="Phone" Grid.Column="0" Grid.Row="8" />
-            <TextBox Name="Phone" IsReadOnly="True" Background="WhiteSmoke" Text="{Binding SelectedItem.phone, ElementName=cmbSupplier}"
                         Grid.Column="1" Grid.Row="8"/>
-            <!-- Email -->
-            <Label Content="Email" Grid.Column="0" Grid.Row="9" />
-            <TextBox Name="Email" IsReadOnly="True" Background="WhiteSmoke" Text="{Binding SelectedItem.email, ElementName=cmbSupplier}"
+            <!-- Phone -->
+            <Label Content="Country" Grid.Column="0" Grid.Row="9" />
+            <TextBox Name="Phone" IsReadOnly="True" Background="WhiteSmoke" Text="{Binding SelectedItem.phone, ElementName=cmbSupplier}"
                         Grid.Column="1" Grid.Row="9"/>
+            <!-- Email -->
+            <Label Content="Email" Grid.Column="0" Grid.Row="10" />
+            <TextBox Name="Email" IsReadOnly="True" Background="WhiteSmoke" Text="{Binding SelectedItem.email, ElementName=cmbSupplier}"
+                        Grid.Column="1" Grid.Row="10"/>
 
             <!-- Invoice Number Combobox -->
 
@@ -98,7 +109,6 @@
             <TextBox x:Name="purchase_date" Background="White" Text="{Binding SelectedItem.purchase_date, StringFormat='MM/dd/yyyy', ElementName=purchaseorderdatagrid, UpdateSourceTrigger=PropertyChanged}"
                         Grid.Column="7" Grid.Row="6"/>
             <!-- Purchase Date ComboBox-->
-            <CheckBox Content="Keep Last" IsChecked="{Binding keep_last, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Column="8" Grid.Row="6" HorizontalAlignment="Center" VerticalAlignment="Center"/>
 
 
             <TextBlock Grid.Row="3" Grid.Column="6" FontSize="12" FontWeight="Bold" HorizontalAlignment="Center">Purchase Date</TextBlock>
@@ -119,31 +129,27 @@
 
             <!--  Save Button -->
             <Button 
-                    x:Name="SaveCommand" Grid.Column="0" Grid.Row="11"
+                    x:Name="SaveCommand" Grid.Column="0" Grid.Row="13"
                             Width="75"
                             Content="Save"
                             HorizontalAlignment="Left"/>
 
             <!--  Add Button -->
-            <Button x:Name="AddCommand" Grid.Column="1" Grid.Row="11"
+            <Button x:Name="AddCommand" Grid.Column="1" Grid.Row="13"
                             Width="75"                                      
                             HorizontalAlignment="Left"
                             Content="Add"/>
             <!-- Delete Button -->
-            <Button x:Name="DeleteCommand" Grid.Column="1" Grid.Row="11"             
+            <Button x:Name="DeleteCommand" Grid.Column="1" Grid.Row="13"             
                             Width="75"        
                             Content="Delete" Height="19" Margin="90,0,20,0" VerticalAlignment="Top"/>
             <!-- Reset Button -->
-            <Button x:Name="ResetCommand" Grid.Column="2" Grid.Row="11"
+            <Button x:Name="ResetCommand" Grid.Column="2" Grid.Row="13"
                             Width="75" 
                             HorizontalAlignment="Left"
                             Content="Reset"/>
 
             <!-- Reset Button -->
-            <Button x:Name="GenerateCommand" Grid.Column="3" Grid.Row="11"
-                            Width="100" 
-                            HorizontalAlignment="Left"
-                            Content="Generate Products"/>
 
 
         </Grid>
@@ -155,7 +161,7 @@
                           SelectionMode="Single"
                           SelectedItem="{Binding SelectedItem, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                           CanUserAddRows="False" 
-                          EnableRowVirtualization="True" IsReadOnly="False" Grid.Row="10" 
+                          EnableRowVirtualization="True" IsReadOnly="False" Grid.Row="13" 
                           Height="Auto" Width="1400"  HorizontalAlignment="Center" >
             <DataGrid.RowStyle>
                 <Style TargetType="{x:Type DataGridRow}">
@@ -163,54 +169,52 @@
                 </Style>
             </DataGrid.RowStyle>
             <DataGrid.Columns>
-                <!-- 5 keys hidden -->
+                <!-- 5 keys hidden for debugging -->
                 <DataGridTextColumn x:Name="customer_order_pk" Header="CO_PK" Width="60"
                             Visibility="Hidden"  IsReadOnly="True" Binding="{Binding Path=SelectedValue, ElementName=cmbSupplier, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}"/>
+                <DataGridTextColumn x:Name="customer_fk" Header="C FK" Width="60"
+                            Visibility="Hidden" IsReadOnly="True" Binding="{Binding customer_fk, Mode=TwoWay, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}"/>
+                <DataGridTextColumn x:Name="customer_order_fk" Header="CO FK" Width="60"
+                            Visibility="Hidden" IsReadOnly="True" Binding="{Binding customer_order_fk, Mode=TwoWay, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}"/>
+                <DataGridTextColumn x:Name="customer_order_detail_pk" Header="COD PK" Width="60"
+                            Visibility="Hidden" IsReadOnly="True" Binding="{Binding customer_order_detail_pk,  Mode=TwoWay, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}"/>
+                <DataGridTextColumn x:Name="product_fk" Header="P FK" Width="60"
+                            Visibility="Hidden" IsReadOnly="True" Binding="{Binding product_fk,  Mode=TwoWay, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}"/>
+                <!-- 5 keys end -->
 
-                <DataGridTextColumn x:Name="selected_purchase_order_pk" Header="PO PK" Width="60"
-                            Visibility="Hidden" IsReadOnly="True" Binding="{Binding purchase_order_pk, Mode=TwoWay, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}"/>
-
-                <DataGridTextColumn x:Name="selected_purchase_order_fk" Header="PO FK" Width="60"
-                            Visibility="Hidden" IsReadOnly="True" Binding="{Binding purchase_order_fk, Mode=TwoWay, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}"/>
-
-                <DataGridTextColumn x:Name="selected_purchase_order_detail_pk" Header="POD PK" Width="60"
-                            Visibility="Hidden" IsReadOnly="True" Binding="{Binding purchase_order_detail_pk,  Mode=TwoWay, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}"/>
-            
-                <DataGridTextColumn x:Name="sselected_purchase_order_detail_pk" Header="POD PK" Width="60"
-                            Visibility="Hidden" IsReadOnly="True" Binding="{Binding purchase_order_detail_pk,  Mode=TwoWay, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}"/>
-
-                <DataGridTextColumn Header="Order Number" Width="90" 
-                            Binding="{Binding lot_quantity, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}"/>
-
-                <DataGridTextColumn Header="Shipping Status" Width="95"
-                            Binding="{Binding lot_number, ValidatesOnNotifyDataErrors=True, UpdateSourceTrigger=PropertyChanged}"/>
-
-                <DataGridTextColumn Header="Shipping Service" Width="100"
-                            Binding="{Binding lot_name, ValidatesOnNotifyDataErrors=True, UpdateSourceTrigger=PropertyChanged}" />
-                <DataGridTextColumn Header="Tracking Number" Width="100"  
-                            Binding="{Binding lot_description, ValidatesOnNotifyDataErrors=True, UpdateSourceTrigger=PropertyChanged}" />
-                <DataGridTextColumn Header="Order Date" Width="100"  
-                            Binding="{Binding lot_cost, StringFormat='$0.00;;#', ValidatesOnNotifyDataErrors=True, UpdateSourceTrigger=PropertyChanged}" />
-                <DataGridTextColumn Header="Shipping Date" Width="100" 
-                            Binding="{Binding sales_tax, StringFormat='c', ValidatesOnNotifyDataErrors=True, UpdateSourceTrigger=PropertyChanged}" />
-                <DataGridTextColumn Header="Shipping Cost (Est)" Width="100" 
+                <DataGridTextColumn Header="Order Number" Width="Auto" 
+                            Binding="{Binding order_number, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}"/>
+                <DataGridTextColumn Header="Shipping Status" Width="Auto"
+                            Binding="{Binding shipping_status, ValidatesOnNotifyDataErrors=True, UpdateSourceTrigger=PropertyChanged}"/>
+                <DataGridTextColumn Header="Shipping Service" Width="Auto"
+                            Binding="{Binding shipping_service, ValidatesOnNotifyDataErrors=True, UpdateSourceTrigger=PropertyChanged}" />
+                <DataGridTextColumn Header="Tracking Number" Width="Auto"  
+                            Binding="{Binding tracking_number, ValidatesOnNotifyDataErrors=True, UpdateSourceTrigger=PropertyChanged}" />
+                <DataGridTextColumn Header="Order Date" Width="Auto"  
+                            Binding="{Binding order_date, StringFormat='$0.00;;#', ValidatesOnNotifyDataErrors=True, UpdateSourceTrigger=PropertyChanged}" />
+                <DataGridTextColumn Header="Shipping Date" Width="Auto" 
+                            Binding="{Binding shipping_date, StringFormat='c', ValidatesOnNotifyDataErrors=True, UpdateSourceTrigger=PropertyChanged}" />
+                <DataGridTextColumn Header="Shipping Cost (Est)" Width="Auto" 
                             Binding="{Binding shipping_cost, StringFormat='c', ValidatesOnNotifyDataErrors=True, UpdateSourceTrigger=PropertyChanged}" />
-                <DataGridTextColumn Header="Actual Shipping Cost" Width="60" 
-                            Binding="{Binding invoice_number, ValidatesOnDataErrors=True,  ValidatesOnNotifyDataErrors=True, NotifyOnValidationError=True, UpdateSourceTrigger=PropertyChanged}" />
-                <DataGridTextColumn Header="Brand Name" Width="100" 
-                            Binding="{Binding purchase_date, StringFormat='MM-dd-yyyy', ValidatesOnNotifyDataErrors=True, UpdateSourceTrigger=PropertyChanged}" />
-                <DataGridTextColumn Header="Product Name" Width="100" 
-                            Binding="{Binding purchase_date, StringFormat='MM-dd-yyyy', ValidatesOnNotifyDataErrors=True, UpdateSourceTrigger=PropertyChanged}" />
-                <DataGridTextColumn Header="Quantity" Width="100" 
-                            Binding="{Binding purchase_date, StringFormat='MM-dd-yyyy', ValidatesOnNotifyDataErrors=True, UpdateSourceTrigger=PropertyChanged}" />
-                <DataGridTextColumn Header="Sold Price" Width="100" 
-                            Binding="{Binding purchase_date, StringFormat='MM-dd-yyyy', ValidatesOnNotifyDataErrors=True, UpdateSourceTrigger=PropertyChanged}" />
-                <DataGridTextColumn Header="Selling Fee" Width="100" 
-                            Binding="{Binding purchase_date, StringFormat='MM-dd-yyyy', ValidatesOnNotifyDataErrors=True, UpdateSourceTrigger=PropertyChanged}" />
-                <DataGridTextColumn Header="Sales Tax Amount" Width="100" 
-                            Binding="{Binding purchase_date, StringFormat='MM-dd-yyyy', ValidatesOnNotifyDataErrors=True, UpdateSourceTrigger=PropertyChanged}" />
-                <DataGridTextColumn Header="Sales Tax Rate" Width="100" 
-                            Binding="{Binding purchase_date, StringFormat='MM-dd-yyyy', ValidatesOnNotifyDataErrors=True, UpdateSourceTrigger=PropertyChanged}" />
+                <DataGridTextColumn Header="Shipping Cost (Act)" Width="Auto" 
+                            Binding="{Binding actual_shipping_cost, ValidatesOnDataErrors=True,  ValidatesOnNotifyDataErrors=True, NotifyOnValidationError=True, UpdateSourceTrigger=PropertyChanged}" />
+                
+                <!-- product-->
+                <DataGridTextColumn Header="Brand Name" Width="Auto" 
+                            Binding="{Binding brand_name, ValidatesOnNotifyDataErrors=True, UpdateSourceTrigger=PropertyChanged}" />
+                <DataGridTextColumn Header="Product Name" Width="Auto" 
+                            Binding="{Binding product_name, ValidatesOnNotifyDataErrors=True, UpdateSourceTrigger=PropertyChanged}" />
+                <!-- end product-->
+                <DataGridTextColumn Header="Qty" Width="Auto" 
+                            Binding="{Binding quantity, ValidatesOnNotifyDataErrors=True, UpdateSourceTrigger=PropertyChanged}" />
+                <DataGridTextColumn Header="Sold Price" Width="Auto" 
+                            Binding="{Binding sold_price, StringFormat='c', ValidatesOnNotifyDataErrors=True, UpdateSourceTrigger=PropertyChanged}" />
+                <DataGridTextColumn Header="Selling Fee" Width="Auto" 
+                            Binding="{Binding selling_fee,  StringFormat='c', ValidatesOnNotifyDataErrors=True, UpdateSourceTrigger=PropertyChanged}" />
+                <DataGridTextColumn Header="Sales Tax Amount" Width="Auto" 
+                            Binding="{Binding sales_tax_amount, StringFormat='c', ValidatesOnNotifyDataErrors=True, UpdateSourceTrigger=PropertyChanged}" />
+                <DataGridTextColumn Header="Sales Tax Rate" Width="Auto" 
+                            Binding="{Binding sales_tax_rate, StringFormat='{}{0}%}', ValidatesOnNotifyDataErrors=True, UpdateSourceTrigger=PropertyChanged}" />
 
             </DataGrid.Columns>
         </DataGrid>
