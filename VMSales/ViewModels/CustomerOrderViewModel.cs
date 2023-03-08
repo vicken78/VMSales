@@ -6,7 +6,15 @@ using System.Threading.Tasks;
 
 namespace VMSales.ViewModels
 {
-    public class CustomerOrderViewModel
+    public class CustomerOrderViewModel : BaseViewModel
     {
+        public void initial_load()
+        { 
+        
+        }
+        public CustomerOrderViewModel()
+        {
+            initial_load();
+        }
     }
 }

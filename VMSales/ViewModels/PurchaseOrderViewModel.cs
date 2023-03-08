@@ -28,8 +28,8 @@ namespace VMSales.ViewModels
                 RaisePropertyChanged("cmbSupplier");
             }
         }
-    
-    private ObservableCollection<PurchaseOrderModel> POM = new ObservableCollection<PurchaseOrderModel>();
+
+        private ObservableCollection<PurchaseOrderModel> POM = new ObservableCollection<PurchaseOrderModel>();
         private List<int> purchase_order_products;
         private string invoicetemp;
         private DateTime purchase_datetemp;
@@ -70,8 +70,8 @@ namespace VMSales.ViewModels
                 RaisePropertyChanged("PurchaseDate");
             }
         }
-        
-     
+
+
         public ObservableCollection<SupplierModel> ObservableCollectionSupplierModel { get; set; }
         private ObservableCollection<PurchaseOrderModel> ObservableCollectionPurchaseOrderModelclean { get; set; }
         public ObservableCollection<PurchaseOrderModel> ObservableCollectionPurchaseOrderModel
@@ -242,9 +242,9 @@ namespace VMSales.ViewModels
             RaisePropertyChanged("PurchaseOrderView");
         }
 
-        #endregion 
+        #endregion
 
-        
+
         public CollectionView PurchaseOrderView
         {
             get
@@ -277,7 +277,7 @@ namespace VMSales.ViewModels
         public void RemoveSupplier()
         {
             cmbSupplier = -1;
-            supplier_fk = 0; 
+            supplier_fk = 0;
             RaisePropertyChanged("supplier_fk");
             LoadPurchaseOrder(0);
         }
@@ -286,7 +286,7 @@ namespace VMSales.ViewModels
 
         public void AddCommand()
         {
-   
+
             if (supplier_fk == 0)
             {
                 MessageBox.Show("Please select a supplier.");
@@ -391,14 +391,14 @@ namespace VMSales.ViewModels
         }
         public void ResetCommand()
         {
-
+            initial_load();
         }
         public void SaveCommand()
         {
             SelectedItem = new PurchaseOrderModel();
 
             var selectedRows = ObservableCollectionPurchaseOrderModel.Where(i => i.IsSelected);
-            
+
             foreach (var item in selectedRows)
             {
                 SelectedItem.supplier_fk = supplier_fk;
@@ -417,15 +417,15 @@ namespace VMSales.ViewModels
                 SelectedItem.lot_number = item.lot_number;
             }
 
-           
+
 
             //  we need to check for default values here. better checks later.
-                       if (SelectedItem.lot_name == "Name")
-                       {
-                           MessageBox.Show("Default Values must not be used.");
-                        SelectedItem = null;
-                        return;
-                       }
+            if (SelectedItem.lot_name == "Name")
+            {
+                MessageBox.Show("Default Values must not be used.");
+                SelectedItem = null;
+                return;
+            }
 
 
             if (supplier_fk.ToString() == null || supplier_fk == 0)
@@ -439,7 +439,7 @@ namespace VMSales.ViewModels
 
                     Task<PurchaseOrderModel> get_supplier = PurchaseOrderRepo.get_supplier_fk(SelectedItem.purchase_order_pk);
 
-                    if (get_supplier.Result.supplier_fk !=  0)
+                    if (get_supplier.Result.supplier_fk != 0)
                     {
                         PurchaseOrderRepo.Commit();
                         PurchaseOrderRepo.Dispose();
@@ -470,8 +470,8 @@ namespace VMSales.ViewModels
             // scenerio 1
             // same invoice number, UPDATE purchase_order_detail.
 
-              dataBaseProvider = getprovider();
-              DataBaseLayer.PurchaseOrderRepository SavePurchaseOrderRepo = new DataBaseLayer.PurchaseOrderRepository(dataBaseProvider);
+            dataBaseProvider = getprovider();
+            DataBaseLayer.PurchaseOrderRepository SavePurchaseOrderRepo = new DataBaseLayer.PurchaseOrderRepository(dataBaseProvider);
             try
             {
                 if (SelectedItem.purchase_order_detail_pk != 0)
@@ -518,7 +518,7 @@ namespace VMSales.ViewModels
                     //dataBaseProvider = getprovider();
                     //DataBaseLayer.PurchaseOrderRepository PurchaseOrderRepo = new DataBaseLayer.PurchaseOrderRepository(dataBaseProvider);
                     Task<bool> insertPurchase_Order = SavePurchaseOrderRepo.Insert(SelectedItem);
-                    
+
                     // new purchase order_detail_pk must be assigned 
                     if (insertPurchase_Order.Result.Equals(true))
                     {
@@ -624,7 +624,7 @@ namespace VMSales.ViewModels
                         DataBaseLayer.ProductRepository ProductRepo = new DataBaseLayer.ProductRepository(dataBaseProvider);
                         try
                         {
-                           
+
                             //insert into product
                             Task<int> insert_product_pk = ProductRepo.InsertProduct(PM);
 
@@ -657,12 +657,12 @@ namespace VMSales.ViewModels
             ObservableCollectionPurchaseOrderModel = new ObservableCollection<PurchaseOrderModel>();
 
             //clear and reload invoicedate and purchasedate based on supplier
-                 if (InvoiceNumberList.Count > 0 && PurchaseDateList.Count > 0)
-                 {
-                     InvoiceNumberList.Clear();
-                     PurchaseDateList.Clear();
-                 }
-            
+            if (InvoiceNumberList.Count > 0 && PurchaseDateList.Count > 0)
+            {
+                InvoiceNumberList.Clear();
+                PurchaseDateList.Clear();
+            }
+
             dataBaseProvider = getprovider();
             DataBaseLayer.PurchaseOrderRepository PurchaseOrderRepo = new DataBaseLayer.PurchaseOrderRepository(dataBaseProvider);
 
@@ -686,7 +686,7 @@ namespace VMSales.ViewModels
             PurchaseOrderRepo.Dispose();
 
 
-        
+
 
             /*
             foreach (var item in ObservableCollectionPurchaseOrderModel)
@@ -744,10 +744,7 @@ namespace VMSales.ViewModels
             }
         }
 
-
-
-        #region pageload
-        public PurchaseOrderViewModel()
+        public void initial_load()
         {
             //Initial Page Load
             InvoiceNumberList = new List<string>();
@@ -794,6 +791,13 @@ namespace VMSales.ViewModels
             ObservableCollectionSupplierModel = SupplierRepo.GetAll().Result.ToObservable();
             SupplierRepo.Commit();
             SupplierRepo.Dispose();
+        }
+
+
+        #region pageload
+        public PurchaseOrderViewModel()
+        {
+            initial_load();
         }
 
     }

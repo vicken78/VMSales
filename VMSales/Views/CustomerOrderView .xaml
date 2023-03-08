@@ -16,7 +16,7 @@
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
+                <RowDefinition />
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
@@ -84,24 +84,24 @@
             <TextBox Name="Email" IsReadOnly="True" Background="WhiteSmoke" Text="{Binding SelectedItem.email, ElementName=cmbSupplier}"
                         Grid.Column="1" Grid.Row="10"/>
 
-            <!-- Invoice Number Combobox -->
+            <!-- Order Number Combobox -->
 
-            <TextBlock Grid.Row="3" Grid.Column="3" FontSize="12" HorizontalAlignment="Center" FontWeight="Bold">Invoice No.</TextBlock>
+            <TextBlock Grid.Row="3" Grid.Column="3" FontSize="12" HorizontalAlignment="Center" FontWeight="Bold">Order No.</TextBlock>
         
                 <ComboBox Background="White" Grid.Row="3" Grid.Column="4" 
-                ItemsSource="{Binding FilterInvoiceNumber, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" 
-                SelectedItem="{Binding SelectedInvoiceNumber, 
+                ItemsSource="{Binding FilterOrderNumber, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" 
+                SelectedItem="{Binding SelectedOrderNumber, 
                 Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
-                Width="100" HorizontalAlignment="Left"/>
+                Width="100" HorizontalAlignment="Left" Height="22" Margin="0.222,0.222,0,0" VerticalAlignment="Top"/>
 
-           <Button x:Name="RemoveInvoiceNumberFilterCommand" HorizontalAlignment="Left" Margin="20,0,0,0" Grid.Row="3" Grid.Column="5" Width="16" Height="16" 
-            IsEnabled="{Binding CanRemoveInvoiceNumberFilter, Mode=OneWay}">
+           <Button x:Name="RemoveOrderNumberFilterCommand" HorizontalAlignment="Left" Margin="20,0,0,0" Grid.Row="3" Grid.Column="5" Width="16" Height="16" 
+            IsEnabled="{Binding CanRemoveOrderNumberFilter, Mode=OneWay}">
                 <Image Width="10" Height="10" Style="{DynamicResource ImageStyleForButtons}"/>
             </Button>
          
             
-            <Label Content="Invoice No." FontSize="12" FontWeight="Bold" Grid.Column="3" HorizontalAlignment="Center" Grid.Row="6" />
-            <TextBox x:Name="invoice_number" Background="White" Text="{Binding SelectedItem.invoice_number, ElementName=purchaseorderdatagrid, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
+            <Label Content="Order No." FontSize="12" FontWeight="Bold" Grid.Column="3" HorizontalAlignment="Center" Grid.Row="6" />
+            <TextBox x:Name="order_number" Background="White" Text="{Binding SelectedItem.order_number, ElementName=purchaseorderdatagrid, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
                         Grid.Column="4" Grid.Row="6"/>
 
 

@@ -955,5 +955,50 @@ namespace VMSales.Logic
             }
         }
         #endregion
+        #region CustomerOrderModel
+        public class CustomerOrderRepository : Repository<CustomerOrderModel>
+        {
+            public CustomerOrderRepository(IDatabaseProvider dbProvider) : base(dbProvider) { }
+
+
+            public override async Task<IEnumerable<CustomerOrderModel>> GetAllWithID(int id)
+            {
+                return null;
+            }
+
+            public override async Task<CustomerOrderModel> Get(int id)
+            {
+                //change
+                return await Connection.QuerySingleAsync<CustomerOrderModel>("SELECT customer_pk FROM customer WHERE customer_pk = @id", new { id }, Transaction);
+            }
+            
+
+            public override async Task<IEnumerable<CustomerOrderModel>> GetAll()
+            {
+                // change
+                //            return await Connection.QueryAsync<CustomerOrderModel>("SELECT customer_pk, user_name, first_name, last_name, address, city, state, zip, country, phone, shipping_address, shipping_city, shipping_state, shipping_zip, shipping_country, same_shipping_address FROM customer ORDER BY last_name", null, Transaction);
+                return null;
+            }
+
+            public override async Task<bool> Insert(CustomerOrderModel entity)
+            {
+                //change
+                return false;
+            }
+
+            public override async Task<bool> Update(CustomerOrderModel entity)
+            {
+                // change
+                return false;
+            }
+
+            public override async Task<bool> Delete(CustomerOrderModel entity)
+            {
+                // change
+                //return (await Connection.ExecuteAsync("DELETE FROM customer WHERE customer_pk = @id", new { id = entity.customer_pk }, Transaction)) == 1;
+                return false;
+            }
+        }
+        #endregion
     }
 }
