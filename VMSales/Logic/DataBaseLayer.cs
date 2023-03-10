@@ -491,8 +491,8 @@ namespace VMSales.Logic
             public async Task<int> InsertProduct(ProductModel entity)
             {
                 int product_pk = await Connection.QuerySingleAsync<int>("INSERT INTO product " +
-            "(brand_name, product_name, description, quantity, cost, sku, sold_price, instock, condition, listing_url, listing_number, listing_date) " +
-            "VALUES (@brand_name, @product_name, @description, @quantity, @cost, @sku, @sold_price, @instock, @condition, @listing_url, @listing_number, @listing_date); SELECT last_insert_rowid()",
+            "(brand_name, product_name, description, quantity, cost, sku, listed_price, instock, condition, listing_url, listing_number, listing_date) " +
+            "VALUES (@brand_name, @product_name, @description, @quantity, @cost, @sku, @listed_price, @instock, @condition, @listing_url, @listing_number, @listing_date); SELECT last_insert_rowid()",
             new
             {
                 brand_name = entity.brand_name,
@@ -501,7 +501,7 @@ namespace VMSales.Logic
                 quantity = entity.quantity,
                 cost = entity.cost,
                 sku = entity.sku,
-                sold_price = entity.sold_price,
+                listed_price = entity.listed_price,
                 instock = entity.instock,
                 condition = entity.condition,
                 listing_url = entity.listing_url,
@@ -570,7 +570,7 @@ namespace VMSales.Logic
                 */
                 return await Connection.QueryAsync<ProductModel>("SELECT DISTINCT " +
 
-                "p.product_pk, p.brand_name, p.product_name, p.description, p.quantity, p.cost, p.sku, p.sold_price, p.instock, p.condition, p.listing_url, p.listing_number, p.listing_date, c.category_pk, c.category_name " +
+                "p.product_pk, p.brand_name, p.product_name, p.description, p.quantity, p.cost, p.sku, p.listed_price, p.instock, p.condition, p.listing_url, p.listing_number, p.listing_date, c.category_pk, c.category_name " +
                 "FROM product as p " +
                 "LEFT OUTER JOIN product_category as pc on p.product_pk = pc.product_fk " +
                 "LEFT OUTER JOIN category as c on c.category_pk = pc.category_fk " +
@@ -653,7 +653,7 @@ namespace VMSales.Logic
 
                 return await Connection.QueryAsync<ProductModel>("SELECT DISTINCT " +
                     "ppo.*, c.category_pk, c.category_name, p.product_pk, p.brand_name, p.product_name, p.description, p.quantity, " +
-                    "p.cost, p.sku, p.sold_price, p.instock, p.condition, p.listing_url, p.listing_number, p.listing_date " +
+                    "p.cost, p.sku, p.listed_price, p.instock, p.condition, p.listing_url, p.listing_number, p.listing_date " +
                     "FROM product_purchase_order as ppo, product as p, product_category as pc, " +
                     "category as c, product_supplier as ps, supplier as s, purchase_order_detail as pod " +
                     "INNER JOIN product_purchase_order on pod.purchase_order_detail_pk = ppo.purchase_order_detail_fk " +
@@ -689,7 +689,7 @@ namespace VMSales.Logic
                         "quantity = @lot_number, " +
                         "cost = @lot_name, " +
                         "sku = @lot_description, " +
-                        "sold_price = @sales_tax, " +
+                        "listed_price = @listed_price, " +
                         "instock = @instock, " +
                         "condition = @sales_tax, " +
                         "listing_url = @listing_url, " +
@@ -704,7 +704,7 @@ namespace VMSales.Logic
                             quantity = entity.quantity,
                             cost = entity.cost,
                             sku = entity.sku,
-                            sold_price = entity.sold_price,
+                            listed_price = entity.listed_price,
                             instock = entity.instock,
                             condition = entity.condition,
                             listing_url = entity.listing_url,
@@ -793,7 +793,7 @@ namespace VMSales.Logic
                         "quantity = @lot_number, " +
                         "cost = @lot_name, " +
                         "sku = @lot_description, " +
-                        "sold_price = @sales_tax, " +
+                        "listed_price = @listed_price, " +
                         "instock = @shipping_cost, " +
                         "condition = @sales_tax, " +
                         "listing_url = @shipping_cost, " +
@@ -955,29 +955,41 @@ namespace VMSales.Logic
             }
         }
         #endregion
+        
         #region CustomerOrderModel
+        // table customer_order and customer_order_detail
         public class CustomerOrderRepository : Repository<CustomerOrderModel>
         {
             public CustomerOrderRepository(IDatabaseProvider dbProvider) : base(dbProvider) { }
 
-
             public override async Task<IEnumerable<CustomerOrderModel>> GetAllWithID(int id)
             {
-                return null;
+                  return null;
             }
 
             public override async Task<CustomerOrderModel> Get(int id)
             {
-                //change
-                return await Connection.QuerySingleAsync<CustomerOrderModel>("SELECT customer_pk FROM customer WHERE customer_pk = @id", new { id }, Transaction);
+                return await Connection.QuerySingleAsync<CustomerOrderModel>("SELECT customer_order_detail_pk FROM customer_order_detail WHERE customer__order_detail_pk = @id", new { id }, Transaction);
             }
             
-
             public override async Task<IEnumerable<CustomerOrderModel>> GetAll()
             {
-                // change
-                //            return await Connection.QueryAsync<CustomerOrderModel>("SELECT customer_pk, user_name, first_name, last_name, address, city, state, zip, country, phone, shipping_address, shipping_city, shipping_state, shipping_zip, shipping_country, same_shipping_address FROM customer ORDER BY last_name", null, Transaction);
-                return null;
+                return await Connection.QueryAsync<CustomerOrderModel>(
+                "SELECT customer_order_pk, customer_fk, order_number, shipping_status, shipping_service, tracking_number, " +
+                "order_date, shipping_date, shipping_cost_collected, actual_shipping_cost, customer_order_detail_pk, customer_order_fk, " +
+                "product_fk, customer_order_detail.quantity, sold_price, selling_fee, sales_tax_amount, sales_tax_rate, brand_name, product_name " +
+                "FROM customer_order as co " +
+                "INNER JOIN customer_order_detail on co.customer_order_pk = customer_order_detail.customer_order_fk " +
+                "INNER JOIN customer on customer.customer_pk = co.customer_fk " +
+                "INNER JOIN product on product.product_pk = product_fk " +
+                "UNION " +
+                "SELECT co.customer_order_pk, co.customer_fk, co.order_number, co.shipping_status, co.shipping_service, co.tracking_number, " +
+                "co.order_date, co.shipping_date, co.shipping_cost_collected, co.actual_shipping_cost, cod.customer_order_detail_pk, cod.customer_order_fk, " +
+                "cod.product_fk, cod.quantity, cod.sold_price, cod.selling_fee, cod.sales_tax_amount, cod.sales_tax_rate, p.brand_name, p.product_name " +
+                "FROM customer_order AS co " +
+                "LEFT JOIN customer_order_detail AS cod ON co.customer_order_pk = cod.customer_order_fk " +
+                "LEFT JOIN customer ON customer.customer_pk = co.customer_fk " +
+                "LEFT JOIN product AS p ON p.product_pk = cod.product_fk", null, Transaction);
             }
 
             public override async Task<bool> Insert(CustomerOrderModel entity)
@@ -1002,3 +1014,21 @@ namespace VMSales.Logic
         #endregion
     }
 }
+
+/* fix
+SELECT customer_order_pk, customer_fk, order_number, shipping_status, shipping_service, tracking_number,
+order_date, shipping_date, shipping_cost_collected, actual_shipping_cost, customer_order_detail_pk, customer_order_fk,
+product_fk, customer_order_detail.quantity, sold_price, selling_fee, sales_tax_amount, sales_tax_rate, brand_name, product_name
+FROM customer_order as co
+INNER JOIN customer_order_detail on co.customer_order_pk = customer_order_detail.customer_order_fk
+INNER JOIN customer on customer.customer_pk = co.customer_fk
+INNER JOIN product on product.product_pk = product_fk
+UNION
+SELECT co.customer_order_pk, co.customer_fk, co.order_number, co.shipping_status, co.shipping_service, co.tracking_number,
+co.order_date, co.shipping_date, co.shipping_cost_collected, co.actual_shipping_cost, cod.customer_order_detail_pk, cod.customer_order_fk,
+cod.product_fk, cod.quantity, cod.sold_price, cod.selling_fee, cod.sales_tax_amount, cod.sales_tax_rate, p.brand_name, p.product_name
+FROM customer_order AS co
+LEFT JOIN customer_order_detail AS cod ON co.customer_order_pk = cod.customer_order_fk
+LEFT JOIN customer ON customer.customer_pk = co.customer_fk
+LEFT JOIN product AS p ON p.product_pk = cod.product_fk
+*/

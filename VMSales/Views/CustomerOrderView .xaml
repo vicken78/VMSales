@@ -3,7 +3,9 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:cal="http://caliburnmicro.com"
+             xmlns:cal="http://caliburnmicro.com" 
+             xmlns:viewmodels="clr-namespace:VMSales.ViewModels" 
+             d:DataContext="{d:DesignInstance Type=viewmodels:CustomerOrderViewModel}"
              mc:Ignorable="d" 
              Height="800" Width="1400" VerticalAlignment="Top" MinHeight="400" MinWidth="800">
    
@@ -44,7 +46,7 @@
             <!-- Customer Combo static -->
             <Label Grid.Row="2" Grid.Column="0">Customer</Label>
 
-            <ComboBox x:Name="cmbCustomer" ItemsSource="{Binding Path=ObservableCollectionCustomerModel}" DisplayMemberPath="customer_name" SelectedValue="{Binding customer_pk, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" SelectedIndex="{Binding cmbSupplier, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" SelectedValuePath="supplier_pk" Grid.Row="2" Grid.Column="1"/>
+            <ComboBox ItemsSource="{Binding Path=ObservableCollectionCustomerModel}" DisplayMemberPath="user_name" SelectedValue="{Binding customer_pk, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Row="2" Grid.Column="1"/>
             <Button x:Name="RemoveCustomer" HorizontalAlignment="Left" Margin="20,0,0,0" Grid.Row="2" Grid.Column="2" Width="16" Height="16" 
             IsEnabled="True">
                 <Image Width="10" Height="10" Style="{DynamicResource ImageStyleForButtons}"/>

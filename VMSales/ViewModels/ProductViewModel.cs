@@ -361,7 +361,7 @@ namespace VMSales.ViewModels
                 SelectedItem.quantity = item.quantity;
                 SelectedItem.cost = item.cost;
                 SelectedItem.sku = item.sku;
-                SelectedItem.sold_price = item.sold_price;
+                SelectedItem.listed_price = item.listed_price;
                 SelectedItem.instock = item.instock;
                 SelectedItem.condition = item.condition;
                 SelectedItem.listing_url = item.listing_url;
@@ -425,7 +425,7 @@ namespace VMSales.ViewModels
             MessageBox.Show("desc" + SelectedItem.description);
             MessageBox.Show("qty" + SelectedItem.quantity.ToString());
             MessageBox.Show("sku" + SelectedItem.sku);
-            MessageBox.Show("soldprice" + SelectedItem.sold_price.ToString());
+            MessageBox.Show("listed_price" + SelectedItem.listed_price.ToString());
             MessageBox.Show("instock" + SelectedItem.instock.ToString());
             MessageBox.Show("listdate" + SelectedItem.listing_date.ToString());
             MessageBox.Show("listurl" + SelectedItem.listing_url);
@@ -477,7 +477,7 @@ namespace VMSales.ViewModels
             SelectedItem.quantity = 0;
             SelectedItem.cost = 0;
             SelectedItem.sku = "0";
-            SelectedItem.sold_price = 0;
+            SelectedItem.listed_price = 0;
             SelectedItem.condition = "New";
             SelectedItem.instock = 1;
             SelectedItem.listing_url = null;

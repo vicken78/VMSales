@@ -617,7 +617,7 @@ namespace VMSales.ViewModels
                             listing_date = DateTime.MinValue,
                             listing_number = null,
                             listing_url = null,
-                            sold_price = 0,
+                            listed_price = 0,
                             supplier_fk = item.supplier_fk
                         };
 

@@ -21,7 +21,7 @@ namespace VMSales.Models
         private int _quantity { get; set; }
         private decimal _cost { get; set; }
         private string _sku { get; set; }
-        private decimal _sold_price { get; set; }
+        private decimal _listed_price { get; set; }
         private int _instock { get; set; }
         private string _listing_url { get; set; }
         private string _listing_number { get; set; }
@@ -96,14 +96,14 @@ namespace VMSales.Models
                 RaisePropertyChanged("sku");
             }
         }
-        public decimal sold_price
+        public decimal listed_price
         {
-            get { return _sold_price; }
+            get { return _listed_price; }
             set
             {
-                if (_sold_price == value) return;
-                _sold_price = value;
-                RaisePropertyChanged("sold_price");
+                if (_listed_price == value) return;
+                _listed_price = value;
+                RaisePropertyChanged("listed_price");
             }
 
         }

@@ -13,6 +13,6 @@ namespace VMSales.Views
         public CustomerOrderView()
         {
             InitializeComponent();
-        }    
+        }
     }
 }
