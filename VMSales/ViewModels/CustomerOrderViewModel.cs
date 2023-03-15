@@ -21,6 +21,20 @@ namespace VMSales.ViewModels
             }
         }
 
+        private ObservableCollection<ProductModel> _ObservableCollectionProductModel { get; set; }
+        public ObservableCollection<ProductModel> ObservableCollectionProductModel
+        {
+            get { return _ObservableCollectionProductModel; }
+            set
+            {
+                if (_ObservableCollectionProductModel == value) return;
+                _ObservableCollectionProductModel = value;
+                RaisePropertyChanged("ObservableCollectionProductModel");
+            }
+        }
+
+
+
         public void initial_load()
         {
             // load customers
@@ -38,6 +52,11 @@ namespace VMSales.ViewModels
             {
                 MessageBox.Show("An error has occured loading customers." + e);
             }
+
+            // load products
+
+
+
         }
         public CustomerOrderViewModel()
         {

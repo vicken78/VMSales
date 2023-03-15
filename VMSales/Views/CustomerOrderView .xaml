@@ -46,44 +46,44 @@
             <!-- Customer Combo static -->
             <Label Grid.Row="2" Grid.Column="0">Customer</Label>
 
-            <ComboBox ItemsSource="{Binding Path=ObservableCollectionCustomerModel}" DisplayMemberPath="user_name" SelectedValue="{Binding customer_pk, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Row="2" Grid.Column="1"/>
+            <ComboBox x:Name="cmbCustomer" ItemsSource="{Binding Path=ObservableCollectionCustomerModel}" DisplayMemberPath="user_name" SelectedValue="{Binding customer_pk, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Row="2" Grid.Column="1"/>
             <Button x:Name="RemoveCustomer" HorizontalAlignment="Left" Margin="20,0,0,0" Grid.Row="2" Grid.Column="2" Width="16" Height="16" 
             IsEnabled="True">
                 <Image Width="10" Height="10" Style="{DynamicResource ImageStyleForButtons}"/>
             </Button>
 
             <!-- User Name -->
-            <Label Content="User Name" Grid.Column="0" Grid.Row="4" />
-            <TextBox Name="Addressa" IsReadOnly="True" Background="WhiteSmoke"  Text="{Binding SelectedItem.address, ElementName=cmbSupplier}" 
+            <Label Content="Name" Grid.Column="0" Grid.Row="4" />
+            <TextBox Name="Addressa" IsReadOnly="True" Background="WhiteSmoke"  Text="{Binding SelectedItem.address, ElementName=cmbCustomer}" 
                         Grid.Column="1" Grid.Row="4"/>
 
 
 
             <!-- Address -->
-            <Label Content="Ship Address" Grid.Column="0" Grid.Row="5" />
-            <TextBox Name="Address" IsReadOnly="True" Background="WhiteSmoke"  Text="{Binding SelectedItem.address, ElementName=cmbSupplier}" 
+            <Label Content="Address" Grid.Column="0" Grid.Row="5" />
+            <TextBox Name="Address" IsReadOnly="True" Background="WhiteSmoke"  Text="{Binding SelectedItem.address, ElementName=cmbCustomer}" 
                         Grid.Column="1" Grid.Row="5"/>
 
             <!-- City -->
             <Label Content="City" Grid.Column="0" Grid.Row="6" />
-            <TextBox Name="City" IsReadOnly="True" Background="WhiteSmoke" Text="{Binding SelectedItem.city, ElementName=cmbSupplier}"
+            <TextBox Name="City" IsReadOnly="True" Background="WhiteSmoke" Text="{Binding SelectedItem.city, ElementName=cmbCustomer}"
                         Grid.Column="1" Grid.Row="6" />
             <!-- State -->
             <Label Content="State" Grid.Column="0" Grid.Row="7" />
-            <TextBox Name="State" IsReadOnly="True" Background="WhiteSmoke" Text="{Binding SelectedItem.state, ElementName=cmbSupplier}"
+            <TextBox Name="State" IsReadOnly="True" Background="WhiteSmoke" Text="{Binding SelectedItem.state, ElementName=cmbCustomer}"
                         Grid.Column="1" Grid.Row="7"/>
 
             <!-- Zip -->
             <Label Content="Zip" Grid.Column="0" Grid.Row="8" />
-            <TextBox Name="Zip" IsReadOnly="True" Background="WhiteSmoke" Text="{Binding SelectedItem.zip, ElementName=cmbSupplier}"
+            <TextBox Name="Zip" IsReadOnly="True" Background="WhiteSmoke" Text="{Binding SelectedItem.zip, ElementName=cmbCustomer}"
                         Grid.Column="1" Grid.Row="8"/>
             <!-- Phone -->
             <Label Content="Country" Grid.Column="0" Grid.Row="9" />
-            <TextBox Name="Phone" IsReadOnly="True" Background="WhiteSmoke" Text="{Binding SelectedItem.phone, ElementName=cmbSupplier}"
+            <TextBox Name="Phone" IsReadOnly="True" Background="WhiteSmoke" Text="{Binding SelectedItem.phone, ElementName=cmbCustomer}"
                         Grid.Column="1" Grid.Row="9"/>
             <!-- Email -->
             <Label Content="Email" Grid.Column="0" Grid.Row="10" />
-            <TextBox Name="Email" IsReadOnly="True" Background="WhiteSmoke" Text="{Binding SelectedItem.email, ElementName=cmbSupplier}"
+            <TextBox Name="Email" IsReadOnly="True" Background="WhiteSmoke" Text="{Binding SelectedItem.email, ElementName=cmbCustomer}"
                         Grid.Column="1" Grid.Row="10"/>
 
             <!-- Order Number Combobox -->

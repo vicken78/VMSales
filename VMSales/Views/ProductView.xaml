@@ -264,8 +264,8 @@
                         </Style>
                     </DataGridTextColumn.ElementStyle>
                 </DataGridTextColumn>
-                <!-- Sold Price -->
-                <DataGridTextColumn Header="Sold Price" Width="70" Binding="{Binding sold_price, StringFormat='c', ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}">
+                <!-- Listed Price -->
+                <DataGridTextColumn Header="Listed Price" Width="70" Binding="{Binding listed_price, StringFormat='c', ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}">
                     <DataGridTextColumn.ElementStyle>
                         <Style TargetType="TextBlock">
                             <Setter Property="TextWrapping" Value="Wrap"/>
@@ -311,6 +311,16 @@
                         </DataTemplate>
                     </DataGridTemplateColumn.CellEditingTemplate>
                 </DataGridTemplateColumn>
+
+                <DataGridTemplateColumn Header="Photos" Width="50">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Button x:Name="Openphotos" Content="Photos" Width="50"
+                            cal:Message.Attach="[Event Click] = [Action Openphotos()]"></Button>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+
 
             </DataGrid.Columns>
         </DataGrid>

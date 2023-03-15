@@ -10,6 +10,10 @@ namespace VMSales.ViewModels
 {
     public class ProductViewModel : BaseViewModel
     {
+        private IEventAggregator _eventAggregator;
+   
+
+
         #region Filters
         private bool _canRemoveSupplierFilter;
         public bool canRemoveSupplierFilter
@@ -180,7 +184,7 @@ namespace VMSales.ViewModels
         {
             int get_supplier_fk = 0;
             int get_product_purchase_order_detail_fk = 0;
-            if (SelectedItem.product_pk != 0)
+            if (SelectedItem != null && SelectedItem.product_pk != 0)
             {
                 // Load Supplier
                 DataBaseLayer.SupplierRepository  SupplierRepo = new DataBaseLayer.SupplierRepository(dataBaseProvider);
@@ -205,7 +209,7 @@ namespace VMSales.ViewModels
                     LoadPurchaseOrder(get_supplier_fk, get_product_purchase_order_detail_fk);
                 }
                 // Load Purchase Order Lots
-            }
+              }
         }
 
         #endregion
@@ -492,6 +496,14 @@ namespace VMSales.ViewModels
         public void ResetCommand()
         {
             initial_load();
+        }
+
+        public void Openphotos()
+        {
+            var popupwindow = new ProductPhotoViewModel(SelectedItem);
+            IWindowManager _windowManager = new WindowManager();
+            _windowManager.ShowWindowAsync(popupwindow);
+
         }
 
         public void LoadPurchaseOrder(int supplier_fk,int purchase_order_detail_pk)

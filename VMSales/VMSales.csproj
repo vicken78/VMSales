@@ -252,6 +252,7 @@
     <Compile Include="ViewModels\BaseViewModel.cs" />
     <Compile Include="ViewModels\CustomerOrderViewModel.cs" />
     <Compile Include="ViewModels\CustomerViewModel.cs" />
+    <Compile Include="ViewModels\ProductPhotoViewModel.cs" />
     <Compile Include="ViewModels\ProductViewModel.cs" />
     <Compile Include="ViewModels\PurchaseOrderViewModel.cs" />
     <Compile Include="ViewModels\ShellViewModel.cs" />
@@ -261,6 +262,9 @@
     </Compile>
     <Compile Include="Views\CustomerOrderView .xaml.cs">
       <DependentUpon>CustomerOrderView .xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\ProductPhotoView.xaml.cs">
+      <DependentUpon>ProductPhotoView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\SupplierView.xaml.cs">
       <DependentUpon>SupplierView.xaml</DependentUpon>
@@ -317,6 +321,10 @@
     <Page Include="Views\CustomerOrderView .xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\ProductPhotoView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\SupplierView.xaml">
       <Generator>MSBuild:Compile</Generator>
