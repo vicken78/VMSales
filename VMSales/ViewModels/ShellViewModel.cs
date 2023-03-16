@@ -35,8 +35,6 @@ namespace VMSales.ViewModels
             await ActivateItemAsync(new CustomerOrderViewModel());
         }
 
-
-
         protected override Task OnActivateAsync(CancellationToken cancellationToken)
         {
             return base.OnActivateAsync(cancellationToken);

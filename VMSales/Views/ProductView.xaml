@@ -43,6 +43,7 @@
                 <ColumnDefinition Width="100"/>
                 <ColumnDefinition Width="100"/>
                 <ColumnDefinition Width="100"/>
+                <ColumnDefinition Width="100"/>
             </Grid.ColumnDefinitions>
 
             <!-- Supplier -->
@@ -146,8 +147,16 @@
                             Content="Associate" IsEnabled="{Binding canEnableProductPurchase}">
             </Button>
 
-
-
+            <!-- Images -->
+            <Button Content="Image1" Height="75" Width="75" Grid.Row="2" Grid.Column="8" Grid.RowSpan="4"/>
+            <Button Content="Image2" Height="75" Width="75" Grid.Row="2" Grid.Column="9" Grid.RowSpan="4"/>
+            <Button Content="Image3" Height="75" Width="75" Grid.Row="2" Grid.Column="10" Grid.RowSpan="4"/>
+            <Button Content="Image4" Height="75" Width="75" Grid.Row="6" Grid.Column="8" Grid.RowSpan="4"/>
+            <Button Content="Image5" Height="75" Width="75" Grid.Row="6" Grid.Column="9" Grid.RowSpan="4"/>
+            <Button Content="Image6" Height="75" Width="75" Grid.Row="6" Grid.Column="10" Grid.RowSpan="4"/>
+            <Button Content="Image7" Height="75" Width="75" Grid.Row="10" Grid.Column="8" Grid.RowSpan="4"/>
+            <Button Content="Image8" Height="75" Width="75" Grid.Row="10" Grid.Column="9" Grid.RowSpan="4"/>
+            <Button Content="Image9" Height="75" Width="75" Grid.Row="10" Grid.Column="10" Grid.RowSpan="4"/>
 
             <!--       <CheckBox FlowDirection="RightToLeft" IsChecked="True" Grid.Column="4" Grid.Row="5" Grid.ColumnSpan="2" HorizontalAlignment="Left" VerticalAlignment="Center">
                 <TextBlock FlowDirection="RightToLeft" FontWeight="Bold" FontSize="14" Text="Show All Products" />
@@ -214,7 +223,7 @@
                     </DataGridTextColumn.ElementStyle>
                 </DataGridTextColumn>
                 <!-- Product Description -->
-                <DataGridTextColumn Header="Description" Width="230" Binding="{Binding description, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                <DataGridTextColumn Header="Description" Width="312" Binding="{Binding description, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
                     <DataGridTextColumn.ElementStyle>
                         <Style TargetType="TextBlock">
                             <Setter Property="TextWrapping" Value="Wrap"/>
@@ -312,7 +321,7 @@
                     </DataGridTemplateColumn.CellEditingTemplate>
                 </DataGridTemplateColumn>
 
-                <DataGridTemplateColumn Header="Photos" Width="50">
+       <!--         <DataGridTemplateColumn Header="Photos" Width="50">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <Button x:Name="Openphotos" Content="Photos" Width="50"
@@ -320,7 +329,7 @@
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
-
+-->
 
             </DataGrid.Columns>
         </DataGrid>
