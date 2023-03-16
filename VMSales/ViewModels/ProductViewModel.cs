@@ -10,10 +10,6 @@ namespace VMSales.ViewModels
 {
     public class ProductViewModel : BaseViewModel
     {
-        private IEventAggregator _eventAggregator;
-   
-
-
         #region Filters
         private bool _canRemoveSupplierFilter;
         public bool canRemoveSupplierFilter
@@ -155,14 +151,14 @@ namespace VMSales.ViewModels
                 if (_purchase_order_detail_pk == value) return;
                 _purchase_order_detail_pk = value;
                 RaisePropertyChanged("purchase_order_detail_pk");
-                MessageBox.Show(purchase_order_detail_pk.ToString());
+                //MessageBox.Show(purchase_order_detail_pk.ToString());
                 if (purchase_order_detail_pk != 0)
                 {
                     canEnableProductPurchase = true;
                 }
             }
         }
-
+    
         private ProductModel _SelectedItem { get; set; }
         public ProductModel SelectedItem
         {
@@ -176,9 +172,12 @@ namespace VMSales.ViewModels
             }
         }
 
+
+
+
         #endregion
 
-     
+
         #region SupplierChange
         public void LoadSupplier()
         {

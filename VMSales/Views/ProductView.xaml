@@ -148,15 +148,37 @@
             </Button>
 
             <!-- Images -->
-            <Button Content="Image1" Height="75" Width="75" Grid.Row="2" Grid.Column="8" Grid.RowSpan="4"/>
-            <Button Content="Image2" Height="75" Width="75" Grid.Row="2" Grid.Column="9" Grid.RowSpan="4"/>
-            <Button Content="Image3" Height="75" Width="75" Grid.Row="2" Grid.Column="10" Grid.RowSpan="4"/>
-            <Button Content="Image4" Height="75" Width="75" Grid.Row="6" Grid.Column="8" Grid.RowSpan="4"/>
-            <Button Content="Image5" Height="75" Width="75" Grid.Row="6" Grid.Column="9" Grid.RowSpan="4"/>
-            <Button Content="Image6" Height="75" Width="75" Grid.Row="6" Grid.Column="10" Grid.RowSpan="4"/>
-            <Button Content="Image7" Height="75" Width="75" Grid.Row="10" Grid.Column="8" Grid.RowSpan="4"/>
-            <Button Content="Image8" Height="75" Width="75" Grid.Row="10" Grid.Column="9" Grid.RowSpan="4"/>
-            <Button Content="Image9" Height="75" Width="75" Grid.Row="10" Grid.Column="10" Grid.RowSpan="4"/>
+            <Button Content="Image1" Height="75" Width="75"
+             IsEnabled="{Binding canEnableProductSupplier, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
+                Grid.Row="2" Grid.Column="8" Grid.RowSpan="4"/>
+            <Button Content="Image2" Height="75" Width="75" 
+             IsEnabled="{Binding canEnableProductSupplier, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
+                Grid.Row="2" Grid.Column="9" Grid.RowSpan="4"/>
+            <Button Content="Image3" Height="75" Width="75" 
+             IsEnabled="{Binding canEnableProductSupplier, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
+              Grid.Row="2" Grid.Column="10" Grid.RowSpan="4"/>
+            <Button Content="Image4" Height="75" Width="75" 
+             IsEnabled="{Binding canEnableProductSupplier, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
+              Grid.Row="6" Grid.Column="8" Grid.RowSpan="4"/>
+            <Button Content="Image5" Height="75" Width="75" 
+              IsEnabled="{Binding canEnableProductSupplier, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
+              Grid.Row="6" Grid.Column="9" Grid.RowSpan="4"/>
+            <Button Content="Image6" Height="75" Width="75" 
+             IsEnabled="{Binding canEnableProductSupplier, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
+                Grid.Row="6" Grid.Column="10" Grid.RowSpan="4"/>
+            <Button Content="Image7" Height="75" Width="75" 
+             IsEnabled="{Binding canEnableProductSupplier, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
+         
+                    Grid.Row="10" Grid.Column="8" Grid.RowSpan="4"/>
+         
+   <Button Content="Image8" Height="75" Width="75" 
+    IsEnabled="{Binding canEnableProductSupplier, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
+         
+           Grid.Row="10" Grid.Column="9" Grid.RowSpan="4"/>
+            <Button Content="Image9" Height="75" Width="75" 
+             IsEnabled="{Binding canEnableProductSupplier, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
+         
+                    Grid.Row="10" Grid.Column="10" Grid.RowSpan="4"/>
 
             <!--       <CheckBox FlowDirection="RightToLeft" IsChecked="True" Grid.Column="4" Grid.Row="5" Grid.ColumnSpan="2" HorizontalAlignment="Left" VerticalAlignment="Center">
                 <TextBlock FlowDirection="RightToLeft" FontWeight="Bold" FontSize="14" Text="Show All Products" />
@@ -203,7 +225,7 @@
             <DataGrid.Columns>
 
                 <!-- Category Combobox -->
-                
+
                 <DataGridTemplateColumn Header="Category" Width="100">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
@@ -260,7 +282,7 @@
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <TextBox Text="{Binding quantity, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" PreviewTextInput="NumericInput"/>
-                   
+
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
@@ -321,7 +343,7 @@
                     </DataGridTemplateColumn.CellEditingTemplate>
                 </DataGridTemplateColumn>
 
-       <!--         <DataGridTemplateColumn Header="Photos" Width="50">
+                <!--         <DataGridTemplateColumn Header="Photos" Width="50">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <Button x:Name="Openphotos" Content="Photos" Width="50"
