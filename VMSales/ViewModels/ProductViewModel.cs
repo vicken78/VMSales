@@ -1,4 +1,5 @@
 ﻿using Caliburn.Micro;
+using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -496,6 +497,19 @@ namespace VMSales.ViewModels
         {
             initial_load();
         }
+
+        public void UploadCommand()
+        {
+            OpenFileDialog openFileDialog = new OpenFileDialog();
+            openFileDialog.Filter = "Image Files (*.bmp, *.jpg, *.png)|*.bmp;*.jpg;*.png";
+            if (openFileDialog.ShowDialog() == true)
+            {
+                string filePath = openFileDialog.FileName;
+                MessageBox.Show(filePath);
+                // TODO: Handle the selected file path
+            }
+        }
+
 
         public void Openphotos()
         {
