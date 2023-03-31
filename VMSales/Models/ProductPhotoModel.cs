@@ -2,8 +2,7 @@
 
 namespace VMSales.Models
 {
-    [Table("product_photo")]
-    public class ProductPhotoModel
+    public partial class PhotoModel
     {
             [ExplicitKey]
             public string product_photo_pk { get; set; }

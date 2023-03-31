@@ -205,8 +205,9 @@
                             Content="Reset"/>
             <!-- Upload Button -->
             <Button x:Name="UploadCommand" Grid.Column="3" Grid.Row="12"
-             IsEnabled="{Binding canEnableProductSupplier, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"               
-                            Width="75" 
+             IsEnabled="{Binding productSelected, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"               
+          
+                    Width="75" 
                             HorizontalAlignment="Left"
                             Content="Upload"/>
 

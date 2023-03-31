@@ -11,6 +11,18 @@ namespace VMSales.ViewModels
 {
     public class ProductViewModel : BaseViewModel
     {
+        private bool _productSelected;
+        public bool productSelected
+        {
+            get { return _productSelected; }
+            set
+            {
+                _productSelected = value;
+                RaisePropertyChanged("productSelected");
+            }
+        }
+
+
         #region Filters
         private bool _canRemoveSupplierFilter;
         public bool canRemoveSupplierFilter
@@ -170,10 +182,10 @@ namespace VMSales.ViewModels
                 _SelectedItem = value;
                 RaisePropertyChanged("SelectedItem");
                 LoadSupplier();
+                if (SelectedItem != null && SelectedItem.IsSelected)
+                    productSelected = true;
             }
         }
-
-
 
 
         #endregion
@@ -498,26 +510,25 @@ namespace VMSales.ViewModels
             initial_load();
         }
 
+
+        
         public void UploadCommand()
         {
-            OpenFileDialog openFileDialog = new OpenFileDialog();
+        
+        OpenFileDialog openFileDialog = new OpenFileDialog();
             openFileDialog.Filter = "Image Files (*.bmp, *.jpg, *.png)|*.bmp;*.jpg;*.png";
             if (openFileDialog.ShowDialog() == true)
             {
                 string filePath = openFileDialog.FileName;
-                MessageBox.Show(filePath);
+                // MessageBox.Show(filePath);
                 // TODO: Handle the selected file path
+                IWindowManager _windowManager = new WindowManager();
+                var popupwindow = new ProductPhotoViewModel(SelectedItem, filePath);
+                _windowManager.ShowWindowAsync(popupwindow);
             }
         }
 
 
-        public void Openphotos()
-        {
-            var popupwindow = new ProductPhotoViewModel(SelectedItem);
-            IWindowManager _windowManager = new WindowManager();
-            _windowManager.ShowWindowAsync(popupwindow);
-
-        }
 
         public void LoadPurchaseOrder(int supplier_fk,int purchase_order_detail_pk)
         {
@@ -566,6 +577,8 @@ namespace VMSales.ViewModels
         public void initial_load()
         {
             // reset buttons
+            _productSelected = false;
+            productSelected = false;
             canEnableProductSupplier = false;
             canEnableProductPurchase = false;
             selected_supplier_name = null;

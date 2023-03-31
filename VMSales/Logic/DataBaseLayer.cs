@@ -433,8 +433,8 @@ namespace VMSales.Logic
                 //
                 // check and fix.  we need to delete purchase_order_detail pk, then delete purchase_order_pk IF its the last one.
                 //
-                         bool deleterow = (await Connection.ExecuteAsync("...DELETE FROM purchase_order_detail WHERE purchase_order_fk = @id", new { id = entity.purchase_order_fk }, null)) == 1;
-                         return (await Connection.ExecuteAsync("...DELETE FROM purchase_order WHERE purchase_order_pk = @id", new { id = entity.purchase_order_pk }, Transaction)) == 1;
+                bool deleterow = (await Connection.ExecuteAsync("...DELETE FROM purchase_order_detail WHERE purchase_order_fk = @id", new { id = entity.purchase_order_fk }, null)) == 1;
+                return (await Connection.ExecuteAsync("...DELETE FROM purchase_order WHERE purchase_order_pk = @id", new { id = entity.purchase_order_pk }, Transaction)) == 1;
             }
 
             // generate product command
@@ -716,7 +716,7 @@ namespace VMSales.Logic
             {
                 // fix
                 bool deleterow = (await Connection.ExecuteAsync("...DELETE FROM purchase_order_detail WHERE purchase_order_fk = @id", new { id = entity.product_fk }, null)) == 1;
-                return (await Connection.ExecuteAsync("...DELETE FROM purchase_order WHERE purchase_order_pk = @id", new { id = entity.product_fk }, Transaction)) == 1;         
+                return (await Connection.ExecuteAsync("...DELETE FROM purchase_order WHERE purchase_order_pk = @id", new { id = entity.product_fk }, Transaction)) == 1;
             }
 
             public override Task<IEnumerable<ProductModel>> GetAllWithID(int id)
@@ -726,65 +726,89 @@ namespace VMSales.Logic
             //product_supplier
         }
         #endregion
-        #region Product_Photo
-        public class ProductPhotoRepository : Repository<ProductPhotoModel>
-        {
-            public ProductPhotoRepository(IDatabaseProvider dbProvider) : base(dbProvider) { }
-            // insert
-            public override async Task<bool> Insert(ProductPhotoModel entity)
-            {
-                  bool insertrow = (await Connection.ExecuteAsync("...INSERT INTO product_purchase_order " +
-                  "(product_order_detail_fk, product_fk) VALUES (@product_order_detail_fk, @product_fk)",
-           new
-           {
-               //product_order_detail_fk = entity.product_order_detail_fk,
-               product_fk = entity.product_fk
-           }, Transaction)) == 1;
-                return insertrow;
 
+      
+        
+   
+        #region Product_Photo
+        public class PhotoRepository : Repository<PhotoModel>
+        {
+
+            public PhotoRepository(IDatabaseProvider dbProvider) : base(dbProvider) { }
+
+
+            public async Task<IEnumerable<List<int>>> GetImagePos(int product_fk)
+            {
+            return await Connection.QueryAsync<List<int>>(
+            "SELECT COALESCE(MIN(photo_order_number), 1) AS photo_order_number " +
+            "FROM " +
+            "(SELECT photo_order_number " +
+            "FROM photo " +
+            "LEFT JOIN product_photo ON photo.photo_pk = product_photo.photo_fk " +
+            "WHERE product_fk = @product_fk) " +  
+            "UNION " +
+            "SELECT photo_order_number " +
+            "FROM photo " +
+            "LEFT JOIN product_photo ON photo.photo_pk = product_photo.photo_fk " +
+            "WHERE product_fk = @product_fk"
+            , new 
+                { product_fk }, Transaction);
+            }
+
+
+
+    // insert
+    public override async Task<bool> Insert(PhotoModel entity)
+            {
+                bool insertrow = (await Connection.ExecuteAsync("INSERT INTO product_photo " +
+                "(product_fk, photo_fk) VALUES (@product_fk, @photo_fk)",
+            new
+            {
+                product_fk = entity.product_fk,
+                photo_fk = entity.photo_fk
+            }, Transaction)) == 1;
+            return insertrow;
             }
 
             // update
-            public override async Task<bool> Update(ProductPhotoModel entity)
+            public override async Task<bool> Update(PhotoModel entity)
             {
-
-                return (await Connection.ExecuteAsync("UPDATE product SET " +
-                        "brand_name = @purchase_order_fk, " +
-                        "WHERE product_pk = @product_pk", new
+                return (await Connection.ExecuteAsync("UPDATE product_photo SET " +
+                        "product_fk = @product_fk, photo_fk = @photo_fk " +
+                        "WHERE product_fk = @product_fk", new
                         {
-                            //product_purchase_order_fk = entity.product_order_detail_fk,
-                            //product_fk = entity.product_fk,
+                            product__fk = entity.product_fk,
+                            photo_fk = entity.photo_fk,
                         }, Transaction)) == 1;
             }
             // delete
-            public override async Task<bool> Delete(ProductPhotoModel entity)
+            public override async Task<bool> Delete(PhotoModel entity)
             {
-                // fix
-                bool deleterow = (await Connection.ExecuteAsync("...DELETE FROM purchase_order_detail WHERE purchase_order_fk = @id", new { id = entity.product_fk }, null)) == 1;
-                return (await Connection.ExecuteAsync("...DELETE FROM purchase_order WHERE purchase_order_pk = @id", new { id = entity.product_fk }, Transaction)) == 1;
-            }
-            
-            //get all by id
-            public override async Task<IEnumerable<ProductPhotoModel>> GetAllWithID(int id)
-            {
-                //fix
-                return await Connection.QueryAsync<ProductPhotoModel>("SELECT " +
-                    "AND po.supplier_fk=@id", new { id }, Transaction);
+                bool deleterow = (await Connection.ExecuteAsync(
+                "DELETE FROM product_photo WHERE product_photo_pk = @id", 
+                new { id = entity.product_photo_pk }, null)) == 1;
+                return deleterow;
             }
 
+            //get all by id
+            public override async Task<IEnumerable<PhotoModel>> GetAllWithID(int id)
+            {
+                return await Connection.QueryAsync<PhotoModel>("SELECT " +
+                    "product_fk, photo_fk FROM product_photo WHERE product_fk=@id", new { id }, Transaction);
+            }
 
             //get all
-            public override async Task<IEnumerable<ProductPhotoModel>> GetAll()
+            public override async Task<IEnumerable<PhotoModel>> GetAll()
             {
                 // needs query fixing here.
-                return await Connection.QueryAsync<ProductPhotoModel>("SELECT " +
-                    "INNER JOIN supplier on sup.supplier_pk = po.supplier_fk;", null, Transaction);
+                return await Connection.QueryAsync<PhotoModel>("SELECT " +
+                    "product_fk, photo_fk FROM ... INNER JOIN supplier on sup.supplier_pk = po.supplier_fk;", null, Transaction);
             }
             //get by product id
-            public override async Task<ProductPhotoModel> Get(int id)
+            public override async Task<PhotoModel> Get(int id)
             {
                 //needs query fixing here
-                return await Connection.QuerySingleAsync<ProductPhotoModel>("SELECT ... FROM product_photo as pp INNER JOIN product on purchase_order.purchase_order_pk = pod.purchase_order_fk WHERE supplier_fk = @id;", new { id }, Transaction);
+                return await Connection.QuerySingleAsync<PhotoModel>("SELECT ... FROM product_photo as pp INNER JOIN product on purchase_order.purchase_order_pk = pod.purchase_order_fk WHERE supplier_fk = @id;", new { id }, Transaction);
             }
 
         }
@@ -916,29 +940,29 @@ namespace VMSales.Logic
                 entity.shipping_state = entity.shipping_state ?? "";
                 entity.shipping_zip = entity.shipping_zip ?? "";
                 entity.shipping_country = entity.shipping_country ?? "";
-               
+
                 int newId = await Connection.QuerySingleAsync<int>("INSERT INTO customer " +
                     "(user_name, first_name, last_name, address, city, state, zip, country, phone, " +
                     "shipping_address, shipping_city, shipping_state, shipping_zip, shipping_country, same_shipping_address) " +
                     "VALUES (@user_name, @first_name, @last_name, @address, @city, @state, @zip, @country, @phone, " +
                     "@shipping_address, @shipping_city, @shipping_state, @shipping_zip, @shipping_country, @same_shipping_address); SELECT last_insert_rowid()", new
-                {
-                    user_name = entity.user_name,
-                    first_name = entity.first_name,
-                    last_name = entity.last_name,
-                    address = entity.address,
-                    city = entity.city,
-                    state = entity.state,
-                    zip = entity.zip,
-                    country = entity.country,
-                    phone = entity.phone,
-                    shipping_address = entity.shipping_address,
-                    shipping_city = entity.shipping_city,
-                    shipping_state = entity.shipping_state,
-                    shipping_zip = entity.shipping_zip,
-                    shipping_country = entity.shipping_country,
-                    same_shipping_address = entity.same_shipping_address
-                }, Transaction);
+                    {
+                        user_name = entity.user_name,
+                        first_name = entity.first_name,
+                        last_name = entity.last_name,
+                        address = entity.address,
+                        city = entity.city,
+                        state = entity.state,
+                        zip = entity.zip,
+                        country = entity.country,
+                        phone = entity.phone,
+                        shipping_address = entity.shipping_address,
+                        shipping_city = entity.shipping_city,
+                        shipping_state = entity.shipping_state,
+                        shipping_zip = entity.shipping_zip,
+                        shipping_country = entity.shipping_country,
+                        same_shipping_address = entity.same_shipping_address
+                    }, Transaction);
                 return true;
             }
 
@@ -987,24 +1011,24 @@ namespace VMSales.Logic
                     "shipping_state = @shipping_state, shipping_zip = @shipping_zip, " +
                     "shipping_country = @shipping_country, same_shipping_address = @same_shipping_address " +
                     "WHERE customer_pk = @id", new
-                {
-                    id = entity.customer_pk,
-                    user_name = entity.user_name,
-                    first_name = entity.first_name,
-                    last_name = entity.last_name,
-                    address = entity.address,
-                    state = entity.state,
-                    city = entity.city,
-                    zip = entity.zip,
-                    country = entity.country,
-                    phone = entity.phone,
-                    shipping_address = entity.shipping_address,
-                    shipping_city = entity.shipping_city,
-                    shipping_state = entity.shipping_state,
-                    shipping_zip = entity.shipping_zip,
-                    shipping_country = entity.shipping_country,
-                    same_shipping_address = entity.same_shipping_address   
-                }, Transaction)) == 1;
+                    {
+                        id = entity.customer_pk,
+                        user_name = entity.user_name,
+                        first_name = entity.first_name,
+                        last_name = entity.last_name,
+                        address = entity.address,
+                        state = entity.state,
+                        city = entity.city,
+                        zip = entity.zip,
+                        country = entity.country,
+                        phone = entity.phone,
+                        shipping_address = entity.shipping_address,
+                        shipping_city = entity.shipping_city,
+                        shipping_state = entity.shipping_state,
+                        shipping_zip = entity.shipping_zip,
+                        shipping_country = entity.shipping_country,
+                        same_shipping_address = entity.same_shipping_address
+                    }, Transaction)) == 1;
             }
 
             public override async Task<bool> Delete(CustomerModel entity)
@@ -1013,7 +1037,7 @@ namespace VMSales.Logic
             }
         }
         #endregion
-        
+
         #region CustomerOrderModel
         // table customer_order and customer_order_detail
         public class CustomerOrderRepository : Repository<CustomerOrderModel>
@@ -1022,14 +1046,14 @@ namespace VMSales.Logic
 
             public override async Task<IEnumerable<CustomerOrderModel>> GetAllWithID(int id)
             {
-                  return null;
+                return null;
             }
 
             public override async Task<CustomerOrderModel> Get(int id)
             {
                 return await Connection.QuerySingleAsync<CustomerOrderModel>("SELECT customer_order_detail_pk FROM customer_order_detail WHERE customer__order_detail_pk = @id", new { id }, Transaction);
             }
-            
+
             public override async Task<IEnumerable<CustomerOrderModel>> GetAll()
             {
                 return await Connection.QueryAsync<CustomerOrderModel>(

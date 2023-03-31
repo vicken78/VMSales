@@ -238,6 +238,7 @@
     <Compile Include="Models\CustomerModel.cs" />
     <Compile Include="Models\CustomerOrderDetailModel.cs" />
     <Compile Include="Models\CustomerOrderModel.cs" />
+    <Compile Include="Models\PhotoModel.cs" />
     <Compile Include="Models\ProductModel.cs" />
     <Compile Include="Models\ProductPhotoModel.cs" />
     <Compile Include="Models\ProductPurchaseOrderModel.cs" />
