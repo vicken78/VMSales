@@ -61,8 +61,6 @@ namespace VMSales.ViewModels
                     IEnumerable<int> next_photo_order_number = await PhotoRepo.GetNextPos(product_fk);
                     int photo_order_number = next_photo_order_number.Single();
                     
-                    //call insert 
-                    MessageBox.Show("inorg");
                     // insert into photo
 
                     // get photo_pk, insert into product_photo

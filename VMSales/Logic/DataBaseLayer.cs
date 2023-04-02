@@ -728,11 +728,11 @@ namespace VMSales.Logic
         #endregion
 
       
-        
-   
-        #region Product_Photo
+        #region Photo includes Product_Photo
         public class PhotoRepository : Repository<PhotoModel>
         {
+            // in development
+
 
             public PhotoRepository(IDatabaseProvider dbProvider) : base(dbProvider) { }
 
@@ -774,24 +774,27 @@ namespace VMSales.Logic
             // insert
             public override async Task<bool> Insert(PhotoModel entity)
             {
-                bool insertrow = (await Connection.ExecuteAsync("INSERT INTO product_photo " +
-                "(product_fk, photo_fk) VALUES (@product_fk, @photo_fk)",
+                bool insertrow = (await Connection.ExecuteAsync("INSERT INTO photo " +
+                "(photo_order_number, photo_path) VALUES (@photo_order_number, @photo_path)",
             new
             {
-                product_fk = entity.product_fk,
-                photo_fk = entity.photo_fk
+                photo_order_number = entity.photo_order_number,
+                photo_path = entity.photo_path
             }, Transaction)) == 1;
             return insertrow;
             }
 
+
+
+
+
             // update
             public override async Task<bool> Update(PhotoModel entity)
             {
-                return (await Connection.ExecuteAsync("UPDATE product_photo SET " +
-                        "product_fk = @product_fk, photo_fk = @photo_fk " +
-                        "WHERE product_fk = @product_fk", new
+                return (await Connection.ExecuteAsync("UPDATE photo SET " +
+                        "photo_order_number = @photo_order_number " +
+                        "WHERE photo_pk = @photo_pk", new
                         {
-                            product__fk = entity.product_fk,
                             photo_fk = entity.photo_fk,
                         }, Transaction)) == 1;
             }
@@ -799,8 +802,8 @@ namespace VMSales.Logic
             public override async Task<bool> Delete(PhotoModel entity)
             {
                 bool deleterow = (await Connection.ExecuteAsync(
-                "DELETE FROM product_photo WHERE product_photo_pk = @id", 
-                new { id = entity.product_photo_pk }, null)) == 1;
+                "DELETE FROM photo WHERE photo_pk = @id", 
+                new { id = entity.photo_pk }, null)) == 1;
                 return deleterow;
             }
 
@@ -808,7 +811,7 @@ namespace VMSales.Logic
             public override async Task<IEnumerable<PhotoModel>> GetAllWithID(int id)
             {
                 return await Connection.QueryAsync<PhotoModel>("SELECT " +
-                    "product_fk, photo_fk FROM product_photo WHERE product_fk=@id", new { id }, Transaction);
+                    "product_order_number, photo_path FROM photo WHERE photo_pk=@id", new { id }, Transaction);
             }
 
             //get all
@@ -816,7 +819,7 @@ namespace VMSales.Logic
             {
                 // needs query fixing here.
                 return await Connection.QueryAsync<PhotoModel>("SELECT " +
-                    "product_fk, photo_fk FROM ... INNER JOIN supplier on sup.supplier_pk = po.supplier_fk;", null, Transaction);
+                    "photo_order_number, photo_fk FROM photo", null, Transaction);
             }
             //get by product id
             public override async Task<PhotoModel> Get(int id)
@@ -828,6 +831,11 @@ namespace VMSales.Logic
         }
 
         #endregion
+
+
+
+
+
 
         // needs fixing here
         /*
