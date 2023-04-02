@@ -523,7 +523,15 @@ namespace VMSales.ViewModels
                 // MessageBox.Show(filePath);
                 // TODO: Handle the selected file path
                 IWindowManager _windowManager = new WindowManager();
+
+                //_eventAggregator.PublishOnUIThreadAsync(new DataMessage(filePath));
+                //_eventAggregator.PublishOnUIThreadAsync(new DataMessage(SelectedItem));
+
+
                 var popupwindow = new ProductPhotoViewModel(SelectedItem, filePath);
+                //var popupwindow = new ProductPhotoViewModel();
+
+
                 _windowManager.ShowWindowAsync(popupwindow);
             }
         }

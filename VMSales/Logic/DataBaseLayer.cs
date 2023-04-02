@@ -737,9 +737,9 @@ namespace VMSales.Logic
             public PhotoRepository(IDatabaseProvider dbProvider) : base(dbProvider) { }
 
 
-            public async Task<IEnumerable<List<int>>> GetImagePos(int product_fk)
+            public async Task<IEnumerable<int>> GetImagePos(int product_fk)
             {
-            return await Connection.QueryAsync<List<int>>(
+            return await Connection.QueryAsync<int>(
             "SELECT COALESCE(MIN(photo_order_number), 1) AS photo_order_number " +
             "FROM " +
             "(SELECT photo_order_number " +
@@ -751,14 +751,28 @@ namespace VMSales.Logic
             "FROM photo " +
             "LEFT JOIN product_photo ON photo.photo_pk = product_photo.photo_fk " +
             "WHERE product_fk = @product_fk"
-            , new 
-                { product_fk }, Transaction);
+            , new { product_fk }, Transaction);
             }
 
-
-
-    // insert
-    public override async Task<bool> Insert(PhotoModel entity)
+            public async Task<IEnumerable<int>> GetNextPos(int product_fk)
+            {
+            return await Connection.QueryAsync<int>(
+            "SELECT COALESCE(MAX(photo_order_number), 0) + 1 AS photo_order_number " +
+            "FROM (" +
+            "SELECT photo_order_number " +
+            "FROM photo " +
+            "LEFT JOIN product_photo ON photo.photo_pk = product_photo.photo_fk " +
+            "WHERE product_fk = @product_fk " +
+            "UNION " +
+            "SELECT MAX(photo_order_number) " +
+            "FROM photo " +
+            "LEFT JOIN product_photo ON photo.photo_pk = product_photo.photo_fk " +
+            "WHERE product_fk = @product_fk) " +
+            "AS subquery WHERE PHOTO_ORDER_NUMBER IS NOT NULL"
+            , new { product_fk }, Transaction);
+            }
+            // insert
+            public override async Task<bool> Insert(PhotoModel entity)
             {
                 bool insertrow = (await Connection.ExecuteAsync("INSERT INTO product_photo " +
                 "(product_fk, photo_fk) VALUES (@product_fk, @photo_fk)",
