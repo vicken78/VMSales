@@ -16,8 +16,13 @@ namespace VMSales.Models
         private string _lot_description { get; set; }
         private decimal _sales_tax { get; set; }
         private decimal _shipping_cost { get; set; }
-        private int _quantity_check {get; set;}
 
+        private decimal _total_lot { get; set; }
+        private decimal _total_sales_tax { get; set; }
+        private decimal _total_shipping { get; set; }
+        private decimal _total_cost { get; set; }
+
+        private int _quantity_check {get; set;}
 
         // purchase order detail
         [ExplicitKey]
@@ -125,6 +130,51 @@ namespace VMSales.Models
                 RaisePropertyChanged("shipping_cost");
             }
         }
+        public decimal total_lot
+        {
+            get { return _total_lot; }
+            set
+            {
+                if (_total_lot == value) return;
+                _total_lot = value;
+                RaisePropertyChanged("total_lot");
+            }
+        }
+
+        public decimal total_sales_tax
+        {
+            get { return _total_sales_tax; }
+            set
+            {
+                if (_total_sales_tax == value) return;
+                _total_sales_tax = value;
+                RaisePropertyChanged("total_sales_tax");
+            }
+        }
+
+        public decimal total_shipping
+        {
+            get { return _total_shipping; }
+            set
+            {
+                if (_total_shipping == value) return;
+                _total_shipping = value;
+                RaisePropertyChanged("total_shipping");
+            }
+        }
+
+        public decimal total_cost
+        {
+            get { return _total_cost; }
+            set
+            {
+                if (_total_cost == value) return;
+                _total_cost = value;
+                RaisePropertyChanged("total_cost");
+            }
+        }
+
+
         public int quantity_check
         {
             get { return _quantity_check; }
@@ -135,12 +185,6 @@ namespace VMSales.Models
                 RaisePropertyChanged("quantity_check");
             }
         }
-
-
-
-
-
-
 
     }
 }

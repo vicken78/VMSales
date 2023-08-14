@@ -94,7 +94,7 @@ namespace VMSales.ViewModels
                 canEnableProductSupplier = true;
             }
         }
-     /*   private int _selected_lot_number { get; set; }
+        private int _selected_lot_number { get; set; }
         public int selected_lot_number
         {
             get { return _selected_lot_number; }
@@ -103,11 +103,9 @@ namespace VMSales.ViewModels
                 if (_selected_lot_number == value) return;
                 _selected_lot_number = value;
                 RaisePropertyChanged("selected_lot_number");
-                canEnableProductPurchase = true;
-                MessageBox.Show(selected_lot_number.ToString());
             }
         }
-     */
+     
         private bool _canEnableProductSupplier;
         public bool canEnableProductSupplier
         {
@@ -220,7 +218,6 @@ namespace VMSales.ViewModels
                 {
                     LoadPurchaseOrder(get_supplier_fk, get_product_purchase_order_detail_fk);
                 }
-                // Load Purchase Order Lots
               }
         }
 
@@ -590,6 +587,7 @@ namespace VMSales.ViewModels
             canEnableProductSupplier = false;
             canEnableProductPurchase = false;
             selected_supplier_name = null;
+            selected_lot_number = 0;
             purchase_order_detail_pk = 0;
 
 

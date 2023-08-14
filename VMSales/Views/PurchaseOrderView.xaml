@@ -144,10 +144,33 @@
                             Width="100" 
                             HorizontalAlignment="Left"
                             Content="Generate Products"/>
-
-
         </Grid>
-        <!-- OLD   ItemsSource="{Binding PurchaseOrderView}" -->
+
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="50" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <DataGrid x:Name="Totalpurchaseorderdatagrid" AutoGenerateColumns="False" 
+                      ItemsSource="{Binding ObservableCollectionTotalPurchaseOrderModel, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                      IsSynchronizedWithCurrentItem="True" 
+                          CanUserDeleteRows="False"
+                          CanUserAddRows="False"
+                          FontSize="10"
+                          IsReadOnly="True"
+                          EnableRowVirtualization="True" Grid.Row="0" 
+                          Height="40" Width="1400"  VerticalAlignment="Top" Margin="1077,0,0,0">
+            <DataGrid.Columns>
+                <DataGridTextColumn x:Name="LotTotal" Header="Lot Total" Width="60"
+                            IsReadOnly="True" Binding="{Binding Path=total_lot, StringFormat='c', Mode=Twoway, UpdateSourceTrigger=PropertyChanged}"/>
+                <DataGridTextColumn x:Name="TaxTotal" Header="Tax Total" Width="60"
+                            IsReadOnly="True" Binding="{Binding total_sales_tax,StringFormat='c', Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                <DataGridTextColumn x:Name="ShipTotal" Header="Ship Total" Width="60"
+                            IsReadOnly="True" Binding="{Binding total_shipping, StringFormat='c',Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                    <DataGridTextColumn x:Name="CostTotal" Header="Total Cost" Width="60"
+                            IsReadOnly="True" Binding="{Binding total_cost, StringFormat='c',Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                </DataGrid.Columns>
+            </DataGrid>
 
         <DataGrid x:Name="purchaseorderdatagrid" AutoGenerateColumns="False" 
                       ItemsSource="{Binding ObservableCollectionPurchaseOrderModel, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
@@ -156,7 +179,7 @@
                           SelectionMode="Single"
                           SelectedItem="{Binding SelectedItem, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                           CanUserAddRows="False" 
-                          EnableRowVirtualization="True" IsReadOnly="False" Grid.Row="10" 
+                          EnableRowVirtualization="True" IsReadOnly="False" Grid.Row="1" 
                           Height="Auto" Width="1400"  HorizontalAlignment="Center" >
             <DataGrid.RowStyle>
                 <Style TargetType="{x:Type DataGridRow}">
@@ -200,7 +223,7 @@
 
                 <DataGridTextColumn Header="Lot Name" Width="Auto"
                             Binding="{Binding lot_name, ValidatesOnNotifyDataErrors=True, UpdateSourceTrigger=PropertyChanged}" />
-                <DataGridTextColumn Header="Lot Description" MinWidth="500" Width="500" MaxWidth="600" CanUserResize="True" 
+                <DataGridTextColumn Header="Lot Description" Width="670" CanUserResize="True" 
                             Binding="{Binding lot_description, ValidatesOnNotifyDataErrors=True, UpdateSourceTrigger=PropertyChanged}" />
                 <DataGridTextColumn Header="Lot Cost" Width="60"  
                             Binding="{Binding lot_cost, StringFormat='$0.00;;#', ValidatesOnNotifyDataErrors=True, UpdateSourceTrigger=PropertyChanged}" />
@@ -215,6 +238,6 @@
      
             </DataGrid.Columns>
         </DataGrid>
-
+        </Grid>
     </DockPanel>
 </UserControl>

@@ -5,12 +5,9 @@ using System.Windows.Data;
 using VMSales.Models;
 using System.Linq;
 using System.Collections.Generic;
-using System.ComponentModel;
 using VMSales.Logic;
 using System.Windows;
 using System.Threading.Tasks;
-using System.Text.RegularExpressions;
-using System.Collections.Specialized;
 
 namespace VMSales.ViewModels
 {
@@ -84,6 +81,20 @@ namespace VMSales.ViewModels
                 RaisePropertyChanged("ObservableCollectionPurchaseOrderModel");
             }
         }
+
+        private ObservableCollection<PurchaseOrderModel> _ObservableCollectionTotalPurchaseOrderModel;
+        public ObservableCollection<PurchaseOrderModel> ObservableCollectionTotalPurchaseOrderModel
+        {
+            get { return _ObservableCollectionTotalPurchaseOrderModel; }
+            set
+            {
+                if (_ObservableCollectionTotalPurchaseOrderModel == value) return;
+                _ObservableCollectionTotalPurchaseOrderModel = value;
+                RaisePropertyChanged("ObservableCollectionPurchaseOrderModel");
+            }
+        }
+
+
         #endregion
 
         #region Selected
@@ -507,16 +518,12 @@ namespace VMSales.ViewModels
                 return;
             }
 
-            //         SelectedItem.supplier_fk = this.supplier_fk;
-
             // scenerio 3
             // INSERT new invoice number, INSERT new purchase_order detail --- pod_pk = 0
             try
             {
                 if (SelectedItem.purchase_order_detail_pk == 0)
                 {
-                    //dataBaseProvider = getprovider();
-                    //DataBaseLayer.PurchaseOrderRepository PurchaseOrderRepo = new DataBaseLayer.PurchaseOrderRepository(dataBaseProvider);
                     Task<bool> insertPurchase_Order = SavePurchaseOrderRepo.Insert(SelectedItem);
 
                     // new purchase order_detail_pk must be assigned 
@@ -752,6 +759,7 @@ namespace VMSales.ViewModels
 
             // Get All Purchase Order
             ObservableCollectionPurchaseOrderModel = new ObservableCollection<PurchaseOrderModel>();
+            ObservableCollectionTotalPurchaseOrderModel = new ObservableCollection<PurchaseOrderModel>();
 
             dataBaseProvider = getprovider();
             DataBaseLayer.PurchaseOrderRepository PurchaseOrderRepo = new DataBaseLayer.PurchaseOrderRepository(dataBaseProvider);
@@ -777,6 +785,7 @@ namespace VMSales.ViewModels
                 });
             }
             ObservableCollectionPurchaseOrderModel = PurchaseOrderRepo.GetAll().Result.ToObservable();
+            ObservableCollectionTotalPurchaseOrderModel = PurchaseOrderRepo.GetAllTotal().Result.ToObservable();
             cvs.Source = ObservableCollectionPurchaseOrderModel;
             PurchaseOrderRepo.Commit();
             PurchaseOrderRepo.Dispose();

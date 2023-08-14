@@ -361,6 +361,9 @@
   <ItemGroup>
     <Resource Include="Resources\1385_Disable_16x16_72_disabled.png" />
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Images\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>

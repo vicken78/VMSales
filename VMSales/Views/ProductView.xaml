@@ -72,11 +72,12 @@
                 ItemsSource="{Binding Path=BindableCollectionPurchaseOrderModel,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
                 DisplayMemberPath="lot_number"
                 Width="60" HorizontalAlignment="Left"
-                SelectedValue="{Binding purchase_order_detail_pk, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" 
+                SelectedValue="{Binding lot_number, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" 
                 SelectedValuePath="purchase_order_detail_pk"
                 Grid.Column="1" Grid.Row="3"/>
             <!--SelectedItem="selected_lot_number"-->
-
+            <!--         SelectedValue="{Binding purchase_order_detail_pk, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" 
+                SelectedValuePath="purchase_order_detail_pk" -->
 
             <!-- Lot Name -->
             <Label Content="Lot Name" Grid.Column="0" Grid.Row="5" />

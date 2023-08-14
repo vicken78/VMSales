@@ -134,7 +134,7 @@ namespace VMSales.Logic
             //get supplier by name
             public async Task<int> Get_by_supplier_name(string supplier_name)
             {
-                return await Connection.QuerySingleAsync<int>("SELECT supplier_pk FROM supplier WHERE supplier_name = @supplier_name", new { supplier_name }, Transaction);
+                return await Connection.QuerySingleAsync<int>("SELECT supplier_pk FROM supplier WHERE supplier_name = @supplier_name ORDER BY supplier_name", new { supplier_name }, Transaction);
             }
 
 
@@ -318,12 +318,23 @@ namespace VMSales.Logic
                 var result = await Connection.QuerySingleAsync<int>("SELECT MAX(purchase_order_detail_pk) FROM purchase_order_detail;", Transaction);
                 return result;
             }
-
-
-
+            // get totals for purchase_order 
+            public async Task<IEnumerable<PurchaseOrderModel>> GetAllTotal()
+            {
+                return await Connection.QueryAsync<PurchaseOrderModel>("SELECT " +
+                    "SUM(pod.sales_tax) AS total_sales_tax, " +
+                    "SUM(pod.shipping_cost) AS total_shipping, " +
+                    "SUM(pod.lot_cost) AS total_lot, " +
+                    "SUM(pod.sales_tax + pod.shipping_cost + pod.lot_cost) AS total_cost " +
+                    "FROM purchase_order AS po " +
+                    "INNER JOIN purchase_order_detail AS pod ON po.purchase_order_pk = pod.purchase_order_fk " +
+                    "INNER JOIN supplier AS sup ON sup.supplier_pk = po.supplier_fk ", null, Transaction);
+            }
+    
             // get all purchase_order and purchase_order_detail
             public override async Task<IEnumerable<PurchaseOrderModel>> GetAll()
             {
+                
                 return await Connection.QueryAsync<PurchaseOrderModel>("SELECT " +
                     "distinct po.purchase_order_pk, po.purchase_date, po.invoice_number, pod.purchase_order_detail_pk, " +
                     "pod.purchase_order_fk, pod.lot_number, pod.lot_cost, pod.lot_quantity," +
@@ -331,11 +342,29 @@ namespace VMSales.Logic
                     "FROM purchase_order as po, purchase_order_detail as pod, supplier as sup " +
                     "INNER JOIN purchase_order_detail on po.purchase_order_pk = pod.purchase_order_fk " +
                     "INNER JOIN supplier on sup.supplier_pk = po.supplier_fk;", null, Transaction);
+                
             }
+
+
+            public async Task<IEnumerable<PurchaseOrderModel>> GetAllTotalWithID(int id)
+            {
+                return await Connection.QueryAsync<PurchaseOrderModel>("SELECT " +
+                    "SUM(pod.sales_tax) AS total_sales_tax, " +
+                    "SUM(pod.shipping_cost) AS total_shipping, " +
+                    "SUM(pod.lot_cost) AS total_lot, " +
+                    "SUM(pod.sales_tax + pod.shipping_cost + pod.lot_cost) AS total_cost " +
+                    "FROM purchase_order AS po " +
+                    "INNER JOIN purchase_order_detail AS pod ON po.purchase_order_pk = pod.purchase_order_fk " +
+                    "INNER JOIN supplier AS sup ON sup.supplier_pk = po.supplier_fk " +
+                    "AND po.supplier_fk=#id", new { id }, Transaction);
+            }
+
+
 
             // get all purchase_order and purchase_order_detail
             public override async Task<IEnumerable<PurchaseOrderModel>> GetAllWithID(int id)
             {
+                
                 return await Connection.QueryAsync<PurchaseOrderModel>("SELECT " +
                     "distinct po.purchase_order_pk, po.purchase_date, po.invoice_number, " +
                     "pod.purchase_order_detail_pk, pod.purchase_order_fk, pod.lot_number, pod.lot_cost, pod.lot_quantity," +
@@ -345,6 +374,7 @@ namespace VMSales.Logic
                     "INNER JOIN supplier on sup.supplier_pk = po.supplier_fk " +
                     "AND po.supplier_fk=@id", new { id }, Transaction);
             }
+
 
             public async Task<PurchaseOrderModel> GetAllWithPK(int purchase_order_detail_pk)
             {
