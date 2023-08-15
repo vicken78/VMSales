@@ -149,6 +149,7 @@ namespace VMSales.ViewModels
         #endregion
 
         #region filter methods
+        private bool _cancanremovesupplierfilter;
         private bool _cancanremoveinvoicenumberfilter;
         private bool _cancanremovepurchasedatefilter;
         private enum FilterField
@@ -235,6 +236,17 @@ namespace VMSales.ViewModels
                 RaisePropertyChanged("CanRemovePurchaseDateFilter");
             }
         }
+        public bool CanRemoveSupplierFilter
+        {
+            get { return _cancanremovesupplierfilter; }
+            set
+            {
+                _cancanremovesupplierfilter = value;
+                RaisePropertyChanged("CanRemoveSupplierFilter");
+            }
+
+        }
+
         public void RemoveInvoiceNumberFilterCommand()
         {
             cvs.Filter -= new FilterEventHandler(FilterByInvoiceNumber);
@@ -274,8 +286,7 @@ namespace VMSales.ViewModels
                 _supplier_fk = value;
                 RaisePropertyChanged("supplier_fk");
                 LoadPurchaseOrder(supplier_fk);
-                // here we need to limit filter to that supplier.
-                // we also need a way to reset thats supplier.
+                CanRemoveSupplierFilter = !CanRemoveSupplierFilter;
             }
         }
 
@@ -291,6 +302,7 @@ namespace VMSales.ViewModels
             supplier_fk = 0;
             RaisePropertyChanged("supplier_fk");
             LoadPurchaseOrder(0);
+            CanRemoveSupplierFilter = false;
         }
 
 

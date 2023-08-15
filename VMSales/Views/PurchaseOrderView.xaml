@@ -40,9 +40,13 @@
             <!-- Supplier Combo static -->
             <Label Grid.Row="2" Grid.Column="0">Supplier</Label>
 
-            <ComboBox x:Name="cmbSupplier" ItemsSource="{Binding Path=ObservableCollectionSupplierModel}" DisplayMemberPath="supplier_name" SelectedValue="{Binding supplier_fk, Mode=TwoWay}" SelectedIndex="{Binding cmbSupplier, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" SelectedValuePath="supplier_pk" Grid.Row="2" Grid.Column="1"/>
+           <!-- <ComboBox x:Name="cmbSupplier" ItemsSource="{Binding Path=ObservableCollectionSupplierModel}" DisplayMemberPath="supplier_name" SelectedValue="{Binding supplier_fk, Mode=TwoWay}" SelectedIndex="{Binding cmbSupplier, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" SelectedValuePath="supplier_pk" Grid.Row="2" Grid.Column="1"/>-->
+          <ComboBox x:Name="cmbSupplier" ItemsSource="{Binding Path=ObservableCollectionSupplierModel}" 
+          DisplayMemberPath="supplier_name" SelectedValue="{Binding supplier_fk, Mode=TwoWay}" 
+          SelectedValuePath="supplier_pk" Grid.Row="2" Grid.Column="1"/>
+
             <Button x:Name="RemoveSupplier" HorizontalAlignment="Left" Margin="20,0,0,0" Grid.Row="2" Grid.Column="2" Width="16" Height="16" 
-            IsEnabled="True">
+            IsEnabled="{Binding CanRemoveSupplierFilter, Mode=OneWay}">
                 <Image Width="10" Height="10" Style="{DynamicResource ImageStyleForButtons}"/>
             </Button>
 
