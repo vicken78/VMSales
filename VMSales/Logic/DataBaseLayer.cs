@@ -319,8 +319,11 @@ namespace VMSales.Logic
                 return result;
             }
             // get totals for purchase_order 
-            public async Task<IEnumerable<PurchaseOrderModel>> GetAllTotal()
+
+            /*
+            public async Task<IEnumerable<PurchaseOrderModel>> GetAllTotal(int supplier_fk)
             {
+                if (supplier_fk == 0)
                 return await Connection.QueryAsync<PurchaseOrderModel>("SELECT " +
                     "SUM(pod.sales_tax) AS total_sales_tax, " +
                     "SUM(pod.shipping_cost) AS total_shipping, " +
@@ -329,8 +332,42 @@ namespace VMSales.Logic
                     "FROM purchase_order AS po " +
                     "INNER JOIN purchase_order_detail AS pod ON po.purchase_order_pk = pod.purchase_order_fk " +
                     "INNER JOIN supplier AS sup ON sup.supplier_pk = po.supplier_fk ", null, Transaction);
+                else
+                    return await Connection.QueryAsync<PurchaseOrderModel>("SELECT " +
+                    "SUM(pod.sales_tax) AS total_sales_tax, " +
+                    "SUM(pod.shipping_cost) AS total_shipping, " +
+                    "SUM(pod.lot_cost) AS total_lot, " +
+                    "SUM(pod.sales_tax + pod.shipping_cost + pod.lot_cost) AS total_cost " +
+                    "FROM purchase_order AS po " +
+                    "INNER JOIN purchase_order_detail AS pod ON po.purchase_order_pk = pod.purchase_order_fk " +
+                    "INNER JOIN supplier AS sup ON sup.supplier_pk = po.supplier_fk " +
+                    "AND supplier_fk=@supplier_fk", supplier_fk, Transaction);
             }
-    
+    */
+
+            public async Task<IEnumerable<PurchaseOrderModel>> GetAllTotal(int supplier_fk)
+            {
+                string query = "SELECT " +
+                               "SUM(pod.sales_tax) AS total_sales_tax, " +
+                               "SUM(pod.shipping_cost) AS total_shipping, " +
+                               "SUM(pod.lot_cost) AS total_lot, " +
+                               "SUM(pod.sales_tax + pod.shipping_cost + pod.lot_cost) AS total_cost " +
+                               "FROM purchase_order AS po " +
+                               "INNER JOIN purchase_order_detail AS pod ON po.purchase_order_pk = pod.purchase_order_fk " +
+                               "INNER JOIN supplier AS sup ON sup.supplier_pk = po.supplier_fk";
+
+                if (supplier_fk != 0)
+                {
+                    query += " WHERE supplier_fk = @supplier_fk";
+                }
+
+                var parameters = new { supplier_fk };
+
+                return await Connection.QueryAsync<PurchaseOrderModel>(query, parameters, Transaction);
+            }
+
+
+
             // get all purchase_order and purchase_order_detail
             public override async Task<IEnumerable<PurchaseOrderModel>> GetAll()
             {

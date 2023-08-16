@@ -690,6 +690,7 @@ namespace VMSales.ViewModels
             {
                 ObservableCollectionPurchaseOrderModel = PurchaseOrderRepo.GetAll().Result.ToObservable();
                 LoadFilterLists(ObservableCollectionPurchaseOrderModel);
+                ObservableCollectionTotalPurchaseOrderModel = PurchaseOrderRepo.GetAllTotal(supplier_fk).Result.ToObservable();
             }
             else
             {
@@ -698,9 +699,12 @@ namespace VMSales.ViewModels
                 {
                     ObservableCollectionPurchaseOrderModel = Result.ToObservable();
                     LoadFilterLists(ObservableCollectionPurchaseOrderModel);
+                    ObservableCollectionTotalPurchaseOrderModel.Clear();
+                    ObservableCollectionTotalPurchaseOrderModel = PurchaseOrderRepo.GetAllTotal(supplier_fk).Result.ToObservable();
                 }
             }
             RaisePropertyChanged("ObservableCollectionPurchaseOrderModel");
+            RaisePropertyChanged("ObservableCollectionTotalPurchaseOrderModel");
             PurchaseOrderRepo.Commit();
             PurchaseOrderRepo.Dispose();
 
@@ -797,7 +801,7 @@ namespace VMSales.ViewModels
                 });
             }
             ObservableCollectionPurchaseOrderModel = PurchaseOrderRepo.GetAll().Result.ToObservable();
-            ObservableCollectionTotalPurchaseOrderModel = PurchaseOrderRepo.GetAllTotal().Result.ToObservable();
+            ObservableCollectionTotalPurchaseOrderModel = PurchaseOrderRepo.GetAllTotal(supplier_fk).Result.ToObservable();
             cvs.Source = ObservableCollectionPurchaseOrderModel;
             PurchaseOrderRepo.Commit();
             PurchaseOrderRepo.Dispose();
