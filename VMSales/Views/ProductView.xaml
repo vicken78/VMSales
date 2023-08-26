@@ -343,7 +343,17 @@
                 <DataGridTemplateColumn Header="Listing Date">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <TextBlock Text="{Binding listing_date, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                            <TextBlock Text="{Binding listing_date, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                            <TextBlock.Style>
+                                    <Style TargetType="TextBlock">
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding listing_date}" Value="1/1/0001">
+                                                <Setter Property="Visibility" Value="Collapsed" />
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </TextBlock.Style>
+                            </TextBlock>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                     <DataGridTemplateColumn.CellEditingTemplate>
