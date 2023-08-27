@@ -26,7 +26,7 @@
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="100" />
                     <ColumnDefinition Width="100" />
-                    <ColumnDefinition Width="1920" />
+                    <ColumnDefinition Width="1720" />
                 </Grid.ColumnDefinitions>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="25" />
@@ -42,8 +42,8 @@
 
                 <!-- Name -->
                 <Label Content="Product Name" Grid.Column="0" Grid.Row="1" />
-                <TextBox IsReadOnly="True" Text="{Binding product_name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}" 
-                    Grid.Column="1" Grid.Row="1"/>
+                <TextBox IsReadOnly="True" Width="255" Text="{Binding product_name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}" 
+                    Grid.Column="1" Grid.Row="1" Grid.ColumnSpan="2" HorizontalAlignment="Left"/>
                 <!--  Save Button -->
                 <Button x:Name="SaveCommand" Grid.Column="0" Grid.Row="2"
                             Width="75"                                      

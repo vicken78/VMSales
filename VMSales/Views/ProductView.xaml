@@ -149,37 +149,19 @@
             </Button>
 
             <!-- Images -->
-            <Button Content="Image1" Height="75" Width="75"
-             IsEnabled="{Binding canEnableProductSupplier, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
-                Grid.Row="2" Grid.Column="8" Grid.RowSpan="4"/>
-            <Button Content="Image2" Height="75" Width="75" 
-             IsEnabled="{Binding canEnableProductSupplier, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
-                Grid.Row="2" Grid.Column="9" Grid.RowSpan="4"/>
-            <Button Content="Image3" Height="75" Width="75" 
-             IsEnabled="{Binding canEnableProductSupplier, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
-              Grid.Row="2" Grid.Column="10" Grid.RowSpan="4"/>
-            <Button Content="Image4" Height="75" Width="75" 
-             IsEnabled="{Binding canEnableProductSupplier, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
-              Grid.Row="6" Grid.Column="8" Grid.RowSpan="4"/>
-            <Button Content="Image5" Height="75" Width="75" 
-              IsEnabled="{Binding canEnableProductSupplier, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
-              Grid.Row="6" Grid.Column="9" Grid.RowSpan="4"/>
-            <Button Content="Image6" Height="75" Width="75" 
-             IsEnabled="{Binding canEnableProductSupplier, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
-                Grid.Row="6" Grid.Column="10" Grid.RowSpan="4"/>
-            <Button Content="Image7" Height="75" Width="75" 
-             IsEnabled="{Binding canEnableProductSupplier, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
-         
-                    Grid.Row="10" Grid.Column="8" Grid.RowSpan="4"/>
-         
-   <Button Content="Image8" Height="75" Width="75" 
-    IsEnabled="{Binding canEnableProductSupplier, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
-         
-           Grid.Row="10" Grid.Column="9" Grid.RowSpan="4"/>
-            <Button Content="Image9" Height="75" Width="75" 
-             IsEnabled="{Binding canEnableProductSupplier, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
-         
-                    Grid.Row="10" Grid.Column="10" Grid.RowSpan="4"/>
+            <Label Content="File List" HorizontalAlignment="Center" VerticalAlignment="Top" Grid.Row="1" Grid.Column="8" Grid.ColumnSpan="2"/>
+        
+        <ListBox x:Name="FileList" ItemsSource="{Binding filelist}" Grid.Row="2" Grid.Column="8" Grid.RowSpan="10" Grid.ColumnSpan="2">
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <Label Content="{Binding Path=.}"/>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+
+            <Image x:Name="imageControl" Grid.Row="2" Grid.Column="10" Width="250" Height="250" Grid.RowSpan="10" Grid.ColumnSpan="1" Margin="10,10,10,10"/>
+ 
+
 
             <!--       <CheckBox FlowDirection="RightToLeft" IsChecked="True" Grid.Column="4" Grid.Row="5" Grid.ColumnSpan="2" HorizontalAlignment="Left" VerticalAlignment="Center">
                 <TextBlock FlowDirection="RightToLeft" FontWeight="Bold" FontSize="14" Text="Show All Products" />
@@ -205,12 +187,18 @@
                             HorizontalAlignment="Left"
                             Content="Reset"/>
             <!-- Upload Button -->
-            <Button x:Name="UploadCommand" Grid.Column="3" Grid.Row="12"
+            <Button x:Name="UploadImageCommand" Grid.Column="8" Grid.Row="12"
              IsEnabled="{Binding productSelected, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"               
           
                     Width="75" 
                             HorizontalAlignment="Left"
                             Content="Upload"/>
+            <Button x:Name="DeleteImageCommand" Grid.Column="9" Grid.Row="12"
+             IsEnabled="{Binding productSelected, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"               
+          
+                    Width="75" 
+                            HorizontalAlignment="Left"
+                            Content="Delete"/>
 
 
         </Grid>

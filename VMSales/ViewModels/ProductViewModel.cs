@@ -495,7 +495,7 @@ namespace VMSales.ViewModels
             SelectedItem.instock = 1;
             SelectedItem.listing_url = null;
             SelectedItem.listing_number = null;
-            SelectedItem.listing_date = DateTime.MinValue;
+            SelectedItem.listing_date = DateTime.Today;
             BindableCollectionProductModel.Add(SelectedItem);
             RaisePropertyChanged("BindableCollectionProductModel");
         }
@@ -509,7 +509,7 @@ namespace VMSales.ViewModels
 
 
         
-        public void UploadCommand()
+        public void UploadImageCommand()
         {
         
         OpenFileDialog openFileDialog = new OpenFileDialog();
