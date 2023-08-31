@@ -7,7 +7,7 @@ namespace VMSales.Logic
 
     public interface IRepository<T> : IDisposable where T : class
     {
-        Task<bool> Insert(T entity);
+        Task<int> Insert(T entity);
         Task<T> Get(int id);
         Task<IEnumerable<T>> GetAll();
         Task<IEnumerable<T>> GetAllWithID(int id);

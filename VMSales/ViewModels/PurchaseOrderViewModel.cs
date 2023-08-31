@@ -536,10 +536,10 @@ namespace VMSales.ViewModels
             {
                 if (SelectedItem.purchase_order_detail_pk == 0)
                 {
-                    Task<bool> insertPurchase_Order = SavePurchaseOrderRepo.Insert(SelectedItem);
+                    Task<int> insertPurchase_Order = SavePurchaseOrderRepo.Insert(SelectedItem);
 
                     // new purchase order_detail_pk must be assigned 
-                    if (insertPurchase_Order.Result.Equals(true))
+                    if (insertPurchase_Order.Result > 0)
                     {
                         var purchase_order_detail_pk_result = SavePurchaseOrderRepo.Get_last_insert();
                         SelectedItem.purchase_order_detail_pk = purchase_order_detail_pk_result.Result;
@@ -651,8 +651,8 @@ namespace VMSales.ViewModels
                             PM.product_fk = insert_product_pk.Result;
                             PM.supplier_fk = item.supplier_fk;
                             PM.purchase_order_detail_fk = item.purchase_order_detail_pk;
-                            Task<bool> insert_product_purchase_order = ProductRepo.Insert(PM);
-                            if (insert_product_purchase_order.Result == false) throw new Exception();
+                            Task<int> insert_product_purchase_order = ProductRepo.Insert(PM);
+                            if (insert_product_purchase_order.Result == 0) throw new Exception();
                             ProductRepo.Commit();
                             ProductRepo.Dispose();
                         }

@@ -37,7 +37,7 @@
 
                 <!-- Header -->
                 <TextBlock Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="2" TextWrapping="Wrap" FontFamily="Arial" FontWeight="Bold">
-                       Photos
+                       Uplaod Photo
                 </TextBlock>
 
                 <!-- Name -->
@@ -54,7 +54,7 @@
                             Width="75"
                             Content="Cancel"/>
 
-                <Image Source="{Binding SelectedImage}" Stretch="None" Grid.Column="0" Grid.Row="3" Grid.ColumnSpan="3" />
+                <Image Source="{Binding SelectedImage}" Stretch="None" Grid.Column="0" Grid.Row="3" Grid.ColumnSpan="3" HorizontalAlignment="Left" />
 
 
 

@@ -69,8 +69,8 @@ namespace VMSales.ViewModels
                 // insert
                 try
                 {
-                    Task<bool> insertSupplier = SupplierRepo.Insert(Select_Request);
-                    if (insertSupplier.Result == true)
+                    Task<int> insertSupplier = SupplierRepo.Insert(Select_Request);
+                    if (insertSupplier.Result > 0)
                     {
                         SupplierRepo.Commit();
                         SupplierRepo.Dispose();

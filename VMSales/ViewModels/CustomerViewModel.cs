@@ -55,8 +55,8 @@ namespace VMSales.ViewModels
                 if (cust_pk == 0)
                 {
                     // Insert
-                    bool insertResult = await CustomerRepo.Insert(Select_Request);
-                    if (insertResult)
+                    int insertResult = await CustomerRepo.Insert(Select_Request);
+                    if (insertResult > 0)
                     {
                         MessageBox.Show("Saved.");
                         CustomerRepo.Commit();

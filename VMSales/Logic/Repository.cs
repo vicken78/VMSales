@@ -59,7 +59,7 @@ namespace VMSales.Logic
                 Transaction = Connection.BeginTransaction();
         }
 
-        public abstract Task<bool> Insert(T entity);
+        public abstract Task<int> Insert(T entity);
         public abstract Task<T> Get(int id);
         public abstract Task<IEnumerable<T>> GetAll();
         public abstract Task<IEnumerable<T>> GetAllWithID(int id);

@@ -21,13 +21,14 @@ namespace VMSales.Logic
             if (PropertyChanged != null)
                 PropertyChanged(this, new PropertyChangedEventArgs(property));
         }
+
         #region Category
         public class CategoryRepository : Repository<CategoryModel>
         {
 
             public CategoryRepository(IDatabaseProvider dbProvider) : base(dbProvider) { }
 
-            public override async Task<bool> Insert(CategoryModel entity)
+            public override async Task<int> Insert(CategoryModel entity)
             {
                 int newId = await Connection.QuerySingleAsync<int>("INSERT INTO category (category_name, description, creation_date) VALUES (@category_name, @description, @creation_date); SELECT last_insert_rowid()", new
                 {
@@ -38,7 +39,7 @@ namespace VMSales.Logic
 
                 entity.category_pk = newId;
 
-                return true;
+                return newId;
             }
 
             public async Task<int> Get_by_category_name(string category_name)
@@ -149,7 +150,7 @@ namespace VMSales.Logic
             }
 
 
-            public override async Task<bool> Insert(SupplierModel entity)
+            public override async Task<int> Insert(SupplierModel entity)
             {
                 int newId = await Connection.QuerySingleAsync<int>("INSERT INTO supplier (supplier_name, address, city, zip, state, country, phone, email) VALUES (@supplier_name, @address, @city, @zip, @state, @country, @phone, @email); SELECT last_insert_rowid()", new
                 {
@@ -165,7 +166,7 @@ namespace VMSales.Logic
 
                 entity.supplier_pk = newId;
 
-                return true;
+                return newId;
             }
 
             public override async Task<SupplierModel> Get(int id)
@@ -213,7 +214,7 @@ namespace VMSales.Logic
         {
             public PurchaseOrderRepository(IDatabaseProvider dbProvider) : base(dbProvider) { }
 
-            public override async Task<bool> Insert(PurchaseOrderModel entity)
+            public override async Task<int> Insert(PurchaseOrderModel entity)
             {
                 // get invoice number
                 try
@@ -229,9 +230,10 @@ namespace VMSales.Logic
                         // get purchase_order_fk
 
                         int db_purchase_order_fk = await Connection.QuerySingleOrDefaultAsync<int>("SELECT purchase_order_pk FROM purchase_order WHERE invoice_number = @invoice_number", new { entity.invoice_number }, Transaction);
-                        bool insertrow = (await Connection.ExecuteAsync("INSERT INTO purchase_order_detail " +
+                 
+                        bool rowsAffected = (await Connection.ExecuteAsync("INSERT INTO purchase_order_detail " +
                         "(purchase_order_fk, lot_cost, lot_quantity, lot_number, lot_name, lot_description, sales_tax, shipping_cost, quantity_check) " +
-                        "VALUES (@db_purchase_order_fk, @lot_cost, @lot_quantity, @lot_number, @lot_name, @lot_description, @sales_tax, @shipping_cost, @quantity_check)",
+                        "VALUES (@db_purchase_order_fk, @lot_cost, @lot_quantity, @lot_number, @lot_name, @lot_description, @sales_tax, @shipping_cost, @quantity_check);  SELECT last_insert_rowid()",
                          new
                          {
                              db_purchase_order_fk,
@@ -244,7 +246,14 @@ namespace VMSales.Logic
                              shipping_cost = entity.shipping_cost,
                              quantity_check = entity.quantity_check
                          }, Transaction)) == 1;
-                        return insertrow;
+                        if (rowsAffected == true)
+                        {
+                            return 1;
+                        }
+                        else
+                        {
+                            return 0; // Return 0 to indicate that no rows were inserted or an error occurred.
+                        }
                     }
 
                     if (invoice_number != entity.invoice_number && entity.invoice_number != "0" && entity.invoice_number != null)
@@ -261,9 +270,9 @@ namespace VMSales.Logic
                         entity.purchase_order_fk = newId;
                         // now for purchase_order_detail
 
-                        bool insertrow = (await Connection.ExecuteAsync("INSERT INTO purchase_order_detail " +
+                        int purchase_order_detail_pk = await Connection.QueryFirstOrDefaultAsync("INSERT INTO purchase_order_detail " +
                           "(purchase_order_fk, lot_cost, lot_quantity, lot_number, lot_name, lot_description, sales_tax, shipping_cost, quantity_check) " +
-                            "VALUES (@purchase_order_fk, @lot_cost, @lot_quantity, @lot_number, @lot_name, @lot_description, @sales_tax, @shipping_cost, @quantity_check)",
+                            "VALUES (@purchase_order_fk, @lot_cost, @lot_quantity, @lot_number, @lot_name, @lot_description, @sales_tax, @shipping_cost, @quantity_check); SELECT last_insert_rowid()",
                             new
                             {
                                 purchase_order_fk = entity.purchase_order_fk,
@@ -275,15 +284,15 @@ namespace VMSales.Logic
                                 sales_tax = entity.sales_tax,
                                 shipping_cost = entity.shipping_cost,
                                 quantity_check = entity.quantity_check
-                            }, Transaction)) == 1;
-                        return insertrow;
+                            }, Transaction);
+                        return purchase_order_detail_pk;
                     }
-                    return false;
+                    return 0;
                 }
                 catch (Exception e)
                 {
                     MessageBox.Show(e.ToString());
-                    return false;
+                    return 0;
                 }
             }
 
@@ -590,13 +599,12 @@ namespace VMSales.Logic
                 return insertproductcategory;
             }
 
-            public override async Task<bool> Insert(ProductModel entity)
+
+            public override async Task<int> Insert(ProductModel entity)
             {
                 // insert into product_purchase_order
                 bool insert_product_purchase_order = (await Connection.ExecuteAsync("INSERT INTO product_purchase_order (product_purchase_order_detail_fk, product_fk) VALUES (@purchase_order_detail_fk, @product_fk);", new
                 {
-
-
                     purchase_order_detail_fk = entity.purchase_order_detail_fk,
                     product_fk = entity.product_fk,
                 }, Transaction)) == 1;
@@ -604,17 +612,15 @@ namespace VMSales.Logic
                 if (insert_product_purchase_order == true)
                 {
                     // insert into product_supplier
-                    bool insert_product_supplier = (await Connection.ExecuteAsync("INSERT INTO product_supplier (supplier_fk, product_fk) VALUES (@supplier_fk, @product_fk);", new
+                    int product_supplier = (await Connection.QueryFirstOrDefaultAsync<int>("INSERT INTO product_supplier (supplier_fk, product_fk) VALUES (@supplier_fk, @product_fk); SELECT last_insert_rowid()", new
                     {
                         supplier_fk = entity.supplier_fk,
                         product_fk = entity.product_pk,
-                    }, Transaction)) == 1;
-                    return insert_product_supplier;
+                    }, Transaction));
+                    return product_supplier;
                 }
-                return false;
+                else return 0;
             }
-
-
 
 
             public override async Task<ProductModel> Get(int id)
@@ -625,15 +631,6 @@ namespace VMSales.Logic
             // get all products
             public override async Task<IEnumerable<ProductModel>> GetAll()
             {
-                /*    
-                    old --- return await Connection.QueryAsync<ProductModel>("SELECT DISTINCT " +
-                    "c.category_pk, c.category_name, brand_name, product_name, p.description, quantity, cost, sku, sold_price, instock, condition, listing_url, " +
-                    "listing_number, listing_date " +
-                    "FROM product as p, product_purchase_order as ppo, product_category as pc, category as c " +
-                    "INNER JOIN product_purchase_order on p.product_pk = ppo.product_fk " +
-                    "INNER JOIN product_category on p.product_pk = pc.product_fk " +
-                    "INNER JOIN category on c.category_pk = pc.category_fk;", null, Transaction);
-                */
                 return await Connection.QueryAsync<ProductModel>("SELECT DISTINCT " +
 
                 "p.product_pk, p.brand_name, p.product_name, p.description, p.quantity, p.cost, p.sku, p.listed_price, p.instock, p.condition, p.listing_url, p.listing_number, p.listing_date, c.category_pk, c.category_name " +
@@ -735,7 +732,6 @@ namespace VMSales.Logic
 
             public override async Task<bool> Update(ProductModel entity)
             {
-                // done
                 bool updaterow = (await Connection.ExecuteAsync("UPDATE product_category SET " +
                     "purchase_category_pk = @id, " +
                     "product_fk = @product_fk, " +
@@ -747,8 +743,7 @@ namespace VMSales.Logic
                         category_fk = entity.category_fk
                     }, null)) == 1;
 
-
-                return (await Connection.ExecuteAsync("UPDATE product SET " +
+                  return (await Connection.ExecuteAsync("UPDATE product SET " +
                         "brand_name = @purchase_order_fk, " +
                         "product_name = @lot_cost, " +
                         "description = @lot_quantity, " +
@@ -798,11 +793,17 @@ namespace VMSales.Logic
         #region Photo includes Product_Photo
         public class PhotoRepository : Repository<PhotoModel>
         {
-            // in development
-
-
+            // in development, need Delete
             public PhotoRepository(IDatabaseProvider dbProvider) : base(dbProvider) { }
-
+       
+            public async Task<string> GetPhotoPath(string product_photo_path)
+            {
+                return await Connection.QuerySingleOrDefaultAsync<string>(
+                    "SELECT photo_path FROM photo WHERE photo_path = @photo_path",
+                    new { photo_path = product_photo_path },
+                    Transaction
+                );
+            }
 
             public async Task<IEnumerable<int>> GetImagePos(int product_fk)
             {
@@ -839,18 +840,30 @@ namespace VMSales.Logic
             , new { product_fk }, Transaction);
             }
             // insert
-            public override async Task<bool> Insert(PhotoModel entity)
+            //public async Task<int> Insert(int product_fk,int photo_order_number, string photofilePath)
+            public override async Task<int> Insert(PhotoModel entity)
             {
-                bool insertrow = (await Connection.ExecuteAsync("INSERT INTO photo " +
-                "(photo_order_number, photo_path) VALUES (@photo_order_number, @photo_path)",
+                int photo_pk = (await Connection.QueryFirstOrDefaultAsync<int>("INSERT INTO photo " +
+                "(photo_order_number, photo_path) VALUES (@photo_order_num, @photo_path); SELECT last_insert_rowid()",
             new
             {
-                photo_order_number = entity.photo_order_number,
+                photo_order_num = entity.photo_order_number,
                 photo_path = entity.photo_path
-            }, Transaction)) == 1;
-            return insertrow;
+            }, Transaction));
+            return photo_pk;
             }
 
+            public async Task<int> InsertProductPhoto(PhotoModel entity)
+            {
+                int pphoto_pk = (await Connection.QueryFirstOrDefaultAsync<int>("INSERT INTO product_photo " +
+                "(product_fk, photo_fk) VALUES (@product_fk, @photo_fk); SELECT last_insert_rowid()",
+            new
+            {
+                product_fk = entity.product_fk,
+                photo_fk = entity.photo_fk
+            }, Transaction));
+                return pphoto_pk;
+            }
 
 
 
@@ -891,6 +904,7 @@ namespace VMSales.Logic
             //get by product id
             public override async Task<PhotoModel> Get(int id)
             {
+                //FIX
                 //needs query fixing here
                 return await Connection.QuerySingleAsync<PhotoModel>("SELECT ... FROM product_photo as pp INNER JOIN product on purchase_order.purchase_order_pk = pod.purchase_order_fk WHERE supplier_fk = @id;", new { id }, Transaction);
             }
@@ -898,11 +912,6 @@ namespace VMSales.Logic
         }
 
         #endregion
-
-
-
-
-
 
         // needs fixing here
         /*
@@ -1012,7 +1021,7 @@ namespace VMSales.Logic
                 }
             */
 
-            public override async Task<bool> Insert(CustomerModel entity)
+            public override async Task<int> Insert(CustomerModel entity)
             {
 
                 entity.user_name = entity.user_name ?? "";
@@ -1052,7 +1061,7 @@ namespace VMSales.Logic
                         shipping_country = entity.shipping_country,
                         same_shipping_address = entity.same_shipping_address
                     }, Transaction);
-                return true;
+                return newId;
             }
 
 
@@ -1163,10 +1172,10 @@ namespace VMSales.Logic
                 "LEFT JOIN product AS p ON p.product_pk = cod.product_fk", null, Transaction);
             }
 
-            public override async Task<bool> Insert(CustomerOrderModel entity)
+            public override async Task<int> Insert(CustomerOrderModel entity)
             {
                 //change
-                return false;
+                return 0;
             }
 
             public override async Task<bool> Update(CustomerOrderModel entity)

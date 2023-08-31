@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media.Imaging;
 using VMSales.Logic;
@@ -18,6 +16,7 @@ namespace VMSales.ViewModels
         public int photo_fk { get; set; }
         public int next_photo_order_number { get; set; }
         public string product_name { get; set; }
+        public string photofilePath { get; set; }
  
         private BitmapImage _selectedImage;
         public BitmapImage SelectedImage
@@ -33,20 +32,18 @@ namespace VMSales.ViewModels
 
         public async void SaveCommand()
         {
-
+            PhotoModel photoModel = new PhotoModel();
+            photoModel.product_fk = product_fk;
+            photoModel.photo_path = photofilePath;
             IDatabaseProvider dataBaseProvider;
             dataBaseProvider = getprovider();
             DataBaseLayer.PhotoRepository PhotoRepo = new DataBaseLayer.PhotoRepository(dataBaseProvider);
             // 1. get next photo order
             try
             {
-                // temp for testing, remove later.
-                product_fk = 5;
-                // 
-
+                int pphoto_pk;
                 IEnumerable<int> imagePositions = await PhotoRepo.GetImagePos(product_fk);
                 List<int> photoOrderNum = imagePositions.Select(x => x).ToList();
-
                 // Sort
                 if (photoOrderNum.Count > 1)
                 {
@@ -57,45 +54,50 @@ namespace VMSales.ViewModels
 
                 if (isInOrder)
                 {
-                    // get next photo order
+                    // 1. get next photo order
                     IEnumerable<int> next_photo_order_number = await PhotoRepo.GetNextPos(product_fk);
-                    int photo_order_number = next_photo_order_number.Single();
-                    
+                    photoModel.photo_order_number = next_photo_order_number.Single();
+
+                    // 2. Check if same photo_path exists.
+                    string saved_photo_path = await PhotoRepo.GetPhotoPath(photoModel.photo_path);
+                    if (saved_photo_path == photoModel.photo_path)
+                    {
+                        MessageBox.Show("A photo with the same path already exists");
+                        PhotoRepo.Commit();
+                        PhotoRepo.Dispose();
+                        return;
+                    }
+
+                    // 3. Save to photo. get photo_pk
+
                     // insert into photo
+                    photoModel.photo_fk = await PhotoRepo.Insert(photoModel);
+                    // 4. Save to product_photo, insert photo_pk and product_fk
+                    if (photoModel.photo_fk > 0)
+                    {
+                        pphoto_pk = await PhotoRepo.InsertProductPhoto(photoModel);
+                        if (pphoto_pk > 0)
+                        PhotoRepo.Commit();
+                        PhotoRepo.Dispose();
 
-                    // get photo_pk, insert into product_photo
-
-
+                        MessageBox.Show("Saved.");
+                            CancelCommand(); // close save window
+                    }
                 }
                 else
                 {
-                    // reorg then call insert
-                    MessageBox.Show("outoforg");
+                    MessageBox.Show("An Error has occured. No Image Saved.");
                 }
-
-                foreach (var item in photoOrderNum)
-                {
-                    MessageBox.Show(item.ToString());
-                }
-
                 PhotoRepo.Commit();
                 PhotoRepo.Dispose();
-
-
-
             }
             catch (Exception e)
             {
-                MessageBox.Show("An Unexpected Error has occured." + e);
+                MessageBox.Show("An Unexpected Error has occured. No Image has been saved" + e);
                 PhotoRepo.Dispose();
             }
 
-
-            // 2. resort if needed
-
-            // 3. Save to photo. get photo_pk
-
-            // 4. Save to product_photo, insert photo_pk and product_fk
+  
         }
         public void CancelCommand()
         {
@@ -110,6 +112,7 @@ namespace VMSales.ViewModels
         {
             product_fk = SelectedItem.product_pk;
             product_name = SelectedItem.product_name;
+            photofilePath = filePath;
             SelectedImage = new BitmapImage(new Uri(filePath));
         }
     }

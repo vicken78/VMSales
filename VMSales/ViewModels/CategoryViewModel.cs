@@ -68,8 +68,8 @@ namespace VMSales.ViewModels
             catch (AggregateException) // primary key does not exist
             {
                 // insert
-                Task<bool> insertCategory = CategoryRepo.Insert(Select_Request);
-                if (insertCategory.Result == true)
+                Task<int> insertCategory = CategoryRepo.Insert(Select_Request);
+                if (insertCategory.Result > 0)
                 {
                     CategoryRepo.Commit();
                     CategoryRepo.Dispose();

@@ -162,7 +162,6 @@ namespace VMSales.ViewModels
                 if (_purchase_order_detail_pk == value) return;
                 _purchase_order_detail_pk = value;
                 RaisePropertyChanged("purchase_order_detail_pk");
-                //MessageBox.Show(purchase_order_detail_pk.ToString());
                 if (purchase_order_detail_pk != 0)
                 {
                     canEnableProductPurchase = true;
@@ -517,18 +516,8 @@ namespace VMSales.ViewModels
             if (openFileDialog.ShowDialog() == true)
             {
                 string filePath = openFileDialog.FileName;
-                // MessageBox.Show(filePath);
-                // TODO: Handle the selected file path
                 IWindowManager _windowManager = new WindowManager();
-
-                //_eventAggregator.PublishOnUIThreadAsync(new DataMessage(filePath));
-                //_eventAggregator.PublishOnUIThreadAsync(new DataMessage(SelectedItem));
-
-
                 var popupwindow = new ProductPhotoViewModel(SelectedItem, filePath);
-                //var popupwindow = new ProductPhotoViewModel();
-
-
                 _windowManager.ShowWindowAsync(popupwindow);
             }
         }
