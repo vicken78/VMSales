@@ -2,8 +2,10 @@
 using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Windows;
+using System.Windows.Media.Imaging;
 using VMSales.Logic;
 using VMSales.Models;
 
@@ -11,6 +13,45 @@ namespace VMSales.ViewModels
 {
     public class ProductViewModel : BaseViewModel
     {
+        private BitmapImage _imageSource;
+        public BitmapImage ImageSource
+        {
+            get { return _imageSource; }
+            set
+            {
+                if (_imageSource != value)
+                {
+                    _imageSource = value;
+                    RaisePropertyChanged("ImageSource");
+                }
+            }
+        }
+
+        private List<string> _filelist { get; set; }
+        public List<string> filelist
+        {
+            get { return _filelist; }
+            set
+            {
+                if (_filelist == value) return;
+                _filelist = value;
+                RaisePropertyChanged("filelist");
+            }
+        }
+
+        private string _selectedfilelist;
+
+        public string Selectedfilelist
+        {
+            get { return _selectedfilelist; }
+            set
+            {
+                _selectedfilelist = value;
+                RaisePropertyChanged("Selectedfilelist");
+                LoadImage(Selectedfilelist);
+            }
+        }
+
         private bool _productSelected;
         public bool productSelected
         {
@@ -180,13 +221,63 @@ namespace VMSales.ViewModels
                 RaisePropertyChanged("SelectedItem");
                 LoadSupplier();
                 if (SelectedItem != null && SelectedItem.IsSelected)
+                {
                     productSelected = true;
+                    LoadFileList();
+                }
             }
         }
 
 
         #endregion
 
+
+
+
+
+        #region filelistload
+     
+            private void LoadImage(string Selectedfilelist)
+            {
+                if (!string.IsNullOrEmpty(Selectedfilelist))
+                {
+                    try
+                    {
+                    BitmapImage image = new BitmapImage();
+                        image.BeginInit();
+                        image.CacheOption = BitmapCacheOption.OnLoad;
+                        image.UriSource = new Uri(Selectedfilelist);
+                        image.DecodePixelWidth = 250;
+                        image.DecodePixelHeight = 250;
+                        image.EndInit();
+                        ImageSource = image;
+                    }
+                    catch (Exception ex)
+                    {
+                        // Handle any exceptions that may occur during image loading.
+                        // You might want to log or handle errors gracefully.
+                       MessageBox.Show(ex.Message);
+                    }
+                }
+                else
+                {
+                    // Clear the image source if the file path is null or empty
+                    ImageSource = null;
+                }
+            }
+        
+        public void LoadFileList()
+        {
+            filelist = new List<string>(); 
+         
+            DataBaseLayer.PhotoRepository  PhotoRepo = new DataBaseLayer.PhotoRepository(dataBaseProvider);
+            //FIX
+            filelist = PhotoRepo.GetPhotoPath(SelectedItem.product_pk).Result.ToList();
+            PhotoRepo.Commit();
+            PhotoRepo.Dispose();
+            RaisePropertyChanged("filelist");
+        }
+        #endregion
 
         #region SupplierChange
         public void LoadSupplier()
@@ -578,8 +669,6 @@ namespace VMSales.ViewModels
             selected_supplier_name = null;
             selected_lot_number = 0;
             purchase_order_detail_pk = 0;
-
-
             // reset filters
             if (selected_supplier_name_filter != null && selected_supplier_name_filter.supplier_name != null)
             {

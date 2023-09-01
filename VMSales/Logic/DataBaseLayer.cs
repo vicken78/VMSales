@@ -894,6 +894,13 @@ namespace VMSales.Logic
                     "product_order_number, photo_path FROM photo WHERE photo_pk=@id", new { id }, Transaction);
             }
 
+            //get Photo_Path
+            public async Task<IEnumerable<string>> GetPhotoPath(int id)
+            {
+                return await Connection.QueryAsync<string>("SELECT " +
+                    "photo_path FROM photo WHERE photo_pk=@id", new { id }, Transaction);
+            }
+
             //get all
             public override async Task<IEnumerable<PhotoModel>> GetAll()
             {

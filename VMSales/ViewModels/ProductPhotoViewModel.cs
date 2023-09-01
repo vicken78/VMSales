@@ -10,7 +10,6 @@ namespace VMSales.ViewModels
 {
     public class ProductPhotoViewModel : BaseViewModel
     {
-
         public int product_fk { get; set; }
         public int photo_pk { get; set; }
         public int photo_fk { get; set; }
@@ -70,7 +69,6 @@ namespace VMSales.ViewModels
 
                     // 3. Save to photo. get photo_pk
 
-                    // insert into photo
                     photoModel.photo_fk = await PhotoRepo.Insert(photoModel);
                     // 4. Save to product_photo, insert photo_pk and product_fk
                     if (photoModel.photo_fk > 0)
