@@ -211,7 +211,8 @@
                           SelectedItem="{Binding SelectedItem, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                           CanUserAddRows="False"
                           EnableRowVirtualization="True" IsReadOnly="False" Grid.Row="10" 
-                          Height="Auto" Width="1920">
+                          Height="Auto" Width="1920"
+                          SelectionMode="Single">
             <DataGrid.RowStyle>
                 <Style TargetType="{x:Type DataGridRow}">
                     <Setter Property="IsSelected"  Value="{Binding IsSelected, Mode=TwoWay}"/>
@@ -230,6 +231,17 @@
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
+
+<!-- for debug only -->
+                <DataGridTextColumn Header="Product PK" Width="140" Binding="{Binding product_pk, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                    <DataGridTextColumn.ElementStyle>
+                        <Style TargetType="TextBlock">
+                            <Setter Property="TextWrapping" Value="Wrap"/>
+                        </Style>
+                    </DataGridTextColumn.ElementStyle>
+                </DataGridTextColumn>
+
+
 
                 <!--Product Name -->
                 <DataGridTextColumn Header="Product Name" Width="140" Binding="{Binding product_name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">

@@ -264,9 +264,11 @@ namespace VMSales.ViewModels
         
         public void LoadFileList()
         {
-            filelist = new List<string>();   
+            filelist = new List<string>();
+            filelist.Clear();
             DataBaseLayer.PhotoRepository  PhotoRepo = new DataBaseLayer.PhotoRepository(dataBaseProvider);
             filelist = PhotoRepo.GetFileList(SelectedItem.product_pk).Result.ToList();
+            MessageBox.Show(SelectedItem.product_pk.ToString());
             PhotoRepo.Commit();
             PhotoRepo.Dispose();
             RaisePropertyChanged("filelist");
