@@ -7,7 +7,7 @@
              xmlns:models="clr-namespace:VMSales.ViewModels" xmlns:Controls="http://schemas.microsoft.com/netfx/2009/xaml/presentation"
              d:DataContext="{d:DesignInstance Type=models:ProductViewModel}"
              mc:Ignorable="d" 
-             Height="800" Width="1400" MinHeight="400" MinWidth="800">
+             Height="800" Width="1920" MinHeight="400" MinWidth="800">
 
     <UserControl.Resources>
         <Style x:Key="CenterGridHeaderStyle" TargetType="DataGridColumnHeader">
@@ -153,12 +153,10 @@
 
             <ListBox x:Name="FileList" ItemsSource="{Binding filelist, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" SelectedItem="{Binding Selectedfilelist, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Row="2" Grid.Column="8" Grid.RowSpan="10" Grid.ColumnSpan="2"/>
 
-            <Image x:Name="imageControl" 
-       Grid.Row="2" Grid.Column="10" 
-       Grid.RowSpan="10" Grid.ColumnSpan="2" 
-       Margin="10,10,10,10"
-       Source="{Binding Selectedfilelist}"/>
-                <!--, Converter={StaticResource FilePathToImageConverter}}" /> -->
+  
+            <Button x:Name="OpenImageCommand" Grid.Row="2" Grid.Column="10" Grid.RowSpan="10" Grid.ColumnSpan="2">
+                <Image x:Name="imageControl" Margin="10,10,10,10" Source="{Binding Selectedfilelist}" />
+            </Button>
 
 
             <!--       <CheckBox FlowDirection="RightToLeft" IsChecked="True" Grid.Column="4" Grid.Row="5" Grid.ColumnSpan="2" HorizontalAlignment="Left" VerticalAlignment="Center">
@@ -213,7 +211,7 @@
                           SelectedItem="{Binding SelectedItem, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                           CanUserAddRows="False"
                           EnableRowVirtualization="True" IsReadOnly="False" Grid.Row="10" 
-                          Height="Auto" Width="1400" Margin="0,0.333,0,0">
+                          Height="Auto" Width="1920">
             <DataGrid.RowStyle>
                 <Style TargetType="{x:Type DataGridRow}">
                     <Setter Property="IsSelected"  Value="{Binding IsSelected, Mode=TwoWay}"/>
@@ -318,7 +316,7 @@
                     </DataGridTextColumn.ElementStyle>
                 </DataGridTextColumn>
                 <!-- Listing URL-->
-                <DataGridTextColumn Header="Listing Url" Width="100" Binding="{Binding listing_url, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                <DataGridTextColumn Header="Listing Url" Width="200" Binding="{Binding listing_url, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
                     <DataGridTextColumn.ElementStyle>
                         <Style TargetType="TextBlock">
                             <Setter Property="TextWrapping" Value="Wrap"/>

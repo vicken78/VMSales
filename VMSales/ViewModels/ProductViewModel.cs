@@ -231,13 +231,9 @@ namespace VMSales.ViewModels
 
         #endregion
 
-
-
-
-
         #region filelistload
-     
-            private void LoadImage(string Selectedfilelist)
+
+        private void LoadImage(string Selectedfilelist)
             {
                 if (!string.IsNullOrEmpty(Selectedfilelist))
                 {
@@ -278,6 +274,25 @@ namespace VMSales.ViewModels
             RaisePropertyChanged("filelist");
         }
         #endregion
+
+        #region OpenImageCommand
+
+        public void OpenImageCommand()
+        {
+            if (Selectedfilelist != null)
+            {
+                // Handle opening the selected files
+                IWindowManager _windowManager = new WindowManager();
+                var popupwindow = new ProductPhotoViewModel(SelectedItem, Selectedfilelist);
+                _windowManager.ShowWindowAsync(popupwindow);
+            }
+        }
+    
+       
+        
+        #endregion
+
+
 
         #region SupplierChange
         public void LoadSupplier()
