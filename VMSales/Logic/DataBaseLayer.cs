@@ -805,6 +805,16 @@ namespace VMSales.Logic
                 );
             }
 
+            public async Task<List<string>> GetFileList(int product_fk)
+            {
+                var queryResult = await Connection.QueryAsync<string>(
+                    "SELECT photo_path FROM photo INNER JOIN product_photo on product_fk WHERE product_fk = @product_fk",
+                    new { product_fk },
+                    Transaction);
+
+                return queryResult.ToList();
+            }
+
             public async Task<IEnumerable<int>> GetImagePos(int product_fk)
             {
             return await Connection.QueryAsync<int>(

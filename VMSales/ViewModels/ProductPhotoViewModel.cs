@@ -79,19 +79,20 @@ namespace VMSales.ViewModels
                         PhotoRepo.Dispose();
 
                         MessageBox.Show("Saved.");
-                            CancelCommand(); // close save window
+                        CancelCommand(); // close save window
                     }
                 }
                 else
                 {
                     MessageBox.Show("An Error has occured. No Image Saved.");
+                    PhotoRepo.Commit();
+                    PhotoRepo.Dispose();
                 }
-                PhotoRepo.Commit();
-                PhotoRepo.Dispose();
             }
             catch (Exception e)
             {
                 MessageBox.Show("An Unexpected Error has occured. No Image has been saved" + e);
+                PhotoRepo.Commit();
                 PhotoRepo.Dispose();
             }
 

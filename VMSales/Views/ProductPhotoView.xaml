@@ -12,7 +12,7 @@
         mc:Ignorable="d"
         Title="Product Photos" Height="1080" Width="1920">
 
-    <Grid x:Name="ObservableCollectionSupplierModel" Margin="10" DockPanel.Dock="Bottom">
+    <Grid x:Name="ProductPhotoViewGrid" DockPanel.Dock="Bottom">
 
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto"/>
@@ -21,7 +21,7 @@
             <RowDefinition Height="Auto" />
             <RowDefinition />
         </Grid.RowDefinitions>
-        <GroupBox Grid.Column="0" Grid.Row="1" Background="Azure" Width="1920" Height="1080" >
+        <GroupBox Grid.Column="0" Grid.Row="1" Background="Azure" Width="1920" Height="1180" >
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="100" />
@@ -32,29 +32,35 @@
                     <RowDefinition Height="25" />
                     <RowDefinition Height="25" />
                     <RowDefinition Height="25" />
+                    <RowDefinition Height="25" />
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
 
                 <!-- Header -->
                 <TextBlock Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="2" TextWrapping="Wrap" FontFamily="Arial" FontWeight="Bold">
-                       Uplaod Photo
+                       Upload Photo
                 </TextBlock>
 
                 <!-- Name -->
                 <Label Content="Product Name" Grid.Column="0" Grid.Row="1" />
                 <TextBox IsReadOnly="True" Width="255" Text="{Binding product_name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}" 
                     Grid.Column="1" Grid.Row="1" Grid.ColumnSpan="2" HorizontalAlignment="Left"/>
+                <Label Content="File Path" Grid.Column="0" Grid.Row="2" />
+                <TextBox IsReadOnly="True" Width="255" Text="{Binding photofilePath, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}" 
+                    Grid.Column="1" Grid.Row="2" Grid.ColumnSpan="2" HorizontalAlignment="Left"/>
+
+
                 <!--  Save Button -->
-                <Button x:Name="SaveCommand" Grid.Column="0" Grid.Row="2"
+                <Button x:Name="SaveCommand" Grid.Column="0" Grid.Row="3"
                             Width="75"                                      
                             HorizontalAlignment="Left"
                             Content="Save"/>
                 <!-- Delete Button -->
-                <Button x:Name="CancelCommand" Grid.Column="1" Grid.Row="2"             
+                <Button x:Name="CancelCommand" Grid.Column="1" Grid.Row="3"             
                             Width="75"
                             Content="Cancel"/>
 
-                <Image Source="{Binding SelectedImage}" Stretch="None" Grid.Column="0" Grid.Row="3" Grid.ColumnSpan="3" HorizontalAlignment="Left" />
+                <Image Source="{Binding SelectedImage}" Stretch="None" Grid.Column="0" Grid.Row="4" Grid.ColumnSpan="3" HorizontalAlignment="Left" />
 
 
 

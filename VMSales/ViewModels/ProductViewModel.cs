@@ -264,11 +264,9 @@ namespace VMSales.ViewModels
         
         public void LoadFileList()
         {
-            filelist = new List<string>(); 
-         
+            filelist = new List<string>();   
             DataBaseLayer.PhotoRepository  PhotoRepo = new DataBaseLayer.PhotoRepository(dataBaseProvider);
-            //FIX
-            filelist = PhotoRepo.GetPhotoPath(SelectedItem.product_pk).Result.ToList();
+            filelist = PhotoRepo.GetFileList(SelectedItem.product_pk).Result.ToList();
             PhotoRepo.Commit();
             PhotoRepo.Dispose();
             RaisePropertyChanged("filelist");
@@ -287,13 +285,8 @@ namespace VMSales.ViewModels
                 _windowManager.ShowWindowAsync(popupwindow);
             }
         }
-    
-       
         
         #endregion
-
-
-
         #region SupplierChange
         public void LoadSupplier()
         {
@@ -612,8 +605,6 @@ namespace VMSales.ViewModels
             initial_load();
         }
 
-
-        
         public void UploadImageCommand()
         {
         
@@ -627,7 +618,6 @@ namespace VMSales.ViewModels
                 _windowManager.ShowWindowAsync(popupwindow);
             }
         }
-
 
 
         public void LoadPurchaseOrder(int supplier_fk,int purchase_order_detail_pk)
