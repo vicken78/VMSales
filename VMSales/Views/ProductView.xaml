@@ -233,7 +233,7 @@
                 </DataGridTemplateColumn>
 
 <!-- for debug only -->
-                <DataGridTextColumn Header="Product PK" Width="140" Binding="{Binding product_pk, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                <DataGridTextColumn Header="Product PK" Visibility="Hidden" Width="140" Binding="{Binding product_pk, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
                     <DataGridTextColumn.ElementStyle>
                         <Style TargetType="TextBlock">
                             <Setter Property="TextWrapping" Value="Wrap"/>
