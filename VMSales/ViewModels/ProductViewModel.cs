@@ -2,6 +2,7 @@
 using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Drawing;
 using System.Linq;
 using System.Windows;
@@ -13,6 +14,7 @@ namespace VMSales.ViewModels
 {
     public class ProductViewModel : BaseViewModel
     {
+
         private BitmapImage _imageSource;
         public BitmapImage ImageSource
         {
@@ -27,8 +29,8 @@ namespace VMSales.ViewModels
             }
         }
 
-        private List<string> _filelist { get; set; }
-        public List<string> filelist
+        private ObservableCollection<string> _filelist { get; set; }
+        public ObservableCollection<string> filelist
         {
             get { return _filelist; }
             set
@@ -264,13 +266,16 @@ namespace VMSales.ViewModels
         
         public void LoadFileList()
         {
-            filelist = new List<string>();
-            filelist.Clear();
-            DataBaseLayer.PhotoRepository  PhotoRepo = new DataBaseLayer.PhotoRepository(dataBaseProvider);
-            filelist = PhotoRepo.GetFileList(SelectedItem.product_pk).Result.ToList();
-            PhotoRepo.Commit();
-            PhotoRepo.Dispose();
-            RaisePropertyChanged("filelist");
+            if (SelectedItem.product_pk > 0)
+            {
+                filelist = new ObservableCollection<string>();
+                filelist.Clear();
+                DataBaseLayer.PhotoRepository PhotoRepo = new DataBaseLayer.PhotoRepository(dataBaseProvider);
+                filelist = PhotoRepo.GetFileList(SelectedItem.product_pk).Result.ToObservable();
+                PhotoRepo.Commit();
+                PhotoRepo.Dispose();
+                RaisePropertyChanged("filelist");
+            }
         }
         #endregion
 
@@ -284,6 +289,7 @@ namespace VMSales.ViewModels
                 IWindowManager _windowManager = new WindowManager();
                 var popupwindow = new ProductPhotoViewModel(SelectedItem, Selectedfilelist);
                 _windowManager.ShowWindowAsync(popupwindow);
+                LoadFileList();
             }
         }
         

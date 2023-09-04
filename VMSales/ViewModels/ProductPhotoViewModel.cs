@@ -10,6 +10,7 @@ namespace VMSales.ViewModels
 {
     public class ProductPhotoViewModel : BaseViewModel
     {
+
         public int product_fk { get; set; }
         public int photo_pk { get; set; }
         public int photo_fk { get; set; }
@@ -79,6 +80,7 @@ namespace VMSales.ViewModels
                         PhotoRepo.Dispose();
 
                         MessageBox.Show("Saved.");
+                        // Need to notify to reload the file list.
                         CancelCommand(); // close save window
                     }
                 }

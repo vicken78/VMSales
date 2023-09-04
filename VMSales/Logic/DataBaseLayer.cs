@@ -1,6 +1,7 @@
 ﻿using Dapper;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
@@ -805,13 +806,18 @@ namespace VMSales.Logic
                 );
             }
 
-            public async Task<List<string>> GetFileList(int product_pk)
+            public async Task<ObservableCollection<string>> GetFileList(int product_pk)
             {
                 var queryResult = await Connection.QueryAsync<string>(
-                    "SELECT photo_path FROM photo INNER JOIN product_photo ON photo.photo_pk = product_photo.photo_fk = @product_pk",
+                    "SELECT photo_path FROM photo " +
+                    "INNER JOIN product_photo " +
+                    "ON photo.photo_pk = product_photo.photo_fk " +
+                    "INNER JOIN product " +
+                    "ON product.product_pk = product_photo.product_fk " +
+                    "WHERE product_photo.product_fk = @product_pk",
                     new { product_pk },
                     Transaction);
-                return queryResult.ToList();
+                return queryResult.ToObservable();
             }
 
             public async Task<IEnumerable<int>> GetImagePos(int product_fk)
