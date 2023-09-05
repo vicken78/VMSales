@@ -135,16 +135,9 @@
                 <Image Width="10" Height="10" Style="{DynamicResource ImageStyleForButtons}"/>
             </Button>
 
-
-
-            <Button x:Name="ProductSupplier" Grid.Column="2" Grid.Row="2"
+            <Button x:Name="ProductPurchase" Grid.Column="1" Grid.Row="3"
                             Width="75" Height="20"
-                            HorizontalAlignment="Center"
-                            Content="Associate" IsEnabled="{Binding canEnableProductSupplier}">
-            </Button>
-            <Button x:Name="ProductPurchase" Grid.Column="2" Grid.Row="3"
-                            Width="75" Height="20"
-                            HorizontalAlignment="Center"
+                            HorizontalAlignment="Right"
                             Content="Associate" IsEnabled="{Binding canEnableProductPurchase}">
             </Button>
 

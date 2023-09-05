@@ -253,7 +253,6 @@ namespace VMSales.ViewModels
                     catch (Exception ex)
                     {
                         // Handle any exceptions that may occur during image loading.
-                        // You might want to log or handle errors gracefully.
                        MessageBox.Show(ex.Message);
                     }
                 }
@@ -581,12 +580,17 @@ namespace VMSales.ViewModels
         //} 
         public void AddCommand()
         {
+            if (filelist.Count > 0)
+            {
+                filelist.Clear();
+                filelist = new ObservableCollection<string>();
+            }
 
             if (BindableCollectionProductModel.Count == 0)
             {
                 BindableCollectionProductModel = new BindableCollection<ProductModel>();
             }
-
+            
             SelectedItem.product_pk = 0;
             SelectedItem.product_fk = 0;
             SelectedItem.brand_name = null;

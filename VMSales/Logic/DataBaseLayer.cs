@@ -814,7 +814,8 @@ namespace VMSales.Logic
                     "ON photo.photo_pk = product_photo.photo_fk " +
                     "INNER JOIN product " +
                     "ON product.product_pk = product_photo.product_fk " +
-                    "WHERE product_photo.product_fk = @product_pk",
+                    "WHERE product_photo.product_fk = @product_pk " +
+                    "ORDER BY photo.photo_order_number",
                     new { product_pk },
                     Transaction);
                 return queryResult.ToObservable();
