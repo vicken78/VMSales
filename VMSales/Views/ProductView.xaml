@@ -195,164 +195,163 @@
 
         <!-- Product DataGrid Start -->
 
-
-        <!--SelectedItem="{Binding Select_Request, Mode=TwoWay}"-->
-        <!-- Product DataGrid Start -->
-        <DataGrid AutoGenerateColumns="False" 
+            <!-- Product DataGrid Start -->
+            <DataGrid AutoGenerateColumns="False" 
                           ItemsSource="{Binding BindableCollectionProductModel,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
                           CanUserReorderColumns="False"
                           SelectedItem="{Binding SelectedItem, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                           CanUserAddRows="False"
                           EnableRowVirtualization="True" IsReadOnly="False" Grid.Row="10" 
-                          Height="Auto" Width="1920"
+                          Height="Auto" Width="1525" HorizontalAlignment="Left"
                           SelectionMode="Single">
-            <DataGrid.RowStyle>
-                <Style TargetType="{x:Type DataGridRow}">
-                    <Setter Property="IsSelected"  Value="{Binding IsSelected, Mode=TwoWay}"/>
-                </Style>
-            </DataGrid.RowStyle>
-            <DataGrid.Columns>
+                <DataGrid.RowStyle>
+                    <Style TargetType="{x:Type DataGridRow}">
+                        <Setter Property="IsSelected"  Value="{Binding IsSelected, Mode=TwoWay}"/>
+                    </Style>
+                </DataGrid.RowStyle>
+                <DataGrid.Columns>
 
-                <!-- Category Combobox -->
+                    <!-- Category Combobox -->
 
-                <DataGridTemplateColumn Header="Category" Width="100">
-                    <DataGridTemplateColumn.CellTemplate>
-                        <DataTemplate>
+                    <DataGridTemplateColumn Header="Category" Width="100">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
 
-                            <ComboBox ItemsSource="{Binding DataContext.category_list,RelativeSource={RelativeSource Mode=FindAncestor,AncestorType=Controls:DataGrid}}" 
+                                <ComboBox ItemsSource="{Binding DataContext.category_list,RelativeSource={RelativeSource Mode=FindAncestor,AncestorType=Controls:DataGrid}}" 
                             SelectedItem="{Binding category_name,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"/>
-                        </DataTemplate>
-                    </DataGridTemplateColumn.CellTemplate>
-                </DataGridTemplateColumn>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
 
-<!-- for debug only -->
-                <DataGridTextColumn Header="Product PK" Visibility="Hidden" Width="140" Binding="{Binding product_pk, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
-                    <DataGridTextColumn.ElementStyle>
-                        <Style TargetType="TextBlock">
-                            <Setter Property="TextWrapping" Value="Wrap"/>
-                        </Style>
-                    </DataGridTextColumn.ElementStyle>
-                </DataGridTextColumn>
+                    <!-- for debug only -->
+                    <DataGridTextColumn Header="Product PK" Visibility="Hidden" Width="140" Binding="{Binding product_pk, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                        <DataGridTextColumn.ElementStyle>
+                            <Style TargetType="TextBlock">
+                                <Setter Property="TextWrapping" Value="Wrap"/>
+                            </Style>
+                        </DataGridTextColumn.ElementStyle>
+                    </DataGridTextColumn>
 
 
 
-                <!--Product Name -->
-                <DataGridTextColumn Header="Product Name" Width="140" Binding="{Binding product_name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
-                    <DataGridTextColumn.ElementStyle>
-                        <Style TargetType="TextBlock">
-                            <Setter Property="TextWrapping" Value="Wrap"/>
-                        </Style>
-                    </DataGridTextColumn.ElementStyle>
-                </DataGridTextColumn>
-                <!-- Product Description -->
-                <DataGridTextColumn Header="Description" Width="312" Binding="{Binding description, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
-                    <DataGridTextColumn.ElementStyle>
-                        <Style TargetType="TextBlock">
-                            <Setter Property="TextWrapping" Value="Wrap"/>
-                        </Style>
-                    </DataGridTextColumn.ElementStyle>
-                </DataGridTextColumn>
-                <!-- SKU-->
-                <DataGridTextColumn Header="SKU" Width="100" Binding="{Binding sku, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"  >
-                    <DataGridTextColumn.ElementStyle>
-                        <Style TargetType="TextBlock">
-                            <Setter Property="TextWrapping" Value="Wrap"/>
-                        </Style>
-                    </DataGridTextColumn.ElementStyle>
-                </DataGridTextColumn>
-                <!-- Brand Name-->
-                <DataGridTextColumn Header="Brand Name" Width="90" Binding="{Binding brand_name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
-                    <DataGridTextColumn.ElementStyle>
-                        <Style TargetType="TextBlock">
-                            <Setter Property="TextWrapping" Value="Wrap"/>
-                        </Style>
-                    </DataGridTextColumn.ElementStyle>
-                </DataGridTextColumn>
-                <!-- Condition -->
-                <DataGridTemplateColumn Header="Condition" Width="70">
-                    <DataGridTemplateColumn.CellTemplate>
-                        <DataTemplate>
-                            <ComboBox ItemsSource="{Binding conditionlist}" SelectedValue="{Binding condition, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-                        </DataTemplate>
-                    </DataGridTemplateColumn.CellTemplate>
-                </DataGridTemplateColumn>
-                <!-- Quantity -->
-                <DataGridTemplateColumn Header="Qty" Width="50">
+                    <!--Product Name -->
+                    <DataGridTextColumn Header="Product Name" Width="140" Binding="{Binding product_name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                        <DataGridTextColumn.ElementStyle>
+                            <Style TargetType="TextBlock">
+                                <Setter Property="TextWrapping" Value="Wrap"/>
+                            </Style>
+                        </DataGridTextColumn.ElementStyle>
+                    </DataGridTextColumn>
+                    <!-- Product Description -->
+                    <DataGridTextColumn Header="Description" Width="312" Binding="{Binding description, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                        <DataGridTextColumn.ElementStyle>
+                            <Style TargetType="TextBlock">
+                                <Setter Property="TextWrapping" Value="Wrap"/>
+                            </Style>
+                        </DataGridTextColumn.ElementStyle>
+                    </DataGridTextColumn>
+                    <!-- SKU-->
+                    <DataGridTextColumn Header="SKU" Width="100" Binding="{Binding sku, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"  >
+                        <DataGridTextColumn.ElementStyle>
+                            <Style TargetType="TextBlock">
+                                <Setter Property="TextWrapping" Value="Wrap"/>
+                            </Style>
+                        </DataGridTextColumn.ElementStyle>
+                    </DataGridTextColumn>
+                    <!-- Brand Name-->
+                    <DataGridTextColumn Header="Brand Name" Width="90" Binding="{Binding brand_name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                        <DataGridTextColumn.ElementStyle>
+                            <Style TargetType="TextBlock">
+                                <Setter Property="TextWrapping" Value="Wrap"/>
+                            </Style>
+                        </DataGridTextColumn.ElementStyle>
+                    </DataGridTextColumn>
+                    <!-- Condition -->
+                    <DataGridTemplateColumn Header="Condition" Width="70">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <ComboBox ItemsSource="{Binding conditionlist}" SelectedValue="{Binding condition, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                    <!-- Quantity -->
+                    <DataGridTemplateColumn Header="Qty" Width="50">
 
-                    <DataGridTemplateColumn.CellTemplate>
-                        <DataTemplate>
-                            <TextBox Text="{Binding quantity, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" PreviewTextInput="NumericInput"/>
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBox Text="{Binding quantity, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" PreviewTextInput="NumericInput"/>
 
-                        </DataTemplate>
-                    </DataGridTemplateColumn.CellTemplate>
-                </DataGridTemplateColumn>
-                <!-- Cost -->
-                <DataGridTextColumn Header="Cost" Width="70" Binding="{Binding cost, StringFormat='c', ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}">
-                    <DataGridTextColumn.ElementStyle>
-                        <Style TargetType="TextBlock">
-                            <Setter Property="TextWrapping" Value="Wrap"/>
-                            <Setter Property="HorizontalAlignment" Value="Center"/>
-                        </Style>
-                    </DataGridTextColumn.ElementStyle>
-                </DataGridTextColumn>
-                <!-- Listed Price -->
-                <DataGridTextColumn Header="Listed Price" Width="70" Binding="{Binding listed_price, StringFormat='c', ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}">
-                    <DataGridTextColumn.ElementStyle>
-                        <Style TargetType="TextBlock">
-                            <Setter Property="TextWrapping" Value="Wrap"/>
-                            <Setter Property="HorizontalAlignment" Value="Center"/>
-                        </Style>
-                    </DataGridTextColumn.ElementStyle>
-                </DataGridTextColumn>
-                <!-- Stock -->
-                <DataGridTemplateColumn Header="In Stock" Width="50">
-                    <DataGridTemplateColumn.CellTemplate>
-                        <DataTemplate>
-                            <CheckBox HorizontalAlignment="Center" VerticalAlignment="Center" IsChecked="{Binding instock, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-                        </DataTemplate>
-                    </DataGridTemplateColumn.CellTemplate>
-                </DataGridTemplateColumn>
-                <!-- Listing Number -->
-                <DataGridTextColumn Header="Listing Number" Width="120" Binding="{Binding listing_number, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"  >
-                    <DataGridTextColumn.ElementStyle>
-                        <Style TargetType="TextBlock">
-                            <Setter Property="TextWrapping" Value="Wrap"/>
-                        </Style>
-                    </DataGridTextColumn.ElementStyle>
-                </DataGridTextColumn>
-                <!-- Listing URL-->
-                <DataGridTextColumn Header="Listing Url" Width="200" Binding="{Binding listing_url, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
-                    <DataGridTextColumn.ElementStyle>
-                        <Style TargetType="TextBlock">
-                            <Setter Property="TextWrapping" Value="Wrap"/>
-                        </Style>
-                    </DataGridTextColumn.ElementStyle>
-                </DataGridTextColumn>
-                <!-- Listing Date -->
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                    <!-- Cost -->
+                    <DataGridTextColumn Header="Cost" Width="70" Binding="{Binding cost, StringFormat='c', ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}">
+                        <DataGridTextColumn.ElementStyle>
+                            <Style TargetType="TextBlock">
+                                <Setter Property="TextWrapping" Value="Wrap"/>
+                                <Setter Property="HorizontalAlignment" Value="Center"/>
+                            </Style>
+                        </DataGridTextColumn.ElementStyle>
+                    </DataGridTextColumn>
+                    <!-- Listed Price -->
+                    <DataGridTextColumn Header="Listed Price" Width="70" Binding="{Binding listed_price, StringFormat='c', ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}">
+                        <DataGridTextColumn.ElementStyle>
+                            <Style TargetType="TextBlock">
+                                <Setter Property="TextWrapping" Value="Wrap"/>
+                                <Setter Property="HorizontalAlignment" Value="Center"/>
+                            </Style>
+                        </DataGridTextColumn.ElementStyle>
+                    </DataGridTextColumn>
+                    <!-- Stock -->
+                    <DataGridTemplateColumn Header="In Stock" Width="50">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <CheckBox HorizontalAlignment="Center" VerticalAlignment="Center" IsChecked="{Binding instock, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                    <!-- Listing Number -->
+                    <DataGridTextColumn Header="Listing Number" Width="120" Binding="{Binding listing_number, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"  >
+                        <DataGridTextColumn.ElementStyle>
+                            <Style TargetType="TextBlock">
+                                <Setter Property="TextWrapping" Value="Wrap"/>
+                            </Style>
+                        </DataGridTextColumn.ElementStyle>
+                    </DataGridTextColumn>
+                    <!-- Listing URL-->
+                    <DataGridTextColumn Header="Listing Url" Width="200" Binding="{Binding listing_url, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                        <DataGridTextColumn.ElementStyle>
+                            <Style TargetType="TextBlock">
+                                <Setter Property="TextWrapping" Value="Wrap"/>
+                            </Style>
+                        </DataGridTextColumn.ElementStyle>
+                    </DataGridTextColumn>
+                    <!-- Listing Date -->
 
-                <DataGridTemplateColumn Header="Listing Date">
-                    <DataGridTemplateColumn.CellTemplate>
-                        <DataTemplate>
-                            <TextBlock Text="{Binding listing_date, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
-                            <TextBlock.Style>
-                                    <Style TargetType="TextBlock">
-                                        <Style.Triggers>
-                                            <DataTrigger Binding="{Binding listing_date}" Value="1/1/0001">
-                                                <Setter Property="Visibility" Value="Collapsed" />
-                                            </DataTrigger>
-                                        </Style.Triggers>
-                                    </Style>
-                                </TextBlock.Style>
-                            </TextBlock>
-                        </DataTemplate>
-                    </DataGridTemplateColumn.CellTemplate>
-                    <DataGridTemplateColumn.CellEditingTemplate>
-                        <DataTemplate>
-                            <DatePicker SelectedDate="{Binding listing_date, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" />
-                        </DataTemplate>
-                    </DataGridTemplateColumn.CellEditingTemplate>
-                </DataGridTemplateColumn>
-            </DataGrid.Columns>
-        </DataGrid>
+                    <DataGridTemplateColumn Header="Listing Date">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding listing_date, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                                    <TextBlock.Style>
+                                        <Style TargetType="TextBlock">
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding listing_date}" Value="1/1/0001">
+                                                    <Setter Property="Visibility" Value="Collapsed" />
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </TextBlock.Style>
+                                </TextBlock>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                        <DataGridTemplateColumn.CellEditingTemplate>
+                            <DataTemplate>
+                                <DatePicker SelectedDate="{Binding listing_date, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" />
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellEditingTemplate>
+                    </DataGridTemplateColumn>
+                </DataGrid.Columns>
+            </DataGrid>
+        
     </DockPanel>
 </UserControl>

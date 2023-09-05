@@ -222,11 +222,11 @@ namespace VMSales.ViewModels
                 _SelectedItem = value;
                 RaisePropertyChanged("SelectedItem");
                 LoadSupplier();
-                if (SelectedItem != null && SelectedItem.IsSelected)
-                {
+                if (SelectedItem?.IsSelected != null)
+                 {
                     productSelected = true;
                     LoadFileList();
-                }
+                 }
             }
         }
 
@@ -265,14 +265,20 @@ namespace VMSales.ViewModels
         
         public void LoadFileList()
         {
+            if (filelist?.Count > 0)
+                filelist.Clear();
+
             if (SelectedItem.product_pk > 0)
             {
-                filelist = new ObservableCollection<string>();
-                filelist.Clear();
                 DataBaseLayer.PhotoRepository PhotoRepo = new DataBaseLayer.PhotoRepository(dataBaseProvider);
                 filelist = PhotoRepo.GetFileList(SelectedItem.product_pk).Result.ToObservable();
                 PhotoRepo.Commit();
                 PhotoRepo.Dispose();
+                RaisePropertyChanged("filelist");
+            }
+            else
+            {
+                filelist = new ObservableCollection<string>();
                 RaisePropertyChanged("filelist");
             }
         }
@@ -580,33 +586,56 @@ namespace VMSales.ViewModels
         //} 
         public void AddCommand()
         {
-            if (filelist.Count > 0)
+            // load all suppliers and lot numbers.
+
+            if (BindableCollectionSupplierModel.Count > 0)
+                BindableCollectionSupplierModel.Clear();
+
+            if (BindableCollectionPurchaseOrderModel.Count > 0)
+                BindableCollectionPurchaseOrderModel.Clear();
+
+            BindableCollectionSupplierModel = new BindableCollection<SupplierModel>();
+            BindableCollectionPurchaseOrderModel = new BindableCollection<PurchaseOrderModel>();
+            RaisePropertyChanged("BindableCollectionSupplierModel");
+            RaisePropertyChanged("BindableCollectionPurchaseOrderModel");
+
+
+            // clear filelist
+            if (filelist?.Count > 0)
             {
                 filelist.Clear();
-                filelist = new ObservableCollection<string>();
             }
-
+            filelist = new ObservableCollection<string>();
+            RaisePropertyChanged("filelist");
             if (BindableCollectionProductModel.Count == 0)
             {
                 BindableCollectionProductModel = new BindableCollection<ProductModel>();
             }
-            
-            SelectedItem.product_pk = 0;
-            SelectedItem.product_fk = 0;
-            SelectedItem.brand_name = null;
-            SelectedItem.product_name = null;
-            SelectedItem.description = null;
-            SelectedItem.quantity = 0;
-            SelectedItem.cost = 0;
-            SelectedItem.sku = "0";
-            SelectedItem.listed_price = 0;
-            SelectedItem.condition = "New";
-            SelectedItem.instock = 1;
-            SelectedItem.listing_url = null;
-            SelectedItem.listing_number = null;
-            SelectedItem.listing_date = DateTime.Today;
-            BindableCollectionProductModel.Add(SelectedItem);
+
+            // add the product line
+
+            var product = new ProductModel()
+            {
+                product_pk = 0,
+                product_fk = 0,
+                brand_name = null,
+                product_name = null,
+                description = null,
+                quantity = 0,
+                cost = 0,
+                sku = "",
+                listed_price = 0,
+                condition = "New",
+                instock = 1,
+                listing_url = null,
+                listing_number = null,
+                listing_date = DateTime.Today
+            };
+
+            BindableCollectionProductModel.Insert(0, product);
+            SelectedItem = null;
             RaisePropertyChanged("BindableCollectionProductModel");
+            RaisePropertyChanged("SelectedItem");
         }
         public void DeleteCommand()
         {
