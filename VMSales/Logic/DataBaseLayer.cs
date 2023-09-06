@@ -436,21 +436,17 @@ namespace VMSales.Logic
 
 
             // get specific product order detail
-            public async Task<IEnumerable<PurchaseOrderModel>> Get_PurchaseOrderDetail_by_pk(int purchase_order_detail_pk)
+             public async Task<int>Get_PurchaseOrderDetail_by_pk(int purchase_order_detail_pk)
             {
-                return await Connection.QueryAsync<PurchaseOrderModel>("SELECT DISTINCT " +
+                return await Connection.QuerySingleAsync<int>("SELECT DISTINCT " +
                     "pod.purchase_order_detail_pk, pod.lot_number, pod.lot_cost, pod.lot_quantity, " +
                     "pod.lot_name, pod.sales_tax, pod.shipping_cost " +
                     "FROM purchase_order_detail as pod " +
                     "WHERE pod.purchase_order_detail_pk = @purchase_order_detail_pk", new { purchase_order_detail_pk }, Transaction);
             }
 
-
-
             // scenerio 3 (UPDATE)
             // same invoice number, UPDATE purchase_order_detail.
-
-
 
 
 

@@ -184,6 +184,19 @@ namespace VMSales.ViewModels
  
         public List<string> category_list { get; set; }
 
+        private int _supplier_pk;
+        public int supplier_pk
+        {
+            get { return _supplier_pk; }
+            set
+            {
+                if (_supplier_pk == value) return;
+                _supplier_pk = value;
+                RaisePropertyChanged("supplier_pk");
+            }
+        }
+
+
         private int _supplier_fk;
         public int supplier_fk
         {
@@ -226,6 +239,7 @@ namespace VMSales.ViewModels
                  {
                     productSelected = true;
                     LoadFileList();
+                    GetSupplierByProduct();
                  }
             }
         }
@@ -297,7 +311,30 @@ namespace VMSales.ViewModels
                 LoadFileList();
             }
         }
-        
+
+        #endregion
+
+       #region SupplierConvertor
+
+        public string GetSupplierByProduct()
+        {
+            try
+            {
+                // Load Supplier
+                DataBaseLayer.SupplierRepository SupplierRepo = new DataBaseLayer.SupplierRepository(dataBaseProvider);
+                if (SelectedItem.product_pk > 0)
+                selected_supplier_name = SupplierRepo.Selected_Supplier(SelectedItem.product_pk).Result.First().ToString();
+                SupplierRepo.Commit();
+                SupplierRepo.Dispose();
+               // return selected_supplier_name;
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show("an expected error has occured." + e);
+            }
+            return selected_supplier_name; 
+        }
+
         #endregion
         #region SupplierChange
         public void LoadSupplier()
@@ -306,13 +343,6 @@ namespace VMSales.ViewModels
             int get_product_purchase_order_detail_fk = 0;
             if (SelectedItem != null && SelectedItem.product_pk != 0)
             {
-                // Load Supplier
-                DataBaseLayer.SupplierRepository  SupplierRepo = new DataBaseLayer.SupplierRepository(dataBaseProvider);
-                selected_supplier_name = SupplierRepo.Selected_Supplier(SelectedItem.product_pk).Result.First().ToString();
-                get_supplier_fk = SupplierRepo.Get_by_supplier_name(selected_supplier_name).Result;
-                SupplierRepo.Commit();
-                SupplierRepo.Dispose();
-                // Check for Purchase_Product_Order
                 try
                 {
                     DataBaseLayer.ProductRepository ProductRepo = new DataBaseLayer.ProductRepository(dataBaseProvider);
@@ -326,7 +356,7 @@ namespace VMSales.ViewModels
                 }
                 finally
                 {
-                    LoadPurchaseOrder(get_supplier_fk, get_product_purchase_order_detail_fk);
+                    LoadSelectedPurchaseOrder(get_product_purchase_order_detail_fk);
                 }
               }
         }
@@ -376,7 +406,6 @@ namespace VMSales.ViewModels
             {
                 dataBaseProvider = getprovider();
                 DataBaseLayer.CategoryRepository CategoryRepo = new DataBaseLayer.CategoryRepository(dataBaseProvider);
-                // fix
                 selected_category_fk_filter = CategoryRepo.Get_by_category_name(selected_category_name_filter.category_name).Result;
                 CategoryRepo.Commit();
                 CategoryRepo.Dispose();
@@ -586,20 +615,6 @@ namespace VMSales.ViewModels
         //} 
         public void AddCommand()
         {
-            // load all suppliers and lot numbers.
-
-            if (BindableCollectionSupplierModel.Count > 0)
-                BindableCollectionSupplierModel.Clear();
-
-            if (BindableCollectionPurchaseOrderModel.Count > 0)
-                BindableCollectionPurchaseOrderModel.Clear();
-
-            BindableCollectionSupplierModel = new BindableCollection<SupplierModel>();
-            BindableCollectionPurchaseOrderModel = new BindableCollection<PurchaseOrderModel>();
-            RaisePropertyChanged("BindableCollectionSupplierModel");
-            RaisePropertyChanged("BindableCollectionPurchaseOrderModel");
-
-
             // clear filelist
             if (filelist?.Count > 0)
             {
@@ -655,53 +670,21 @@ namespace VMSales.ViewModels
                 string filePath = openFileDialog.FileName;
                 IWindowManager _windowManager = new WindowManager();
                 var popupwindow = new ProductPhotoViewModel(SelectedItem, filePath);
-                _windowManager.ShowWindowAsync(popupwindow);
+                _ = _windowManager.ShowWindowAsync(popupwindow);
             }
         }
 
-
-        public void LoadPurchaseOrder(int supplier_fk,int purchase_order_detail_pk)
+        public void LoadSelectedPurchaseOrder(int purchase_order_detail_pk)
         {
-            // load all lots in combobox, unless purchase_order_detail_pk is set.
-            PurchaseOrderModel Purchaseordermodel = new PurchaseOrderModel();
 
-            if (BindableCollectionPurchaseOrderModel  == null)
+            if (purchase_order_detail_pk > 0)
             {
-                BindableCollectionPurchaseOrderModel = new BindableCollection<PurchaseOrderModel>();
+                dataBaseProvider = getprovider();
+                DataBaseLayer.PurchaseOrderRepository PurchaseOrderRepo = new DataBaseLayer.PurchaseOrderRepository(dataBaseProvider);
+                selected_lot_number = PurchaseOrderRepo.Get_PurchaseOrderDetail_by_pk(purchase_order_detail_pk).Result;
+                PurchaseOrderRepo.Commit();
+                PurchaseOrderRepo.Dispose();
             }
-
-            dataBaseProvider = getprovider();
-            DataBaseLayer.PurchaseOrderRepository PurchaseOrderRepo = new DataBaseLayer.PurchaseOrderRepository(dataBaseProvider);
-        
-            if (purchase_order_detail_pk == 0)
-            {
-                // load lot numbers based on the supplier_fk
-                BindableCollectionPurchaseOrderModel = DataConversion.ToBindableCollection(PurchaseOrderRepo.GetAllWithID(supplier_fk).Result.ToObservable());
-                RaisePropertyChanged("BindableCollectionPurchaseOrderModel");
-               
-                foreach (var item in BindableCollectionPurchaseOrderModel)
-                {
-                    Purchaseordermodel.lot_number = item.lot_number;
-                    Purchaseordermodel.purchase_order_detail_pk = item.purchase_order_detail_pk;
-                    SelectedItem.purchase_order_detail_fk = item.purchase_order_detail_pk;
-                }
-            }
-            else
-            {
-                BindableCollectionPurchaseOrderModel = DataConversion.ToBindableCollection(PurchaseOrderRepo.Get_PurchaseOrderDetail_by_pk(purchase_order_detail_pk).Result.ToObservable());
-                RaisePropertyChanged("BindableCollectionPurchaseOrderModel");
-          
-                foreach (var item in BindableCollectionPurchaseOrderModel)
-                {
-                    Purchaseordermodel.lot_number = item.lot_number;
-                    Purchaseordermodel.purchase_order_detail_pk = item.purchase_order_detail_pk;
-                    SelectedItem.purchase_order_detail_fk = item.purchase_order_detail_pk;
-                }
-
-            }
-            PurchaseOrderRepo.Commit();
-            PurchaseOrderRepo.Dispose();
-            return;
         }
 
         public void initial_load()

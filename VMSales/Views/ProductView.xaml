@@ -5,6 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:cal="http://www.caliburnproject.org" 
              xmlns:models="clr-namespace:VMSales.ViewModels" xmlns:Controls="http://schemas.microsoft.com/netfx/2009/xaml/presentation"
+             xmlns:logic="clr-namespace:VMSales.Logic"
              d:DataContext="{d:DesignInstance Type=models:ProductViewModel}"
              mc:Ignorable="d" 
              Height="800" Width="1920" MinHeight="400" MinWidth="800">
@@ -48,23 +49,14 @@
 
             <!-- Supplier -->
             <Label Grid.Row="2" Grid.Column="0">Supplier</Label>
-            <!--<ComboBox x:Name="supplierName" IsEditable="False" Background="WhiteSmoke"  
-                ItemsSource="{Binding PurchaseOrder}"
-                SelectedValue="{Binding supplier_name}"
-                Width="200" Grid.Column="1" Grid.Row="2" />
-                <Label Content="Supplier Name" Grid.Column="0" Grid.Row="2"/>
-    -->
+
             <ComboBox x:Name="supplier" IsEditable="False" Background="WhiteSmoke" 
                IsSynchronizedWithCurrentItem="True"
                ItemsSource="{Binding BindableCollectionSupplierModel}" 
                DisplayMemberPath="supplier_name"
-               SelectedValue="{Binding selected_supplier_name,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
                SelectedValuePath="supplier_name"
+               SelectedValue="{Binding selected_supplier_name,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
                Grid.Row="2" Grid.Column="1"/>
-
-            <!--      SelectedValuePath="{Binding selected_supplier_name,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
-               SelectedValue="selected_supplier_name"
-            -->
 
             <!-- Lot Number -->
             <Label Content="Lot Number" Grid.Column="0" Grid.Row="3"/>
@@ -72,13 +64,10 @@
                 ItemsSource="{Binding Path=BindableCollectionPurchaseOrderModel,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
                 DisplayMemberPath="lot_number"
                 Width="60" HorizontalAlignment="Left"
-                SelectedValue="{Binding lot_number, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" 
+                SelectedValue="{Binding selected_lot_number, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" 
                 SelectedValuePath="purchase_order_detail_pk"
                 Grid.Column="1" Grid.Row="3"/>
-            <!--SelectedItem="selected_lot_number"-->
-            <!--         SelectedValue="{Binding purchase_order_detail_pk, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" 
-                SelectedValuePath="purchase_order_detail_pk" -->
-
+      
             <!-- Lot Name -->
             <Label Content="Lot Name" Grid.Column="0" Grid.Row="5" />
             <TextBox Name="lot_name" IsReadOnly="True" Background="WhiteSmoke" Text="{Binding SelectedItem.lot_name, ElementName=Selected_lot_number}"
@@ -133,12 +122,6 @@
             <Button x:Name="RemoveSupplierFilterCommand" HorizontalAlignment="Left" Margin="20,0,0,0" Grid.Row="3" Grid.Column="5" Width="16" Height="16" 
             IsEnabled="{Binding canRemoveSupplierFilter, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
                 <Image Width="10" Height="10" Style="{DynamicResource ImageStyleForButtons}"/>
-            </Button>
-
-            <Button x:Name="ProductPurchase" Grid.Column="1" Grid.Row="3"
-                            Width="75" Height="20"
-                            HorizontalAlignment="Right"
-                            Content="Associate" IsEnabled="{Binding canEnableProductPurchase}">
             </Button>
 
             <!-- Images -->
