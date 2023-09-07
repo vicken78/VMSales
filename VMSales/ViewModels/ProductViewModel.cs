@@ -339,7 +339,6 @@ namespace VMSales.ViewModels
         #region SupplierChange
         public void LoadSupplier()
         {
-            int get_supplier_fk = 0;
             int get_product_purchase_order_detail_fk = 0;
             if (SelectedItem != null && SelectedItem.product_pk != 0)
             {
@@ -498,9 +497,6 @@ namespace VMSales.ViewModels
 
         public void SaveCommand()
         {
-
-            // need category_name
-            //     SelectedItem = new ProductModel(); this should be run after save.
             var selectedRows = BindableCollectionProductModel.Where(i => i.IsSelected);
 
             foreach (var item in selectedRows)
@@ -520,71 +516,47 @@ namespace VMSales.ViewModels
                 SelectedItem.listing_number = item.listing_number;
                 SelectedItem.listing_date = item.listing_date;
             }
-        
-            //check for product_purchase_order
-            
-            //check for product_supplier 
+
+            // check for null values
 
             //update or insert
 
-            // check for null values
-            if (supplier_fk != 0 && purchase_order_detail_pk != 0)
-            {
+            // update
+            //check for product_purchase_order
+
+            //check for product_supplier 
 
 
-
-                // ask to update
-                //          MessageBox.Show("Please select a Supplier.");
-                //          return;
-            }
-
-
-            //   var selectedRows = BindableCollectionProductModel.Where(i => i.IsSelected);
-            //   foreach (var item in selectedRows)
-            //    {
-            //           invoicetemp = item.invoice_number;
-            //           purchase_datetemp = item.purchase_date;
-            //    }
-
-            // MessageBox.Show(Productmodel.product_pk.ToString());
-            //Insert or Update
-
-            // Check for Product Key
-            /*            if (Productmodel.product_pk == 0)
-                        {
-                            // Insert
-                            MessageBox.Show("Insert");
-                        }
-                        else
-                        {
-                            // Update
-                            MessageBox.Show("Update");
-                        }
-            */
+            //insert 
+            
 
             //product key present?
+            //MessageBox.Show("supplier_name" + selected_supplier_name); // name only not pk
+            //MessageBox.Show("purchase_order_detail_pk " + selected_lot_number.ToString()); 
+            //MessageBox.Show("cat_pk" + SelectedItem.category_pk.ToString()); outputs 2 on first row YES
+            //MessageBox.Show("product_pk" + SelectedItem.product_pk.ToString()); outputs 1 on first row YES
 
-            MessageBox.Show("supplier_fk" + supplier_fk.ToString());
-            MessageBox.Show("purchase_order_detail_pk" + purchase_order_detail_pk.ToString());
 
+            //MessageBox.Show("brandname" + SelectedItem.brand_name);
+            //MessageBox.Show("prodname" + SelectedItem.product_name);
+            //MessageBox.Show("desc" + SelectedItem.description);
+            //MessageBox.Show("qty" + SelectedItem.quantity.ToString());
+            //MessageBox.Show("sku" + SelectedItem.sku);
+            //MessageBox.Show("listed_price" + SelectedItem.listed_price.ToString());
+            //MessageBox.Show("instock" + SelectedItem.instock.ToString());
+            //MessageBox.Show("listdate" + SelectedItem.listing_date.ToString());
+            //MessageBox.Show("listurl" + SelectedItem.listing_url);
+            //MessageBox.Show("listnum" + SelectedItem.listing_number);
+            //MessageBox.Show("cost" + SelectedItem.cost.ToString());
+            //MessageBox.Show("condition" + SelectedItem.condition);
+            //MessageBox.Show("catname" + SelectedItem.category_name);
 
-            MessageBox.Show("prod cat_pk" + SelectedItem.product_category_pk.ToString());
-            MessageBox.Show("cat_pk" + SelectedItem.category_pk.ToString());
-            MessageBox.Show("product_pk" + SelectedItem.product_pk.ToString());
-            MessageBox.Show("product_fk" + SelectedItem.product_fk.ToString());
-            MessageBox.Show("brandname" + SelectedItem.brand_name);
-            MessageBox.Show("prodname" + SelectedItem.product_name);
-            MessageBox.Show("desc" + SelectedItem.description);
-            MessageBox.Show("qty" + SelectedItem.quantity.ToString());
-            MessageBox.Show("sku" + SelectedItem.sku);
-            MessageBox.Show("listed_price" + SelectedItem.listed_price.ToString());
-            MessageBox.Show("instock" + SelectedItem.instock.ToString());
-            MessageBox.Show("listdate" + SelectedItem.listing_date.ToString());
-            MessageBox.Show("listurl" + SelectedItem.listing_url);
-            MessageBox.Show("listnum" + SelectedItem.listing_number);
-            MessageBox.Show("cost" + SelectedItem.cost.ToString());
-            MessageBox.Show("condition" + SelectedItem.condition);
-            MessageBox.Show("catname" + SelectedItem.category_name);
+            //MessageBox.Show("product_fk" + SelectedItem.product_fk.ToString()); // NO
+
+            //MessageBox.Show("supplier_fk" + supplier_fk.ToString()); NO
+            //MessageBox.Show("purchase_order_detail_pk" + purchase_order_detail_pk.ToString()); NO
+            //MessageBox.Show("supplier_fk"+SelectedItem.supplier_fk.ToString()); NO
+            //MessageBox.Show("prod cat_pk" + SelectedItem.product_category_pk.ToString()); NO
 
 
         }
