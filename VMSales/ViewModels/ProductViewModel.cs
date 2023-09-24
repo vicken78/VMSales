@@ -496,7 +496,7 @@ namespace VMSales.ViewModels
         #endregion
 
         public void SaveCommand()
-        {
+        { 
             var selectedRows = BindableCollectionProductModel.Where(i => i.IsSelected);
 
             foreach (var item in selectedRows)
@@ -516,19 +516,72 @@ namespace VMSales.ViewModels
                 SelectedItem.listing_number = item.listing_number;
                 SelectedItem.listing_date = item.listing_date;
             }
+            // first check for null values
+            if (SelectedItem.category_name == null)
+                {
+                    MessageBox.Show("Please select a category name.");
+                    return;
+                }
+                if (SelectedItem.product_name == null)
+                {
+                    MessageBox.Show("Please enter a product name.");
+                    return;
+                }
+                if (SelectedItem.sku == null)
+                {
+                    MessageBox.Show("Please enter a sku.");
+                    return;
+                }
+                if (selected_supplier_name == null)
+                {
+                    MessageBox.Show("Please select a supplier.");
+                    return;
+                }
+                if (selected_lot_number == 0)
+                {
+                    MessageBox.Show("Please select a lot number.");
+                    return;
+                }
 
-            // check for null values
+            DataBaseLayer.ProductRepository ProductRepo = new DataBaseLayer.ProductRepository(dataBaseProvider);
+            try
+            {
+        
+                /*          selected_supplier_name = SupplierRepo.Selected_Supplier(SelectedItem.product_pk).Result.First().ToString();
+                      SupplierRepo.Commit();
+                       SupplierRepo.Dispose();
+                  */
 
-            //update or insert
+                // Insert
+                if (SelectedItem.product_pk == 0)
+                {
 
-            // update
-            //check for product_purchase_order
+                    // Product
+                    // we need the product_pk
+                    // Product Category
+                    // Product Supplier
+                    // product purchase order 
+                    ProductRepo.Revert();
+                    ProductRepo.Dispose();
+                }
+                // Update
+                else
+                {
+                    // Product
+                    // Product Category
+                    // Product Supplier
+                    // product purchase order
+                    ProductRepo.Commit();
+                    ProductRepo.Dispose();
+                }
+            }
+            catch (Exception e) 
+            {
+                MessageBox.Show("An error has occured." + e);
+                ProductRepo.Revert();
+                ProductRepo.Dispose();
 
-            //check for product_supplier 
-
-
-            //insert 
-            
+            }
 
             //product key present?
             //MessageBox.Show("supplier_name" + selected_supplier_name); // name only not pk
