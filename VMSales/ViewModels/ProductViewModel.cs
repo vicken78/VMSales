@@ -546,21 +546,30 @@ namespace VMSales.ViewModels
             DataBaseLayer.ProductRepository ProductRepo = new DataBaseLayer.ProductRepository(dataBaseProvider);
             try
             {
-        
-                /*          selected_supplier_name = SupplierRepo.Selected_Supplier(SelectedItem.product_pk).Result.First().ToString();
-                      SupplierRepo.Commit();
-                       SupplierRepo.Dispose();
-                  */
-
+       
                 // Insert
                 if (SelectedItem.product_pk == 0)
                 {
-
                     // Product
-                    // we need the product_pk
+                    int new_product_fk = ProductRepo.Insert(SelectedItem).Result;
+                    SelectedItem.product_fk = new_product_fk;
+
                     // Product Category
-                    // Product Supplier
-                    // product purchase order 
+                    bool insert_product_category = ProductRepo.InsertProductCategory(SelectedItem).Result;
+                    if (insert_product_category == true)
+                    {
+
+                        //FIX
+
+                        // Product Supplier
+                        // product purchase order 
+                    }
+                    else 
+                    {
+                        ProductRepo.Revert();
+                        ProductRepo.Dispose();
+                    }
+
                     ProductRepo.Revert();
                     ProductRepo.Dispose();
                 }

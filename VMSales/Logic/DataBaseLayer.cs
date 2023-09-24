@@ -560,7 +560,7 @@ namespace VMSales.Logic
             }
 
             // Insert
-            public async Task<int> InsertProduct(ProductModel entity)
+            public override async Task<int> Insert(ProductModel entity)
             {
                 int product_pk = await Connection.QuerySingleAsync<int>("INSERT INTO product " +
             "(brand_name, product_name, description, quantity, cost, sku, listed_price, instock, condition, listing_url, listing_number, listing_date) " +
@@ -596,8 +596,9 @@ namespace VMSales.Logic
                 return insertproductcategory;
             }
 
+            // FIX
 
-            public override async Task<int> Insert(ProductModel entity)
+            public async Task<bool> Insert_Product_Purchase_Order(ProductModel entity)
             {
                 // insert into product_purchase_order
                 bool insert_product_purchase_order = (await Connection.ExecuteAsync("INSERT INTO product_purchase_order (product_purchase_order_detail_fk, product_fk) VALUES (@purchase_order_detail_fk, @product_fk);", new
@@ -609,14 +610,14 @@ namespace VMSales.Logic
                 if (insert_product_purchase_order == true)
                 {
                     // insert into product_supplier
-                    int product_supplier = (await Connection.QueryFirstOrDefaultAsync<int>("INSERT INTO product_supplier (supplier_fk, product_fk) VALUES (@supplier_fk, @product_fk); SELECT last_insert_rowid()", new
+                bool insert_product_supplier = (await Connection.QueryFirstOrDefaultAsync<int>("INSERT INTO product_supplier (supplier_fk, product_fk) VALUES (@supplier_fk, @product_fk); SELECT last_insert_rowid()", new
                     {
                         supplier_fk = entity.supplier_fk,
                         product_fk = entity.product_pk,
-                    }, Transaction));
-                    return product_supplier;
+                    }, Transaction)) == 1;
+                    return true;
                 }
-                else return 0;
+                return false;
             }
 
 
