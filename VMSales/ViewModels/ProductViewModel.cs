@@ -496,7 +496,7 @@ namespace VMSales.ViewModels
         #endregion
 
         public void SaveCommand()
-        { 
+        {
             var selectedRows = BindableCollectionProductModel.Where(i => i.IsSelected);
 
             foreach (var item in selectedRows)
@@ -527,6 +527,7 @@ namespace VMSales.ViewModels
                     MessageBox.Show("Please enter a product name.");
                     return;
                 }
+
                 if (SelectedItem.sku == null)
                 {
                     MessageBox.Show("Please enter a sku.");
@@ -534,30 +535,34 @@ namespace VMSales.ViewModels
                 }
                 if (selected_supplier_name == null)
                 {
-                    MessageBox.Show("Please select a supplier.");
-                    return;
+                MessageBox.Show("Please select a supplier.");
+                return;
                 }
                 if (selected_lot_number == 0)
                 {
                     MessageBox.Show("Please select a lot number.");
                     return;
                 }
-
-            DataBaseLayer.ProductRepository ProductRepo = new DataBaseLayer.ProductRepository(dataBaseProvider);
+            DataBaseLayer.SupplierRepository SupplierRepo = new DataBaseLayer.SupplierRepository(dataBaseProvider);
+            //DataBaseLayer.ProductRepository ProductRepo = new DataBaseLayer.ProductRepository(dataBaseProvider);
             try
             {
-       
+                // convert supplier_name to pk
+                int supplier_pk = SupplierRepo.Get_by_supplier_name(selected_supplier_name).Result;
+                SupplierRepo.Commit();
+                SupplierRepo.Dispose();
                 // Insert
                 if (SelectedItem.product_pk == 0)
                 {
                     // Product
-                    int new_product_fk = ProductRepo.Insert(SelectedItem).Result;
-                    SelectedItem.product_fk = new_product_fk;
+                    //int new_product_fk = ProductRepo.Insert(SelectedItem).Result;
+                    //SelectedItem.product_fk = new_product_fk;
 
                     // Product Category
-                    bool insert_product_category = ProductRepo.InsertProductCategory(SelectedItem).Result;
-                    if (insert_product_category == true)
+                    //bool insert_product_category = ProductRepo.InsertProductCategory(SelectedItem).Result;
+                    /*if (insert_product_category == true)
                     {
+                    
 
                         //FIX
 
@@ -572,7 +577,9 @@ namespace VMSales.ViewModels
 
                     ProductRepo.Revert();
                     ProductRepo.Dispose();
+                    */
                 }
+
                 // Update
                 else
                 {
@@ -580,21 +587,31 @@ namespace VMSales.ViewModels
                     // Product Category
                     // Product Supplier
                     // product purchase order
-                    ProductRepo.Commit();
-                    ProductRepo.Dispose();
+     
+                    //ProductRepo.Commit();
+                    //ProductRepo.Dispose();
                 }
             }
             catch (Exception e) 
             {
                 MessageBox.Show("An error has occured." + e);
-                ProductRepo.Revert();
-                ProductRepo.Dispose();
+                //ProductRepo.Revert();
+                //ProductRepo.Dispose();
 
             }
 
             //product key present?
+            
+            
             //MessageBox.Show("supplier_name" + selected_supplier_name); // name only not pk
+            
+            
+            // purchase_order_detail_pk to use
             //MessageBox.Show("purchase_order_detail_pk " + selected_lot_number.ToString()); 
+            
+
+            // category_pk and product_pk to use
+
             //MessageBox.Show("cat_pk" + SelectedItem.category_pk.ToString()); outputs 2 on first row YES
             //MessageBox.Show("product_pk" + SelectedItem.product_pk.ToString()); outputs 1 on first row YES
 
@@ -613,8 +630,9 @@ namespace VMSales.ViewModels
             //MessageBox.Show("condition" + SelectedItem.condition);
             //MessageBox.Show("catname" + SelectedItem.category_name);
 
-            //MessageBox.Show("product_fk" + SelectedItem.product_fk.ToString()); // NO
 
+
+            //MessageBox.Show("product_fk" + SelectedItem.product_fk.ToString()); // NO
             //MessageBox.Show("supplier_fk" + supplier_fk.ToString()); NO
             //MessageBox.Show("purchase_order_detail_pk" + purchase_order_detail_pk.ToString()); NO
             //MessageBox.Show("supplier_fk"+SelectedItem.supplier_fk.ToString()); NO

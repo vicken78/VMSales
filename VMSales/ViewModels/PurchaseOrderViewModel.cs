@@ -645,7 +645,7 @@ namespace VMSales.ViewModels
                         {
 
                             //insert into product
-                            Task<int> insert_product_pk = ProductRepo.InsertProduct(PM);
+                            Task<int> insert_product_pk = ProductRepo.Insert(PM);
 
                             //insert into product_purchase_order
                             PM.product_fk = insert_product_pk.Result;
