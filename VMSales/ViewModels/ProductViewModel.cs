@@ -544,45 +544,58 @@ namespace VMSales.ViewModels
                     return;
                 }
             DataBaseLayer.SupplierRepository SupplierRepo = new DataBaseLayer.SupplierRepository(dataBaseProvider);
-            //DataBaseLayer.ProductRepository ProductRepo = new DataBaseLayer.ProductRepository(dataBaseProvider);
+            // convert supplier_name to fk
+            SelectedItem.supplier_fk = SupplierRepo.Get_by_supplier_name(selected_supplier_name).Result;
+            SelectedItem.purchase_order_detail_fk = selected_lot_number;
+            SupplierRepo.Commit();
+            SupplierRepo.Dispose();
+
+            DataBaseLayer.CategoryRepository CategoryRepo = new DataBaseLayer.CategoryRepository(dataBaseProvider);
+            // convert category_name to fk
+            SelectedItem.category_fk = CategoryRepo.Get_by_category_name(SelectedItem.category_name).Result;
+            CategoryRepo.Commit();
+            CategoryRepo.Dispose();
+
+            DataBaseLayer.ProductRepository ProductRepo = new DataBaseLayer.ProductRepository(dataBaseProvider);
+
             try
-            {
-                // convert supplier_name to pk
-                int supplier_pk = SupplierRepo.Get_by_supplier_name(selected_supplier_name).Result;
-                SupplierRepo.Commit();
-                SupplierRepo.Dispose();
-                // Insert
+            {      
+                 // Insert
                 if (SelectedItem.product_pk == 0)
                 {
                     // Product
-                    //int new_product_fk = ProductRepo.Insert(SelectedItem).Result;
-                    //SelectedItem.product_fk = new_product_fk;
+                    int new_product_fk = ProductRepo.Insert(SelectedItem).Result;
+                    SelectedItem.product_fk = new_product_fk;
 
                     // Product Category
-                    //bool insert_product_category = ProductRepo.InsertProductCategory(SelectedItem).Result;
-                    /*if (insert_product_category == true)
+                    bool insert_product_category = ProductRepo.InsertProductCategory(SelectedItem).Result; // failing
+                    if (insert_product_category == true)
                     {
-                    
-
-                        //FIX
-
-                        // Product Supplier
-                        // product purchase order 
+                        bool Insert_Product_Purchase_Order = ProductRepo.Insert_Product_Purchase_Order(SelectedItem).Result;
+                        if (Insert_Product_Purchase_Order == true)
+                        {
+                            MessageBox.Show("1 Row Inserted");
+                            ProductRepo.Commit();
+                            ProductRepo.Dispose();
+                        }
+                        else
+                        {
+                            ProductRepo.Revert();
+                            ProductRepo.Dispose();
+                            throw new Exception();
+                        }
                     }
-                    else 
+                    else
                     {
                         ProductRepo.Revert();
                         ProductRepo.Dispose();
+                        throw new Exception();
                     }
-
-                    ProductRepo.Revert();
-                    ProductRepo.Dispose();
-                    */
                 }
 
                 // Update
-                else
-                {
+                //else
+                //{
                     // Product
                     // Product Category
                     // Product Supplier
@@ -590,24 +603,16 @@ namespace VMSales.ViewModels
      
                     //ProductRepo.Commit();
                     //ProductRepo.Dispose();
-                }
+                //}
             }
             catch (Exception e) 
             {
                 MessageBox.Show("An error has occured." + e);
-                //ProductRepo.Revert();
-                //ProductRepo.Dispose();
+                ProductRepo.Revert();
+                ProductRepo.Dispose();
 
             }
 
-            //product key present?
-            
-            
-            //MessageBox.Show("supplier_name" + selected_supplier_name); // name only not pk
-            
-            
-            // purchase_order_detail_pk to use
-            //MessageBox.Show("purchase_order_detail_pk " + selected_lot_number.ToString()); 
             
 
             // category_pk and product_pk to use
@@ -615,56 +620,8 @@ namespace VMSales.ViewModels
             //MessageBox.Show("cat_pk" + SelectedItem.category_pk.ToString()); outputs 2 on first row YES
             //MessageBox.Show("product_pk" + SelectedItem.product_pk.ToString()); outputs 1 on first row YES
 
-
-            //MessageBox.Show("brandname" + SelectedItem.brand_name);
-            //MessageBox.Show("prodname" + SelectedItem.product_name);
-            //MessageBox.Show("desc" + SelectedItem.description);
-            //MessageBox.Show("qty" + SelectedItem.quantity.ToString());
-            //MessageBox.Show("sku" + SelectedItem.sku);
-            //MessageBox.Show("listed_price" + SelectedItem.listed_price.ToString());
-            //MessageBox.Show("instock" + SelectedItem.instock.ToString());
-            //MessageBox.Show("listdate" + SelectedItem.listing_date.ToString());
-            //MessageBox.Show("listurl" + SelectedItem.listing_url);
-            //MessageBox.Show("listnum" + SelectedItem.listing_number);
-            //MessageBox.Show("cost" + SelectedItem.cost.ToString());
-            //MessageBox.Show("condition" + SelectedItem.condition);
-            //MessageBox.Show("catname" + SelectedItem.category_name);
-
-
-
-            //MessageBox.Show("product_fk" + SelectedItem.product_fk.ToString()); // NO
-            //MessageBox.Show("supplier_fk" + supplier_fk.ToString()); NO
-            //MessageBox.Show("purchase_order_detail_pk" + purchase_order_detail_pk.ToString()); NO
-            //MessageBox.Show("supplier_fk"+SelectedItem.supplier_fk.ToString()); NO
-            //MessageBox.Show("prod cat_pk" + SelectedItem.product_category_pk.ToString()); NO
-
-
         }
 
-        /*      try
-              {
-                  dataBaseProvider = getprovider();
-                  DataBaseLayer.ProductRepository ProductRepo = new DataBaseLayer.ProductRepository(dataBaseProvider);
-                  Task<bool> insertProduct = ProductRepo.Insert(Productmodel);
-                  if (insertProduct.Result == true)
-                  {
-                      MessageBox.Show("1 Row Inserted.");
-                      ProductRepo.Commit();
-                      ProductRepo.Dispose();
-                      return;
-                  }
-                  else
-                  {
-                      ProductRepo.Revert();
-                      ProductRepo.Dispose();
-                      return;
-                  }
-              }
-              catch (Exception e)
-              {
-                  MessageBox.Show("An Error has occured: " + e);
-              }*/
-        //} 
         public void AddCommand()
         {
             // clear filelist
@@ -696,7 +653,7 @@ namespace VMSales.ViewModels
                 instock = 1,
                 listing_url = null,
                 listing_number = null,
-                listing_date = DateTime.Today
+                listing_date = DateTime.MinValue
             };
 
             BindableCollectionProductModel.Insert(0, product);

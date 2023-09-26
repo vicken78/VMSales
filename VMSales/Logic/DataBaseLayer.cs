@@ -588,6 +588,8 @@ namespace VMSales.Logic
 
             public async Task<bool> InsertProductCategory(ProductModel entity)
             {
+
+                // failing
                 bool insertproductcategory = (await Connection.ExecuteAsync("INSERT INTO product_category (product_fk, category_fk) VALUES (@product_fk, @category_fk);", new
                 {
                     product_fk = entity.product_fk,
@@ -596,8 +598,7 @@ namespace VMSales.Logic
                 return insertproductcategory;
             }
 
-            // FIX
-
+            //fix
             public async Task<bool> Insert_Product_Purchase_Order(ProductModel entity)
             {
                 // insert into product_purchase_order
