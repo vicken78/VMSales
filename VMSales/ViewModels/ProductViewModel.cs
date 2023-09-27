@@ -602,35 +602,27 @@ namespace VMSales.ViewModels
                     bool Update_Product = ProductRepo.Update(SelectedItem).Result;
                     if (Update_Product == true)
                     {
-                        ProductRepo.Commit();
-                        ProductRepo.Dispose();
-
                         // Product Category
                         bool Update_Product_Category = ProductRepo.Update_Product_Category(SelectedItem).Result;
                         if (Update_Product_Category == true)
                         {
-                            ProductRepo.Commit();
-                            ProductRepo.Dispose();
-                        }
-                        else throw new Exception();
-                        // Product Supplier
-                        bool Update_Product_Supplier = ProductRepo.Update_Product_Supplier(SelectedItem).Result;
-                        if (Update_Product_Supplier == true)
-                        {
-                            ProductRepo.Commit();
-                            ProductRepo.Dispose();
-                        }
-                        else throw new Exception();
-                        // Product Purchase Order
-                        bool Update_Product_Purchase_Order = ProductRepo.Update_Product_Purchase_Order(SelectedItem).Result;
-                        if (Update_Product_Purchase_Order == true)
-                        {
-                            ProductRepo.Commit();
-                            ProductRepo.Dispose();
+                            // Product Supplier
+                            bool Update_Product_Supplier = ProductRepo.Update_Product_Supplier(SelectedItem).Result;
+                            if (Update_Product_Supplier == true)
+                            {
+                                // Product Purchase Order
+                                bool Update_Product_Purchase_Order = ProductRepo.Update_Product_Purchase_Order(SelectedItem).Result;
+                                if (Update_Product_Purchase_Order == true)
+                                {
+                                    ProductRepo.Commit();
+                                    ProductRepo.Dispose();
+                                }
+                                else throw new Exception();
+                            }
+                            else throw new Exception();
                         }
                         else throw new Exception();
                     }
-                    else throw new Exception();
                 }
             }
             catch (Exception e)

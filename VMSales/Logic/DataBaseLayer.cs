@@ -686,7 +686,7 @@ namespace VMSales.Logic
             {
                 bool update_product_category = (await Connection.ExecuteAsync("UPDATE product_category SET " +
                 "product_fk = @product_fk, " +
-                "category_fk = @category_fk, " +
+                "category_fk = @category_fk " +
                 "WHERE product_fk = @id", new
                 {
                     id = entity.product_pk,
@@ -700,7 +700,7 @@ namespace VMSales.Logic
             {
                 bool update_product_supplier = (await Connection.ExecuteAsync("UPDATE product_supplier SET " +
                 "product_fk = @product_fk, " +
-                "supplier_fk = @supplier_fk, " +
+                "supplier_fk = @supplier_fk " +
                 "WHERE product_fk = @id", new
                 {
                     id = entity.product_pk,
@@ -714,20 +714,16 @@ namespace VMSales.Logic
             {
                 bool update_product_purchase_order = (await Connection.ExecuteAsync("UPDATE product_purchase_order SET " +
                 "product_purchase_order_detail_fk = @product_purchase_order_detail_fk, " +
-                "product_fk = @product_fk, " +
+                "product_fk = @product_fk " +
                 "WHERE product_fk = @id", new
                 {
                     id = entity.product_pk,
                     product_fk = entity.product_pk,
-                    product_purchase_order_fk = entity.purchase_order_detail_fk
+                    product_purchase_order_detail_fk = entity.purchase_order_detail_fk
 
                 }, null)) == 1;
                 return update_product_purchase_order;
             }
-
-
-
-
 
 
             //FIX -- Not fully implemented
