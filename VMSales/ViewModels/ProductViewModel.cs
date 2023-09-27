@@ -134,7 +134,7 @@ namespace VMSales.ViewModels
                 _selected_supplier_name = value;
                 RaisePropertyChanged("selected_supplier_name");
                 if (selected_supplier_name != null)
-                canEnableProductSupplier = true;
+                    canEnableProductSupplier = true;
             }
         }
         private int _selected_lot_number { get; set; }
@@ -148,7 +148,7 @@ namespace VMSales.ViewModels
                 RaisePropertyChanged("selected_lot_number");
             }
         }
-     
+
         private bool _canEnableProductSupplier;
         public bool canEnableProductSupplier
         {
@@ -181,7 +181,7 @@ namespace VMSales.ViewModels
 
         #endregion
         #region Members
- 
+
         public List<string> category_list { get; set; }
 
         private int _supplier_pk;
@@ -224,7 +224,7 @@ namespace VMSales.ViewModels
                 }
             }
         }
-    
+
         private ProductModel _SelectedItem { get; set; }
         public ProductModel SelectedItem
         {
@@ -236,11 +236,11 @@ namespace VMSales.ViewModels
                 RaisePropertyChanged("SelectedItem");
                 LoadSupplier();
                 if (SelectedItem?.IsSelected != null)
-                 {
+                {
                     productSelected = true;
                     LoadFileList();
                     GetSupplierByProduct();
-                 }
+                }
             }
         }
 
@@ -250,33 +250,33 @@ namespace VMSales.ViewModels
         #region filelistload
 
         private void LoadImage(string Selectedfilelist)
+        {
+            if (!string.IsNullOrEmpty(Selectedfilelist))
             {
-                if (!string.IsNullOrEmpty(Selectedfilelist))
+                try
                 {
-                    try
-                    {
                     BitmapImage image = new BitmapImage();
-                        image.BeginInit();
-                        image.CacheOption = BitmapCacheOption.OnLoad;
-                        image.UriSource = new Uri(Selectedfilelist);
-                        image.DecodePixelWidth = 250;
-                        image.DecodePixelHeight = 250;
-                        image.EndInit();
-                        ImageSource = image;
-                    }
-                    catch (Exception ex)
-                    {
-                        // Handle any exceptions that may occur during image loading.
-                       MessageBox.Show(ex.Message);
-                    }
+                    image.BeginInit();
+                    image.CacheOption = BitmapCacheOption.OnLoad;
+                    image.UriSource = new Uri(Selectedfilelist);
+                    image.DecodePixelWidth = 250;
+                    image.DecodePixelHeight = 250;
+                    image.EndInit();
+                    ImageSource = image;
                 }
-                else
+                catch (Exception ex)
                 {
-                    // Clear the image source if the file path is null or empty
-                    ImageSource = null;
+                    // Handle any exceptions that may occur during image loading.
+                    MessageBox.Show(ex.Message);
                 }
             }
-        
+            else
+            {
+                // Clear the image source if the file path is null or empty
+                ImageSource = null;
+            }
+        }
+
         public void LoadFileList()
         {
             if (filelist?.Count > 0)
@@ -314,7 +314,7 @@ namespace VMSales.ViewModels
 
         #endregion
 
-       #region SupplierConvertor
+        #region SupplierConvertor
 
         public string GetSupplierByProduct()
         {
@@ -323,16 +323,16 @@ namespace VMSales.ViewModels
                 // Load Supplier
                 DataBaseLayer.SupplierRepository SupplierRepo = new DataBaseLayer.SupplierRepository(dataBaseProvider);
                 if (SelectedItem.product_pk > 0)
-                selected_supplier_name = SupplierRepo.Selected_Supplier(SelectedItem.product_pk).Result.First().ToString();
+                    selected_supplier_name = SupplierRepo.Selected_Supplier(SelectedItem.product_pk).Result.First().ToString();
                 SupplierRepo.Commit();
                 SupplierRepo.Dispose();
-               // return selected_supplier_name;
+                // return selected_supplier_name;
             }
             catch (Exception e)
             {
                 MessageBox.Show("an expected error has occured." + e);
             }
-            return selected_supplier_name; 
+            return selected_supplier_name;
         }
 
         #endregion
@@ -357,7 +357,7 @@ namespace VMSales.ViewModels
                 {
                     LoadSelectedPurchaseOrder(get_product_purchase_order_detail_fk);
                 }
-              }
+            }
         }
 
         #endregion
@@ -476,7 +476,7 @@ namespace VMSales.ViewModels
             ProductRepo.Commit();
             ProductRepo.Dispose();
             SelectedItem = new ProductModel();
-           
+
             // Load product_category, product purchase order, product supplier
             foreach (var item in BindableCollectionProductModel)
             {
@@ -492,7 +492,7 @@ namespace VMSales.ViewModels
             RaisePropertyChanged("SelectedItem");
             RaisePropertyChanged("BindableCollectionProductModel");
         }
-       
+
         #endregion
 
         public void SaveCommand()
@@ -518,31 +518,31 @@ namespace VMSales.ViewModels
             }
             // first check for null values
             if (SelectedItem.category_name == null)
-                {
-                    MessageBox.Show("Please select a category name.");
-                    return;
-                }
-                if (SelectedItem.product_name == null)
-                {
-                    MessageBox.Show("Please enter a product name.");
-                    return;
-                }
+            {
+                MessageBox.Show("Please select a category name.");
+                return;
+            }
+            if (SelectedItem.product_name == null)
+            {
+                MessageBox.Show("Please enter a product name.");
+                return;
+            }
 
-                if (SelectedItem.sku == null)
-                {
-                    MessageBox.Show("Please enter a sku.");
-                    return;
-                }
-                if (selected_supplier_name == null)
-                {
+            if (SelectedItem.sku == null)
+            {
+                MessageBox.Show("Please enter a sku.");
+                return;
+            }
+            if (selected_supplier_name == null)
+            {
                 MessageBox.Show("Please select a supplier.");
                 return;
-                }
-                if (selected_lot_number == 0)
-                {
-                    MessageBox.Show("Please select a lot number.");
-                    return;
-                }
+            }
+            if (selected_lot_number == 0)
+            {
+                MessageBox.Show("Please select a lot number.");
+                return;
+            }
             DataBaseLayer.SupplierRepository SupplierRepo = new DataBaseLayer.SupplierRepository(dataBaseProvider);
             // convert supplier_name to fk
             SelectedItem.supplier_fk = SupplierRepo.Get_by_supplier_name(selected_supplier_name).Result;
@@ -559,8 +559,8 @@ namespace VMSales.ViewModels
             DataBaseLayer.ProductRepository ProductRepo = new DataBaseLayer.ProductRepository(dataBaseProvider);
 
             try
-            {      
-                 // Insert
+            {
+                // Insert
                 if (SelectedItem.product_pk == 0)
                 {
                     // Product
@@ -580,6 +580,7 @@ namespace VMSales.ViewModels
                         }
                         else
                         {
+                            MessageBox.Show("An error has occured at insert product purchase order.");
                             ProductRepo.Revert();
                             ProductRepo.Dispose();
                             throw new Exception();
@@ -587,6 +588,7 @@ namespace VMSales.ViewModels
                     }
                     else
                     {
+                        MessageBox.Show("An error has occured at insert product category.");
                         ProductRepo.Revert();
                         ProductRepo.Dispose();
                         throw new Exception();
@@ -594,26 +596,51 @@ namespace VMSales.ViewModels
                 }
 
                 // Update
-                //else
-                //{
+                else
+                {
                     // Product
-                    // Product Category
-                    // Product Supplier
-                    // product purchase order
-     
-                    //ProductRepo.Commit();
-                    //ProductRepo.Dispose();
-                //}
+                    bool Update_Product = ProductRepo.Update(SelectedItem).Result;
+                    if (Update_Product == true)
+                    {
+                        ProductRepo.Commit();
+                        ProductRepo.Dispose();
+
+                        // Product Category
+                        bool Update_Product_Category = ProductRepo.Update_Product_Category(SelectedItem).Result;
+                        if (Update_Product_Category == true)
+                        {
+                            ProductRepo.Commit();
+                            ProductRepo.Dispose();
+                        }
+                        else throw new Exception();
+                        // Product Supplier
+                        bool Update_Product_Supplier = ProductRepo.Update_Product_Supplier(SelectedItem).Result;
+                        if (Update_Product_Supplier == true)
+                        {
+                            ProductRepo.Commit();
+                            ProductRepo.Dispose();
+                        }
+                        else throw new Exception();
+                        // Product Purchase Order
+                        bool Update_Product_Purchase_Order = ProductRepo.Update_Product_Purchase_Order(SelectedItem).Result;
+                        if (Update_Product_Purchase_Order == true)
+                        {
+                            ProductRepo.Commit();
+                            ProductRepo.Dispose();
+                        }
+                        else throw new Exception();
+                    }
+                    else throw new Exception();
+                }
             }
-            catch (Exception e) 
+            catch (Exception e)
             {
                 MessageBox.Show("An error has occured." + e);
                 ProductRepo.Revert();
                 ProductRepo.Dispose();
-
             }
 
-            
+
 
             // category_pk and product_pk to use
 
@@ -671,8 +698,8 @@ namespace VMSales.ViewModels
 
         public void UploadImageCommand()
         {
-        
-        OpenFileDialog openFileDialog = new OpenFileDialog();
+
+            OpenFileDialog openFileDialog = new OpenFileDialog();
             openFileDialog.Filter = "Image Files (*.bmp, *.jpg, *.png)|*.bmp;*.jpg;*.png";
             if (openFileDialog.ShowDialog() == true)
             {
@@ -711,7 +738,7 @@ namespace VMSales.ViewModels
             {
                 selected_supplier_name_filter = null;
             }
-            
+
             if (selected_category_name_filter != null && selected_category_name_filter.category_name != null)
             {
                 selected_category_name_filter = null;
@@ -737,21 +764,21 @@ namespace VMSales.ViewModels
             }
 
             // Check for Purchase Order
-                     BindableCollectionPurchaseOrderModel = new BindableCollection<PurchaseOrderModel>();
-                     DataBaseLayer.PurchaseOrderRepository PurchaseOrderRepo = new DataBaseLayer.PurchaseOrderRepository(dataBaseProvider);
-                     BindableCollectionPurchaseOrderModel = DataConversion.ToBindableCollection(PurchaseOrderRepo.GetAll().Result.ToObservable());
-                     if (BindableCollectionPurchaseOrderModel.Count() == 0)
-                     {
-                          PurchaseOrderRepo.Revert();
-                          PurchaseOrderRepo.Dispose();
-                          MessageBox.Show("You must add purchase orders.");
-                          return;
-                     }
-                      else
-                      {
-                          PurchaseOrderRepo.Commit();
-                          PurchaseOrderRepo.Dispose();
-                      }
+            BindableCollectionPurchaseOrderModel = new BindableCollection<PurchaseOrderModel>();
+            DataBaseLayer.PurchaseOrderRepository PurchaseOrderRepo = new DataBaseLayer.PurchaseOrderRepository(dataBaseProvider);
+            BindableCollectionPurchaseOrderModel = DataConversion.ToBindableCollection(PurchaseOrderRepo.GetAll().Result.ToObservable());
+            if (BindableCollectionPurchaseOrderModel.Count() == 0)
+            {
+                PurchaseOrderRepo.Revert();
+                PurchaseOrderRepo.Dispose();
+                MessageBox.Show("You must add purchase orders.");
+                return;
+            }
+            else
+            {
+                PurchaseOrderRepo.Commit();
+                PurchaseOrderRepo.Dispose();
+            }
 
             // Load Products
             DataBaseLayer.ProductRepository ProductRepo = new DataBaseLayer.ProductRepository(dataBaseProvider);
@@ -799,7 +826,7 @@ namespace VMSales.ViewModels
             catch (Exception ext)
             {
                 MessageBox.Show(ext.ToString());
-            }  
+            }
         }
 
         public ProductViewModel()

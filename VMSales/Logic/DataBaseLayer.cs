@@ -3,13 +3,9 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using VMSales.Models;
-// Example implementation of the rRepository
-
-// Our model.
 
 namespace VMSales.Logic
 {
@@ -48,42 +44,26 @@ namespace VMSales.Logic
                 return await Connection.QuerySingleAsync<int>("SELECT category_pk FROM category WHERE category_name = @category_name", new { category_name }, Transaction);
             }
 
-            // keep for now, may not be needed.
             public async Task<CategoryModel> Get_by_category_pk(int category_pk)
             {
                 return await Connection.QuerySingleAsync<CategoryModel>("SELECT category_name FROM category WHERE category_pk = @category_pk", new { category_pk }, Transaction);
             }
 
-
             public async Task<IEnumerable<CategoryModel>> Get_all_category_name()
             {
                 return await Connection.QueryAsync<CategoryModel>("SELECT category_name FROM category ORDER BY category_name", null, Transaction);
             }
-            // keep for now, may not be needed.
 
             public async Task<IEnumerable<CategoryModel>> Get_Product_Category()
             {
                 return await Connection.QueryAsync<CategoryModel>(
-                /*                  "SELECT DISTINCT category_pk, category_name, (category_pk - 1) as selected_category  FROM category as c, product_category as pc " +
-                                  "INNER JOIN product_category on pc.category_fk = c.category_pk " +
-                                  "WHERE pc.product_fk = @product_pk " +
-                                  "UNION " +
-                                  "SELECT DISTINCT category_pk, category_name, null  FROM category as c, product_category as pc " +
-                                  "INNER JOIN product_category on pc.category_fk != c.category_pk"
-                                   , product_pk }, Transaction);
-                */
                 "SELECT DISTINCT category_pk, category_name, (category_pk - 1) as selected_category  " +
                 "FROM category as c, product_category as pc " +
                 "INNER JOIN product_category on pc.category_fk = c.category_pk UNION " +
                 "SELECT category_pk, category_name, null  FROM category as c"
                 , null, Transaction);
 
-
-
             }
-
-            // end
-
 
             public override async Task<CategoryModel> Get(int id)
             {
@@ -150,7 +130,6 @@ namespace VMSales.Logic
                 , new { product_pk }, Transaction);
             }
 
-
             public override async Task<int> Insert(SupplierModel entity)
             {
                 int newId = await Connection.QuerySingleAsync<int>("INSERT INTO supplier (supplier_name, address, city, zip, state, country, phone, email) VALUES (@supplier_name, @address, @city, @zip, @state, @country, @phone, @email); SELECT last_insert_rowid()", new
@@ -182,7 +161,6 @@ namespace VMSales.Logic
 
             public override async Task<bool> Update(SupplierModel entity)
             {
-                // Could check for unset id, and throw exception. // fix
                 return (await Connection.ExecuteAsync("UPDATE supplier SET supplier_name = @supplier_name, address = @address, city = @city, zip = @zip, state = @state, country = @country, phone = @phone, email = @email WHERE supplier_pk = @id", new
                 {
                     id = entity.supplier_pk,
@@ -200,7 +178,6 @@ namespace VMSales.Logic
 
             public override async Task<bool> Delete(SupplierModel entity)
             {
-                // Could check for unset id, and throw exception.
                 return (await Connection.ExecuteAsync("DELETE FROM supplier WHERE supplier_pk = @id", new { id = entity.supplier_pk }, Transaction)) == 1;
             }
             public override Task<IEnumerable<SupplierModel>> GetAllWithID(int id)
@@ -227,7 +204,6 @@ namespace VMSales.Logic
                         /// <summary>
                         /// scenerio 1
                         /// same invoice number, INSERT purchase_order_detail using existing po_fk
-
                         // get purchase_order_fk
 
                         int db_purchase_order_fk = await Connection.QuerySingleOrDefaultAsync<int>("SELECT purchase_order_pk FROM purchase_order WHERE invoice_number = @invoice_number", new { entity.invoice_number }, Transaction);
@@ -308,8 +284,6 @@ namespace VMSales.Logic
                 return await Connection.QuerySingleAsync<PurchaseOrderModel>("SELECT purchase_order_detail_pk FROM purchase_order_detail as pod INNER JOIN purchase_order on purchase_order.purchase_order_pk = pod.purchase_order_fk WHERE supplier_fk = @id;", new { id }, Transaction);
             }
 
-
-
             public async Task<bool> Get_purchase_order_detail_pk(PurchaseOrderModel entity)
             {
                 return await Connection.QuerySingleAsync<bool>("SELECT purchase_order_detail_pk FROM purchase_order_detail WHERE purchase_order_detail_pk = @id;", new
@@ -318,42 +292,12 @@ namespace VMSales.Logic
                 }, null);
             }
 
-            //             }, null)) == 1;
-
-
-
             //get last insert
             public async Task<int> Get_last_insert()
             {
                 var result = await Connection.QuerySingleAsync<int>("SELECT MAX(purchase_order_detail_pk) FROM purchase_order_detail;", Transaction);
                 return result;
             }
-            // get totals for purchase_order 
-
-            /*
-            public async Task<IEnumerable<PurchaseOrderModel>> GetAllTotal(int supplier_fk)
-            {
-                if (supplier_fk == 0)
-                return await Connection.QueryAsync<PurchaseOrderModel>("SELECT " +
-                    "SUM(pod.sales_tax) AS total_sales_tax, " +
-                    "SUM(pod.shipping_cost) AS total_shipping, " +
-                    "SUM(pod.lot_cost) AS total_lot, " +
-                    "SUM(pod.sales_tax + pod.shipping_cost + pod.lot_cost) AS total_cost " +
-                    "FROM purchase_order AS po " +
-                    "INNER JOIN purchase_order_detail AS pod ON po.purchase_order_pk = pod.purchase_order_fk " +
-                    "INNER JOIN supplier AS sup ON sup.supplier_pk = po.supplier_fk ", null, Transaction);
-                else
-                    return await Connection.QueryAsync<PurchaseOrderModel>("SELECT " +
-                    "SUM(pod.sales_tax) AS total_sales_tax, " +
-                    "SUM(pod.shipping_cost) AS total_shipping, " +
-                    "SUM(pod.lot_cost) AS total_lot, " +
-                    "SUM(pod.sales_tax + pod.shipping_cost + pod.lot_cost) AS total_cost " +
-                    "FROM purchase_order AS po " +
-                    "INNER JOIN purchase_order_detail AS pod ON po.purchase_order_pk = pod.purchase_order_fk " +
-                    "INNER JOIN supplier AS sup ON sup.supplier_pk = po.supplier_fk " +
-                    "AND supplier_fk=@supplier_fk", supplier_fk, Transaction);
-            }
-    */
 
             public async Task<IEnumerable<PurchaseOrderModel>> GetAllTotal(int supplier_fk)
             {
@@ -375,8 +319,6 @@ namespace VMSales.Logic
 
                 return await Connection.QueryAsync<PurchaseOrderModel>(query, parameters, Transaction);
             }
-
-
 
             // get all purchase_order and purchase_order_detail
             public override async Task<IEnumerable<PurchaseOrderModel>> GetAll()
@@ -405,8 +347,6 @@ namespace VMSales.Logic
                     "INNER JOIN supplier AS sup ON sup.supplier_pk = po.supplier_fk " +
                     "AND po.supplier_fk=#id", new { id }, Transaction);
             }
-
-
 
             // get all purchase_order and purchase_order_detail
             public override async Task<IEnumerable<PurchaseOrderModel>> GetAllWithID(int id)
@@ -461,7 +401,7 @@ namespace VMSales.Logic
                 if (result)
                 {
 
-                    // getting fk constraint fialed here, why.
+                    // getting fk constraint failed here, why.
                     bool updaterow = (await Connection.ExecuteAsync("UPDATE purchase_order SET " +
                         "purchase_order_pk = @id, " +
                         "supplier_fk = @supplier_fk, " +
@@ -513,24 +453,7 @@ namespace VMSales.Logic
             // generate product command
             public async Task<IEnumerable<int>> Eligible_Products()
             {
-
-                /*             string sql = "SELECT purchase_order_detail_pk " +
-                             "FROM purchase_order_detail as pod " +
-                             "LEFT JOIN product_purchase_order as ppo " +
-                             "on pod.purchase_order_detail_pk != ppo.product_purchase_order_detail_fk " +
-                             "WHERE pod.quantity_check = 0 " +
-                             "AND pod.lot_quantity > '0' " +
-                             "AND iif(exists(SELECT * FROM product_purchase_order), 1, 0) = 0 " +
-                             "UNION SELECT purchase_order_detail_pk FROM purchase_order_detail as pod " +
-                             "INNER JOIN product_purchase_order as ppo on pod.purchase_order_detail_pk " +
-                             "!= ppo.product_purchase_order_detail_fk " +
-                             "WHERE pod.quantity_check = 0 " +
-                             "AND pod.lot_quantity > '0' " +
-                             "AND iif(exists(SELECT * FROM product_purchase_order), 1, 0) = 0 " +
-                             "ORDER BY purchase_order_detail_pk";
-                */
-
-                string sql = "SELECT purchase_order_detail_pk FROM purchase_order_detail as pod " +
+                 string sql = "SELECT purchase_order_detail_pk FROM purchase_order_detail as pod " +
                               "WHERE purchase_order_detail_pk NOT IN (SELECT product_purchase_order_detail_fk " +
                               "FROM product_purchase_order) " +
                               "AND pod.lot_quantity > '0' " +
@@ -541,10 +464,7 @@ namespace VMSales.Logic
                 var result = await Connection.QueryAsync<int>(sql, Transaction);
                 return result;
             }
-
-
         }
-
 
         #endregion
         #region Product
@@ -728,30 +648,18 @@ namespace VMSales.Logic
                     new { supplier_fk, purchase_order_detail_pk }, Transaction);
             }
 
-
             public override async Task<bool> Update(ProductModel entity)
             {
-                bool updaterow = (await Connection.ExecuteAsync("UPDATE product_category SET " +
-                    "purchase_category_pk = @id, " +
-                    "product_fk = @product_fk, " +
-                    "category_fk = @category_fk, " +
-                    "WHERE purchase_category_pk = @id", new
-                    {
-                        id = entity.product_category_pk,
-                        product_fk = entity.product_fk,
-                        category_fk = entity.category_fk
-                    }, null)) == 1;
-
-                  return (await Connection.ExecuteAsync("UPDATE product SET " +
-                        "brand_name = @purchase_order_fk, " +
-                        "product_name = @lot_cost, " +
-                        "description = @lot_quantity, " +
-                        "quantity = @lot_number, " +
-                        "cost = @lot_name, " +
-                        "sku = @lot_description, " +
+                bool update_product = (await Connection.ExecuteAsync("UPDATE product SET " +
+                        "brand_name = @brand_name, " +
+                        "product_name = @product_name, " +
+                        "description = @description, " +
+                        "quantity = @quantity, " +
+                        "cost = @cost, " +
+                        "sku = @sku, " +
                         "listed_price = @listed_price, " +
                         "instock = @instock, " +
-                        "condition = @sales_tax, " +
+                        "condition = @condition, " +
                         "listing_url = @listing_url, " +
                         "listing_number = @listing_number, " +
                         "listing_date = @listing_date " +
@@ -771,11 +679,60 @@ namespace VMSales.Logic
                             listing_number = entity.listing_number,
                             listing_date = entity.listing_date
                         }, Transaction)) == 1;
+                return update_product;
             }
 
+            public async Task<bool> Update_Product_Category(ProductModel entity)
+            {
+                bool update_product_category = (await Connection.ExecuteAsync("UPDATE product_category SET " +
+                "product_fk = @product_fk, " +
+                "category_fk = @category_fk, " +
+                "WHERE product_fk = @id", new
+                {
+                    id = entity.product_pk,
+                    product_fk = entity.product_pk,
+                    category_fk = entity.category_fk
+                }, null)) == 1;
+                return update_product_category;
+            }
+
+            public async Task<bool> Update_Product_Supplier(ProductModel entity)
+            {
+                bool update_product_supplier = (await Connection.ExecuteAsync("UPDATE product_supplier SET " +
+                "product_fk = @product_fk, " +
+                "supplier_fk = @supplier_fk, " +
+                "WHERE product_fk = @id", new
+                {
+                    id = entity.product_pk,
+                    product_fk = entity.product_pk,
+                    supplier_fk = entity.supplier_fk
+                }, null)) == 1;
+                return update_product_supplier;
+            }
+
+            public async Task<bool> Update_Product_Purchase_Order(ProductModel entity)
+            {
+                bool update_product_purchase_order = (await Connection.ExecuteAsync("UPDATE product_purchase_order SET " +
+                "product_purchase_order_detail_fk = @product_purchase_order_detail_fk, " +
+                "product_fk = @product_fk, " +
+                "WHERE product_fk = @id", new
+                {
+                    id = entity.product_pk,
+                    product_fk = entity.product_pk,
+                    product_purchase_order_fk = entity.purchase_order_detail_fk
+
+                }, null)) == 1;
+                return update_product_purchase_order;
+            }
+
+
+
+
+
+
+            //FIX -- Not fully implemented
             public override async Task<bool> Delete(ProductModel entity)
             {
-                // fix
                 bool deleterow = (await Connection.ExecuteAsync("...DELETE FROM purchase_order_detail WHERE purchase_order_fk = @id", new { id = entity.product_fk }, null)) == 1;
                 return (await Connection.ExecuteAsync("...DELETE FROM purchase_order WHERE purchase_order_pk = @id", new { id = entity.product_fk }, Transaction)) == 1;
             }
@@ -878,8 +835,6 @@ namespace VMSales.Logic
             }, Transaction));
                 return pphoto_pk;
             }
-
-
 
 
             // update
