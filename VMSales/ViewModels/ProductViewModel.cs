@@ -682,6 +682,55 @@ namespace VMSales.ViewModels
         }
         public void DeleteCommand()
         {
+            var selectedRows = BindableCollectionProductModel.Where(i => i.IsSelected);
+
+            foreach (var item in selectedRows)
+            {
+                SelectedItem.product_pk = item.product_pk;
+                SelectedItem.brand_name = item.brand_name;
+                SelectedItem.product_name = item.product_name;
+                SelectedItem.category_name = item.category_name;
+                SelectedItem.description = item.description;
+                SelectedItem.quantity = item.quantity;
+                SelectedItem.cost = item.cost;
+                SelectedItem.sku = item.sku;
+                SelectedItem.listed_price = item.listed_price;
+                SelectedItem.instock = item.instock;
+                SelectedItem.condition = item.condition;
+                SelectedItem.listing_url = item.listing_url;
+                SelectedItem.listing_number = item.listing_number;
+                SelectedItem.listing_date = item.listing_date;
+            }
+            // are we deleting an unsaved row?
+            if (SelectedItem.product_pk == 0)
+            {
+                BindableCollectionProductModel.Remove(SelectedItem);
+            }
+            else 
+            {
+                // warn user
+                bool Result = MessageBox.Show("Are you sure you want to delete " + SelectedItem.product_name + "\nThis change cannot be undone.", "Confirmation", MessageBoxButton.YesNo) == MessageBoxResult.Yes;
+
+                if (Result == true)
+                {
+
+                    // if product is in customer order we cannot delete.
+                    // this product is in customer order so and so, delete that first.
+                    // check if in customer_order_detail
+
+                    // tables to delete
+                    // product
+                    // product_photo
+                    // photo
+                    // product_purchase_order
+                    // product_category
+                    // product supplier
+
+
+                    // delete item
+                    //MessageBox.Show("1 Row Deleted");
+                }
+            }
         }
         public void ResetCommand()
         {
