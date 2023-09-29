@@ -207,7 +207,7 @@ namespace VMSales.Logic
                         // get purchase_order_fk
 
                         int db_purchase_order_fk = await Connection.QuerySingleOrDefaultAsync<int>("SELECT purchase_order_pk FROM purchase_order WHERE invoice_number = @invoice_number", new { entity.invoice_number }, Transaction);
-                 
+
                         bool rowsAffected = (await Connection.ExecuteAsync("INSERT INTO purchase_order_detail " +
                         "(purchase_order_fk, lot_cost, lot_quantity, lot_number, lot_name, lot_description, sales_tax, shipping_cost, quantity_check) " +
                         "VALUES (@db_purchase_order_fk, @lot_cost, @lot_quantity, @lot_number, @lot_name, @lot_description, @sales_tax, @shipping_cost, @quantity_check);  SELECT last_insert_rowid()",
@@ -323,7 +323,7 @@ namespace VMSales.Logic
             // get all purchase_order and purchase_order_detail
             public override async Task<IEnumerable<PurchaseOrderModel>> GetAll()
             {
-                
+
                 return await Connection.QueryAsync<PurchaseOrderModel>("SELECT " +
                     "distinct po.purchase_order_pk, po.purchase_date, po.invoice_number, pod.purchase_order_detail_pk, " +
                     "pod.purchase_order_fk, pod.lot_number, pod.lot_cost, pod.lot_quantity," +
@@ -331,7 +331,7 @@ namespace VMSales.Logic
                     "FROM purchase_order as po, purchase_order_detail as pod, supplier as sup " +
                     "INNER JOIN purchase_order_detail on po.purchase_order_pk = pod.purchase_order_fk " +
                     "INNER JOIN supplier on sup.supplier_pk = po.supplier_fk;", null, Transaction);
-                
+
             }
 
 
@@ -351,7 +351,7 @@ namespace VMSales.Logic
             // get all purchase_order and purchase_order_detail
             public override async Task<IEnumerable<PurchaseOrderModel>> GetAllWithID(int id)
             {
-                
+
                 return await Connection.QueryAsync<PurchaseOrderModel>("SELECT " +
                     "distinct po.purchase_order_pk, po.purchase_date, po.invoice_number, " +
                     "pod.purchase_order_detail_pk, pod.purchase_order_fk, pod.lot_number, pod.lot_cost, pod.lot_quantity," +
@@ -376,7 +376,7 @@ namespace VMSales.Logic
 
 
             // get specific product order detail
-             public async Task<int>Get_PurchaseOrderDetail_by_pk(int purchase_order_detail_pk)
+            public async Task<int> Get_PurchaseOrderDetail_by_pk(int purchase_order_detail_pk)
             {
                 return await Connection.QuerySingleAsync<int>("SELECT DISTINCT " +
                     "pod.purchase_order_detail_pk, pod.lot_number, pod.lot_cost, pod.lot_quantity, " +
@@ -453,12 +453,12 @@ namespace VMSales.Logic
             // generate product command
             public async Task<IEnumerable<int>> Eligible_Products()
             {
-                 string sql = "SELECT purchase_order_detail_pk FROM purchase_order_detail as pod " +
-                              "WHERE purchase_order_detail_pk NOT IN (SELECT product_purchase_order_detail_fk " +
-                              "FROM product_purchase_order) " +
-                              "AND pod.lot_quantity > '0' " +
-                              "AND pod.quantity_check = 0 " +
-                              "ORDER BY purchase_order_detail_pk";
+                string sql = "SELECT purchase_order_detail_pk FROM purchase_order_detail as pod " +
+                             "WHERE purchase_order_detail_pk NOT IN (SELECT product_purchase_order_detail_fk " +
+                             "FROM product_purchase_order) " +
+                             "AND pod.lot_quantity > '0' " +
+                             "AND pod.quantity_check = 0 " +
+                             "ORDER BY purchase_order_detail_pk";
 
 
                 var result = await Connection.QueryAsync<int>(sql, Transaction);
@@ -531,7 +531,7 @@ namespace VMSales.Logic
                 if (insert_product_purchase_order == true)
                 {
                     // insert into product_supplier
-                bool insert_product_supplier = (await Connection.QueryFirstOrDefaultAsync<int>("INSERT INTO product_supplier (supplier_fk, product_fk) VALUES (@supplier_fk, @product_fk); SELECT last_insert_rowid()", new
+                    bool insert_product_supplier = (await Connection.QueryFirstOrDefaultAsync<int>("INSERT INTO product_supplier (supplier_fk, product_fk) VALUES (@supplier_fk, @product_fk); SELECT last_insert_rowid()", new
                     {
                         supplier_fk = entity.supplier_fk,
                         product_fk = entity.product_pk,
@@ -725,13 +725,50 @@ namespace VMSales.Logic
                 return update_product_purchase_order;
             }
 
+            public async Task<string> Check_Product_Customer(ProductModel entity)
+            {
+                    string orderNumber = await Connection.QuerySingleOrDefaultAsync<string>(
+                    "SELECT order_number FROM customer_order " +
+                    "INNER JOIN customer_order_detail on customer_order.customer_order_pk = customer_order_fk " +
+                    "WHERE customer_order_detail.product_fk = @product_fk",
+                    new { product_fk = entity.product_pk });
+                    return orderNumber;
+            }
 
             //FIX -- Not fully implemented
             public override async Task<bool> Delete(ProductModel entity)
+            
             {
                 bool deleterow = (await Connection.ExecuteAsync("...DELETE FROM purchase_order_detail WHERE purchase_order_fk = @id", new { id = entity.product_fk }, null)) == 1;
                 return (await Connection.ExecuteAsync("...DELETE FROM purchase_order WHERE purchase_order_pk = @id", new { id = entity.product_fk }, Transaction)) == 1;
             }
+
+            public async Task<bool> Delete_Product_Category(ProductModel entity)
+            {
+                //bool deleterow = (await Connection.ExecuteAsync("...DELETE FROM purchase_order_detail WHERE purchase_order_fk = @id", new { id = entity.product_fk }, null)) == 1;
+                //return (await Connection.ExecuteAsync("...DELETE FROM purchase_order WHERE purchase_order_pk = @id", new { id = entity.product_fk }, Transaction)) == 1;
+                return false;
+            }
+
+            public async Task<bool> Delete_Product_Supplier(ProductModel entity)
+            {
+                //bool deleterow = (await Connection.ExecuteAsync("...DELETE FROM purchase_order_detail WHERE purchase_order_fk = @id", new { id = entity.product_fk }, null)) == 1;
+                //return (await Connection.ExecuteAsync("...DELETE FROM purchase_order WHERE purchase_order_pk = @id", new { id = entity.product_fk }, Transaction)) == 1;
+                return false;
+            }
+
+            public async Task<bool> Delete_Product_Purchase_Order(ProductModel entity)
+            {
+                //bool deleterow = (await Connection.ExecuteAsync("...DELETE FROM purchase_order_detail WHERE purchase_order_fk = @id", new { id = entity.product_fk }, null)) == 1;
+                //return (await Connection.ExecuteAsync("...DELETE FROM purchase_order WHERE purchase_order_pk = @id", new { id = entity.product_fk }, Transaction)) == 1;
+                return false;
+            }
+
+
+
+
+
+
 
             public override Task<IEnumerable<ProductModel>> GetAllWithID(int id)
             {
@@ -741,13 +778,13 @@ namespace VMSales.Logic
         }
         #endregion
 
-      
+
         #region Photo includes Product_Photo
         public class PhotoRepository : Repository<PhotoModel>
         {
             // in development, need Delete
             public PhotoRepository(IDatabaseProvider dbProvider) : base(dbProvider) { }
-       
+
             public async Task<string> GetPhotoPath(string product_photo_path)
             {
                 return await Connection.QuerySingleOrDefaultAsync<string>(
@@ -774,37 +811,37 @@ namespace VMSales.Logic
 
             public async Task<IEnumerable<int>> GetImagePos(int product_fk)
             {
-            return await Connection.QueryAsync<int>(
-            "SELECT COALESCE(MIN(photo_order_number), 1) AS photo_order_number " +
-            "FROM " +
-            "(SELECT photo_order_number " +
-            "FROM photo " +
-            "LEFT JOIN product_photo ON photo.photo_pk = product_photo.photo_fk " +
-            "WHERE product_fk = @product_fk) " +  
-            "UNION " +
-            "SELECT photo_order_number " +
-            "FROM photo " +
-            "LEFT JOIN product_photo ON photo.photo_pk = product_photo.photo_fk " +
-            "WHERE product_fk = @product_fk"
-            , new { product_fk }, Transaction);
+                return await Connection.QueryAsync<int>(
+                "SELECT COALESCE(MIN(photo_order_number), 1) AS photo_order_number " +
+                "FROM " +
+                "(SELECT photo_order_number " +
+                "FROM photo " +
+                "LEFT JOIN product_photo ON photo.photo_pk = product_photo.photo_fk " +
+                "WHERE product_fk = @product_fk) " +
+                "UNION " +
+                "SELECT photo_order_number " +
+                "FROM photo " +
+                "LEFT JOIN product_photo ON photo.photo_pk = product_photo.photo_fk " +
+                "WHERE product_fk = @product_fk"
+                , new { product_fk }, Transaction);
             }
 
             public async Task<IEnumerable<int>> GetNextPos(int product_fk)
             {
-            return await Connection.QueryAsync<int>(
-            "SELECT COALESCE(MAX(photo_order_number), 0) + 1 AS photo_order_number " +
-            "FROM (" +
-            "SELECT photo_order_number " +
-            "FROM photo " +
-            "LEFT JOIN product_photo ON photo.photo_pk = product_photo.photo_fk " +
-            "WHERE product_fk = @product_fk " +
-            "UNION " +
-            "SELECT MAX(photo_order_number) " +
-            "FROM photo " +
-            "LEFT JOIN product_photo ON photo.photo_pk = product_photo.photo_fk " +
-            "WHERE product_fk = @product_fk) " +
-            "AS subquery WHERE PHOTO_ORDER_NUMBER IS NOT NULL"
-            , new { product_fk }, Transaction);
+                return await Connection.QueryAsync<int>(
+                "SELECT COALESCE(MAX(photo_order_number), 0) + 1 AS photo_order_number " +
+                "FROM (" +
+                "SELECT photo_order_number " +
+                "FROM photo " +
+                "LEFT JOIN product_photo ON photo.photo_pk = product_photo.photo_fk " +
+                "WHERE product_fk = @product_fk " +
+                "UNION " +
+                "SELECT MAX(photo_order_number) " +
+                "FROM photo " +
+                "LEFT JOIN product_photo ON photo.photo_pk = product_photo.photo_fk " +
+                "WHERE product_fk = @product_fk) " +
+                "AS subquery WHERE PHOTO_ORDER_NUMBER IS NOT NULL"
+                , new { product_fk }, Transaction);
             }
             // insert
             //public async Task<int> Insert(int product_fk,int photo_order_number, string photofilePath)
@@ -817,7 +854,7 @@ namespace VMSales.Logic
                 photo_order_num = entity.photo_order_number,
                 photo_path = entity.photo_path
             }, Transaction));
-            return photo_pk;
+                return photo_pk;
             }
 
             public async Task<int> InsertProductPhoto(PhotoModel entity)
@@ -847,7 +884,7 @@ namespace VMSales.Logic
             public override async Task<bool> Delete(PhotoModel entity)
             {
                 bool deleterow = (await Connection.ExecuteAsync(
-                "DELETE FROM photo WHERE photo_pk = @id", 
+                "DELETE FROM photo WHERE photo_pk = @id",
                 new { id = entity.photo_pk }, null)) == 1;
                 return deleterow;
             }

@@ -714,21 +714,50 @@ namespace VMSales.ViewModels
                 if (Result == true)
                 {
 
+
+                    DataBaseLayer.ProductRepository ProductRepo = new DataBaseLayer.ProductRepository(dataBaseProvider);
+
+                    // convert category_name to fk
+                    string order_number = ProductRepo.Check_Product_Customer(SelectedItem).Result;
+                    ProductRepo.Commit();
                     // if product is in customer order we cannot delete.
-                    // this product is in customer order so and so, delete that first.
-                    // check if in customer_order_detail
+                    if (order_number != null)
+                    {
+                        ProductRepo.Dispose();
+                        MessageBox.Show("This product is sold and associated with order number " + order_number + " Please delete customer order number first");
+                        return;
+                    }
+                    else
+                    {
+                        // ok to delete
 
-                    // tables to delete
-                    // product
-                    // product_photo
-                    // photo
-                    // product_purchase_order
-                    // product_category
-                    // product supplier
+                        // Photo and Product Photo
 
+                        bool Delete_Product = ProductRepo.Delete(SelectedItem).Result;
+                        if (Delete_Product == true)
+                        {
+                            // Product Category
+                            
+                            bool Delete_Product_Category = ProductRepo.Delete_Product_Category(SelectedItem).Result;
+                            if (Delete_Product_Category == true)
+                            {
+                                // Product Supplier 
+                                bool Delete_Product_Supplier = ProductRepo.Delete_Product_Supplier(SelectedItem).Result;
+                                if (Delete_Product_Supplier == true)
+                                {
+                                    // Product Purchase Order
 
-                    // delete item
-                    //MessageBox.Show("1 Row Deleted");
+                                    bool Delete_Product_Purchase_Order = ProductRepo.Delete_Product_Purchase_Order(SelectedItem).Result;
+                                    if (Delete_Product_Purchase_Order == true)
+                                    {
+                                        ProductRepo.Commit();
+                                        ProductRepo.Dispose();
+                                        MessageBox.Show("1 Row Deleted");
+                                    }
+                                }
+                            }
+                        }
+                    }
                 }
             }
         }
