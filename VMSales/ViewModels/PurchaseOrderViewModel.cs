@@ -13,7 +13,9 @@ namespace VMSales.ViewModels
 {
     public class PurchaseOrderViewModel : BaseViewModel
     {
-        private int _cmbSupplier { get; set; }
+
+        // is this needed???
+    /*    private int _cmbSupplier { get; set; }
         public int cmbSupplier
         {
             get { return _cmbSupplier; }
@@ -23,9 +25,11 @@ namespace VMSales.ViewModels
                     return;
                 _cmbSupplier = value;
                 RaisePropertyChanged("cmbSupplier");
+         
+
             }
         }
-
+    */
         private ObservableCollection<PurchaseOrderModel> POM = new ObservableCollection<PurchaseOrderModel>();
         private List<int> purchase_order_products;
         private string invoicetemp;
@@ -287,6 +291,12 @@ namespace VMSales.ViewModels
                 RaisePropertyChanged("supplier_fk");
                 LoadPurchaseOrder(supplier_fk);
                 CanRemoveSupplierFilter = !CanRemoveSupplierFilter;
+                // Remove filters for purchase date and invoice
+                RemoveInvoiceNumberFilterCommand();
+                RemovePurchaseDateFilterCommand();
+                // ReLoad
+                LoadFilterLists(ObservableCollectionPurchaseOrderModel);
+
             }
         }
 
@@ -296,16 +306,15 @@ namespace VMSales.ViewModels
         IDatabaseProvider dataBaseProvider;
 
         #region ButtonCommands
+        // remove Supplier Filter
         public void RemoveSupplier()
         {
-            cmbSupplier = -1;
             supplier_fk = 0;
             RaisePropertyChanged("supplier_fk");
             LoadPurchaseOrder(0);
             CanRemoveSupplierFilter = false;
         }
-
-
+    
 
         public void AddCommand()
         {
@@ -542,7 +551,8 @@ namespace VMSales.ViewModels
                     if (insertPurchase_Order.Result > 0)
                     {
                         var purchase_order_detail_pk_result = SavePurchaseOrderRepo.Get_last_insert();
-                        SelectedItem.purchase_order_detail_pk = purchase_order_detail_pk_result.Result;
+                        // perhaps this is the failure.
+                        //SelectedItem.purchase_order_detail_pk = purchase_order_detail_pk_result.Result;
                         SavePurchaseOrderRepo.Commit();
                         SavePurchaseOrderRepo.Dispose();
                         MessageBox.Show("1 Row Inserted, POD_PK " + SelectedItem.purchase_order_detail_pk.ToString());
@@ -708,37 +718,22 @@ namespace VMSales.ViewModels
             PurchaseOrderRepo.Commit();
             PurchaseOrderRepo.Dispose();
 
-
-
-
-            /*
-            foreach (var item in ObservableCollectionPurchaseOrderModel)
-            {
-                SelectedItem = item;
-
-                if (item.invoice_number != null || item.purchase_date != null)
-                    if (!InvoiceNumberList.Contains(item.invoice_number))
-                        InvoiceNumberList.Add(item.invoice_number);
-                if (!PurchaseDateList.Contains(item.purchase_date))
-                    PurchaseDateList.Add(item.purchase_date);
-            }
-
-            if (InvoiceNumberList.Count > 0 || PurchaseDateList.Count > 0)
-            {
-                FilterInvoiceNumber = new ObservableCollection<string>(InvoiceNumberList.Cast<String>());
-                FilterPurchaseDate = new ObservableCollection<DateTime>(PurchaseDateList.Cast<DateTime>());
-            }
-            */
         }
 
         public void LoadFilterLists(ObservableCollection<PurchaseOrderModel> ObservableCollectionPurchaseOrderModel)
         {
+            // first clear
             if (FilterInvoiceNumber != null || FilterPurchaseDate != null)
             {
+                cvs.Filter -= new FilterEventHandler(FilterByInvoiceNumber);
+                cvs.Filter -= new FilterEventHandler(FilterByPurchaseDate);
+
                 FilterInvoiceNumber.Clear();
                 FilterPurchaseDate.Clear();
             }
 
+
+            //then load
 
             foreach (var item in ObservableCollectionPurchaseOrderModel)
             {
@@ -770,6 +765,8 @@ namespace VMSales.ViewModels
         public void initial_load()
         {
             //Initial Page Load
+
+            
             InvoiceNumberList = new List<string>();
             PurchaseDateList = new List<DateTime>();
 
@@ -822,7 +819,10 @@ namespace VMSales.ViewModels
         #region pageload
         public PurchaseOrderViewModel()
         {
-            initial_load();
+
+        PurchaseOrderModel.productinventoried = false;
+
+        initial_load();
         }
 
     }

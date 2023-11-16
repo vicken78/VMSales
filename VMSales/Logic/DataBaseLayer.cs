@@ -247,6 +247,11 @@ namespace VMSales.Logic
                         entity.purchase_order_fk = newId;
                         // now for purchase_order_detail
 
+                        // erroring below cannot convert int to object?
+
+                       
+                        // cannot convert object to int
+
                         int purchase_order_detail_pk = await Connection.QueryFirstOrDefaultAsync("INSERT INTO purchase_order_detail " +
                           "(purchase_order_fk, lot_cost, lot_quantity, lot_number, lot_name, lot_description, sales_tax, shipping_cost, quantity_check) " +
                             "VALUES (@purchase_order_fk, @lot_cost, @lot_quantity, @lot_number, @lot_name, @lot_description, @sales_tax, @shipping_cost, @quantity_check); SELECT last_insert_rowid()",

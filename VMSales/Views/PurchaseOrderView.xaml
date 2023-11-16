@@ -6,7 +6,7 @@
              xmlns:cal="http://caliburnmicro.com"
              mc:Ignorable="d" 
              Height="800" Width="1400" VerticalAlignment="Top" MinHeight="400" MinWidth="800">
-   
+
     <DockPanel LastChildFill="True">
         <Grid Margin="10" DockPanel.Dock="Top" Background="Azure">
             <Grid.RowDefinitions>
@@ -40,8 +40,8 @@
             <!-- Supplier Combo static -->
             <Label Grid.Row="2" Grid.Column="0">Supplier</Label>
 
-           <!-- <ComboBox x:Name="cmbSupplier" ItemsSource="{Binding Path=ObservableCollectionSupplierModel}" DisplayMemberPath="supplier_name" SelectedValue="{Binding supplier_fk, Mode=TwoWay}" SelectedIndex="{Binding cmbSupplier, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" SelectedValuePath="supplier_pk" Grid.Row="2" Grid.Column="1"/>-->
-          <ComboBox x:Name="cmbSupplier" ItemsSource="{Binding Path=ObservableCollectionSupplierModel}" 
+            <!-- <ComboBox x:Name="cmbSupplier" ItemsSource="{Binding Path=ObservableCollectionSupplierModel}" DisplayMemberPath="supplier_name" SelectedValue="{Binding supplier_fk, Mode=TwoWay}" SelectedIndex="{Binding cmbSupplier, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" SelectedValuePath="supplier_pk" Grid.Row="2" Grid.Column="1"/>-->
+            <ComboBox x:Name="cmbSupplier" ItemsSource="{Binding Path=ObservableCollectionSupplierModel}" 
           DisplayMemberPath="supplier_name" SelectedValue="{Binding supplier_fk, Mode=TwoWay}" 
           SelectedValuePath="supplier_pk" Grid.Row="2" Grid.Column="1"/>
 
@@ -80,19 +80,19 @@
             <!-- Invoice Number Combobox -->
 
             <TextBlock Grid.Row="3" Grid.Column="3" FontSize="12" HorizontalAlignment="Center" FontWeight="Bold">Invoice No.</TextBlock>
-        
-                <ComboBox Background="White" Grid.Row="3" Grid.Column="4" 
+
+            <ComboBox Background="White" Grid.Row="3" Grid.Column="4" 
                 ItemsSource="{Binding FilterInvoiceNumber, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" 
                 SelectedItem="{Binding SelectedInvoiceNumber, 
                 Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
                 Width="100" HorizontalAlignment="Left"/>
 
-           <Button x:Name="RemoveInvoiceNumberFilterCommand" HorizontalAlignment="Left" Margin="20,0,0,0" Grid.Row="3" Grid.Column="5" Width="16" Height="16" 
+            <Button x:Name="RemoveInvoiceNumberFilterCommand" HorizontalAlignment="Left" Margin="20,0,0,0" Grid.Row="3" Grid.Column="5" Width="16" Height="16" 
             IsEnabled="{Binding CanRemoveInvoiceNumberFilter, Mode=OneWay}">
                 <Image Width="10" Height="10" Style="{DynamicResource ImageStyleForButtons}"/>
             </Button>
-         
-            
+
+
             <Label Content="Invoice No." FontSize="12" FontWeight="Bold" Grid.Column="3" HorizontalAlignment="Center" Grid.Row="6" />
             <TextBox x:Name="invoice_number" Background="White" Text="{Binding SelectedItem.invoice_number, ElementName=purchaseorderdatagrid, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
                         Grid.Column="4" Grid.Row="6"/>
@@ -110,7 +110,8 @@
             <ComboBox Background="White" Grid.Row="3" Grid.Column="7" 
                 ItemsSource="{Binding FilterPurchaseDate,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"  
                 SelectedItem="{Binding SelectedPurchaseDate, 
-                Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"  
+                Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                ItemStringFormat="{}{0:MM-dd-yyyy}"
                 Width="100" HorizontalAlignment="Left"/>
 
             <Button x:Name="RemovePurchaseDateFilterCommand" HorizontalAlignment="Left" Margin="20,0,0,0" Grid.Row="3" Grid.Column="8" Width="16" Height="16" 
@@ -118,7 +119,7 @@
                 <Image Width="10" Height="10" Style="{DynamicResource ImageStyleForButtons}"/>
             </Button>
 
-            
+
 
 
             <!--  Save Button -->
@@ -164,56 +165,62 @@
                           IsReadOnly="True"
                           EnableRowVirtualization="True" Grid.Row="0" 
                           Height="40" Width="1400"  VerticalAlignment="Top" Margin="1077,0,0,0">
-            <DataGrid.Columns>
-                <DataGridTextColumn x:Name="LotTotal" Header="Lot Total" Width="60"
+                <DataGrid.Columns>
+                    <DataGridTextColumn x:Name="LotTotal" Header="Lot Total" Width="60"
                             IsReadOnly="True" Binding="{Binding Path=total_lot, StringFormat='c', Mode=Twoway, UpdateSourceTrigger=PropertyChanged}"/>
-                <DataGridTextColumn x:Name="TaxTotal" Header="Tax Total" Width="60"
+                    <DataGridTextColumn x:Name="TaxTotal" Header="Tax Total" Width="60"
                             IsReadOnly="True" Binding="{Binding total_sales_tax,StringFormat='c', Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-                <DataGridTextColumn x:Name="ShipTotal" Header="Ship Total" Width="60"
+                    <DataGridTextColumn x:Name="ShipTotal" Header="Ship Total" Width="60"
                             IsReadOnly="True" Binding="{Binding total_shipping, StringFormat='c',Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                     <DataGridTextColumn x:Name="CostTotal" Header="Total Cost" Width="60"
                             IsReadOnly="True" Binding="{Binding total_cost, StringFormat='c',Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                 </DataGrid.Columns>
             </DataGrid>
 
-        <DataGrid x:Name="purchaseorderdatagrid" AutoGenerateColumns="False" 
+            <DataGrid x:Name="purchaseorderdatagrid" AutoGenerateColumns="False" 
                       ItemsSource="{Binding ObservableCollectionPurchaseOrderModel, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                       IsSynchronizedWithCurrentItem="True" 
                           CanUserDeleteRows="False"
                           SelectionMode="Single"
                           SelectedItem="{Binding SelectedItem, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                           CanUserAddRows="False" 
-                          EnableRowVirtualization="True" IsReadOnly="False" Grid.Row="1" 
-                          Height="Auto" Width="1400"  HorizontalAlignment="Center" >
-            <DataGrid.RowStyle>
-                <Style TargetType="{x:Type DataGridRow}">
-                    <Setter Property="IsSelected"  Value="{Binding IsSelected, Mode=TwoWay}"/>
-                </Style>
-            </DataGrid.RowStyle>
-            <DataGrid.Columns>
+                          EnableRowVirtualization="True" IsReadOnly="False" 
+                          Height="Auto" Width="1400"  HorizontalAlignment="Center" Margin="0,40,0,10" Grid.RowSpan="2" >
+                <DataGrid.RowStyle>
+                    <Style TargetType="DataGridRow">
+                        <Setter Property="IsSelected"  Value="{Binding IsSelected, Mode=TwoWay}"/>
                 
-                <DataGridTextColumn x:Name="supplier_fk" Header="SUP FK" Width="90"
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding productinventoried}" Value="True">
+                                <Setter Property="Background" Value="Yellow"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+
+                </DataGrid.RowStyle>
+                <DataGrid.Columns>
+                    <DataGridTextColumn x:Name="supplier_fk" Header="SUP FK" Width="90"
                             Visibility="Hidden"  IsReadOnly="True" Binding="{Binding Path=SelectedValue, ElementName=cmbSupplier, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}"/>
 
-                <DataGridTextColumn x:Name="selected_purchase_order_pk" Header="PO PK" Width="90"
+                    <DataGridTextColumn x:Name="selected_purchase_order_pk" Header="PO PK" Width="90"
                             Visibility="Hidden" IsReadOnly="True" Binding="{Binding purchase_order_pk, Mode=TwoWay, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}"/>
 
-                <DataGridTextColumn x:Name="selected_purchase_order_fk" Header="PO FK" Width="90"
+                    <DataGridTextColumn x:Name="selected_purchase_order_fk" Header="PO FK" Width="90"
                             Visibility="Hidden" IsReadOnly="True" Binding="{Binding purchase_order_fk, Mode=TwoWay, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}"/>
 
-                <DataGridTextColumn x:Name="selected_purchase_order_detail_pk" Header="POD PK" Width="90"
+                    <DataGridTextColumn x:Name="selected_purchase_order_detail_pk" Header="POD PK" Width="90"
                             Visibility="Hidden" IsReadOnly="True" Binding="{Binding purchase_order_detail_pk,  Mode=TwoWay, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}"/>
 
-                <DataGridCheckBoxColumn Header="Qty Check" Width="65" Binding="{Binding quantity_check, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"></DataGridCheckBoxColumn>
+                    <DataGridCheckBoxColumn Header="Qty Check" Width="65" Binding="{Binding quantity_check, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"></DataGridCheckBoxColumn>
 
 
-                <DataGridTextColumn Header="Qty" Width="40" 
+                    <DataGridTextColumn Header="Qty" Width="40" 
                             Binding="{Binding lot_quantity, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}"/>
 
-                <DataGridTextColumn Header="Lot No." Width="45"
+                    <DataGridTextColumn Header="Lot No." Width="45"
                             Binding="{Binding lot_number, ValidatesOnNotifyDataErrors=True, UpdateSourceTrigger=PropertyChanged}"/>
 
-         <!--       <DataGridTemplateColumn>
+                    <!--       <DataGridTemplateColumn>
                     <DataGridTemplateColumn.Header>
                         <CheckBox Width="50" Name="chkSelectAll" Content="Build" HorizontalAlignment="Left"></CheckBox>
                     </DataGridTemplateColumn.Header>
@@ -225,23 +232,23 @@
                 </DataGridTemplateColumn>
 -->
 
-                <DataGridTextColumn Header="Lot Name" Width="Auto"
+                    <DataGridTextColumn Header="Lot Name" Width="Auto"
                             Binding="{Binding lot_name, ValidatesOnNotifyDataErrors=True, UpdateSourceTrigger=PropertyChanged}" />
-                <DataGridTextColumn Header="Lot Description" Width="670" CanUserResize="True" 
+                    <DataGridTextColumn Header="Lot Description" Width="670" CanUserResize="True" 
                             Binding="{Binding lot_description, ValidatesOnNotifyDataErrors=True, UpdateSourceTrigger=PropertyChanged}" />
-                <DataGridTextColumn Header="Lot Cost" Width="60"  
+                    <DataGridTextColumn Header="Lot Cost" Width="60"  
                             Binding="{Binding lot_cost, StringFormat='$0.00;;#', ValidatesOnNotifyDataErrors=True, UpdateSourceTrigger=PropertyChanged}" />
-                <DataGridTextColumn Header="Sales Tax" Width="60" 
+                    <DataGridTextColumn Header="Sales Tax" Width="60" 
                             Binding="{Binding sales_tax, StringFormat='c', ValidatesOnNotifyDataErrors=True, UpdateSourceTrigger=PropertyChanged}" />
-                <DataGridTextColumn Header="Ship Cost" Width="60" 
+                    <DataGridTextColumn Header="Ship Cost" Width="60" 
                             Binding="{Binding shipping_cost, StringFormat='c', ValidatesOnNotifyDataErrors=True, UpdateSourceTrigger=PropertyChanged}" />
-                <DataGridTextColumn Header="Inv. No." Width="60" 
+                    <DataGridTextColumn Header="Inv. No." Width="60" 
                             Binding="{Binding invoice_number, ValidatesOnDataErrors=True,  ValidatesOnNotifyDataErrors=True, NotifyOnValidationError=True, UpdateSourceTrigger=PropertyChanged}" />
-                <DataGridTextColumn Header="Purchase Date" Width="100" 
+                    <DataGridTextColumn Header="Purchase Date" Width="100" 
                             Binding="{Binding purchase_date, StringFormat='MM-dd-yyyy', ValidatesOnNotifyDataErrors=True, UpdateSourceTrigger=PropertyChanged}" />
-     
-            </DataGrid.Columns>
-        </DataGrid>
+
+                </DataGrid.Columns>
+            </DataGrid>
         </Grid>
     </DockPanel>
 </UserControl>
