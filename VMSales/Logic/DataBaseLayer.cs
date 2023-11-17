@@ -199,11 +199,14 @@ namespace VMSales.Logic
                 {
                     string invoice_number = await Connection.QuerySingleOrDefaultAsync<string>("SELECT invoice_number FROM purchase_order WHERE invoice_number = @invoice_number", new { entity.invoice_number }, Transaction);
 
+
+                    /// <summary>
+                    /// scenerio 1
+                    /// same invoice number, INSERT purchase_order_detail using existing purchase_order_fk
+                    /// adding row to existing invoice
+
                     if (invoice_number == entity.invoice_number)
                     {
-                        /// <summary>
-                        /// scenerio 1
-                        /// same invoice number, INSERT purchase_order_detail using existing po_fk
                         // get purchase_order_fk
 
                         int db_purchase_order_fk = await Connection.QuerySingleOrDefaultAsync<int>("SELECT purchase_order_pk FROM purchase_order WHERE invoice_number = @invoice_number", new { entity.invoice_number }, Transaction);
@@ -233,11 +236,12 @@ namespace VMSales.Logic
                         }
                     }
 
+                    //  scenerio 2
+                    // INSERT new invoice number, INSERT new purchase_order detail (purchase_order_detail_pk = 0)
+                    // insert into purchase_order and purchase_order_detail using new purchase_order_fk
+
                     if (invoice_number != entity.invoice_number && entity.invoice_number != "0" && entity.invoice_number != null)
                     {
-                        //  scenerio 2
-                        // INSERT new invoice number, INSERT new purchase_order detail pod_pk = 0
-                        // insert into purchase_order and purchase_order_detail using new purchase_order_fk
                         int newId = await Connection.QuerySingleAsync<int>("INSERT INTO purchase_order (supplier_fk, invoice_number, purchase_date) VALUES (@supplier_fk, @invoice_number, @purchase_date); SELECT last_insert_rowid()", new
                         {
                             supplier_fk = entity.supplier_fk,
@@ -247,12 +251,7 @@ namespace VMSales.Logic
                         entity.purchase_order_fk = newId;
                         // now for purchase_order_detail
 
-                        // erroring below cannot convert int to object?
-
-                       
-                        // cannot convert object to int
-
-                        int purchase_order_detail_pk = await Connection.QueryFirstOrDefaultAsync("INSERT INTO purchase_order_detail " +
+                        int purchase_order_detail_pk = await Connection.ExecuteScalarAsync<int>("INSERT INTO purchase_order_detail " +
                           "(purchase_order_fk, lot_cost, lot_quantity, lot_number, lot_name, lot_description, sales_tax, shipping_cost, quantity_check) " +
                             "VALUES (@purchase_order_fk, @lot_cost, @lot_quantity, @lot_number, @lot_name, @lot_description, @sales_tax, @shipping_cost, @quantity_check); SELECT last_insert_rowid()",
                             new
@@ -277,6 +276,9 @@ namespace VMSales.Logic
                     return 0;
                 }
             }
+
+
+
 
             public async Task<PurchaseOrderModel> get_supplier_fk(int id)
             {
@@ -446,6 +448,10 @@ namespace VMSales.Logic
                 return false;
             }
 
+
+
+
+            // FIX
             public override async Task<bool> Delete(PurchaseOrderModel entity)
             {
                 //

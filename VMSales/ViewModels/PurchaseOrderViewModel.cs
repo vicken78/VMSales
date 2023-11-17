@@ -449,16 +449,13 @@ namespace VMSales.ViewModels
                 SelectedItem.lot_number = item.lot_number;
             }
 
-
-
-            //  we need to check for default values here. better checks later.
+            //  Check for default values here. better checks later.
             if (SelectedItem.lot_name == "Name")
             {
                 MessageBox.Show("Default Values must not be used.");
                 SelectedItem = null;
                 return;
             }
-
 
             if (supplier_fk.ToString() == null || supplier_fk == 0)
             {
@@ -494,10 +491,6 @@ namespace VMSales.ViewModels
                     PurchaseOrderRepo.Dispose();
                 }
             }
-
-            // scenerio 4 not programmed
-            // INSERT new invoice number, UPDATE purchase_order_details to that invoice number.
-
 
             // scenerio 1
             // same invoice number, UPDATE purchase_order_detail.
@@ -545,38 +538,38 @@ namespace VMSales.ViewModels
             {
                 if (SelectedItem.purchase_order_detail_pk == 0)
                 {
-                    Task<int> insertPurchase_Order = SavePurchaseOrderRepo.Insert(SelectedItem);
+                    int insertPurchase_Order = SavePurchaseOrderRepo.Insert(SelectedItem).Result;
+
 
                     // new purchase order_detail_pk must be assigned 
-                    if (insertPurchase_Order.Result > 0)
+
+
+                    if (insertPurchase_Order > 0)
                     {
                         var purchase_order_detail_pk_result = SavePurchaseOrderRepo.Get_last_insert();
-                        // perhaps this is the failure.
-                        //SelectedItem.purchase_order_detail_pk = purchase_order_detail_pk_result.Result;
+                        SelectedItem.purchase_order_detail_pk = purchase_order_detail_pk_result.Result;
                         SavePurchaseOrderRepo.Commit();
                         SavePurchaseOrderRepo.Dispose();
-                        MessageBox.Show("1 Row Inserted, POD_PK " + SelectedItem.purchase_order_detail_pk.ToString());
+                        MessageBox.Show("1 Row Inserted: Lot Name " + SelectedItem.lot_name);
                         RaisePropertyChanged("ObservableCollectionPurchaseOrderModel");
                         SelectedItem = new PurchaseOrderModel();
                         return;
-                    }
-                    else
-                    {
-                        SavePurchaseOrderRepo.Revert();
-                        SavePurchaseOrderRepo.Dispose();
-                        MessageBox.Show("An error has occured.  No changes were made");
                     }
                 }
             }
             catch (Exception e)
             {
                 MessageBox.Show("An Error has occured, no changes were made. Error:" + e);
+                SavePurchaseOrderRepo.Revert();
+                SavePurchaseOrderRepo.Dispose();
                 return;
             }
 
             #endregion
         }
 
+
+        // generate product from purchase order
         public void GenerateCommand()
         {
             // select all without qty check and make sure product does not exist.
