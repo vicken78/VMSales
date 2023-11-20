@@ -7,6 +7,7 @@ namespace VMSales.Models
 {
     public partial class PurchaseOrderModel : BaseViewModel
     {
+        public bool productinventoried { get; set; }
         private int _purchase_order_detail_pk { get; set; }
         private int _purchase_order_fk { get; set; }
         private decimal _lot_cost { get; set; }

@@ -332,28 +332,45 @@ namespace VMSales.Logic
             {
 
                 return await Connection.QueryAsync<PurchaseOrderModel>("SELECT " +
-                    "distinct po.purchase_order_pk, po.purchase_date, po.invoice_number, pod.purchase_order_detail_pk, " +
+             /*       "distinct po.purchase_order_pk, po.purchase_date, po.invoice_number, pod.purchase_order_detail_pk, " +
                     "pod.purchase_order_fk, pod.lot_number, pod.lot_cost, pod.lot_quantity," +
                     "pod.lot_name, pod.lot_description, pod.sales_tax, pod.shipping_cost, pod.quantity_check " +
                     "FROM purchase_order as po, purchase_order_detail as pod, supplier as sup " +
                     "INNER JOIN purchase_order_detail on po.purchase_order_pk = pod.purchase_order_fk " +
                     "INNER JOIN supplier on sup.supplier_pk = po.supplier_fk;", null, Transaction);
-
+             */
+             "DISTINCT po.purchase_order_pk, po.purchase_date, po.invoice_number, pod.purchase_order_detail_pk, pod.purchase_order_fk, " +
+             "pod.lot_number, pod.lot_cost, pod.lot_quantity, pod.lot_name, pod.lot_description, pod.sales_tax, pod.shipping_cost, pod.quantity_check, " +
+                "CASE " +
+                "WHEN product_purchase_order.product_purchase_order_detail_fk IS NULL THEN 'True' " +
+                "ELSE 'False' " +
+             "END AS productinventoried " +
+             "FROM " +
+                "purchase_order AS po " +
+             "JOIN " +
+                "purchase_order_detail AS pod ON po.purchase_order_pk = pod.purchase_order_fk " +
+             "JOIN " +
+                "supplier AS sup ON sup.supplier_pk = po.supplier_fk " +
+             "LEFT JOIN " +
+                "product_purchase_order ON pod.purchase_order_detail_pk = product_purchase_order.product_purchase_order_detail_fk");
             }
 
+            /*
 
-            public async Task<IEnumerable<PurchaseOrderModel>> GetAllTotalWithID(int id)
-            {
-                return await Connection.QueryAsync<PurchaseOrderModel>("SELECT " +
-                    "SUM(pod.sales_tax) AS total_sales_tax, " +
-                    "SUM(pod.shipping_cost) AS total_shipping, " +
-                    "SUM(pod.lot_cost) AS total_lot, " +
-                    "SUM(pod.sales_tax + pod.shipping_cost + pod.lot_cost) AS total_cost " +
-                    "FROM purchase_order AS po " +
-                    "INNER JOIN purchase_order_detail AS pod ON po.purchase_order_pk = pod.purchase_order_fk " +
-                    "INNER JOIN supplier AS sup ON sup.supplier_pk = po.supplier_fk " +
-                    "AND po.supplier_fk=#id", new { id }, Transaction);
-            }
+           public async Task<IEnumerable<bool>> CheckForProductfk()
+           {
+               IEnumerable<bool> result = await Connection.QueryAsync<bool>("SELECT CASE " +
+                   "WHEN product_purchase_order.product_purchase_order_detail_fk IS NULL THEN 'True' " +
+                   "ELSE 'False' " +
+               "END AS productinventoried " +
+               "FROM " +
+                   "purchase_order_detail " +
+               "LEFT JOIN " +
+                   "product_purchase_order ON purchase_order_detail.purchase_order_detail_pk = product_purchase_order.product_purchase_order_detail_fk");
+                return result;
+           }
+        */
+
 
             // get all purchase_order and purchase_order_detail
             public override async Task<IEnumerable<PurchaseOrderModel>> GetAllWithID(int id)
@@ -369,7 +386,7 @@ namespace VMSales.Logic
                     "AND po.supplier_fk=@id", new { id }, Transaction);
             }
 
-
+            
             public async Task<PurchaseOrderModel> GetAllWithPK(int purchase_order_detail_pk)
             {
                 return await Connection.QuerySingleAsync<PurchaseOrderModel>("SELECT DISTINCT " +
@@ -380,7 +397,7 @@ namespace VMSales.Logic
                     "INNER JOIN supplier on sup.supplier_pk = po.supplier_fk " +
                     "WHERE pod.purchase_order_detail_pk =@purchase_order_detail_pk", new { purchase_order_detail_pk }, Transaction);
             }
-
+            
 
             // get specific product order detail
             public async Task<int> Get_PurchaseOrderDetail_by_pk(int purchase_order_detail_pk)
@@ -392,13 +409,17 @@ namespace VMSales.Logic
                     "WHERE pod.purchase_order_detail_pk = @purchase_order_detail_pk", new { purchase_order_detail_pk }, Transaction);
             }
 
-            // scenerio 3 (UPDATE)
-            // same invoice number, UPDATE purchase_order_detail.
+            
+        
+            // Update Scenerios
+
+            // scenerio 3 
+            // keep same invoice number, UPDATE purchase_order_detail. (this should be already implemented?)
 
 
 
-            // scenerio 4  (may not be needed)
-            // INSERT new invoice number, UPDATE purchase_order_details to that invoice number.
+            // scenerio 4 
+            // change the invoice number, UPDATE purchase_order_details to that invoice number.
 
             public override async Task<bool> Update(PurchaseOrderModel entity)
             {

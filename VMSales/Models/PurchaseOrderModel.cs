@@ -12,8 +12,6 @@ namespace VMSales.Models
     public partial class PurchaseOrderModel : BaseViewModel
     {
 
-        public static bool productinventoried { get; set; }
-
         private int _purchase_order_pk { get; set; }
         private string _invoice_number { get; set; }
         private DateTime _purchase_date { get; set; }

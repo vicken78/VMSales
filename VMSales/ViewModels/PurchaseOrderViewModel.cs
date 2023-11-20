@@ -14,22 +14,6 @@ namespace VMSales.ViewModels
     public class PurchaseOrderViewModel : BaseViewModel
     {
 
-        // is this needed???
-    /*    private int _cmbSupplier { get; set; }
-        public int cmbSupplier
-        {
-            get { return _cmbSupplier; }
-            set
-            {
-                if (_cmbSupplier == value)
-                    return;
-                _cmbSupplier = value;
-                RaisePropertyChanged("cmbSupplier");
-         
-
-            }
-        }
-    */
         private ObservableCollection<PurchaseOrderModel> POM = new ObservableCollection<PurchaseOrderModel>();
         private List<int> purchase_order_products;
         private string invoicetemp;
@@ -757,39 +741,43 @@ namespace VMSales.ViewModels
 
         public void initial_load()
         {
-            //Initial Page Load
-
-            
-            InvoiceNumberList = new List<string>();
-            PurchaseDateList = new List<DateTime>();
-
-            // Get All Purchase Order
-            ObservableCollectionPurchaseOrderModel = new ObservableCollection<PurchaseOrderModel>();
-            ObservableCollectionTotalPurchaseOrderModel = new ObservableCollection<PurchaseOrderModel>();
-
-            dataBaseProvider = getprovider();
-            DataBaseLayer.PurchaseOrderRepository PurchaseOrderRepo = new DataBaseLayer.PurchaseOrderRepository(dataBaseProvider);
-            var Result = PurchaseOrderRepo.GetAll().Result;
-            if (Result.Count() == 0)
+            try
             {
-                Result.DefaultIfEmpty(new PurchaseOrderModel()
+                //Initial Page Load
+
+                InvoiceNumberList = new List<string>();
+                PurchaseDateList = new List<DateTime>();
+
+                // Get All Purchase Order
+                ObservableCollectionPurchaseOrderModel = new ObservableCollection<PurchaseOrderModel>();
+                ObservableCollectionTotalPurchaseOrderModel = new ObservableCollection<PurchaseOrderModel>();
+
+                dataBaseProvider = getprovider();
+                DataBaseLayer.PurchaseOrderRepository PurchaseOrderRepo = new DataBaseLayer.PurchaseOrderRepository(dataBaseProvider);
+                var Result = PurchaseOrderRepo.GetAll().Result;
+                if (Result.Count() == 0)
                 {
-                    purchase_order_pk = 0,
-                    purchase_order_fk = 0,
-                    purchase_order_detail_pk = 0,
-                    supplier_fk = this.supplier_fk,
-                    invoice_number = "0",
-                    purchase_date = DateTime.MinValue,
-                    lot_cost = 0,
-                    lot_quantity = 0,
-                    lot_number = "0",
-                    lot_name = "Name",
-                    lot_description = "",
-                    sales_tax = 0,
-                    shipping_cost = 0,
-                    quantity_check = 0
-                });
-            }
+                    Result.DefaultIfEmpty(new PurchaseOrderModel()
+                    {
+                        purchase_order_pk = 0,
+                        purchase_order_fk = 0,
+                        purchase_order_detail_pk = 0,
+                        supplier_fk = this.supplier_fk,
+                        invoice_number = "0",
+                        purchase_date = DateTime.MinValue,
+                        lot_cost = 0,
+                        lot_quantity = 0,
+                        lot_number = "0",
+                        lot_name = "Name",
+                        lot_description = "",
+                        sales_tax = 0,
+                        shipping_cost = 0,
+                        quantity_check = 0,
+                        productinventoried = false
+                    });
+                }
+
+        
             ObservableCollectionPurchaseOrderModel = PurchaseOrderRepo.GetAll().Result.ToObservable();
             ObservableCollectionTotalPurchaseOrderModel = PurchaseOrderRepo.GetAllTotal(supplier_fk).Result.ToObservable();
             cvs.Source = ObservableCollectionPurchaseOrderModel;
@@ -806,15 +794,17 @@ namespace VMSales.ViewModels
             ObservableCollectionSupplierModel = SupplierRepo.GetAll().Result.ToObservable();
             SupplierRepo.Commit();
             SupplierRepo.Dispose();
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show(e.ToString());
+            }
         }
 
 
         #region pageload
         public PurchaseOrderViewModel()
         {
-
-        PurchaseOrderModel.productinventoried = false;
-
         initial_load();
         }
 
