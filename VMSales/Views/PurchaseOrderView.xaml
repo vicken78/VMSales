@@ -5,7 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:cal="http://caliburnmicro.com"
              mc:Ignorable="d" 
-             Height="800" Width="1400" VerticalAlignment="Top" MinHeight="400" MinWidth="800">
+             Height="900" Width="1920" VerticalAlignment="Top" MinHeight="800" MinWidth="800">
 
     <DockPanel LastChildFill="True">
         <Grid Margin="10" DockPanel.Dock="Top" Background="Azure">
@@ -161,21 +161,25 @@
                       IsSynchronizedWithCurrentItem="True" 
                           CanUserDeleteRows="False"
                           CanUserAddRows="False"
-                          FontSize="10"
+                          FontSize="12"
+                          FontWeight="Bold"
                           IsReadOnly="True"
                           EnableRowVirtualization="True" Grid.Row="0" 
-                          Height="40" Width="1400"  VerticalAlignment="Top" Margin="1077,0,0,0">
+                          Height="50" Width="1800" Margin="955,0,0,0" VerticalAlignment="Top">
                 <DataGrid.Columns>
-                    <DataGridTextColumn x:Name="LotTotal" Header="Lot Total" Width="60"
+                    <DataGridTextColumn x:Name="LotTotal" Header="Lot Total" Width="70"
                             IsReadOnly="True" Binding="{Binding Path=total_lot, StringFormat='c', Mode=Twoway, UpdateSourceTrigger=PropertyChanged}"/>
-                    <DataGridTextColumn x:Name="TaxTotal" Header="Tax Total" Width="60"
+                    <DataGridTextColumn x:Name="TaxTotal" Header="Tax Total" Width="70"
                             IsReadOnly="True" Binding="{Binding total_sales_tax,StringFormat='c', Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-                    <DataGridTextColumn x:Name="ShipTotal" Header="Ship Total" Width="60"
+                    <DataGridTextColumn x:Name="ShipTotal" Header="Ship Total" Width="70"
                             IsReadOnly="True" Binding="{Binding total_shipping, StringFormat='c',Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-                    <DataGridTextColumn x:Name="CostTotal" Header="Total Cost" Width="60"
+                    <DataGridTextColumn x:Name="CostTotal" Header="Total Cost" Width="70"
                             IsReadOnly="True" Binding="{Binding total_cost, StringFormat='c',Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                 </DataGrid.Columns>
             </DataGrid>
+
+            <!-- GridSplitter -->
+
 
             <DataGrid x:Name="purchaseorderdatagrid" AutoGenerateColumns="False" 
                       ItemsSource="{Binding ObservableCollectionPurchaseOrderModel, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
@@ -185,11 +189,11 @@
                           SelectedItem="{Binding SelectedItem, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                           CanUserAddRows="False" 
                           EnableRowVirtualization="True" IsReadOnly="False" 
-                          Height="Auto" Width="1400"  HorizontalAlignment="Center" Margin="0,40,0,10" Grid.RowSpan="2" >
+                          Height="Auto" Width="1800"  HorizontalAlignment="Center" Margin="60,45,60,0" Grid.RowSpan="2">
                 <DataGrid.RowStyle>
                     <Style TargetType="DataGridRow">
                         <Setter Property="IsSelected"  Value="{Binding IsSelected, Mode=TwoWay}"/>
-                
+
                         <Style.Triggers>
                             <DataTrigger Binding="{Binding productinventoried}" Value="True">
                                 <Setter Property="Background" Value="Yellow"/>
@@ -224,15 +228,15 @@
                             Binding="{Binding lot_name, ValidatesOnNotifyDataErrors=True, UpdateSourceTrigger=PropertyChanged}" />
                     <DataGridTextColumn Header="Lot Description" Width="670" CanUserResize="True" 
                             Binding="{Binding lot_description, ValidatesOnNotifyDataErrors=True, UpdateSourceTrigger=PropertyChanged}" />
-                    <DataGridTextColumn Header="Lot Cost" Width="60"  
+                    <DataGridTextColumn Header="Lot Cost" Width="70"  
                             Binding="{Binding lot_cost, StringFormat='$0.00;;#', ValidatesOnNotifyDataErrors=True, UpdateSourceTrigger=PropertyChanged}" />
-                    <DataGridTextColumn Header="Sales Tax" Width="60" 
+                    <DataGridTextColumn Header="Sales Tax" Width="70" 
                             Binding="{Binding sales_tax, StringFormat='c', ValidatesOnNotifyDataErrors=True, UpdateSourceTrigger=PropertyChanged}" />
-                    <DataGridTextColumn Header="Ship Cost" Width="60" 
+                    <DataGridTextColumn Header="Ship Cost" Width="70" 
                             Binding="{Binding shipping_cost, StringFormat='c', ValidatesOnNotifyDataErrors=True, UpdateSourceTrigger=PropertyChanged}" />
                     <DataGridTextColumn Header="Inv. No." Width="60" 
                             Binding="{Binding invoice_number, ValidatesOnDataErrors=True,  ValidatesOnNotifyDataErrors=True, NotifyOnValidationError=True, UpdateSourceTrigger=PropertyChanged}" />
-                    <DataGridTextColumn Header="Purchase Date" Width="100" 
+                    <DataGridTextColumn Header="Purchase Date" Width="*" 
                             Binding="{Binding purchase_date, StringFormat='MM-dd-yyyy', ValidatesOnNotifyDataErrors=True, UpdateSourceTrigger=PropertyChanged}" />
 
                 </DataGrid.Columns>

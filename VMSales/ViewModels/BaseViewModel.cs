@@ -2,10 +2,11 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Configuration;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
-using System.Reflection;
-using System.Runtime.CompilerServices;
+using System.Windows;
 using VMSales.Logic;
 
 namespace VMSales.ViewModels
@@ -54,26 +55,26 @@ namespace VMSales.ViewModels
               if (PropertyChanged == null) return;
               PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
         }
-    
-    /// <summary>
-    /// Database setting, change dbfilepath to TEST or PROD
-    /// </summary>
-    /// <returns></returns>
-    protected static string SetDataBase()
+
+        protected static string SetDataBase()
         {
-            string dbfilepath = "TEST";
+            string filePath = ConfigurationManager.AppSettings["DatabaseFilePath"];
 
-            if (dbfilepath == "PROD")
+            if (string.IsNullOrEmpty(filePath) || !File.Exists(filePath))
             {
+                //test
+                //filePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "testsales2.db");
+                //prod
+                filePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "sales.db");
+            }
 
-                const string filepath = "C:\\Users\\Vicken\\source\\repos\\VMSales\\VMSales\\sales.db";
-                return filepath;
-            }
-            else
+            // Check if the file exists, and throw an exception if it doesn't
+            if (!File.Exists(filePath))
             {
-                const string filepath = "C:\\Users\\Vicken\\source\\repos\\testsqllite\\testsqllite\\db\\testsales2.db";
-                return filepath;
+                throw new FileNotFoundException("Database file not found.", filePath);
             }
+
+            return filePath;
         }
 
         public static IDatabaseProvider getprovider()

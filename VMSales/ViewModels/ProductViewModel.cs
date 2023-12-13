@@ -3,7 +3,6 @@ using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Drawing;
 using System.Linq;
 using System.Windows;
 using System.Windows.Media.Imaging;
@@ -556,73 +555,98 @@ namespace VMSales.ViewModels
             CategoryRepo.Commit();
             CategoryRepo.Dispose();
 
-            DataBaseLayer.ProductRepository ProductRepo = new DataBaseLayer.ProductRepository(dataBaseProvider);
 
+            DataBaseLayer.ProductRepository SelectProductRepo = new DataBaseLayer.ProductRepository(dataBaseProvider);
+            bool get_product_category = SelectProductRepo.Get_Product_Category(SelectedItem).Result;
+            SelectProductRepo.Commit();
+            SelectProductRepo.Dispose();
+
+            DataBaseLayer.ProductRepository ProductRepo = new DataBaseLayer.ProductRepository(dataBaseProvider);
+       
+            // Insert and Update Logic Needs to be redone.
+
+            // Case Insert
             try
             {
-                // Insert
+
+                bool update_product_category = false;
+                bool insert_product_category = false;
+
                 if (SelectedItem.product_pk == 0)
                 {
-                    // Product
+                    // new product_fk
                     int new_product_fk = ProductRepo.Insert(SelectedItem).Result;
                     SelectedItem.product_fk = new_product_fk;
+                    ProductRepo.Commit();
 
-                    // Product Category
-                    bool insert_product_category = ProductRepo.InsertProductCategory(SelectedItem).Result; // failing
-                    if (insert_product_category == true)
+                    // insert the Product Category
+                    insert_product_category = ProductRepo.InsertProductCategory(SelectedItem).Result;
+                    ProductRepo.Commit();
+                    if (insert_product_category)
                     {
                         bool Insert_Product_Purchase_Order = ProductRepo.Insert_Product_Purchase_Order(SelectedItem).Result;
-                        if (Insert_Product_Purchase_Order == true)
+                        if (Insert_Product_Purchase_Order)
                         {
                             MessageBox.Show("1 Row Inserted");
                             ProductRepo.Commit();
                             ProductRepo.Dispose();
                         }
-                        else
-                        {
-                            MessageBox.Show("An error has occured at insert product purchase order.");
-                            ProductRepo.Revert();
-                            ProductRepo.Dispose();
-                            throw new Exception();
-                        }
-                    }
-                    else
-                    {
-                        MessageBox.Show("An error has occured at insert product category.");
-                        ProductRepo.Revert();
-                        ProductRepo.Dispose();
-                        throw new Exception();
                     }
                 }
 
-                // Update
+                // Product Table
+                bool Update_Product = ProductRepo.Update(SelectedItem).Result;
+                if (Update_Product)
+                {
+                    // does product_category exist?
+                    // Product Category
+                    // if it exists then update it.
+                    if (get_product_category)
+                    {
+                        update_product_category = ProductRepo.Update_Product_Category(SelectedItem).Result;
+                    }
+                    // does not exist, insert product category
+                    else
+                    {
+                        insert_product_category = ProductRepo.InsertProductCategory(SelectedItem).Result;
+                    }
+                    // continue
+                    if (update_product_category == true || insert_product_category == true)
+                    {
+                        // Product Supplier
+                        bool Update_Product_Supplier = ProductRepo.Update_Product_Supplier(SelectedItem).Result;
+                        if (Update_Product_Supplier)
+                        {
+                            // Product Purchase Order
+                            bool Update_Product_Purchase_Order = ProductRepo.Update_Product_Purchase_Order(SelectedItem).Result;
+                            if (Update_Product_Purchase_Order)
+                            {
+                                ProductRepo.Commit();
+                                ProductRepo.Dispose();
+                            }
+                            else
+                            {
+                                MessageBox.Show("update_product_purchase_order failed");
+                                ProductRepo.Revert();
+                            }
+                        }
+                        else
+                        {
+                            MessageBox.Show("update product supplier failed");
+                            ProductRepo.Revert();
+                        }
+
+                    }
+                    else
+                    {
+                        MessageBox.Show("update product category failed");
+                        ProductRepo.Revert();
+                    }
+                }
                 else
                 {
-                    // Product
-                    bool Update_Product = ProductRepo.Update(SelectedItem).Result;
-                    if (Update_Product == true)
-                    {
-                        // Product Category
-                        bool Update_Product_Category = ProductRepo.Update_Product_Category(SelectedItem).Result;
-                        if (Update_Product_Category == true)
-                        {
-                            // Product Supplier
-                            bool Update_Product_Supplier = ProductRepo.Update_Product_Supplier(SelectedItem).Result;
-                            if (Update_Product_Supplier == true)
-                            {
-                                // Product Purchase Order
-                                bool Update_Product_Purchase_Order = ProductRepo.Update_Product_Purchase_Order(SelectedItem).Result;
-                                if (Update_Product_Purchase_Order == true)
-                                {
-                                    ProductRepo.Commit();
-                                    ProductRepo.Dispose();
-                                }
-                                else throw new Exception();
-                            }
-                            else throw new Exception();
-                        }
-                        else throw new Exception();
-                    }
+                    MessageBox.Show("update product failed");
+                    ProductRepo.Revert();
                 }
             }
             catch (Exception e)
@@ -631,18 +655,10 @@ namespace VMSales.ViewModels
                 ProductRepo.Revert();
                 ProductRepo.Dispose();
             }
-
-
-
-            // category_pk and product_pk to use
-
-            //MessageBox.Show("cat_pk" + SelectedItem.category_pk.ToString()); outputs 2 on first row YES
-            //MessageBox.Show("product_pk" + SelectedItem.product_pk.ToString()); outputs 1 on first row YES
-
-        }
-
-        public void AddCommand()
-        {
+        }    
+            
+            public void AddCommand()
+            {
             // clear filelist
             if (filelist?.Count > 0)
             {
@@ -815,9 +831,12 @@ namespace VMSales.ViewModels
             }
 
             dataBaseProvider = getprovider();
+
+            
             // Get Suppliers
             BindableCollectionSupplierModel = new BindableCollection<SupplierModel>();
             DataBaseLayer.SupplierRepository SupplierRepo = new DataBaseLayer.SupplierRepository(dataBaseProvider);
+
             BindableCollectionSupplierModel = DataConversion.ToBindableCollection(SupplierRepo.GetAll().Result.ToBindableCollection());
 
             if (BindableCollectionSupplierModel.Count == 0)

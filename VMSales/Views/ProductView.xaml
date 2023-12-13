@@ -8,7 +8,7 @@
              xmlns:logic="clr-namespace:VMSales.Logic"
              d:DataContext="{d:DesignInstance Type=models:ProductViewModel}"
              mc:Ignorable="d" 
-             Height="800" Width="1920" MinHeight="400" MinWidth="800">
+             Height="800" Width="1920" MinHeight="400" VerticalAlignment="Top" MinWidth="800">
 
     <UserControl.Resources>
         <Style x:Key="CenterGridHeaderStyle" TargetType="DataGridColumnHeader">
@@ -135,6 +135,20 @@
             </Button>
 
 
+            <!-- Search box-->
+            <TextBlock Grid.Row="6" Grid.Column="4" FontSize="14" FontWeight="Bold" Grid.RowSpan="2">Filter By</TextBlock>
+            <ComboBox IsEditable="False" Background="White" Grid.Row="8" Grid.Column="4" Grid.ColumnSpan="2"
+                ItemsSource="{Binding temp}"  
+                SelectedItem="{Binding selected_temp, 
+                Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"  
+                Width="200" HorizontalAlignment="Left"/>
+
+            <TextBox Name="Search" Background="White" Text="{Binding SearchBox}" Grid.Row="10" Grid.Column="4" Grid.ColumnSpan="2"/>
+
+
+
+
+
             <!--       <CheckBox FlowDirection="RightToLeft" IsChecked="True" Grid.Column="4" Grid.Row="5" Grid.ColumnSpan="2" HorizontalAlignment="Left" VerticalAlignment="Center">
                 <TextBlock FlowDirection="RightToLeft" FontWeight="Bold" FontSize="14" Text="Show All Products" />
             </CheckBox>-->
@@ -158,6 +172,18 @@
                             Width="75" 
                             HorizontalAlignment="Left"
                             Content="Reset"/>
+
+            <Button x:Name="SearchCommand" Grid.Column="4" Grid.Row="12"
+                            Width="75" 
+                            HorizontalAlignment="Left"
+                            Content="Search"/>
+
+            <Button x:Name="ClearCommand" Grid.Column="5" Grid.Row="12"
+                            Width="75" 
+                            HorizontalAlignment="Left"
+                            Content="Clear"/>
+
+
             <!-- Upload Photo Button -->
             <Button x:Name="UploadImageCommand" Grid.Column="8" Grid.Row="12"
              IsEnabled="{Binding productSelected, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"               

@@ -3,12 +3,9 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:syncfusion="http://schemas.syncfusion.com/wpf"
-        xmlns:syncfusionskin="clr-namespace:Syncfusion.SfSkinManager;assembly=Syncfusion.SfSkinManager.WPF" 
-        syncfusionskin:SfSkinManager.VisualStyle="Office2013White" 
         xmlns:local="clr-namespace:VMSales.Views"
         mc:Ignorable="d"
-        Title="ShellView" Height="1920" Width="1080" WindowState="Maximized">
+        Title="Main Menu" Height="1920" Width="1080" WindowState="Maximized">
     <Grid ShowGridLines="False">
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"/>

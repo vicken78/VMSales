@@ -18,7 +18,7 @@ namespace VMSales.Logic
             if (PropertyChanged != null)
                 PropertyChanged(this, new PropertyChangedEventArgs(property));
         }
-
+        
         #region Category
         public class CategoryRepository : Repository<CategoryModel>
         {
@@ -54,7 +54,7 @@ namespace VMSales.Logic
                 return await Connection.QueryAsync<CategoryModel>("SELECT category_name FROM category ORDER BY category_name", null, Transaction);
             }
 
-            public async Task<IEnumerable<CategoryModel>> Get_Product_Category()
+       /*     public async Task<IEnumerable<CategoryModel>> Get_Product_Category()
             {
                 return await Connection.QueryAsync<CategoryModel>(
                 "SELECT DISTINCT category_pk, category_name, (category_pk - 1) as selected_category  " +
@@ -64,7 +64,7 @@ namespace VMSales.Logic
                 , null, Transaction);
 
             }
-
+       */
             public override async Task<CategoryModel> Get(int id)
             {
                 return await Connection.QuerySingleAsync<CategoryModel>("SELECT category_pk FROM category WHERE category_pk = @id", new { id }, Transaction);
@@ -105,7 +105,7 @@ namespace VMSales.Logic
             }
         }
         #endregion
-
+        
         #region Supplier
         public class SupplierRepository : Repository<SupplierModel>
         {
@@ -680,6 +680,33 @@ namespace VMSales.Logic
                     new { supplier_fk, purchase_order_detail_pk }, Transaction);
             }
 
+            // get product category
+            public async Task<bool> Get_Product_Category(ProductModel entity)
+            {
+                try
+                {
+                    // Check if the record exists in the database
+                    var result = await Connection.QueryFirstAsync<int>("SELECT 1 FROM product_category WHERE product_fk = @product_fk AND category_fk = @category_fk", new
+                    {
+                        product_fk = entity.product_fk,
+                        category_fk = entity.category_fk
+                    }, Transaction);
+
+                    // If the query succeeded, a record was found
+                    return result == 1;
+                }
+                catch (InvalidOperationException)
+                {
+                    // No records found, return false
+                    return false;
+                }
+            }
+
+
+
+
+
+
             public override async Task<bool> Update(ProductModel entity)
             {
                 bool update_product = (await Connection.ExecuteAsync("UPDATE product SET " +
@@ -716,16 +743,13 @@ namespace VMSales.Logic
 
             public async Task<bool> Update_Product_Category(ProductModel entity)
             {
-                bool update_product_category = (await Connection.ExecuteAsync("UPDATE product_category SET " +
-                "product_fk = @product_fk, " +
-                "category_fk = @category_fk " +
-                "WHERE product_fk = @id", new
-                {
-                    id = entity.product_pk,
-                    product_fk = entity.product_pk,
-                    category_fk = entity.category_fk
-                }, null)) == 1;
-                return update_product_category;
+                    bool update_product_category = (await Connection.ExecuteAsync("UPDATE product_category SET " +
+                    "product_fk = @product_fk, category_fk = @category_fk WHERE product_fk = @product_fk", new
+                    {
+                        product_fk = entity.product_fk,
+                        category_fk = entity.category_fk
+                    }, null)) == 1;
+                    return update_product_category;
             }
 
             public async Task<bool> Update_Product_Supplier(ProductModel entity)
@@ -738,7 +762,7 @@ namespace VMSales.Logic
                     id = entity.product_pk,
                     product_fk = entity.product_pk,
                     supplier_fk = entity.supplier_fk
-                }, null)) == 1;
+                }, Transaction)) == 1;
                 return update_product_supplier;
             }
 
@@ -753,7 +777,7 @@ namespace VMSales.Logic
                     product_fk = entity.product_pk,
                     product_purchase_order_detail_fk = entity.purchase_order_detail_fk
 
-                }, null)) == 1;
+                }, Transaction)) == 1;
                 return update_product_purchase_order;
             }
 
