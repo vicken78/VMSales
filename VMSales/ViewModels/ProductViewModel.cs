@@ -14,6 +14,35 @@ namespace VMSales.ViewModels
     public class ProductViewModel : BaseViewModel
     {
 
+        private Visibility _showsearchtext;
+        public Visibility showsearchtext
+        {
+            get { return _showsearchtext; }
+            set
+            {
+                if (_showsearchtext != value)
+                {
+                    _showsearchtext = value;
+                    RaisePropertyChanged("showsearchtext");
+                }
+            }
+        }
+
+        private Visibility _showsearchdrop;
+        public Visibility showsearchdrop
+        {
+            get { return _showsearchdrop; }
+            set
+            {
+                if (_showsearchdrop != value)
+                {
+                    _showsearchdrop = value;
+                    RaisePropertyChanged("showsearchdrop");
+                }
+            }
+        }
+
+
         private BitmapImage _imageSource;
         public BitmapImage ImageSource
         {
@@ -25,6 +54,36 @@ namespace VMSales.ViewModels
                     _imageSource = value;
                     RaisePropertyChanged("ImageSource");
                 }
+            }
+        }
+
+        private ObservableCollection<string> _searchdropdown { get; set; }
+        public ObservableCollection<string> searchdropdown
+        {
+            get { return _searchdropdown; }
+            set
+            {
+                if (_searchdropdown == value) return;
+                _searchdropdown = value;
+                RaisePropertyChanged("searchdropdown");
+            }
+        }
+
+        private string _selected_search { get; set; }
+
+        public string selected_search
+        {
+            get { return _selected_search; }
+            set
+            {
+                _selected_search = value;
+                RaisePropertyChanged("selected_search");
+                if (selected_search == "Condition")
+                {
+                    showsearchdrop = Visibility.Visible;
+                    showsearchtext = Visibility.Hidden;
+                }
+                else { showsearchdrop = Visibility.Hidden; showsearchtext = Visibility.Visible; }
             }
         }
 
@@ -812,6 +871,8 @@ namespace VMSales.ViewModels
         public void initial_load()
         {
             // reset buttons
+            showsearchdrop = Visibility.Hidden;
+            showsearchtext = Visibility.Visible;
             _productSelected = false;
             productSelected = false;
             canEnableProductSupplier = false;
@@ -819,6 +880,12 @@ namespace VMSales.ViewModels
             selected_supplier_name = null;
             selected_lot_number = 0;
             purchase_order_detail_pk = 0;
+
+            searchdropdown = new ObservableCollection<string>
+            {
+                "Condition", "Product Name", "Description", "SKU", "Brand Name"
+            };
+
             // reset filters
             if (selected_supplier_name_filter != null && selected_supplier_name_filter.supplier_name != null)
             {
