@@ -14,6 +14,21 @@ namespace VMSales.ViewModels
     public class ProductViewModel : BaseViewModel
     {
 
+        private string _searchbox;
+        public string searchbox
+        {
+            get { return _searchbox; }
+            set
+            {
+                if (_searchbox != value)
+                {
+                    _searchbox = value;
+                    RaisePropertyChanged("searchbox");
+                }
+            }
+        }
+
+
         private Visibility _showsearchtext;
         public Visibility showsearchtext
         {
@@ -841,6 +856,17 @@ namespace VMSales.ViewModels
             initial_load();
         }
 
+        public void SearchCommand()
+        {
+        }
+
+        public void ClearCommand()
+        {
+            initial_load();
+        }
+
+
+
         public void UploadImageCommand()
         {
 
@@ -873,6 +899,8 @@ namespace VMSales.ViewModels
             // reset buttons
             showsearchdrop = Visibility.Hidden;
             showsearchtext = Visibility.Visible;
+            searchbox = null;
+            selected_search = null;
             _productSelected = false;
             productSelected = false;
             canEnableProductSupplier = false;
