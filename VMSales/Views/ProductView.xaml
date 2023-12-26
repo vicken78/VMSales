@@ -144,23 +144,13 @@
                 Width="200" HorizontalAlignment="Left"/>
 
 			<TextBox Name="Search" Background="White" Text="{Binding searchbox}" Grid.Row="10" Grid.Column="4" Grid.ColumnSpan="2" Visibility="{Binding showsearchtext}"/>
-			<ComboBox Visibility="{Binding showsearchdrop}" IsEditable="False" Background="White" Grid.Row="10" Grid.Column="4"
-						ItemsSource="{Binding temp}"
-						DisplayMemberPath="supplier_name"
-						SelectedItem="{Binding temp, 
+            <ComboBox Visibility="{Binding showsearchdrop}" IsEditable="False" Background="White" Grid.Row="10" Grid.Column="4"
+						ItemsSource="{Binding searchdrop}"
+						SelectedItem="{Binding searchdropselect, 
                 Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
 						Width="200" Grid.ColumnSpan="2"/>
 
-
-
-
-
-
-			<!--       <CheckBox FlowDirection="RightToLeft" IsChecked="True" Grid.Column="4" Grid.Row="5" Grid.ColumnSpan="2" HorizontalAlignment="Left" VerticalAlignment="Center">
-                <TextBlock FlowDirection="RightToLeft" FontWeight="Bold" FontSize="14" Text="Show All Products" />
-            </CheckBox>-->
-
-			<!--  Save Button -->
+            <!--  Save Button -->
 			<Button x:Name="SaveCommand" cal:Message.Attach="SaveCommand" Grid.Column="0" Grid.Row="12"
                             Width="75"
                             Content="Save"
@@ -186,7 +176,8 @@
                             Content="Search"/>
 
 			<Button x:Name="ClearCommand" Grid.Column="5" Grid.Row="12"
-                            Width="75" 
+                            Width="75"
+                            IsEnabled="{Binding canEnableSearchFilter, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                             HorizontalAlignment="Left"
                             Content="Clear"/>
 

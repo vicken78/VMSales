@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Reflection;
 using System.Windows;
 using System.Windows.Media.Imaging;
 using VMSales.Logic;
@@ -14,6 +15,7 @@ namespace VMSales.ViewModels
     public class ProductViewModel : BaseViewModel
     {
 
+        private string searchterm;
         private string _searchbox;
         public string searchbox
         {
@@ -27,7 +29,22 @@ namespace VMSales.ViewModels
                 }
             }
         }
+        public int selected_supplier_fk_filter;
+        public int selected_category_fk_filter;
 
+        private string _searchdropselect;
+        public string searchdropselect
+        {
+            get { return _searchdropselect; }
+            set
+            {
+                if (_searchdropselect != value)
+                {
+                    _searchdropselect = value;
+                    RaisePropertyChanged("searchdropselect");
+                }
+            }
+        }
 
         private Visibility _showsearchtext;
         public Visibility showsearchtext
@@ -72,6 +89,18 @@ namespace VMSales.ViewModels
             }
         }
 
+        private ObservableCollection<string> _searchdrop { get; set; }
+        public ObservableCollection<string> searchdrop
+        {
+            get { return _searchdrop; }
+            set
+            {
+                if (_searchdrop == value) return;
+                _searchdrop = value;
+                RaisePropertyChanged("searchdrop");
+            }
+        }
+
         private ObservableCollection<string> _searchdropdown { get; set; }
         public ObservableCollection<string> searchdropdown
         {
@@ -95,6 +124,7 @@ namespace VMSales.ViewModels
                 RaisePropertyChanged("selected_search");
                 if (selected_search == "Condition")
                 {
+                    searchterm = "Condition";
                     showsearchdrop = Visibility.Visible;
                     showsearchtext = Visibility.Hidden;
                 }
@@ -160,7 +190,17 @@ namespace VMSales.ViewModels
                 RaisePropertyChanged("canRemoveCategoryFilter");
             }
         }
-
+        
+        private bool _canEnableSearchFilter;
+        public bool canEnableSearchFilter
+        {
+            get { return _canEnableSearchFilter; }
+            set
+            {
+                _canEnableSearchFilter = value;
+                RaisePropertyChanged("canEnableSearchFilter");
+            }
+        }
         private enum FilterField
         {
             Category,
@@ -436,6 +476,9 @@ namespace VMSales.ViewModels
         #endregion
         IDatabaseProvider dataBaseProvider;
 
+
+        // expand
+
         #region FilterFunctions
         private void ApplyFilter(FilterField field)
         {
@@ -458,11 +501,13 @@ namespace VMSales.ViewModels
 
         public void RemoveCategoryFilterCommand()
         {
+            selected_category_fk_filter = 0;
             canRemoveCategoryFilter = false;
             ApplyFilter(FilterField.None);
         }
         public void RemoveSupplierFilterCommand()
         {
+            selected_supplier_fk_filter = 0;
             canRemoveSupplierFilter = false;
             ApplyFilter(FilterField.None);
         }
@@ -470,9 +515,7 @@ namespace VMSales.ViewModels
         {
             if (!canRemoveCategoryFilter)
                 canRemoveCategoryFilter = true;
-            int selected_supplier_fk_filter = 0;
-            int selected_category_fk_filter = 0;
-
+     
             // Load Supplier
             try
             {
@@ -519,9 +562,6 @@ namespace VMSales.ViewModels
         {
             if (!canRemoveSupplierFilter)
                 canRemoveSupplierFilter = true;
-
-            int selected_supplier_fk_filter = 0;
-            int selected_category_fk_filter = 0;
 
             // Load Supplier
             try
@@ -856,12 +896,49 @@ namespace VMSales.ViewModels
             initial_load();
         }
 
+        // databaselayer line 597
         public void SearchCommand()
         {
+            canEnableSearchFilter = true;
+
+            if (searchterm == "Condition" && !string.IsNullOrWhiteSpace(searchdropselect))
+            
+            {
+                PropertyInfo property = typeof(ProductModel).GetProperty(searchterm);
+                BindableCollectionProductModel = new BindableCollection<ProductModel>(
+                BindableCollectionProductModel.Where(item => item.condition == searchdropselect));
+                RaisePropertyChanged("BindableCollectionProductModel");
+            }
+            if (!string.IsNullOrWhiteSpace(searchbox) && !string.IsNullOrWhiteSpace(selected_search))
+            {
+                  switch (selected_search)
+                  {
+                      case "Product Name":
+                          searchterm = "product_name";
+                          break;
+                      case "Description":
+                          searchterm = "description";
+                          break;
+                      case "SKU":
+                          searchterm = "sku";
+                          break;
+                      case "Brand Name":
+                          searchterm = "brand_name";
+                          break;
+                      default:
+                          searchterm = "product_name";
+                          break;
+                  }
+                    PropertyInfo property = typeof(ProductModel).GetProperty(searchterm);
+                    BindableCollectionProductModel = new BindableCollection<ProductModel>(
+                    BindableCollectionProductModel.Where(item => property.GetValue(item)?.ToString().IndexOf(searchbox, StringComparison.OrdinalIgnoreCase) >= 0));
+                    RaisePropertyChanged("BindableCollectionProductModel");
+            }
         }
 
         public void ClearCommand()
         {
+            canEnableSearchFilter = false;
             initial_load();
         }
 
@@ -897,6 +974,7 @@ namespace VMSales.ViewModels
         public void initial_load()
         {
             // reset buttons
+            searchterm = null;
             showsearchdrop = Visibility.Hidden;
             showsearchtext = Visibility.Visible;
             searchbox = null;
@@ -908,6 +986,12 @@ namespace VMSales.ViewModels
             selected_supplier_name = null;
             selected_lot_number = 0;
             purchase_order_detail_pk = 0;
+
+            searchdrop = new ObservableCollection<string>
+            {
+                "New", "Used"
+            };
+
 
             searchdropdown = new ObservableCollection<string>
             {
