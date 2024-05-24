@@ -710,11 +710,15 @@ namespace VMSales.ViewModels
 
                 // Product Table
                 bool Update_Product = ProductRepo.Update(SelectedItem).Result;
+
+                MessageBox.Show("Update Product" + Update_Product.ToString());     
                 if (Update_Product)
                 {
+                    SelectedItem.product_fk = SelectedItem.product_pk;
+
                     // does product_category exist?
                     // Product Category
-                    // if it exists then update it.
+                    // this is not working properly. 
                     if (get_product_category)
                     {
                         update_product_category = ProductRepo.Update_Product_Category(SelectedItem).Result;
@@ -724,6 +728,8 @@ namespace VMSales.ViewModels
                     {
                         insert_product_category = ProductRepo.InsertProductCategory(SelectedItem).Result;
                     }
+                  
+
                     // continue
                     if (update_product_category == true || insert_product_category == true)
                     {
