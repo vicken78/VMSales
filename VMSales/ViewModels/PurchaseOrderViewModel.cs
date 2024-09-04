@@ -13,6 +13,13 @@ namespace VMSales.ViewModels
 {
     public class PurchaseOrderViewModel : BaseViewModel
     {
+        #region Propertychanged
+        // private
+
+        //public
+
+
+        #endregion
 
         private ObservableCollection<PurchaseOrderModel> POM = new ObservableCollection<PurchaseOrderModel>();
         private List<int> purchase_order_products;

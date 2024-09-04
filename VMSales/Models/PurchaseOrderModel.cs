@@ -11,7 +11,8 @@ namespace VMSales.Models
 
     public partial class PurchaseOrderModel : BaseViewModel
     {
-
+        private int _changecolor { get; set; }
+        public int changecolor { get; set; }
         private int _purchase_order_pk { get; set; }
         private string _invoice_number { get; set; }
         private DateTime _purchase_date { get; set; }
@@ -47,6 +48,7 @@ namespace VMSales.Models
                 if (_purchase_date == value) return;
                 _purchase_date = value;
                 RaisePropertyChanged("purchase_date");
+                changecolor = 1;
             }
         }
 

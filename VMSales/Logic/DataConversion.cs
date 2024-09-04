@@ -4,11 +4,14 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Globalization;
 using System.Linq;
+using System.Windows.Data;
 
 namespace VMSales.Logic
 {
-    public static class DataConversion
+    public static class DataConversion 
     {
+
+
 
         public static BindableCollection<T> ToBindableCollection<T>(this IEnumerable<T> source)
         {

@@ -3,7 +3,8 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:cal="http://caliburnmicro.com"
+             xmlns:cal="http://caliburnmicro.com" 
+             xmlns:logic="clr-namespace:VMSales.Logic"
              mc:Ignorable="d" 
              Height="900" Width="1920" VerticalAlignment="Top" MinHeight="800" MinWidth="800">
 
@@ -236,8 +237,10 @@
                             Binding="{Binding shipping_cost, StringFormat='c', ValidatesOnNotifyDataErrors=True, UpdateSourceTrigger=PropertyChanged}" />
                     <DataGridTextColumn Header="Inv. No." Width="60" 
                             Binding="{Binding invoice_number, ValidatesOnDataErrors=True,  ValidatesOnNotifyDataErrors=True, NotifyOnValidationError=True, UpdateSourceTrigger=PropertyChanged}" />
-                    <DataGridTextColumn Header="Purchase Date" Width="*" 
-                            Binding="{Binding purchase_date, StringFormat='MM-dd-yyyy', ValidatesOnNotifyDataErrors=True, UpdateSourceTrigger=PropertyChanged}" />
+                    <DataGridTextColumn Header="Purchase Date" Width="*" Foreground="{Binding FontColor}"
+                            Binding="{Binding purchase_date, StringFormat='MM-dd-yyyy', ValidatesOnNotifyDataErrors=True, UpdateSourceTrigger=PropertyChanged}"/>
+
+
 
                 </DataGrid.Columns>
             </DataGrid>

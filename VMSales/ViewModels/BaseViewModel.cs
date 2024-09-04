@@ -6,13 +6,74 @@ using System.Configuration;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Windows;
+using System.Runtime.CompilerServices;
+using System.Windows.Media;
 using VMSales.Logic;
 
 namespace VMSales.ViewModels
 {
     public abstract class BaseViewModel : INotifyPropertyChanged, INotifyDataErrorInfo
     {
+
+        // Tracks whether any property in the ViewModel has changed
+        private bool _isInitialized = false;
+        private bool _isDirty = false;
+        public bool IsDirty
+        {
+            get => _isDirty;
+            protected set
+            {
+                if (_isDirty != value)
+                {
+                    _isDirty = value;
+                    RaisePropertyChanged(nameof(IsDirty));
+                }
+            }
+        }
+
+        //Tracks initialization
+        protected void SetProperty<T>(ref T field, T value, [CallerMemberName] string propertyName = null)
+        {
+            if (Equals(field, value)) return;
+
+            field = value;
+
+            if (_isInitialized)
+            {
+                IsDirty = true;
+                FontColor = Brushes.Red;
+            }
+
+            RaisePropertyChanged(propertyName);
+        }
+
+        public void Initialize()
+        {
+            _isInitialized = true;
+        }
+
+        // Tracks the font color for modified properties
+        private Brush _FontColor = Brushes.Black; // Default color
+        public Brush FontColor
+        {
+            get => _FontColor;
+            protected set
+            {
+                if (_FontColor != value)
+                {
+                    _FontColor = value;
+                    RaisePropertyChanged(nameof(FontColor));
+                }
+            }
+        }
+
+     /*     protected virtual void RaiseAnyPropertyChanged(object sender, PropertyChangedEventArgs e)
+          {
+              //IsDirty = true;
+              //FontColor = Brushes.Red;
+          }
+     */
+
         // INotifyDateErrorInfo
         private readonly Dictionary<string, List<string>> _errorsByPropertyName = new Dictionary<string, List<string>>();
         public bool HasErrors => _errorsByPropertyName.Any();
@@ -27,6 +88,14 @@ namespace VMSales.ViewModels
             ErrorsChanged?.Invoke(this, new DataErrorsChangedEventArgs(propertyName));
         }
 
+
+        public event PropertyChangedEventHandler PropertyChanged;
+        protected void RaisePropertyChanged(string propertyName)
+        {
+            if (PropertyChanged == null) return;
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+    
         public void AddError(string propertyName, string error)
         {
             if (!_errorsByPropertyName.ContainsKey(propertyName))
@@ -46,14 +115,6 @@ namespace VMSales.ViewModels
                 _errorsByPropertyName.Remove(propertyName);
                 OnErrorsChanged(propertyName);
             }
-        }
-
-    //INotifyPropertyChanged
-    public event PropertyChangedEventHandler PropertyChanged;
-        protected void RaisePropertyChanged(string propertyName)
-        {
-              if (PropertyChanged == null) return;
-              PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
         }
 
         protected static string SetDataBase()
@@ -83,5 +144,11 @@ namespace VMSales.ViewModels
             SQLiteDatabase dataBaseProvider = new SQLiteDatabase(filepath);
             return dataBaseProvider;
         }
+
+/*        public BaseViewModel()
+        {
+              PropertyChanged += RaiseAnyPropertyChanged;
+        }
+*/
     }
 }

@@ -233,7 +233,7 @@
     </ApplicationDefinition>
     <Compile Include="Bootstrapper.cs" />
     <Compile Include="Logic\DataConversion.cs" />
-    <Compile Include="Logic\DataValidator.cs" />
+    <Compile Include="Logic\CollectionToVisibilityConverter .cs" />
     <Compile Include="Logic\IRepository.cs" />
     <Compile Include="Logic\Repository.cs" />
     <Compile Include="Logic\SQLiteDataBaseProvider.cs" />
