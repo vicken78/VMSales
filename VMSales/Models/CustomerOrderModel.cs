@@ -28,7 +28,7 @@ namespace VMSales.Models
             {
                 if (_customer_fk == value) return;
                 _customer_fk = value;
-                RaisePropertyChanged("customer_fk");
+                //RaisePropertyChanged("customer_fk");
 
             }
         }
@@ -39,7 +39,7 @@ namespace VMSales.Models
             {
                 if (_order_number == value) return;
                 _order_number = value;
-                RaisePropertyChanged("order_number");
+                //RaisePropertyChanged("order_number");
             }
         }
 
@@ -50,7 +50,7 @@ namespace VMSales.Models
             {
                 if (_shipping_status == value) return;
                 _shipping_status = value;
-                RaisePropertyChanged("shipping_status");
+                //RaisePropertyChanged("shipping_status");
             } 
         }
         
@@ -61,7 +61,7 @@ namespace VMSales.Models
                 {
                     if (_shipping_service == value) return;
                     _shipping_service = value;
-                    RaisePropertyChanged("shipping_service");
+                    //RaisePropertyChanged("shipping_service");
                 }
             
         }
@@ -80,7 +80,7 @@ namespace VMSales.Models
             {
                 if (_order_date == value) return;
                 _order_date = value;
-                RaisePropertyChanged("order_date");
+                //RaisePropertyChanged("order_date");
             } 
         }
         public DateTime shipping_date 
@@ -90,7 +90,7 @@ namespace VMSales.Models
             {
                 if (_shipping_date == value) return;
                 _shipping_date = value;
-                RaisePropertyChanged("shipping_date");
+                //RaisePropertyChanged("shipping_date");
             }
         }
  
@@ -104,7 +104,7 @@ namespace VMSales.Models
             {
                 if (_shipping_cost_collected == value) return;
                 _shipping_cost_collected = value;
-                RaisePropertyChanged("shipping_cost_collected");
+                //RaisePropertyChanged("shipping_cost_collected");
             }
         }
         public decimal actual_shipping_cost 
@@ -117,7 +117,7 @@ namespace VMSales.Models
             {
                 if (_actual_shipping_cost == value) return;
                 _actual_shipping_cost = value;
-                RaisePropertyChanged("actual_shipping_cost");
+                //RaisePropertyChanged("actual_shipping_cost");
             }
         }
     }

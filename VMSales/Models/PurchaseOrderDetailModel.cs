@@ -34,7 +34,7 @@ namespace VMSales.Models
             {
                 if (_purchase_order_detail_pk == value) return;
                 _purchase_order_detail_pk = value;
-                RaisePropertyChanged("purchase_order_detail_pk");
+                //RaisePropertyChanged("purchase_order_detail_pk");
 
             }
         }
@@ -45,7 +45,7 @@ namespace VMSales.Models
             {
                 if (_purchase_order_fk == value) return;
                 _purchase_order_fk = value;
-                RaisePropertyChanged("purchase_order_fk");
+                //RaisePropertyChanged("purchase_order_fk");
             }
         }
         public string lot_number
@@ -55,7 +55,7 @@ namespace VMSales.Models
             {
                 if (_lot_number == value) return;
                 _lot_number = value;
-                RaisePropertyChanged("lot_number");
+                //RaisePropertyChanged("lot_number");
             }
         }
 
@@ -74,7 +74,7 @@ namespace VMSales.Models
                 var flg = regex.IsMatch(_lot_cost.ToString());
                 if (flg)
                 {
-                    RaisePropertyChanged("lot_cost");
+                    //RaisePropertyChanged("lot_cost");
                 }
 
             }
@@ -86,7 +86,7 @@ namespace VMSales.Models
             {
                 if (_lot_quantity == value) return;
                 _lot_quantity = value;
-                RaisePropertyChanged("lot_quantity");
+                //RaisePropertyChanged("lot_quantity");
             }
         }
 
@@ -97,7 +97,7 @@ namespace VMSales.Models
             {
                 if (_lot_name == value) return;
                 _lot_name = value;
-                RaisePropertyChanged("lot_name");
+                //RaisePropertyChanged("lot_name");
             }
         }
 
@@ -108,7 +108,7 @@ namespace VMSales.Models
             {
                 if (_lot_description == value) return;
                 _lot_description = value;
-                RaisePropertyChanged("lot_description");
+                //RaisePropertyChanged("lot_description");
             }
         }
         public decimal sales_tax
@@ -118,7 +118,7 @@ namespace VMSales.Models
             {
                 if (_sales_tax == value) return;
                 _sales_tax = value;
-                RaisePropertyChanged("sales_tax");
+                //RaisePropertyChanged("sales_tax");
             }
         }
         public decimal shipping_cost
@@ -128,7 +128,7 @@ namespace VMSales.Models
             {
                 if (_shipping_cost == value) return;
                 _shipping_cost = value;
-                RaisePropertyChanged("shipping_cost");
+                //RaisePropertyChanged("shipping_cost");
             }
         }
         public decimal total_lot
@@ -138,7 +138,7 @@ namespace VMSales.Models
             {
                 if (_total_lot == value) return;
                 _total_lot = value;
-                RaisePropertyChanged("total_lot");
+                //RaisePropertyChanged("total_lot");
             }
         }
 
@@ -149,7 +149,7 @@ namespace VMSales.Models
             {
                 if (_total_sales_tax == value) return;
                 _total_sales_tax = value;
-                RaisePropertyChanged("total_sales_tax");
+                //RaisePropertyChanged("total_sales_tax");
             }
         }
 
@@ -160,7 +160,7 @@ namespace VMSales.Models
             {
                 if (_total_shipping == value) return;
                 _total_shipping = value;
-                RaisePropertyChanged("total_shipping");
+                //RaisePropertyChanged("total_shipping");
             }
         }
 
@@ -171,7 +171,7 @@ namespace VMSales.Models
             {
                 if (_total_cost == value) return;
                 _total_cost = value;
-                RaisePropertyChanged("total_cost");
+                //RaisePropertyChanged("total_cost");
             }
         }
 
@@ -183,7 +183,7 @@ namespace VMSales.Models
             {
                 if (_quantity_check == value) return;
                 _quantity_check = value;
-                RaisePropertyChanged("quantity_check");
+                //RaisePropertyChanged("quantity_check");
             }
         }
 

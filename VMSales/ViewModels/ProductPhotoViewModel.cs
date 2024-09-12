@@ -26,7 +26,7 @@ namespace VMSales.ViewModels
             {
                 if (_selectedImage == value) return;
                 _selectedImage = value;
-                RaisePropertyChanged("SelectedImage");
+                //RaisePropertyChanged("SelectedImage");
             }
         }
 

@@ -16,7 +16,7 @@ namespace VMSales.ViewModels
             set
             {
                 select_request = value;
-                RaisePropertyChanged("Select_Request");
+                ////RaisePropertyChanged("Select_Request");
             }
         }
         private ObservableCollection<SupplierModel> ObservableCollectionSupplierModelclean { get; set; }
@@ -27,7 +27,7 @@ namespace VMSales.ViewModels
             {
                 if (ObservableCollectionSupplierModelclean == value) return;
                 ObservableCollectionSupplierModelclean = value;
-                RaisePropertyChanged("ObservableCollectionSupplierModel");
+                ////RaisePropertyChanged("ObservableCollectionSupplierModel");
             }
         }
 
@@ -123,7 +123,7 @@ namespace VMSales.ViewModels
 
             };
             ObservableCollectionSupplierModel.Add(obj);
-            RaisePropertyChanged("ObservableCollectionSupplierModel");
+            ////RaisePropertyChanged("ObservableCollectionSupplierModel");
         }
         public void DeleteCommand()
         {

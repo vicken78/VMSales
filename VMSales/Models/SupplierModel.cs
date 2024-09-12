@@ -24,7 +24,7 @@ namespace VMSales.Models
             {
                 if (_supplier_pk == value) return;
                 _supplier_pk = value;
-                RaisePropertyChanged("supplier_pk");
+                //RaisePropertyChanged("supplier_pk");
             }
         }
         public string supplier_name
@@ -34,7 +34,7 @@ namespace VMSales.Models
            {
                 if (_supplier_name == value) return;
                 _supplier_name = value;
-                RaisePropertyChanged("supplier_name");
+                //RaisePropertyChanged("supplier_name");
             }
         }
 
@@ -45,7 +45,7 @@ namespace VMSales.Models
             {
                 if (_address == value) return;
                 _address = value;
-                RaisePropertyChanged("address");
+                //RaisePropertyChanged("address");
             }
         }
         public string city
@@ -55,7 +55,7 @@ namespace VMSales.Models
             {
                 if (_city == value) return;
                 _city = value;
-                RaisePropertyChanged("city");
+                //RaisePropertyChanged("city");
             }
         }
         public string state
@@ -65,7 +65,7 @@ namespace VMSales.Models
             {
                 if (_state == value) return;
                 _state = value;
-                RaisePropertyChanged("state");
+                //RaisePropertyChanged("state");
             }
         }
         public string country
@@ -75,7 +75,7 @@ namespace VMSales.Models
             {
                 if (_country == value) return;
                 _country = value;
-                RaisePropertyChanged("country");
+                //RaisePropertyChanged("country");
             }
         }
         public string zip
@@ -85,7 +85,7 @@ namespace VMSales.Models
             {
                 if (_zip == value) return;
                 _zip = value;
-                RaisePropertyChanged("zip");
+                //RaisePropertyChanged("zip");
             }
         }
         public string phone
@@ -95,7 +95,7 @@ namespace VMSales.Models
             {
                 if (_phone == value) return;
                 _phone = value;
-                RaisePropertyChanged("phone");
+                //RaisePropertyChanged("phone");
             }
         }
         public string email
@@ -105,7 +105,7 @@ namespace VMSales.Models
             {
                 if (_email == value) return;
                 _email = value;
-                RaisePropertyChanged("email");
+                //RaisePropertyChanged("email");
             }
         }   
     }

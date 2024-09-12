@@ -32,7 +32,7 @@ namespace VMSales.Models
             {
                 if (_customer_pk == value) return;
                 _customer_pk = value;
-                RaisePropertyChanged("customer_pk");
+                //RaisePropertyChanged("customer_pk");
             }
         }
         public string user_name 
@@ -42,7 +42,7 @@ namespace VMSales.Models
             {
                 if (_user_name == value) return;
                 _user_name = value;
-                RaisePropertyChanged("user_name");
+                //RaisePropertyChanged("user_name");
             }
         }
         public string first_name 
@@ -52,7 +52,7 @@ namespace VMSales.Models
             {
                 if (_first_name == value) return;
                 _first_name = value;
-                RaisePropertyChanged("first_name");
+                //RaisePropertyChanged("first_name");
             }
         }
         public string last_name 
@@ -62,7 +62,7 @@ namespace VMSales.Models
             {
                 if (_last_name == value) return;
                 _last_name = value;
-                RaisePropertyChanged("last_name");
+                //RaisePropertyChanged("last_name");
             }
         }
         public string address 
@@ -72,7 +72,7 @@ namespace VMSales.Models
             {
                 if (_address == value) return;
                 _address = value;
-                RaisePropertyChanged("address");
+                //RaisePropertyChanged("address");
             }
         }
         public string state 
@@ -82,7 +82,7 @@ namespace VMSales.Models
             {
                 if (_state == value) return;
                 _state = value;
-                RaisePropertyChanged("state");
+                //RaisePropertyChanged("state");
             }
         }
         public string city
@@ -92,7 +92,7 @@ namespace VMSales.Models
             {
                 if (_city == value) return;
                 _city = value;
-                RaisePropertyChanged("city");
+                //RaisePropertyChanged("city");
             }
         }
 
@@ -103,7 +103,7 @@ namespace VMSales.Models
             {
                 if (_zip == value) return;
                 _zip = value;
-                RaisePropertyChanged("zip");
+                //RaisePropertyChanged("zip");
             }
         }
         public string country 
@@ -113,7 +113,7 @@ namespace VMSales.Models
             {
                 if (_country == value) return;
                 _country = value;
-                RaisePropertyChanged("country");
+                //RaisePropertyChanged("country");
             }
         }
         public string phone 
@@ -123,7 +123,7 @@ namespace VMSales.Models
             {
                 if (_phone == value) return;
                 _phone = value;
-                RaisePropertyChanged("phone");
+                //RaisePropertyChanged("phone");
             }
         }
         public string shipping_address 
@@ -133,7 +133,7 @@ namespace VMSales.Models
             {
                 if (_shipping_address == value) return;
                 _shipping_address = value;
-                RaisePropertyChanged("shipping_address");
+                //RaisePropertyChanged("shipping_address");
             }
         }
         public string shipping_city
@@ -143,7 +143,7 @@ namespace VMSales.Models
             {
                 if (_shipping_city == value) return;
                 _shipping_city = value;
-                RaisePropertyChanged("shipping_city");
+                //RaisePropertyChanged("shipping_city");
             }
         }
         public string shipping_state 
@@ -153,7 +153,7 @@ namespace VMSales.Models
             {
                 if (_shipping_state == value) return;
                 _shipping_state = value;
-                RaisePropertyChanged("shipping_state");
+                //RaisePropertyChanged("shipping_state");
             }
         }
         public string shipping_zip 
@@ -163,7 +163,7 @@ namespace VMSales.Models
             {
                 if (_shipping_zip == value) return;
                 _shipping_zip = value;
-                RaisePropertyChanged("shipping_zip");
+                //RaisePropertyChanged("shipping_zip");
             }
         }
         public string shipping_country
@@ -173,7 +173,7 @@ namespace VMSales.Models
             {
                 if (_shipping_country == value) return;
                 _shipping_country = value;
-                RaisePropertyChanged("shipping_country");
+                //RaisePropertyChanged("shipping_country");
             }
         }
         private int _same_shipping_address { get; set; }
@@ -184,7 +184,7 @@ namespace VMSales.Models
             {
                 if (_same_shipping_address == value) return;
                 _same_shipping_address = value;
-                RaisePropertyChanged("same_shipping_address");
+                //RaisePropertyChanged("same_shipping_address");
             }
         }
 

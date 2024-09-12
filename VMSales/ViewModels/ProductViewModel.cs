@@ -25,7 +25,7 @@ namespace VMSales.ViewModels
                 if (_searchbox != value)
                 {
                     _searchbox = value;
-                    RaisePropertyChanged("searchbox");
+                    //RaisePropertyChanged("searchbox");
                 }
             }
         }
@@ -41,7 +41,7 @@ namespace VMSales.ViewModels
                 if (_searchdropselect != value)
                 {
                     _searchdropselect = value;
-                    RaisePropertyChanged("searchdropselect");
+                    //RaisePropertyChanged("searchdropselect");
                 }
             }
         }
@@ -55,7 +55,7 @@ namespace VMSales.ViewModels
                 if (_showsearchtext != value)
                 {
                     _showsearchtext = value;
-                    RaisePropertyChanged("showsearchtext");
+                    //RaisePropertyChanged("showsearchtext");
                 }
             }
         }
@@ -69,7 +69,7 @@ namespace VMSales.ViewModels
                 if (_showsearchdrop != value)
                 {
                     _showsearchdrop = value;
-                    RaisePropertyChanged("showsearchdrop");
+                    //RaisePropertyChanged("showsearchdrop");
                 }
             }
         }
@@ -84,7 +84,7 @@ namespace VMSales.ViewModels
                 if (_imageSource != value)
                 {
                     _imageSource = value;
-                    RaisePropertyChanged("ImageSource");
+                    //RaisePropertyChanged("ImageSource");
                 }
             }
         }
@@ -97,7 +97,7 @@ namespace VMSales.ViewModels
             {
                 if (_searchdrop == value) return;
                 _searchdrop = value;
-                RaisePropertyChanged("searchdrop");
+                //RaisePropertyChanged("searchdrop");
             }
         }
 
@@ -109,7 +109,7 @@ namespace VMSales.ViewModels
             {
                 if (_searchdropdown == value) return;
                 _searchdropdown = value;
-                RaisePropertyChanged("searchdropdown");
+                //RaisePropertyChanged("searchdropdown");
             }
         }
 
@@ -121,7 +121,7 @@ namespace VMSales.ViewModels
             set
             {
                 _selected_search = value;
-                RaisePropertyChanged("selected_search");
+                //RaisePropertyChanged("selected_search");
                 if (selected_search == "Condition")
                 {
                     searchterm = "Condition";
@@ -140,7 +140,7 @@ namespace VMSales.ViewModels
             {
                 if (_filelist == value) return;
                 _filelist = value;
-                RaisePropertyChanged("filelist");
+                //RaisePropertyChanged("filelist");
             }
         }
 
@@ -152,7 +152,7 @@ namespace VMSales.ViewModels
             set
             {
                 _selectedfilelist = value;
-                RaisePropertyChanged("Selectedfilelist");
+                //RaisePropertyChanged("Selectedfilelist");
                 LoadImage(Selectedfilelist);
             }
         }
@@ -164,7 +164,7 @@ namespace VMSales.ViewModels
             set
             {
                 _productSelected = value;
-                RaisePropertyChanged("productSelected");
+                //RaisePropertyChanged("productSelected");
             }
         }
 
@@ -177,7 +177,7 @@ namespace VMSales.ViewModels
             set
             {
                 _canRemoveSupplierFilter = value;
-                RaisePropertyChanged("canRemoveSupplierFilter");
+                //RaisePropertyChanged("canRemoveSupplierFilter");
             }
         }
         private bool _canRemoveCategoryFilter;
@@ -187,7 +187,7 @@ namespace VMSales.ViewModels
             set
             {
                 _canRemoveCategoryFilter = value;
-                RaisePropertyChanged("canRemoveCategoryFilter");
+                //RaisePropertyChanged("canRemoveCategoryFilter");
             }
         }
         
@@ -198,7 +198,7 @@ namespace VMSales.ViewModels
             set
             {
                 _canEnableSearchFilter = value;
-                RaisePropertyChanged("canEnableSearchFilter");
+                //RaisePropertyChanged("canEnableSearchFilter");
             }
         }
         private enum FilterField
@@ -215,7 +215,7 @@ namespace VMSales.ViewModels
             {
                 if (_selected_supplier_name_filter == value) return;
                 _selected_supplier_name_filter = value;
-                RaisePropertyChanged("selected_supplier_name_filter");
+                //RaisePropertyChanged("selected_supplier_name_filter");
                 //filter product based on supplier name.
                 ApplyFilter(!string.IsNullOrEmpty(selected_supplier_name_filter?.supplier_name) ? FilterField.Supplier : FilterField.None);
             }
@@ -229,7 +229,7 @@ namespace VMSales.ViewModels
             {
                 if (_selected_category_name_filter == value) return;
                 _selected_category_name_filter = value;
-                RaisePropertyChanged("selected_category_name_filter");
+                //RaisePropertyChanged("selected_category_name_filter");
                 //filter product based on category name.
                 ApplyFilter(!string.IsNullOrEmpty(_selected_category_name_filter?.category_name) ? FilterField.Category : FilterField.None);
             }
@@ -245,7 +245,7 @@ namespace VMSales.ViewModels
             {
                 if (_selected_supplier_name == value) return;
                 _selected_supplier_name = value;
-                RaisePropertyChanged("selected_supplier_name");
+                //RaisePropertyChanged("selected_supplier_name");
                 if (selected_supplier_name != null)
                     canEnableProductSupplier = true;
             }
@@ -258,7 +258,7 @@ namespace VMSales.ViewModels
             {
                 if (_selected_lot_number == value) return;
                 _selected_lot_number = value;
-                RaisePropertyChanged("selected_lot_number");
+                //RaisePropertyChanged("selected_lot_number");
             }
         }
 
@@ -269,7 +269,7 @@ namespace VMSales.ViewModels
             set
             {
                 _canEnableProductSupplier = value;
-                RaisePropertyChanged("canEnableProductSupplier");
+                //RaisePropertyChanged("canEnableProductSupplier");
             }
         }
         private bool _canEnableProductPurchase;
@@ -279,7 +279,7 @@ namespace VMSales.ViewModels
             set
             {
                 _canEnableProductPurchase = value;
-                RaisePropertyChanged("canEnableProductPurchase");
+                //RaisePropertyChanged("canEnableProductPurchase");
             }
         }
 
@@ -305,7 +305,7 @@ namespace VMSales.ViewModels
             {
                 if (_supplier_pk == value) return;
                 _supplier_pk = value;
-                RaisePropertyChanged("supplier_pk");
+                //RaisePropertyChanged("supplier_pk");
             }
         }
 
@@ -318,7 +318,7 @@ namespace VMSales.ViewModels
             {
                 if (_supplier_fk == value) return;
                 _supplier_fk = value;
-                RaisePropertyChanged("supplier_fk");
+                //RaisePropertyChanged("supplier_fk");
             }
         }
 
@@ -330,7 +330,7 @@ namespace VMSales.ViewModels
             {
                 if (_purchase_order_detail_pk == value) return;
                 _purchase_order_detail_pk = value;
-                RaisePropertyChanged("purchase_order_detail_pk");
+                //RaisePropertyChanged("purchase_order_detail_pk");
                 if (purchase_order_detail_pk != 0)
                 {
                     canEnableProductPurchase = true;
@@ -346,7 +346,7 @@ namespace VMSales.ViewModels
             {
                 if (_SelectedItem == value) return;
                 _SelectedItem = value;
-                RaisePropertyChanged("SelectedItem");
+                //RaisePropertyChanged("SelectedItem");
                 LoadSupplier();
                 if (SelectedItem?.IsSelected != null)
                 {
@@ -401,12 +401,12 @@ namespace VMSales.ViewModels
                 filelist = PhotoRepo.GetFileList(SelectedItem.product_pk).Result.ToObservable();
                 PhotoRepo.Commit();
                 PhotoRepo.Dispose();
-                RaisePropertyChanged("filelist");
+                //RaisePropertyChanged("filelist");
             }
             else
             {
                 filelist = new ObservableCollection<string>();
-                RaisePropertyChanged("filelist");
+                //RaisePropertyChanged("filelist");
             }
         }
         #endregion
@@ -555,8 +555,8 @@ namespace VMSales.ViewModels
                 SelectedItem.product_supplier_pk = item.product_supplier_pk;
                 SelectedItem.supplier_fk = item.supplier_fk;
             }
-            RaisePropertyChanged("SelectedItem");
-            RaisePropertyChanged("BindableCollectionProductModel");
+            //RaisePropertyChanged("SelectedItem");
+            //RaisePropertyChanged("BindableCollectionProductModel");
         }
         public void AddSupplierFilter()
         {
@@ -602,8 +602,8 @@ namespace VMSales.ViewModels
                 SelectedItem.product_supplier_pk = item.product_supplier_pk;
                 SelectedItem.supplier_fk = item.supplier_fk;
             }
-            RaisePropertyChanged("SelectedItem");
-            RaisePropertyChanged("BindableCollectionProductModel");
+            //RaisePropertyChanged("SelectedItem");
+            //RaisePropertyChanged("BindableCollectionProductModel");
         }
 
         #endregion
@@ -785,7 +785,7 @@ namespace VMSales.ViewModels
                 filelist.Clear();
             }
             filelist = new ObservableCollection<string>();
-            RaisePropertyChanged("filelist");
+            //RaisePropertyChanged("filelist");
             if (BindableCollectionProductModel.Count == 0)
             {
                 BindableCollectionProductModel = new BindableCollection<ProductModel>();
@@ -813,8 +813,8 @@ namespace VMSales.ViewModels
 
             BindableCollectionProductModel.Insert(0, product);
             SelectedItem = null;
-            RaisePropertyChanged("BindableCollectionProductModel");
-            RaisePropertyChanged("SelectedItem");
+            //RaisePropertyChanged("BindableCollectionProductModel");
+            //RaisePropertyChanged("SelectedItem");
         }
         public void DeleteCommand()
         {
@@ -913,7 +913,7 @@ namespace VMSales.ViewModels
                 PropertyInfo property = typeof(ProductModel).GetProperty(searchterm);
                 BindableCollectionProductModel = new BindableCollection<ProductModel>(
                 BindableCollectionProductModel.Where(item => item.condition == searchdropselect));
-                RaisePropertyChanged("BindableCollectionProductModel");
+                //RaisePropertyChanged("BindableCollectionProductModel");
             }
             if (!string.IsNullOrWhiteSpace(searchbox) && !string.IsNullOrWhiteSpace(selected_search))
             {
@@ -938,7 +938,7 @@ namespace VMSales.ViewModels
                     PropertyInfo property = typeof(ProductModel).GetProperty(searchterm);
                     BindableCollectionProductModel = new BindableCollection<ProductModel>(
                     BindableCollectionProductModel.Where(item => property.GetValue(item)?.ToString().IndexOf(searchbox, StringComparison.OrdinalIgnoreCase) >= 0));
-                    RaisePropertyChanged("BindableCollectionProductModel");
+                    //RaisePropertyChanged("BindableCollectionProductModel");
             }
         }
 
@@ -1066,8 +1066,8 @@ namespace VMSales.ViewModels
             ProductRepo.Commit();
             ProductRepo.Dispose();
             SelectedItem = new ProductModel();
-            RaisePropertyChanged("SelectedItem");
-            RaisePropertyChanged("BindableCollectionProductModel");
+            ////RaisePropertyChanged("SelectedItem");
+            ////RaisePropertyChanged("BindableCollectionProductModel");
 
             // Load product_category, product purchase order, product supplier
             foreach (var item in BindableCollectionProductModel)

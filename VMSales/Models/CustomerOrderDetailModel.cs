@@ -26,7 +26,7 @@ namespace VMSales.Models
             {
                 if (_customer_order_fk == value) return;
                 _customer_order_fk = value;
-                RaisePropertyChanged("customer_order_fk");
+                ////RaisePropertyChanged("customer_order_fk");
             }
         }
         public int product_fk
@@ -36,7 +36,7 @@ namespace VMSales.Models
             {
                 if (_product_fk == value) return;
                 _product_fk = value;
-                RaisePropertyChanged("product_fk");
+                ////RaisePropertyChanged("product_fk");
             }
         }
         public int quantity
@@ -46,7 +46,7 @@ namespace VMSales.Models
             {
                 if (_quantity == value) return;
                 _quantity = value;
-                RaisePropertyChanged("quantity");
+                ////RaisePropertyChanged("quantity");
             }
         }
         public decimal sold_price
@@ -56,7 +56,7 @@ namespace VMSales.Models
             {
                 if (_sold_price == value) return;
                 _sold_price = value;
-                RaisePropertyChanged("sold_price");
+                ////RaisePropertyChanged("sold_price");
             }
         }
         public decimal selling_fee
@@ -66,7 +66,7 @@ namespace VMSales.Models
             {
                 if (_selling_fee == value) return;
                 _selling_fee = value;
-                RaisePropertyChanged("selling_fee");
+                ////RaisePropertyChanged("selling_fee");
             }
         }
         public decimal sales_tax_amount
@@ -76,7 +76,7 @@ namespace VMSales.Models
             {
                 if (_sales_tax_amount == value) return;
                 _sales_tax_amount = value;
-                RaisePropertyChanged("sales_tax_amount");
+                ////RaisePropertyChanged("sales_tax_amount");
             }
         }
         public decimal sales_tax_rate
@@ -86,7 +86,7 @@ namespace VMSales.Models
             {
                 if (_sales_tax_rate == value) return;
                 _sales_tax_rate = value;
-                RaisePropertyChanged("sales_tax_rate");
+                ////RaisePropertyChanged("sales_tax_rate");
             }
         }
     }

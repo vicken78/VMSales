@@ -17,7 +17,7 @@ namespace VMSales.ViewModels
             {
                 if (_ObservableCollectionCustomerModel == value) return;
                 _ObservableCollectionCustomerModel = value;
-                RaisePropertyChanged("ObservableCollectionCustomerModel");
+                //RaisePropertyChanged("ObservableCollectionCustomerModel");
             }
         }
 
@@ -29,7 +29,7 @@ namespace VMSales.ViewModels
             {
                 if (_ObservableCollectionProductModel == value) return;
                 _ObservableCollectionProductModel = value;
-                RaisePropertyChanged("ObservableCollectionProductModel");
+                //RaisePropertyChanged("ObservableCollectionProductModel");
             }
         }
 

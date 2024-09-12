@@ -35,7 +35,7 @@ namespace VMSales.ViewModels
                 if (_SelectedItem == value)
                     return;
                 _SelectedItem = value;
-                RaisePropertyChanged("SelectedItem");
+                ////RaisePropertyChanged("SelectedItem");
             }
         }
 
@@ -48,7 +48,7 @@ namespace VMSales.ViewModels
                 if (_invoicenumber == value)
                     return;
                 _invoicenumber = value;
-                RaisePropertyChanged("InvoiceNumber");
+                ////RaisePropertyChanged("InvoiceNumber");
             }
         }
         public ObservableCollection<DateTime> FilterPurchaseDate
@@ -59,7 +59,7 @@ namespace VMSales.ViewModels
                 if (_purchasedate == value)
                     return;
                 _purchasedate = value;
-                RaisePropertyChanged("PurchaseDate");
+                ////RaisePropertyChanged("PurchaseDate");
             }
         }
 
@@ -73,7 +73,7 @@ namespace VMSales.ViewModels
             {
                 if (ObservableCollectionPurchaseOrderModelclean == value) return;
                 ObservableCollectionPurchaseOrderModelclean = value;
-                RaisePropertyChanged("ObservableCollectionPurchaseOrderModel");
+                ////RaisePropertyChanged("ObservableCollectionPurchaseOrderModel");
             }
         }
 
@@ -85,7 +85,7 @@ namespace VMSales.ViewModels
             {
                 if (_ObservableCollectionTotalPurchaseOrderModel == value) return;
                 _ObservableCollectionTotalPurchaseOrderModel = value;
-                RaisePropertyChanged("ObservableCollectionPurchaseOrderModel");
+                ////RaisePropertyChanged("ObservableCollectionPurchaseOrderModel");
             }
         }
 
@@ -105,7 +105,7 @@ namespace VMSales.ViewModels
                 if (_keep_last == value)
                     return;
                 _keep_last = value;
-                RaisePropertyChanged("keep_last");
+                ////RaisePropertyChanged("keep_last");
             }
         }
 
@@ -117,7 +117,7 @@ namespace VMSales.ViewModels
                 if (_selectedinvoicenumber == value)
                     return;
                 _selectedinvoicenumber = value;
-                RaisePropertyChanged("SelectedInvoiceNumber");
+                ////RaisePropertyChanged("SelectedInvoiceNumber");
                 ApplyFilter(!string.IsNullOrEmpty(_selectedinvoicenumber) ? FilterField.InvoiceNumber : FilterField.None);
             }
         }
@@ -129,7 +129,7 @@ namespace VMSales.ViewModels
                 if (_selectedpurchasedate == value)
                     return;
                 _selectedpurchasedate = value;
-                RaisePropertyChanged("SelectedPurchaseDate");
+                ////RaisePropertyChanged("SelectedPurchaseDate");
                 ApplyFilter(!string.IsNullOrEmpty(_selectedpurchasedate) ? FilterField.PurchaseDate : FilterField.None);
             }
         }
@@ -160,12 +160,12 @@ namespace VMSales.ViewModels
                 case FilterField.InvoiceNumber:
                     AddInvoiceNumberFilter();
                     PurchaseOrderView.Filter = new Predicate<object>(x => ((PurchaseOrderModel)x).invoice_number.ToString() == _selectedinvoicenumber);
-                    RaisePropertyChanged("PurchaseOrderView");
+                    ////RaisePropertyChanged("PurchaseOrderView");
                     break;
                 case FilterField.PurchaseDate:
                     AddPurchaseDateFilter();
                     PurchaseOrderView.Filter = new Predicate<object>(x => ((PurchaseOrderModel)x).purchase_date.ToString() == _selectedpurchasedate);
-                    RaisePropertyChanged("PurchaseOrderView");
+                    ////RaisePropertyChanged("PurchaseOrderView");
                     break;
                 default:
                     break;
@@ -219,7 +219,7 @@ namespace VMSales.ViewModels
             set
             {
                 _cancanremoveinvoicenumberfilter = value;
-                RaisePropertyChanged("CanRemoveInvoiceNumberFilter");
+                ////RaisePropertyChanged("CanRemoveInvoiceNumberFilter");
             }
         }
         public bool CanRemovePurchaseDateFilter
@@ -228,7 +228,7 @@ namespace VMSales.ViewModels
             set
             {
                 _cancanremovepurchasedatefilter = value;
-                RaisePropertyChanged("CanRemovePurchaseDateFilter");
+               // //RaisePropertyChanged("CanRemovePurchaseDateFilter");
             }
         }
         public bool CanRemoveSupplierFilter
@@ -237,7 +237,7 @@ namespace VMSales.ViewModels
             set
             {
                 _cancanremovesupplierfilter = value;
-                RaisePropertyChanged("CanRemoveSupplierFilter");
+                ////RaisePropertyChanged("CanRemoveSupplierFilter");
             }
 
         }
@@ -248,7 +248,7 @@ namespace VMSales.ViewModels
             SelectedInvoiceNumber = null;
             PurchaseOrderView.Filter = null;
             CanRemoveInvoiceNumberFilter = false;
-            RaisePropertyChanged("PurchaseOrderView");
+            ////RaisePropertyChanged("PurchaseOrderView");
 
         }
         public void RemovePurchaseDateFilterCommand()
@@ -257,7 +257,7 @@ namespace VMSales.ViewModels
             SelectedPurchaseDate = null;
             PurchaseOrderView.Filter = null;
             CanRemovePurchaseDateFilter = false;
-            RaisePropertyChanged("PurchaseOrderView");
+            ////RaisePropertyChanged("PurchaseOrderView");
         }
 
         #endregion
@@ -279,7 +279,7 @@ namespace VMSales.ViewModels
             {
                 if (_supplier_fk == value) return;
                 _supplier_fk = value;
-                RaisePropertyChanged("supplier_fk");
+                ////RaisePropertyChanged("supplier_fk");
                 LoadPurchaseOrder(supplier_fk);
                 CanRemoveSupplierFilter = !CanRemoveSupplierFilter;
                 // Remove filters for purchase date and invoice
@@ -301,7 +301,7 @@ namespace VMSales.ViewModels
         public void RemoveSupplier()
         {
             supplier_fk = 0;
-            RaisePropertyChanged("supplier_fk");
+            ////RaisePropertyChanged("supplier_fk");
             LoadPurchaseOrder(0);
             CanRemoveSupplierFilter = false;
         }
@@ -379,7 +379,7 @@ namespace VMSales.ViewModels
                     // delete from screen only.
 
                     ObservableCollectionPurchaseOrderModel.Remove(ObservableCollectionPurchaseOrderModel.Where(i => i.purchase_order_detail_pk == SelectedItem.purchase_order_detail_pk).Single());
-                    RaisePropertyChanged("ObservableCollectionPurchaseModel");
+                    ////RaisePropertyChanged("ObservableCollectionPurchaseModel");
                     return;
                 }
                 if (SelectedItem.purchase_order_pk != 0 && SelectedItem.purchase_order_fk != 0 && SelectedItem.purchase_order_detail_pk != 0)
@@ -464,7 +464,7 @@ namespace VMSales.ViewModels
                         PurchaseOrderRepo.Commit();
                         PurchaseOrderRepo.Dispose();
                         SelectedItem.supplier_fk = get_supplier.Result.supplier_fk;
-                        RaisePropertyChanged("supplier_fk");
+                        ////RaisePropertyChanged("supplier_fk");
                     }
                     else
                     {
@@ -542,7 +542,7 @@ namespace VMSales.ViewModels
                         SavePurchaseOrderRepo.Commit();
                         SavePurchaseOrderRepo.Dispose();
                         MessageBox.Show("1 Row Inserted: Lot Name " + SelectedItem.lot_name);
-                        RaisePropertyChanged("ObservableCollectionPurchaseOrderModel");
+                        ////RaisePropertyChanged("ObservableCollectionPurchaseOrderModel");
                         SelectedItem = new PurchaseOrderModel();
                         return;
                     }
@@ -697,8 +697,8 @@ namespace VMSales.ViewModels
                     ObservableCollectionTotalPurchaseOrderModel = PurchaseOrderRepo.GetAllTotal(supplier_fk).Result.ToObservable();
                 }
             }
-            RaisePropertyChanged("ObservableCollectionPurchaseOrderModel");
-            RaisePropertyChanged("ObservableCollectionTotalPurchaseOrderModel");
+            ////RaisePropertyChanged("ObservableCollectionPurchaseOrderModel");
+            ////RaisePropertyChanged("ObservableCollectionTotalPurchaseOrderModel");
             PurchaseOrderRepo.Commit();
             PurchaseOrderRepo.Dispose();
 
@@ -737,8 +737,8 @@ namespace VMSales.ViewModels
                 FilterInvoiceNumber = new ObservableCollection<string>(InvoiceNumberList.Cast<String>());
                 FilterPurchaseDate = new ObservableCollection<DateTime>(PurchaseDateList.Cast<DateTime>());
             }
-            RaisePropertyChanged("FilterInvoiceNumber");
-            RaisePropertyChanged("FilterPurchaseDate");
+            //////RaisePropertyChanged("FilterInvoiceNumber");
+            //////RaisePropertyChanged("FilterPurchaseDate");
 
             if (ObservableCollectionPurchaseOrderModel is null)
             {
@@ -790,7 +790,7 @@ namespace VMSales.ViewModels
             cvs.Source = ObservableCollectionPurchaseOrderModel;
             PurchaseOrderRepo.Commit();
             PurchaseOrderRepo.Dispose();
-            RaisePropertyChanged("ObservableCollectionPurchaseOrderModel");
+            ////RaisePropertyChanged("ObservableCollectionPurchaseOrderModel");
 
             LoadFilterLists(ObservableCollectionPurchaseOrderModel);
 

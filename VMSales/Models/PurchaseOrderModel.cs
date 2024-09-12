@@ -26,7 +26,7 @@ namespace VMSales.Models
             {
                 if (_purchase_order_pk == value) return;
                 _purchase_order_pk = value;
-                RaisePropertyChanged("purchase_order_pk");
+                //RaisePropertyChanged("purchase_order_pk");
             }
         }
 
@@ -37,7 +37,7 @@ namespace VMSales.Models
             {
                 if (_invoice_number == value) return;
                 _invoice_number = value;
-                RaisePropertyChanged("invoice_number");
+                //RaisePropertyChanged("invoice_number");
             }
         }
         public DateTime purchase_date
@@ -47,7 +47,7 @@ namespace VMSales.Models
             {
                 if (_purchase_date == value) return;
                 _purchase_date = value;
-                RaisePropertyChanged("purchase_date");
+                //RaisePropertyChanged("purchase_date");
                 changecolor = 1;
             }
         }
@@ -59,7 +59,7 @@ namespace VMSales.Models
             set
             {
                 _IsSelected = value;
-                RaisePropertyChanged("IsSelected");
+                //RaisePropertyChanged("IsSelected");
             }
         }
 

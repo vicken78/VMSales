@@ -40,7 +40,7 @@ namespace VMSales.Models
             {
                 if (_product_pk == value) return;
                 _product_pk = value;
-                RaisePropertyChanged("product_pk");
+                //RaisePropertyChanged("product_pk");
             }
         }      
         public string product_name
@@ -50,7 +50,7 @@ namespace VMSales.Models
             {
                 if (_product_name == value) return;
                 _product_name = value;
-                RaisePropertyChanged("product_name");
+                //RaisePropertyChanged("product_name");
             }
         }
         public string description
@@ -60,7 +60,7 @@ namespace VMSales.Models
             {
                 if (_description == value) return;
                 _description = value;
-                RaisePropertyChanged("description");
+                //RaisePropertyChanged("description");
             }
 
         }
@@ -71,7 +71,7 @@ namespace VMSales.Models
             {
                 if (_quantity == value) return;
                 _quantity = value;
-                RaisePropertyChanged("quantity");
+                //RaisePropertyChanged("quantity");
             }
 
         }
@@ -82,7 +82,7 @@ namespace VMSales.Models
             {
                 if (_cost == value) return;
                 _cost = value;
-                RaisePropertyChanged("cost");
+                //RaisePropertyChanged("cost");
             }
 
         }
@@ -93,7 +93,7 @@ namespace VMSales.Models
             {
                 if (_sku == value) return;
                 _sku = value;
-                RaisePropertyChanged("sku");
+                //RaisePropertyChanged("sku");
             }
         }
         public decimal listed_price
@@ -103,7 +103,7 @@ namespace VMSales.Models
             {
                 if (_listed_price == value) return;
                 _listed_price = value;
-                RaisePropertyChanged("listed_price");
+                //RaisePropertyChanged("listed_price");
             }
 
         }
@@ -114,7 +114,7 @@ namespace VMSales.Models
             {
                 if (_instock == value) return;
                 _instock = value;
-                RaisePropertyChanged("instock");
+                //RaisePropertyChanged("instock");
             }
 
         }
@@ -127,7 +127,7 @@ namespace VMSales.Models
             {
                 if (_conditionlist == value) return;
                 _conditionlist = value;
-                RaisePropertyChanged("conditionlist");
+                //RaisePropertyChanged("conditionlist");
             }
 
         }
@@ -139,7 +139,7 @@ namespace VMSales.Models
             {
                 if (_condition == value) return;
                 _condition = value;
-                RaisePropertyChanged("condition");
+                //RaisePropertyChanged("condition");
             }
         }
 
@@ -150,7 +150,7 @@ namespace VMSales.Models
             {
                 if (_listing_url == value) return;
                 _listing_url = value;
-                RaisePropertyChanged("listing_url");
+                //RaisePropertyChanged("listing_url");
             }
 
         }
@@ -161,7 +161,7 @@ namespace VMSales.Models
             {
                 if (_listing_number == value) return;
                 _listing_number = value;
-                RaisePropertyChanged("listing_number");
+                //RaisePropertyChanged("listing_number");
             }
 
 
@@ -173,7 +173,7 @@ namespace VMSales.Models
             {
                 if (_listing_date == value) return;
                 _listing_date = value;
-                RaisePropertyChanged("listing_date");
+                //RaisePropertyChanged("listing_date");
             }
 
         }
@@ -185,7 +185,7 @@ namespace VMSales.Models
             {
                 if (_brand_name == value) return;
                 _brand_name = value;
-                RaisePropertyChanged("brand_name");
+                //RaisePropertyChanged("brand_name");
             }
 
 
@@ -198,7 +198,7 @@ namespace VMSales.Models
             set
             {
                 _IsSelected = value;
-                RaisePropertyChanged("IsSelected");
+                //RaisePropertyChanged("IsSelected");
             }
         }
         [ExplicitKey]
@@ -208,7 +208,7 @@ namespace VMSales.Models
         set {
                 if (_product_category_pk == value) return;
                 _product_category_pk = value;
-                RaisePropertyChanged("product_category_pk");
+                //RaisePropertyChanged("product_category_pk");
             }
         }
         
@@ -219,7 +219,7 @@ namespace VMSales.Models
             set {
                 if (_category_fk == value) return;
                 _category_fk = value;
-                RaisePropertyChanged("category_fk");
+                //RaisePropertyChanged("category_fk");
                 }
         }
 
@@ -231,7 +231,7 @@ namespace VMSales.Models
             {
                 if (_category_name == value) return;
                 _category_name = value;
-                RaisePropertyChanged("category_name");
+                //RaisePropertyChanged("category_name");
             }
         }
 
@@ -242,7 +242,7 @@ namespace VMSales.Models
             set
             {
                 _purchase_order_detail_fk = value;
-                RaisePropertyChanged("purchase_order_detail_fk");
+                //RaisePropertyChanged("purchase_order_detail_fk");
             }
         }
     }
