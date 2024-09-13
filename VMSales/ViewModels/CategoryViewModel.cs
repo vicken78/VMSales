@@ -10,11 +10,7 @@ namespace VMSales.ViewModels
 {
     public class CategoryViewModel : BaseViewModel
     {
-        #region INotify Private
         private ObservableCollection<CategoryModel> _ObservableCollectionCategoryModelDirty { get; set; }
-
-        #endregion
-        #region INotify Public
 
         public ObservableCollection<CategoryModel> ObservableCollectionCategoryModelDirty
         {
@@ -26,8 +22,6 @@ namespace VMSales.ViewModels
             }
         }
         public ObservableCollection<CategoryModel> ObservableCollectionCategoryModelClean { get; protected set; }
-
-        #endregion
 
         IDatabaseProvider dataBaseProvider;
 
@@ -46,7 +40,7 @@ namespace VMSales.ViewModels
 
                 try
                 {
-               
+                    // implement check for foreign keys, if foreign key exists, warn user.
                     switch (item.Action)
                     {
                         case "Update":
