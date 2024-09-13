@@ -1,111 +1,159 @@
-﻿using VMSales.Logic;
-using Dapper.Contrib.Extensions;
+﻿using Dapper.Contrib.Extensions;
+using VMSales.ViewModels;
+using System.Windows.Media;
 
 namespace VMSales.Models
 {
     [Table("supplier")]
-    public class SupplierModel : DataBaseLayer
+    public class SupplierModel : BaseViewModel
     {
         private int _supplier_pk { get; set; }
-        private string _supplier_name { get; set; }
-        private string _address { get; set; }
-        private string _city { get; set; }
-        private string _state { get; set; }
-        private string _zip { get; set; }
-        private string _country { get; set; }
-        private string _phone { get; set; }
-        private string _email { get; set; }
-
         [ExplicitKey]
         public int supplier_pk
         {
-            get { return _supplier_pk; }
+            get  =>  _supplier_pk; 
             set
             {
-                if (_supplier_pk == value) return;
+                if (_supplier_pk != value)
                 _supplier_pk = value;
-                //RaisePropertyChanged("supplier_pk");
-            }
+                NotifyOfPropertyChange(() => supplier_pk);
+           }
         }
+
+        private string _supplier_name { get; set; }
         public string supplier_name
         {
-            get { return _supplier_name; }
+            get => _supplier_name; 
             set
            {
-                if (_supplier_name == value) return;
-                _supplier_name = value;
-                //RaisePropertyChanged("supplier_name");
+                if (_supplier_name != null)
+                {
+                    FontColor = Brushes.Red;
+                    NotifyOfPropertyChange(() => FontColor);
+                }
+                if (_supplier_name != value)
+                    _supplier_name = value;
+                NotifyOfPropertyChange(() => supplier_name);
             }
         }
 
+        private string _address { get; set; }
         public string address
         {
-            get { return _address; }
+            get  => _address; 
             set
             {
-                if (_address == value) return;
+                if (_address != null)
+                {
+                    FontColor = Brushes.Red;
+                    NotifyOfPropertyChange(() => FontColor);
+                }
+                if (_address != value) 
                 _address = value;
-                //RaisePropertyChanged("address");
+                NotifyOfPropertyChange(() => address);
             }
         }
+
+        private string _city { get; set; }
         public string city
         {
-            get { return _city; }
+            get  => _city; 
             set
             {
-                if (_city == value) return;
+                if (_city != null)
+                {
+                    FontColor = Brushes.Red;
+                    NotifyOfPropertyChange(() => FontColor);
+                }
+                if (_city != value) 
                 _city = value;
-                //RaisePropertyChanged("city");
+                NotifyOfPropertyChange(() => city);
             }
         }
+
+        private string _state { get; set; }
         public string state
         {
-            get { return _state; }
+            get => _state; 
             set
             {
-                if (_state == value) return;
+                if (_state != null)
+                {
+                    FontColor = Brushes.Red;
+                    NotifyOfPropertyChange(() => FontColor);
+                }
+                if (_state != value) 
                 _state = value;
-                //RaisePropertyChanged("state");
+                NotifyOfPropertyChange(() => state);
             }
         }
+
+        private string _country { get; set; }
         public string country
         {
-            get { return _country; }
+            get => _country; 
             set
             {
-                if (_country == value) return;
+                if (_country != null)
+                {
+                    FontColor = Brushes.Red;
+                    NotifyOfPropertyChange(() => FontColor);
+                }
+                if (_country != value) 
                 _country = value;
-                //RaisePropertyChanged("country");
+                NotifyOfPropertyChange(() => country);
             }
         }
+
+        private string _zip { get; set; }
         public string zip
         {
-            get { return _zip; }
+            get  => _zip; 
             set
             {
-                if (_zip == value) return;
+                if (_zip != null)
+                {
+                    FontColor = Brushes.Red;
+                    NotifyOfPropertyChange(() => FontColor);
+                }
+                if (_zip != value) 
                 _zip = value;
-                //RaisePropertyChanged("zip");
+                NotifyOfPropertyChange(() => zip);
             }
         }
+
+
+        private string _phone { get; set; }
         public string phone
         {
-            get { return _phone; }
+            get => _phone; 
             set
             {
-                if (_phone == value) return;
+                if (_phone != null)
+                {
+                    FontColor = Brushes.Red;
+                    NotifyOfPropertyChange(() => FontColor);
+                }
+                if (_phone != value) 
                 _phone = value;
-                //RaisePropertyChanged("phone");
+                NotifyOfPropertyChange(() => phone);
             }
         }
+
+        private string _email { get; set; }
         public string email
         {
-            get { return _email; }
+            get  => _email; 
             set
             {
-                if (_email == value) return;
+                if (_email != null)
+                {
+                    FontColor = Brushes.Black;
+                    NotifyOfPropertyChange(() => FontColor);
+                }
+                if (_email != value) 
                 _email = value;
-                //RaisePropertyChanged("email");
+                NotifyOfPropertyChange(() => email);
             }
         }   
     }

@@ -1,10 +1,7 @@
-﻿using VMSales.Logic;
-using Dapper.Contrib.Extensions;
+﻿using Dapper.Contrib.Extensions;
 using System;
-using System.Windows.Forms;
 using VMSales.ViewModels;
 using System.Windows.Media;
-using System.Diagnostics;
 
 namespace VMSales.Models
 {
@@ -12,6 +9,7 @@ namespace VMSales.Models
     public class CategoryModel : BaseViewModel
     {
         private int _category_pk;
+        [ExplicitKey]
         public int category_pk
         {
             get => _category_pk;
@@ -67,7 +65,6 @@ namespace VMSales.Models
                 }
             }
         }
-
 
         private DateTime _creation_date;
         public DateTime creation_date
