@@ -35,7 +35,7 @@ namespace VMSales.ViewModels
 
             foreach (var item in differences)
             {
-                DataBaseLayer.SupplierRepository SupplierRepo = new DataBaseLayer.SupplierRepository(dataBaseProvider);
+                SupplierRepository SupplierRepo = new SupplierRepository(dataBaseProvider);
                 try
                 {
                     // implement check for foreign keys, if foreign key exists, warn user.
@@ -87,7 +87,7 @@ namespace VMSales.ViewModels
             ObservableCollectionSupplierModelClean = new ObservableCollection<SupplierModel>();
 
             dataBaseProvider = getprovider();
-            DataBaseLayer.SupplierRepository SupplierRepo = new DataBaseLayer.SupplierRepository(dataBaseProvider);
+            SupplierRepository SupplierRepo = new SupplierRepository(dataBaseProvider);
             ObservableCollectionSupplierModelDirty = SupplierRepo.GetAll().Result.ToObservable();
 
             ObservableCollectionSupplierModelClean = new ObservableCollection<SupplierModel>(ObservableCollectionSupplierModelDirty.Select(item => new SupplierModel

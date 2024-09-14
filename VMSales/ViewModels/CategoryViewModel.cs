@@ -36,7 +36,7 @@ namespace VMSales.ViewModels
 
             foreach (var item in differences)
             {
-                DataBaseLayer.CategoryRepository CategoryRepo = new DataBaseLayer.CategoryRepository(dataBaseProvider);
+                CategoryRepository CategoryRepo = new CategoryRepository(dataBaseProvider);
 
                 try
                 {
@@ -91,9 +91,9 @@ namespace VMSales.ViewModels
                 ObservableCollectionCategoryModelDirty = new ObservableCollection<CategoryModel>();
                 ObservableCollectionCategoryModelClean = new ObservableCollection<CategoryModel>();
 
-                dataBaseProvider = getprovider();
-                DataBaseLayer.CategoryRepository CategoryRepo = new DataBaseLayer.CategoryRepository(dataBaseProvider);
-                ObservableCollectionCategoryModelDirty = CategoryRepo.GetAll().Result.ToObservable();
+            dataBaseProvider = getprovider();
+            CategoryRepository CategoryRepo = new CategoryRepository(dataBaseProvider);
+            ObservableCollectionCategoryModelDirty = CategoryRepo.GetAll().Result.ToObservable();
         
             ObservableCollectionCategoryModelClean = new ObservableCollection<CategoryModel>(ObservableCollectionCategoryModelDirty.Select(item => new CategoryModel
             {

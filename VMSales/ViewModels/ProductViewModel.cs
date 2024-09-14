@@ -434,7 +434,7 @@ namespace VMSales.ViewModels
             try
             {
                 // Load Supplier
-                DataBaseLayer.SupplierRepository SupplierRepo = new DataBaseLayer.SupplierRepository(dataBaseProvider);
+                SupplierRepository SupplierRepo = new SupplierRepository(dataBaseProvider);
                 if (SelectedItem.product_pk > 0)
                     selected_supplier_name = SupplierRepo.Selected_Supplier(SelectedItem.product_pk).Result.First().ToString();
                 SupplierRepo.Commit();
@@ -520,7 +520,7 @@ namespace VMSales.ViewModels
             try
             {
                 dataBaseProvider = getprovider();
-                DataBaseLayer.CategoryRepository CategoryRepo = new DataBaseLayer.CategoryRepository(dataBaseProvider);
+                CategoryRepository CategoryRepo = new CategoryRepository(dataBaseProvider);
                 selected_category_fk_filter = CategoryRepo.Get_by_category_name(selected_category_name_filter.category_name).Result;
                 CategoryRepo.Commit();
                 CategoryRepo.Dispose();
@@ -567,7 +567,7 @@ namespace VMSales.ViewModels
             try
             {
                 dataBaseProvider = getprovider();
-                DataBaseLayer.SupplierRepository SupplierRepo = new DataBaseLayer.SupplierRepository(dataBaseProvider);
+                SupplierRepository SupplierRepo = new SupplierRepository(dataBaseProvider);
                 selected_supplier_fk_filter = SupplierRepo.Get_by_supplier_name(selected_supplier_name_filter.supplier_name).Result;
                 SupplierRepo.Commit();
                 SupplierRepo.Dispose();
@@ -656,14 +656,14 @@ namespace VMSales.ViewModels
                 MessageBox.Show("Please select a lot number.");
                 return;
             }
-            DataBaseLayer.SupplierRepository SupplierRepo = new DataBaseLayer.SupplierRepository(dataBaseProvider);
+            SupplierRepository SupplierRepo = new SupplierRepository(dataBaseProvider);
             // convert supplier_name to fk
             SelectedItem.supplier_fk = SupplierRepo.Get_by_supplier_name(selected_supplier_name).Result;
             SelectedItem.purchase_order_detail_fk = selected_lot_number;
             SupplierRepo.Commit();
             SupplierRepo.Dispose();
 
-            DataBaseLayer.CategoryRepository CategoryRepo = new DataBaseLayer.CategoryRepository(dataBaseProvider);
+            CategoryRepository CategoryRepo = new CategoryRepository(dataBaseProvider);
             // convert category_name to fk
             SelectedItem.category_fk = CategoryRepo.Get_by_category_name(SelectedItem.category_name).Result;
             CategoryRepo.Commit();
@@ -1020,7 +1020,7 @@ namespace VMSales.ViewModels
             
             // Get Suppliers
             BindableCollectionSupplierModel = new BindableCollection<SupplierModel>();
-            DataBaseLayer.SupplierRepository SupplierRepo = new DataBaseLayer.SupplierRepository(dataBaseProvider);
+            SupplierRepository SupplierRepo = new SupplierRepository(dataBaseProvider);
 
             BindableCollectionSupplierModel = DataConversion.ToBindableCollection(SupplierRepo.GetAll().Result.ToBindableCollection());
 
@@ -1088,7 +1088,7 @@ namespace VMSales.ViewModels
             {
                 category_list = new List<string>();
                 BindableCollectionCategoryModel = new BindableCollection<CategoryModel>();
-                DataBaseLayer.CategoryRepository CategoryRepos = new DataBaseLayer.CategoryRepository(dataBaseProvider);
+                CategoryRepository CategoryRepos = new CategoryRepository(dataBaseProvider);
                 BindableCollectionCategoryModel = DataConversion.ToBindableCollection(CategoryRepos.Get_all_category_name().Result.ToObservable());
                 CategoryRepos.Commit();
                 CategoryRepos.Dispose();
