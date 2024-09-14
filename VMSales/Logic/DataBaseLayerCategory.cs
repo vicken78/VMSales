@@ -1,6 +1,9 @@
-﻿using Dapper;
+﻿using Caliburn.Micro;
+using Dapper;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using System.Windows.Controls.Primitives;
+using System.Windows.Forms;
 using VMSales.Models;
 
 namespace VMSales.Logic
@@ -80,9 +83,14 @@ namespace VMSales.Logic
 
             public override async Task<bool> Delete(CategoryModel entity)
             {
-                // Could check for unset id, and throw exception.
-                return (await Connection.ExecuteAsync("DELETE FROM category WHERE category_pk = @id", new { id = entity.category_pk }, Transaction)) == 1;
-            }
+            // Check for foreign key.
+            bool result = await Connection.QueryFirstAsync<bool>("SELECT CASE WHEN EXISTS (SELECT category_fk FROM product_category WHERE category_fk = @category_pk) THEN 1 ELSE 0 END as result", new { category_pk = entity.category_pk }, null);
+
+            if (result)
+                return false;
+            else 
+            return (await Connection.ExecuteAsync("DELETE FROM category WHERE category_pk = @id", new { id = entity.category_pk }, Transaction)) == 1;
+        }
 
             public override Task<IEnumerable<CategoryModel>> GetAllWithID(int id)
             {

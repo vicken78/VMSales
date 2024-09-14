@@ -74,8 +74,15 @@ namespace VMSales.Logic
 
         public override async Task<bool> Delete(SupplierModel entity)
         {
-            return (await Connection.ExecuteAsync("DELETE FROM supplier WHERE supplier_pk = @id", new { id = entity.supplier_pk }, Transaction)) == 1;
+            bool result = await Connection.QueryFirstAsync<bool>("SELECT CASE WHEN EXISTS (SELECT supplier_fk FROM product_supplier WHERE supplier_fk = @supplier_pk) THEN 1 ELSE 0 END as result", new { supplier_pk = entity.supplier_pk }, null);
+            if (result)
+                return false;
+            else
+
+                return (await Connection.ExecuteAsync("DELETE FROM supplier WHERE supplier_pk = @id", new { id = entity.supplier_pk }, Transaction)) == 1;
         }
+        
+        
         public override Task<IEnumerable<SupplierModel>> GetAllWithID(int id)
         {
             throw new System.NotImplementedException();

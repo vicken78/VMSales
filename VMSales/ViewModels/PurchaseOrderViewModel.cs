@@ -797,7 +797,7 @@ namespace VMSales.ViewModels
             // Get Suppliers
             ObservableCollectionSupplierModel = new ObservableCollection<SupplierModel>();
             dataBaseProvider = getprovider();
-            DataBaseLayer.SupplierRepository SupplierRepo = new DataBaseLayer.SupplierRepository(dataBaseProvider);
+            SupplierRepository SupplierRepo = new SupplierRepository(dataBaseProvider);
             ObservableCollectionSupplierModel = SupplierRepo.GetAll().Result.ToObservable();
             SupplierRepo.Commit();
             SupplierRepo.Dispose();

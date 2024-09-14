@@ -58,7 +58,7 @@ namespace VMSales.ViewModels
                         case "Delete":
                             bool Supplier_Category = SupplierRepo.Delete(item).Result;
                             if (Supplier_Category == false)
-                            { throw new Exception("Delete Failed"); }
+                            { MessageBox.Show("Foreign Key Exists, You must delete the associated foreign key first Supplier FK=" + item.supplier_pk); }
                             else
                                 SupplierRepo.Commit();
                             break;

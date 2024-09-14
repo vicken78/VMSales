@@ -60,7 +60,7 @@ namespace VMSales.ViewModels
                         case "Delete":
                             bool Delete_Category = CategoryRepo.Delete(item).Result;
                             if (Delete_Category == false)
-                            { throw new Exception("Delete Failed"); }
+                            { MessageBox.Show("Foreign Key Exists, You must delete the associated foreign key first Category FK="+item.category_pk); }
                             else
                                 CategoryRepo.Commit();
                             break;
