@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Threading.Tasks;
 using System.Windows;
 using VMSales.Models;
@@ -398,6 +399,8 @@ namespace VMSales.Logic
             }
 
 
+
+
             public override async Task<ProductModel> Get(int id)
             {
                 return await Connection.QuerySingleAsync<ProductModel>("SELECT purchase_order_detail_pk FROM purchase_order_detail as pod INNER JOIN purchase_order on purchase_order.purchase_order_pk = pod.purchase_order_fk WHERE supplier_fk = @id;", new { id }, Transaction);
@@ -420,10 +423,10 @@ namespace VMSales.Logic
 
             public async Task<IEnumerable<ProductModel>> GetAllWithID(int supplier_fk, int category_fk)
             {
-
                 // category only
-                if (category_fk != 0 && supplier_fk == 0)
-                {
+   
+                    if (category_fk > 0 && supplier_fk == 0)
+                    {
                     return await Connection.QueryAsync<ProductModel>(
                     "SELECT DISTINCT c.category_pk, c.category_name, p.*, ps.* " +
                     "FROM product p " +
@@ -442,7 +445,7 @@ namespace VMSales.Logic
                     "WHERE pc.category_fk = @category_fk ", new { category_fk }, Transaction);
                 }
                 // supplier only
-                if (category_fk == 0 && supplier_fk != 0)
+                if (category_fk == 0 && supplier_fk > 0)
                 {
                     return await Connection.QueryAsync<ProductModel>(
                 "SELECT DISTINCT c.category_pk, c.category_name, p.*, ps.* " +
@@ -462,7 +465,7 @@ namespace VMSales.Logic
                 "WHERE ps.supplier_fk = @supplier_fk", new { supplier_fk }, Transaction);
                 }
                 // supplier and category
-                if (category_fk != 0 && supplier_fk != 0)
+                if (category_fk > 0 && supplier_fk > 0)
                 {
                     return await Connection.QueryAsync<ProductModel>(
                 "SELECT DISTINCT c.category_pk, c.category_name, p.*, ps.* " +

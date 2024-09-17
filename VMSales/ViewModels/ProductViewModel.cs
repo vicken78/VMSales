@@ -12,8 +12,8 @@ using VMSales.Logic;
 using VMSales.Models;
 
 namespace VMSales.ViewModels
-{ 
-public class ProductViewModel : BaseViewModel
+{
+    public class ProductViewModel : BaseViewModel
     {
         IDatabaseProvider dataBaseProvider;
         private ObservableCollection<ProductModel> _ObservableCollectionProductModelDirty;
@@ -49,7 +49,7 @@ public class ProductViewModel : BaseViewModel
         private bool _canRemoveCategoryFilter;
         public bool canRemoveCategoryFilter
         {
-            get => _canRemoveCategoryFilter; 
+            get => _canRemoveCategoryFilter;
             set
             {
                 if (_canRemoveCategoryFilter != value)
@@ -67,26 +67,32 @@ public class ProductViewModel : BaseViewModel
         private SupplierModel _selected_supplier_filter;
         public SupplierModel selected_supplier_filter
         {
-            get => _selected_supplier_filter; 
+            get => _selected_supplier_filter;
             set
             {
-                if (_selected_supplier_filter != value) 
-                _selected_supplier_filter = value;
-                NotifyOfPropertyChange(() => selected_supplier_filter);
-                ApplyFilter(!string.IsNullOrEmpty(selected_supplier_filter?.supplier_name) ? FilterField.Supplier : FilterField.None);
+       
+                  if (_selected_supplier_filter != value)
+                  {
+                      _selected_supplier_filter = value; 
+                      NotifyOfPropertyChange(() => selected_supplier_filter);
+                      ApplyFilter(!string.IsNullOrEmpty(selected_supplier_filter?.supplier_name) ? FilterField.Supplier : FilterField.None);
+                  }
             }
         }
 
         private CategoryModel _selected_category_filter;
         public CategoryModel selected_category_filter
         {
-            get => _selected_category_filter; 
+            get => _selected_category_filter;
             set
             {
-                if (_selected_category_filter != value) 
-                _selected_category_filter = value;
-                NotifyOfPropertyChange(() => selected_category_filter);
-                ApplyFilter(!string.IsNullOrEmpty(_selected_category_filter?.category_name) ? FilterField.Category : FilterField.None);
+
+                if (_selected_category_filter != value)
+                {
+                    _selected_category_filter = value;
+                    NotifyOfPropertyChange(() => selected_category_filter);
+                    ApplyFilter(!string.IsNullOrEmpty(_selected_category_filter?.category_name) ? FilterField.Category : FilterField.None);
+                }
             }
         }
 
@@ -95,6 +101,7 @@ public class ProductViewModel : BaseViewModel
             switch (field)
             {
                 case FilterField.Category:
+
                     AddCategoryFilter();
                     break;
                 case FilterField.Supplier:
@@ -107,43 +114,71 @@ public class ProductViewModel : BaseViewModel
         {
             if (!canRemoveCategoryFilter)
                 canRemoveCategoryFilter = true;
-                NotifyOfPropertyChange(() => canRemoveCategoryFilter);
-
-            MessageBox.Show(selected_category_filter.category_pk.ToString());
-
+            NotifyOfPropertyChange(() => canRemoveCategoryFilter);
+            UpdateProduct();
         }
 
         public void AddSupplierFilter()
         {
             if (!canRemoveSupplierFilter)
                 canRemoveSupplierFilter = true;
-                NotifyOfPropertyChange(() => canRemoveSupplierFilter);
-            MessageBox.Show(selected_supplier_filter.supplier_pk.ToString());
-
+            NotifyOfPropertyChange(() => canRemoveSupplierFilter);
+            UpdateProduct();
         }
 
         public void RemoveCategoryFilterCommand()
         {
-            //selected_category_fk_filter = 0;
             canRemoveCategoryFilter = false;
-            selected_category_filter = null;
+            selected_category_filter.category_pk = 0;
+            selected_category_filter.category_name = null;
             NotifyOfPropertyChange(() => canRemoveCategoryFilter);
             NotifyOfPropertyChange(() => selected_category_filter);
+            UpdateProduct();
         }
         public void RemoveSupplierFilterCommand()
         {
-            //selected_supplier_fk_filter = 0;
             canRemoveSupplierFilter = false;
-            selected_supplier_filter = null;
+            selected_supplier_filter.supplier_pk = 0;
+            selected_supplier_filter.supplier_name = null;
             NotifyOfPropertyChange(() => canRemoveSupplierFilter);
             NotifyOfPropertyChange(() => selected_supplier_filter);
+            UpdateProduct();
         }
 
+        public void UpdateProduct()
+        {
+            try
+            {
 
+                dataBaseProvider = getprovider();
+                DataBaseLayer.ProductRepository ProductRepo = new DataBaseLayer.ProductRepository(dataBaseProvider);
+                ObservableCollectionProductModelDirty.Clear();
 
+                if (selected_category_filter.category_pk > 0 || selected_supplier_filter.supplier_pk > 0)
+                {
+                    
+                    ObservableCollectionProductModelDirty = ProductRepo.GetAllWithID(
+                        selected_supplier_filter.supplier_pk,
+                        selected_category_filter.category_pk)
+                        .Result.ToObservable();
+                    ProductRepo.Dispose();
+                }
+
+                else
+                {
+                    ProductRepo.Dispose();
+                    ObservableCollectionProductModelDirty = new ObservableCollection<ProductModel>();
+                    initial_load();
+                }
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show("An error has occured" + e);
+            }
+             
+        }
 
         #endregion
-
 
         #region Commands
         //public async Task SaveCommand()
@@ -163,6 +198,9 @@ public class ProductViewModel : BaseViewModel
 
         public void initial_load()
         {
+            _selected_supplier_filter = new SupplierModel { supplier_pk = 0, supplier_name = null };
+            _selected_category_filter = new CategoryModel { category_pk = 0, category_name = null };
+
             ObservableCollectionProductModelDirty = new ObservableCollection<ProductModel>();
             ObservableCollectionProductModelClean = new ObservableCollection<ProductModel>();
             ObservableCollectionPurchaseOrderModel = new ObservableCollection<PurchaseOrderModel>();
