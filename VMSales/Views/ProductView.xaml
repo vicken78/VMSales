@@ -98,7 +98,7 @@
 
 			<TextBlock Grid.Row="2" Grid.Column="6" FontSize="14" HorizontalAlignment="Center" FontWeight="Bold">Filter Category</TextBlock>
 			<ComboBox IsEditable="False" Background="White" Grid.Row="3" Grid.Column="6" 
-                ItemsSource="{Binding BindableCollectionCategoryModel}" 
+                ItemsSource="{Binding ObservableCollectionCategoryModel}" 
                 DisplayMemberPath="category_name"
                 SelectedItem="{Binding selected_category_name_filter, 
                 UpdateSourceTrigger=PropertyChanged}" 
@@ -113,7 +113,7 @@
 
 			<TextBlock Grid.Row="2" Grid.Column="4" FontSize="14" FontWeight="Bold" HorizontalAlignment="Center" Grid.RowSpan="2">Filter Supplier</TextBlock>
 			<ComboBox IsEditable="False" Background="White" Grid.Row="2" Grid.Column="4" 
-                ItemsSource="{Binding BindableCollectionSupplierModel}"  
+                ItemsSource="{Binding ObservableCollectionSupplierModel}"  
                 DisplayMemberPath="supplier_name"
                 SelectedItem="{Binding selected_supplier_name_filter, 
                 Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"  
@@ -136,14 +136,20 @@
 
 
 			<!-- Search box-->
-			<TextBlock Grid.Row="6" Grid.Column="4" FontSize="14" FontWeight="Bold" Grid.RowSpan="2">Filter By</TextBlock>
+			<TextBlock Grid.Row="6" Grid.Column="4" FontSize="14" FontWeight="Bold" Grid.RowSpan="2">Filter Product</TextBlock>
 			<ComboBox IsEditable="False" Background="White" Grid.Row="8" Grid.Column="4" Grid.ColumnSpan="2"
                 ItemsSource="{Binding searchdropdown}"  
                 SelectedItem="{Binding selected_search, 
                 Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"  
                 Width="200" HorizontalAlignment="Left"/>
 
-			<TextBox Name="Search" Background="White" Text="{Binding searchbox}" Grid.Row="10" Grid.Column="4" Grid.ColumnSpan="2" Visibility="{Binding showsearchtext}"/>
+            <Button x:Name="RemoveCatsegoryFilterCommand" HorizontalAlignment="Left" Margin="30,0,0,0" Grid.Row="10" Grid.Column="6" Width="16" Height="16" 
+            IsEnabled="{Binding canRemoveCategoryFilter, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                <Image Width="10" Height="10" Style="{DynamicResource ImageStyleForButtons}"/>
+            </Button>
+
+
+            <TextBox Name="Search" Background="White" Text="{Binding searchbox}" Grid.Row="10" Grid.Column="4" Grid.ColumnSpan="2" Visibility="{Binding showsearchtext}"/>
             <ComboBox Visibility="{Binding showsearchdrop}" IsEditable="False" Background="White" Grid.Row="10" Grid.Column="4"
 						ItemsSource="{Binding searchdrop}"
 						SelectedItem="{Binding searchdropselect, 
@@ -204,7 +210,7 @@
 
 		<!-- Product DataGrid Start -->
 		<DataGrid AutoGenerateColumns="False" 
-                          ItemsSource="{Binding BindableCollectionProductModel,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
+                          ItemsSource="{Binding ObservableCollectionProductModelDirty,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
                           CanUserReorderColumns="False"
                           SelectedItem="{Binding SelectedItem, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                           CanUserAddRows="False"

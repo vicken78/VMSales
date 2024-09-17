@@ -5,10 +5,92 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Reflection;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media.Imaging;
 using VMSales.Logic;
 using VMSales.Models;
+
+namespace VMSales.ViewModels
+{ 
+public class ProductViewModel : BaseViewModel
+    {
+        private ObservableCollection<ProductModel> _ObservableCollectionProductModelDirty { get; set; }
+
+        public ObservableCollection<ProductModel> ObservableCollectionProductModelDirty
+        {
+            get => _ObservableCollectionProductModelDirty;
+            set
+            {
+                _ObservableCollectionProductModelDirty = value;
+                NotifyOfPropertyChange(() => ObservableCollectionProductModelDirty);
+            }
+        }
+        public ObservableCollection<ProductModel> ObservableCollectionProductModelClean { get; protected set; }
+
+        public ObservableCollection<SupplierModel> ObservableCollectionSupplierModel { get; set; }
+        public ObservableCollection<ProductModel> ObservableCollectionProductModel { get; set; }
+        public ObservableCollection<CategoryModel> ObservableCollectionCategoryModel { get; set; }
+        public ObservableCollection<PurchaseOrderModel> ObservableCollectionPurchaseOrderModel { get; set; }
+
+
+
+        IDatabaseProvider dataBaseProvider;
+
+
+        //Commands
+        public async Task SaveCommand()
+        { 
+        
+        }
+
+        public void ResetCommand()
+        {
+            ObservableCollectionProductModelDirty.Clear();
+            ObservableCollectionProductModelClean.Clear();
+            initial_load();
+        }
+
+
+
+        public void initial_load()
+        {
+            ObservableCollectionProductModelDirty = new ObservableCollection<ProductModel>();
+            ObservableCollectionProductModelClean = new ObservableCollection<ProductModel>();
+            ObservableCollectionPurchaseOrderModel = new ObservableCollection<PurchaseOrderModel>();
+            ObservableCollectionCategoryModel = new ObservableCollection<CategoryModel>();
+            ObservableCollectionSupplierModel = new ObservableCollection<SupplierModel>();
+
+            dataBaseProvider = getprovider();
+            DataBaseLayer.ProductRepository ProductRepo = new DataBaseLayer.ProductRepository(dataBaseProvider);
+            ObservableCollectionProductModelDirty = ProductRepo.GetAll().Result.ToObservable();
+            ProductRepo.Dispose();
+
+            DataBaseLayer.PurchaseOrderRepository PurchaseOrderRepo = new DataBaseLayer.PurchaseOrderRepository(dataBaseProvider);
+            ObservableCollectionPurchaseOrderModel = PurchaseOrderRepo.GetAll().Result.ToObservable();
+            PurchaseOrderRepo.Dispose();
+
+            CategoryRepository CategoryRepo = new CategoryRepository(dataBaseProvider);
+            ObservableCollectionCategoryModel = CategoryRepo.GetAll().Result.ToObservable();
+            CategoryRepo.Dispose();
+
+            SupplierRepository SupplierRepo = new SupplierRepository(dataBaseProvider);
+            ObservableCollectionSupplierModel = SupplierRepo.GetAll().Result.ToObservable();
+            SupplierRepo.Dispose();
+        }
+
+        public ProductViewModel()
+        {
+            initial_load();
+        }
+    }
+
+}
+
+
+/* OLD CODE */
+
+/*
 
 namespace VMSales.ViewModels
 {
@@ -287,10 +369,6 @@ namespace VMSales.ViewModels
 
         #region collections   
 
-        public BindableCollection<SupplierModel> BindableCollectionSupplierModel { get; set; }
-        public BindableCollection<ProductModel> BindableCollectionProductModel { get; set; }
-        public BindableCollection<CategoryModel> BindableCollectionCategoryModel { get; set; }
-        public BindableCollection<PurchaseOrderModel> BindableCollectionPurchaseOrderModel { get; set; }
 
         #endregion
         #region Members
@@ -1109,3 +1187,5 @@ namespace VMSales.ViewModels
         }
     }
 }
+
+*/
