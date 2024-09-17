@@ -15,7 +15,8 @@ namespace VMSales.ViewModels
 { 
 public class ProductViewModel : BaseViewModel
     {
-        private ObservableCollection<ProductModel> _ObservableCollectionProductModelDirty { get; set; }
+        IDatabaseProvider dataBaseProvider;
+        private ObservableCollection<ProductModel> _ObservableCollectionProductModelDirty;
 
         public ObservableCollection<ProductModel> ObservableCollectionProductModelDirty
         {
@@ -27,21 +28,122 @@ public class ProductViewModel : BaseViewModel
             }
         }
         public ObservableCollection<ProductModel> ObservableCollectionProductModelClean { get; protected set; }
-
         public ObservableCollection<SupplierModel> ObservableCollectionSupplierModel { get; set; }
         public ObservableCollection<ProductModel> ObservableCollectionProductModel { get; set; }
         public ObservableCollection<CategoryModel> ObservableCollectionCategoryModel { get; set; }
         public ObservableCollection<PurchaseOrderModel> ObservableCollectionPurchaseOrderModel { get; set; }
 
+        #region Filters
+        private bool _canRemoveSupplierFilter;
+        public bool canRemoveSupplierFilter
+        {
+            get => _canRemoveSupplierFilter;
+            set
+            {
+                if (_canRemoveSupplierFilter != value)
+                    _canRemoveSupplierFilter = value;
+                NotifyOfPropertyChange(() => canRemoveSupplierFilter);
+            }
+        }
+        private bool _canRemoveCategoryFilter;
+        public bool canRemoveCategoryFilter
+        {
+            get => _canRemoveCategoryFilter; 
+            set
+            {
+                if (_canRemoveCategoryFilter != value)
+                    _canRemoveCategoryFilter = value;
+                NotifyOfPropertyChange(() => canRemoveCategoryFilter);
+            }
+        }
+
+        private enum FilterField
+        {
+            Category,
+            Supplier,
+            None
+        }
+        private SupplierModel _selected_supplier_filter;
+        public SupplierModel selected_supplier_filter
+        {
+            get => _selected_supplier_filter; 
+            set
+            {
+                if (_selected_supplier_filter != value) 
+                _selected_supplier_filter = value;
+                NotifyOfPropertyChange(() => selected_supplier_filter);
+                ApplyFilter(!string.IsNullOrEmpty(selected_supplier_filter?.supplier_name) ? FilterField.Supplier : FilterField.None);
+            }
+        }
+
+        private CategoryModel _selected_category_filter;
+        public CategoryModel selected_category_filter
+        {
+            get => _selected_category_filter; 
+            set
+            {
+                if (_selected_category_filter != value) 
+                _selected_category_filter = value;
+                NotifyOfPropertyChange(() => selected_category_filter);
+                ApplyFilter(!string.IsNullOrEmpty(_selected_category_filter?.category_name) ? FilterField.Category : FilterField.None);
+            }
+        }
+
+        private void ApplyFilter(FilterField field)
+        {
+            switch (field)
+            {
+                case FilterField.Category:
+                    AddCategoryFilter();
+                    break;
+                case FilterField.Supplier:
+                    AddSupplierFilter();
+                    break;
+            }
+        }
+
+        public void AddCategoryFilter()
+        {
+            if (!canRemoveCategoryFilter)
+                canRemoveCategoryFilter = true;
+                NotifyOfPropertyChange(() => canRemoveCategoryFilter);
+        }
+
+        public void AddSupplierFilter()
+        {
+            if (!canRemoveSupplierFilter)
+                canRemoveSupplierFilter = true;
+                NotifyOfPropertyChange(() => canRemoveSupplierFilter);
+        }
+
+        public void RemoveCategoryFilterCommand()
+        {
+            //selected_category_fk_filter = 0;
+            canRemoveCategoryFilter = false;
+            selected_category_filter = null;
+            NotifyOfPropertyChange(() => canRemoveCategoryFilter);
+            NotifyOfPropertyChange(() => selected_category_filter);
+        }
+        public void RemoveSupplierFilterCommand()
+        {
+            //selected_supplier_fk_filter = 0;
+            canRemoveSupplierFilter = false;
+            selected_supplier_filter = null;
+            NotifyOfPropertyChange(() => canRemoveSupplierFilter);
+            NotifyOfPropertyChange(() => selected_supplier_filter);
+        }
 
 
-        IDatabaseProvider dataBaseProvider;
 
 
-        //Commands
-        public async Task SaveCommand()
-        { 
-        
+        #endregion
+
+
+        #region Commands
+        //public async Task SaveCommand()
+        public void SaveCommand()
+        {
+
         }
 
         public void ResetCommand()
@@ -50,7 +152,7 @@ public class ProductViewModel : BaseViewModel
             ObservableCollectionProductModelClean.Clear();
             initial_load();
         }
-
+        #endregion
 
 
         public void initial_load()
@@ -125,7 +227,7 @@ namespace VMSales.ViewModels
                     _searchdropselect = value;
                     //RaisePropertyChanged("searchdropselect");
                 }
-            }
+            }*-
         }
 
         private Visibility _showsearchtext;
@@ -251,27 +353,6 @@ namespace VMSales.ViewModels
         }
 
 
-        #region Filters
-        private bool _canRemoveSupplierFilter;
-        public bool canRemoveSupplierFilter
-        {
-            get { return _canRemoveSupplierFilter; }
-            set
-            {
-                _canRemoveSupplierFilter = value;
-                //RaisePropertyChanged("canRemoveSupplierFilter");
-            }
-        }
-        private bool _canRemoveCategoryFilter;
-        public bool canRemoveCategoryFilter
-        {
-            get { return _canRemoveCategoryFilter; }
-            set
-            {
-                _canRemoveCategoryFilter = value;
-                //RaisePropertyChanged("canRemoveCategoryFilter");
-            }
-        }
         
         private bool _canEnableSearchFilter;
         public bool canEnableSearchFilter
@@ -281,39 +362,6 @@ namespace VMSales.ViewModels
             {
                 _canEnableSearchFilter = value;
                 //RaisePropertyChanged("canEnableSearchFilter");
-            }
-        }
-        private enum FilterField
-        {
-            Category,
-            Supplier,
-            None
-        }
-        private SupplierModel _selected_supplier_name_filter { get; set; }
-        public SupplierModel selected_supplier_name_filter
-        {
-            get { return _selected_supplier_name_filter; }
-            set
-            {
-                if (_selected_supplier_name_filter == value) return;
-                _selected_supplier_name_filter = value;
-                //RaisePropertyChanged("selected_supplier_name_filter");
-                //filter product based on supplier name.
-                ApplyFilter(!string.IsNullOrEmpty(selected_supplier_name_filter?.supplier_name) ? FilterField.Supplier : FilterField.None);
-            }
-        }
-
-        private CategoryModel _selected_category_name_filter { get; set; }
-        public CategoryModel selected_category_name_filter
-        {
-            get { return _selected_category_name_filter; }
-            set
-            {
-                if (_selected_category_name_filter == value) return;
-                _selected_category_name_filter = value;
-                //RaisePropertyChanged("selected_category_name_filter");
-                //filter product based on category name.
-                ApplyFilter(!string.IsNullOrEmpty(_selected_category_name_filter?.category_name) ? FilterField.Category : FilterField.None);
             }
         }
         #endregion
@@ -557,25 +605,6 @@ namespace VMSales.ViewModels
 
         // expand
 
-        #region FilterFunctions
-        private void ApplyFilter(FilterField field)
-        {
-            switch (field)
-            {
-                case FilterField.Category:
-                    AddCategoryFilter();
-                    break;
-                case FilterField.Supplier:
-                    AddSupplierFilter();
-                    break;
-                case FilterField.None:
-                    initial_load();
-                    break;
-                default:
-                    MessageBox.Show("Error in FilterField");
-                    break;
-            }
-        }
 
         public void RemoveCategoryFilterCommand()
         {

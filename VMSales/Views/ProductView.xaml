@@ -52,7 +52,7 @@
 
 			<ComboBox x:Name="supplier" IsEditable="False" Background="WhiteSmoke" 
                IsSynchronizedWithCurrentItem="True"
-               ItemsSource="{Binding BindableCollectionSupplierModel}" 
+               ItemsSource="{Binding ObservableCollectionSupplierModel}" 
                DisplayMemberPath="supplier_name"
                SelectedValuePath="supplier_name"
                SelectedValue="{Binding selected_supplier_name,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
@@ -61,7 +61,7 @@
 			<!-- Lot Number -->
 			<Label Content="Lot Number" Grid.Column="0" Grid.Row="3"/>
 			<ComboBox x:Name="Selected_lot_number" IsEditable="False" Background="WhiteSmoke"  
-                ItemsSource="{Binding Path=BindableCollectionPurchaseOrderModel,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
+                ItemsSource="{Binding Path=ObservableCollectionPurchaseOrderModel,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
                 DisplayMemberPath="lot_number"
                 Width="60" HorizontalAlignment="Left"
                 SelectedValue="{Binding selected_lot_number, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" 
@@ -100,7 +100,7 @@
 			<ComboBox IsEditable="False" Background="White" Grid.Row="3" Grid.Column="6" 
                 ItemsSource="{Binding ObservableCollectionCategoryModel}" 
                 DisplayMemberPath="category_name"
-                SelectedItem="{Binding selected_category_name_filter, 
+                SelectedItem="{Binding selected_category_filter, 
                 UpdateSourceTrigger=PropertyChanged}" 
                 Width="100" HorizontalAlignment="Left" Grid.RowSpan="3" Grid.ColumnSpan="2" Margin="1.333,0.222,0,25.333"/>
 
@@ -115,7 +115,7 @@
 			<ComboBox IsEditable="False" Background="White" Grid.Row="2" Grid.Column="4" 
                 ItemsSource="{Binding ObservableCollectionSupplierModel}"  
                 DisplayMemberPath="supplier_name"
-                SelectedItem="{Binding selected_supplier_name_filter, 
+                SelectedItem="{Binding selected_supplier_filter, 
                 Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"  
                 Width="100" HorizontalAlignment="Center" Margin="0,25,0,1" Grid.RowSpan="2"/>
 
@@ -138,15 +138,10 @@
 			<!-- Search box-->
 			<TextBlock Grid.Row="6" Grid.Column="4" FontSize="14" FontWeight="Bold" Grid.RowSpan="2">Filter Product</TextBlock>
 			<ComboBox IsEditable="False" Background="White" Grid.Row="8" Grid.Column="4" Grid.ColumnSpan="2"
-                ItemsSource="{Binding searchdropdown}"  
-                SelectedItem="{Binding selected_search, 
+                ItemsSource="{Binding product_filter}"  
+                SelectedItem="{Binding selected_product_filter, 
                 Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"  
                 Width="200" HorizontalAlignment="Left"/>
-
-            <Button x:Name="RemoveCatsegoryFilterCommand" HorizontalAlignment="Left" Margin="30,0,0,0" Grid.Row="10" Grid.Column="6" Width="16" Height="16" 
-            IsEnabled="{Binding canRemoveCategoryFilter, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
-                <Image Width="10" Height="10" Style="{DynamicResource ImageStyleForButtons}"/>
-            </Button>
 
 
             <TextBox Name="Search" Background="White" Text="{Binding searchbox}" Grid.Row="10" Grid.Column="4" Grid.ColumnSpan="2" Visibility="{Binding showsearchtext}"/>
@@ -161,17 +156,8 @@
                             Width="75"
                             Content="Save"
                             HorizontalAlignment="Left"/>
-			<!--  Add Button -->
-			<Button x:Name="AddCommand" Grid.Column="1" Grid.Row="12"
-                            Width="75"                                      
-                            HorizontalAlignment="Left"
-                            Content="Add"/>
-			<!-- Delete Button -->
-			<Button x:Name="DeleteCommand" Grid.Column="1" Grid.Row="12"             
-                            Width="75"        
-                            Content="Delete" Height="19" Margin="90,0,20,0" VerticalAlignment="Top"/>
 			<!-- Reset Button -->
-			<Button x:Name="ResetCommand" Grid.Column="2" Grid.Row="12"
+			<Button x:Name="ResetCommand" Grid.Column="1" Grid.Row="12"
                             Width="75" 
                             HorizontalAlignment="Left"
                             Content="Reset"/>
@@ -205,8 +191,6 @@
 
 
 		</Grid>
-
-		<!-- Product DataGrid Start -->
 
 		<!-- Product DataGrid Start -->
 		<DataGrid AutoGenerateColumns="False" 
