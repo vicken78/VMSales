@@ -32,6 +32,7 @@ public class ProductViewModel : BaseViewModel
         public ObservableCollection<ProductModel> ObservableCollectionProductModel { get; set; }
         public ObservableCollection<CategoryModel> ObservableCollectionCategoryModel { get; set; }
         public ObservableCollection<PurchaseOrderModel> ObservableCollectionPurchaseOrderModel { get; set; }
+        public List<string> category_list { get; set; }
 
         #region Filters
         private bool _canRemoveSupplierFilter;
@@ -107,6 +108,9 @@ public class ProductViewModel : BaseViewModel
             if (!canRemoveCategoryFilter)
                 canRemoveCategoryFilter = true;
                 NotifyOfPropertyChange(() => canRemoveCategoryFilter);
+
+            MessageBox.Show(selected_category_filter.category_pk.ToString());
+
         }
 
         public void AddSupplierFilter()
@@ -114,6 +118,8 @@ public class ProductViewModel : BaseViewModel
             if (!canRemoveSupplierFilter)
                 canRemoveSupplierFilter = true;
                 NotifyOfPropertyChange(() => canRemoveSupplierFilter);
+            MessageBox.Show(selected_supplier_filter.supplier_pk.ToString());
+
         }
 
         public void RemoveCategoryFilterCommand()
@@ -175,6 +181,12 @@ public class ProductViewModel : BaseViewModel
             CategoryRepository CategoryRepo = new CategoryRepository(dataBaseProvider);
             ObservableCollectionCategoryModel = CategoryRepo.GetAll().Result.ToObservable();
             CategoryRepo.Dispose();
+            category_list = new List<string>();
+            foreach (var item in ObservableCollectionCategoryModel)
+            {
+                category_list.Add(item.category_name);
+            }
+
 
             SupplierRepository SupplierRepo = new SupplierRepository(dataBaseProvider);
             ObservableCollectionSupplierModel = SupplierRepo.GetAll().Result.ToObservable();
@@ -421,8 +433,7 @@ namespace VMSales.ViewModels
         #endregion
         #region Members
 
-        public List<string> category_list { get; set; }
-
+   
         private int _supplier_pk;
         public int supplier_pk
         {
@@ -1199,10 +1210,7 @@ namespace VMSales.ViewModels
                 BindableCollectionCategoryModel = DataConversion.ToBindableCollection(CategoryRepos.Get_all_category_name().Result.ToObservable());
                 CategoryRepos.Commit();
                 CategoryRepos.Dispose();
-                foreach (var item in BindableCollectionCategoryModel)
-                {
-                    category_list.Add(item.category_name);
-                }
+           
             }
             catch (Exception ext)
             {
