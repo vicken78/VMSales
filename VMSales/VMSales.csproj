@@ -240,7 +240,7 @@
     <Compile Include="Logic\DataBaseLayerCategory.cs" />
     <Compile Include="Logic\DataBaseLayerSupplier.cs" />
     <Compile Include="Logic\DataConversion.cs" />
-    <Compile Include="Logic\CollectionToVisibilityConverter .cs" />
+    <Compile Include="Logic\CollectionIsEnabled.cs" />
     <Compile Include="Logic\DataProcessor.cs" />
     <Compile Include="Logic\IRepository.cs" />
     <Compile Include="Logic\Repository.cs" />

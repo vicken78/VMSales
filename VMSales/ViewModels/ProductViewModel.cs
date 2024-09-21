@@ -33,8 +33,7 @@ namespace VMSales.ViewModels
         }
         public List<string> category_list { get; set; }
         public List<string> product_filter { get; set; }
-        public string selected_product_filter { get; set; }
-
+        
         public ObservableCollection<ProductModel> ObservableCollectionProductModelClean { get; protected set; }
         public ObservableCollection<PurchaseOrderModel> ObservableCollectionPurchaseOrderModel { get; set; }
         public ObservableCollection<ProductModel> ObservableCollectionProductModel { get; set; }
@@ -82,7 +81,20 @@ namespace VMSales.ViewModels
                 NotifyOfPropertyChange(() => selected_lot_number);
             }
         }
-        
+        private string _selected_product_filter;
+        public string selected_product_filter
+        {
+            get => _selected_product_filter;
+            set
+            {
+                if (_selected_product_filter != value)
+                    _selected_product_filter = value;
+                NotifyOfPropertyChange(() => selected_product_filter);
+            }
+        }
+
+
+
         #endregion
 
 
@@ -148,6 +160,20 @@ namespace VMSales.ViewModels
             }
         }
 
+        private string _searchtext;
+        public string searchtext
+        {
+            get => _searchtext; 
+            set
+            {
+                if (_searchtext != value)
+                {
+                    _searchtext = value;
+                    NotifyOfPropertyChange(() => searchtext);
+                }
+            }
+        }
+
         private void ApplyFilter(FilterField field)
         {
             switch (field)
@@ -206,7 +232,10 @@ namespace VMSales.ViewModels
                     DataBaseLayer.ProductRepository ProductRepo = new DataBaseLayer.ProductRepository(dataBaseProvider);
                     ObservableCollectionProductModelDirty = ProductRepo.GetAllWithID(
                         selected_supplier_filter.supplier_pk,
-                        selected_category_filter.category_pk)
+                        selected_category_filter.category_pk,
+                        selected_product_filter,
+                        searchtext
+                        )
                         .Result.ToObservable();
                     ProductRepo.Dispose();
                 }
@@ -294,6 +323,21 @@ namespace VMSales.ViewModels
             ObservableCollectionProductModelClean.Clear();
             initial_load();
         }
+
+        public void SearchCommand()
+        { 
+        if (selected_product_filter != null && searchtext != null)
+            { 
+            
+            }
+        }
+
+        public void ClearCommand()
+        {
+            searchtext = null;
+        }
+
+
         #endregion
 
 
@@ -331,8 +375,8 @@ namespace VMSales.ViewModels
             {
                 category_list.Add(item.category_name);
             }
-            product_filter = new List<string>{"Product Name", "Description", "Brand Name","Quantity","Cost","SKU","Listed Price","Listing URL"," Listing Number","Listing Date"};        }
-        
+            product_filter = new List<string> { "Product Name", "Description", "SKU", "Brand Name", "Quantity", "Cost","Listed Price", "Listing Number", "Listing URL","Listing Date" };
+        }
         public void LoadSupplier()
         {
             if (SelectedProduct != null && SelectedProduct.product_pk != 0)

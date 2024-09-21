@@ -3,19 +3,14 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:logic="clr-namespace:VMSales.Logic"
              xmlns:viewmodels="clr-namespace:VMSales.ViewModels" 
              d:DataContext="{d:DesignInstance Type=viewmodels:CategoryViewModel}"
              mc:Ignorable="d" 
              Height="800" Width="1400" VerticalAlignment="Top" MinHeight="400" MinWidth="800">
 
-    <UserControl.Resources>
-        <logic:CollectionToVisibilityConverter x:Key="CollectionToVisibilityConverter"/>
-    </UserControl.Resources>
-
     <DockPanel LastChildFill="True">
 
-        <Grid x:Name="ObservableCollectionCategoryModelDirty" Margin="10" DockPanel.Dock="Bottom" Visibility="{Binding ObservableCollectionCategoryModelDirty, Converter={StaticResource CollectionToVisibilityConverter}}">
+        <Grid x:Name="ObservableCollectionCategoryModelDirty" Margin="10" DockPanel.Dock="Bottom">
 
 
             <Grid.ColumnDefinitions>

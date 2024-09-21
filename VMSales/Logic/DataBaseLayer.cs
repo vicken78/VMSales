@@ -138,8 +138,7 @@ namespace VMSales.Logic
                     new { product_pk }, Transaction);
             }
 
-
-
+        
             //get last insert
             public async Task<int> Get_last_insert()
             {
@@ -419,9 +418,6 @@ namespace VMSales.Logic
                 return false;
             }
 
-
-
-
             public override async Task<ProductModel> Get(int id)
             {
                 return await Connection.QuerySingleAsync<ProductModel>("SELECT purchase_order_detail_pk FROM purchase_order_detail as pod INNER JOIN purchase_order on purchase_order.purchase_order_pk = pod.purchase_order_fk WHERE supplier_fk = @id;", new { id }, Transaction);
@@ -442,33 +438,54 @@ namespace VMSales.Logic
 
             // get all products by supplier
 
-            public async Task<IEnumerable<ProductModel>> GetAllWithID(int supplier_fk, int category_fk)
+            public async Task<IEnumerable<ProductModel>> GetAllWithID(int supplier_fk, int category_fk, string selected_product_filter, string searchtext)
             {
-                // category only
-   
-                    if (category_fk > 0 && supplier_fk == 0)
-                    {
-                    return await Connection.QueryAsync<ProductModel>(
-                    "SELECT DISTINCT c.category_pk, c.category_name, p.*, ps.* " +
-                    "FROM product p " +
-                    "INNER JOIN product_supplier ps ON p.product_pk = ps.product_fk " +
-                    "INNER JOIN supplier s ON s.supplier_pk = ps.supplier_fk " +
-                    "LEFT JOIN product_category pc ON p.product_pk = pc.product_fk " +
-                    "LEFT JOIN category c ON c.category_pk = pc.category_fk " +
-                    "WHERE pc.category_fk = @category_fk " +
-                    "UNION SELECT DISTINCT " +
-                    "c.category_pk, c.category_name, p.*, ps.* " +
-                    "FROM product p " +
-                    "INNER JOIN product_supplier ps ON p.product_pk = ps.product_fk " +
-                    "INNER JOIN supplier s ON s.supplier_pk = ps.supplier_fk " +
-                    "INNER JOIN product_category pc ON p.product_pk = pc.product_fk " +
-                    "INNER JOIN category c ON c.category_pk = pc.category_fk " +
-                    "WHERE pc.category_fk = @category_fk ", new { category_fk }, Transaction);
-                }
-                // supplier only
-                if (category_fk == 0 && supplier_fk > 0)
+                var actions = new Dictionary<(bool, bool, bool), Func<Task<IEnumerable<ProductModel>>>>
+        {
+            { (true, false, false), () => ReturnCategoryOnly() },
+            { (false, true, false), () => ReturnSupplierOnly() },
+           // { (false, false, true), () => ReturnProductSearchOnly() },
+            { (true, true, false), () => ReturnCategoryAndSupplier() },
+         //   { (true, false, true), () => ReturnCategoryAndProductSearch() },
+         //   { (false, true, true), () => ReturnSupplierAndProductSearch() },
+         //   { (true, true, true), () => ReturnAll() }
+        };
+                // Determine if each variable is non-empty
+                bool hasCategory = category_fk > 0;          
+                bool hasSupplier = supplier_fk > 0;  
+                bool hasProductSearch = !string.IsNullOrEmpty(searchtext);
+                // Look up the appropriate action in the dictionary
+                if (actions.TryGetValue((hasCategory, hasSupplier, hasProductSearch), out var func))
                 {
+                    // Return the corresponding value
+                    return await func.Invoke();
+                 }
+
+                async Task<IEnumerable<ProductModel>> ReturnCategoryOnly()
+                {
+                    // Logic for "category only" case
                     return await Connection.QueryAsync<ProductModel>(
+                   "SELECT DISTINCT c.category_pk, c.category_name, p.*, ps.* " +
+                   "FROM product p " +
+                   "INNER JOIN product_supplier ps ON p.product_pk = ps.product_fk " +
+                   "INNER JOIN supplier s ON s.supplier_pk = ps.supplier_fk " +
+                   "LEFT JOIN product_category pc ON p.product_pk = pc.product_fk " +
+                   "LEFT JOIN category c ON c.category_pk = pc.category_fk " +
+                   "WHERE pc.category_fk = @category_fk " +
+                   "UNION SELECT DISTINCT " +
+                   "c.category_pk, c.category_name, p.*, ps.* " +
+                   "FROM product p " +
+                   "INNER JOIN product_supplier ps ON p.product_pk = ps.product_fk " +
+                   "INNER JOIN supplier s ON s.supplier_pk = ps.supplier_fk " +
+                   "INNER JOIN product_category pc ON p.product_pk = pc.product_fk " +
+                   "INNER JOIN category c ON c.category_pk = pc.category_fk " +
+                   "WHERE pc.category_fk = @category_fk ", new { category_fk }, Transaction);
+                }
+
+                async Task<IEnumerable<ProductModel>> ReturnSupplierOnly()
+                {
+                // Logic for "supplier only" case
+                return await Connection.QueryAsync<ProductModel>(
                 "SELECT DISTINCT c.category_pk, c.category_name, p.*, ps.* " +
                 "FROM product p " +
                 "INNER JOIN product_supplier ps ON p.product_pk = ps.product_fk " +
@@ -485,8 +502,9 @@ namespace VMSales.Logic
                 "INNER JOIN category c ON c.category_pk = pc.category_fk " +
                 "WHERE ps.supplier_fk = @supplier_fk", new { supplier_fk }, Transaction);
                 }
-                // supplier and category
-                if (category_fk > 0 && supplier_fk > 0)
+
+                async Task<IEnumerable<ProductModel>> ReturnCategoryAndSupplier()
+                // Logic for "supplier and category" case
                 {
                     return await Connection.QueryAsync<ProductModel>(
                 "SELECT DISTINCT c.category_pk, c.category_name, p.*, ps.* " +
@@ -508,6 +526,9 @@ namespace VMSales.Logic
                 }
                 return null;
             }
+
+
+
 
             // get all products by supplier and purchase_order
             public async Task<IEnumerable<ProductModel>> GetAllWithAllID(int supplier_fk, int purchase_order_detail_pk)
@@ -550,8 +571,9 @@ namespace VMSales.Logic
                 }
             }
 
+            /*
             //filter product
-            public async Task<IEnumerable<ProductModel>> FilterProduct(string searchterm, string selected_search)
+            public async Task<IEnumerable<ProductModel>> FilterProduct(string selected_product_filter, string searchtext)
             {
 
                 return await Connection.QueryAsync<ProductModel>("SELECT DISTINCT " +
@@ -569,7 +591,26 @@ namespace VMSales.Logic
                     new { searchterm, selected_search }, Transaction);
             }
 
-            
+            */
+
+          /*  public async Task<IEnumerable<ProductModel>> FilterProduct(string selected_product_filter, string searchtext)
+            {
+
+                return await Connection.QueryAsync<ProductModel>("SELECT DISTINCT " +
+                    "ppo.*, c.category_pk, c.category_name, p.product_pk, p.brand_name, p.product_name, p.description, p.quantity, " +
+                    "p.cost, p.sku, p.listed_price, p.instock, p.condition, p.listing_url, p.listing_number, p.listing_date " +
+                    "FROM product_purchase_order as ppo, product as p, product_category as pc, " +
+                    "category as c, product_supplier as ps, supplier as s, purchase_order_detail as pod " +
+                    "INNER JOIN product_purchase_order on pod.purchase_order_detail_pk = ppo.purchase_order_detail_fk " +
+                    "INNER JOIN product_purchase_order on p.product_pk = ppo.product_fk " +
+                    "INNER JOIN product_category on c.category_pk = pc.category_fk " +
+                    "INNER JOIN product on p.product_pk = pc.product_fk " +
+                    "INNER JOIN product_supplier on ps.supplier_fk = s.supplier_pk " +
+                    "INNER JOIN product_supplier on ps.product_fk = p.product_pk " +
+                    "WHERE s.supplier_pk = @supplier_fk AND pod.purchase_order_detail_pk = @purchase_order_detail_pk",
+                    new { searchterm, selected_search }, Transaction);
+            }
+   */
 
             public override async Task<bool> Update(ProductModel entity)
             {
@@ -925,9 +966,9 @@ namespace VMSales.Logic
         }
         #endregion
         */
-        #region CustomerModel
-        // Customer
-        public class CustomerRepository : Repository<CustomerModel>
+            #region CustomerModel
+            // Customer
+            public class CustomerRepository : Repository<CustomerModel>
         {
             public CustomerRepository(IDatabaseProvider dbProvider) : base(dbProvider) { }
 

@@ -11,6 +11,7 @@
              Height="800" Width="1920" MinHeight="400" VerticalAlignment="Top" MinWidth="800">
 
 	<UserControl.Resources>
+        <logic:CollectionIsEnabled x:Key="CollectionIsEnabled" />
 		<Style x:Key="CenterGridHeaderStyle" TargetType="DataGridColumnHeader">
 			<Setter Property="HorizontalContentAlignment" Value="Center"/>
 		</Style>
@@ -117,14 +118,7 @@
                 Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"  
                 Width="200" HorizontalAlignment="Left"/>
 
-
-            <TextBox Name="Search" Background="White" Text="{Binding searchbox}" Grid.Row="10" Grid.Column="4" Grid.ColumnSpan="2" Visibility="{Binding showsearchtext}"/>
-            <ComboBox Visibility="{Binding showsearchdrop}" IsEditable="False" Background="White" Grid.Row="10" Grid.Column="4"
-						ItemsSource="{Binding searchdrop}"
-						SelectedItem="{Binding searchdropselect, 
-                Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-						Width="200" Grid.ColumnSpan="2"/>
-
+            <TextBox Name="Search" IsEnabled="{Binding selected_product_filter, Converter={StaticResource CollectionIsEnabled}}" Background="White" Text="{Binding searchtext}" Grid.Row="10" Grid.Column="4" Grid.ColumnSpan="2"/>
             <!--  Save Button -->
 			<Button x:Name="SaveCommand" cal:Message.Attach="SaveCommand" Grid.Column="0" Grid.Row="12"
                             Width="75"
