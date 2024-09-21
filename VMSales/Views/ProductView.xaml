@@ -24,14 +24,14 @@
 				<RowDefinition Height="Auto" />
 				<RowDefinition Height="Auto" />
 				<RowDefinition Height="Auto" />
-				<RowDefinition Height="Auto" />
-				<RowDefinition Height="Auto" />
-				<RowDefinition Height="Auto" />
-				<RowDefinition Height="Auto" />
-				<RowDefinition Height="Auto" />
-				<RowDefinition Height="Auto" />
-				<RowDefinition Height="25" />
-				<RowDefinition Height="Auto" />
+                <RowDefinition Height="25" />
+                <RowDefinition Height="25" />
+                <RowDefinition Height="25" />
+                <RowDefinition Height="25" />
+                <RowDefinition Height="25" />
+                <RowDefinition Height="25" />
+                <RowDefinition Height="25" />
+                <RowDefinition Height="25" />
 			</Grid.RowDefinitions>
 			<Grid.ColumnDefinitions>
 				<ColumnDefinition Width="100"/>
@@ -60,44 +60,18 @@
 
 			<!-- Lot Number -->
 			<Label Content="Lot Number" Grid.Column="0" Grid.Row="3"/>
-			<ComboBox x:Name="Selected_lot_number" IsEditable="False" Background="WhiteSmoke"  
-                ItemsSource="{Binding Path=ObservableCollectionPurchaseOrderModel,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
+            <ComboBox x:Name="SelectedItem" IsEditable="False" Background="WhiteSmoke"  
+                ItemsSource="{Binding ObservableCollectionPurchaseOrderModel}"
                 DisplayMemberPath="lot_number"
+				SelectedValuePath="lot_number"
                 Width="60" HorizontalAlignment="Left"
                 SelectedValue="{Binding selected_lot_number, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" 
-                SelectedValuePath="purchase_order_detail_pk"
                 Grid.Column="1" Grid.Row="3"/>
 
-			<!-- Lot Name -->
-			<Label Content="Lot Name" Grid.Column="0" Grid.Row="5" />
-			<TextBox Name="lot_name" IsReadOnly="True" Background="WhiteSmoke" Text="{Binding SelectedItem.lot_name, ElementName=Selected_lot_number}"
-            Grid.Column="1" Grid.Row="5"/>
-
-			<!-- Lot Description -->
-			<!--           <Label Content="Lot Description" Grid.Column="0" Grid.Row="6" />
-            <TextBox Name="lot_description" IsReadOnly="True" Background="WhiteSmoke" Text="{Binding SelectedItem.lot_description, ElementName=Selected_lot_number}"
-                        Grid.Column="1" Grid.Row="6" /> -->
-			<!-- Lot Quantity -->
-			<Label Content="Lot Quantity" Grid.Column="0" Grid.Row="7" />
-			<TextBox Name="lot_quantity" IsReadOnly="True" Background="WhiteSmoke" Text="{Binding SelectedItem.lot_quantity, ElementName=Selected_lot_number}"
-                        Grid.Column="1" Grid.Row="7"/>
-			<!-- Lot Cost -->
-			<Label Content="Lot Cost" Grid.Column="0" Grid.Row="8" />
-			<TextBox Name="lot_cost" IsReadOnly="True" Background="WhiteSmoke" Text="{Binding SelectedItem.lot_cost, StringFormat='c', ElementName=Selected_lot_number}"
-                        Grid.Column="1" Grid.Row="8"/>
-			<!-- Lot Sales Tax -->
-			<Label Content="Lot Sales Tax" Grid.Column="0" Grid.Row="9" />
-			<TextBox Name="lot_salestax" IsReadOnly="True" Background="WhiteSmoke" Text="{Binding SelectedItem.sales_tax, StringFormat='c',ElementName=Selected_lot_number}"
-                        Grid.Column="1" Grid.Row="9"/>
-			<!-- Lot Shipping -->
-			<Label Content="Lot Shipping" Grid.Column="0" Grid.Row="10" />
-			<TextBox Name="lot_shipping" IsReadOnly="True" Background="WhiteSmoke" Text="{Binding SelectedItem.shipping_cost, StringFormat='c',ElementName=Selected_lot_number}"
-                        Grid.Column="1" Grid.Row="10"/>
-
-			<!-- Filter Category -->
+            <!-- Filter Category -->
 
 			<TextBlock Grid.Row="2" Grid.Column="6" FontSize="14" HorizontalAlignment="Center" FontWeight="Bold">Filter Category</TextBlock>
-			<ComboBox IsEditable="False" Background="White" Grid.Row="3" Grid.Column="6" 
+			<ComboBox x:Name="FilterCategory" IsEditable="False" Background="White" Grid.Row="3" Grid.Column="6" 
                 ItemsSource="{Binding ObservableCollectionCategoryModel}" 
                 DisplayMemberPath="category_name"
                 SelectedItem="{Binding selected_category_filter, 
@@ -196,7 +170,7 @@
 		<DataGrid AutoGenerateColumns="False" 
                           ItemsSource="{Binding ObservableCollectionProductModelDirty,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
                           CanUserReorderColumns="False"
-                          SelectedItem="{Binding SelectedItem, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                          SelectedItem="{Binding SelectedProduct, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                           CanUserAddRows="False"
                           EnableRowVirtualization="True" IsReadOnly="False" Grid.Row="10" 
                           Height="Auto" Width="1525" HorizontalAlignment="Left"

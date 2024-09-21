@@ -3,13 +3,17 @@ using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Media.Imaging;
 using VMSales.Logic;
 using VMSales.Models;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement;
+using static VMSales.Logic.DataBaseLayer;
 
 namespace VMSales.ViewModels
 {
@@ -27,12 +31,60 @@ namespace VMSales.ViewModels
                 NotifyOfPropertyChange(() => ObservableCollectionProductModelDirty);
             }
         }
+        public List<string> category_list { get; set; }
+        public List<string> product_filter { get; set; }
+        public string selected_product_filter { get; set; }
+
         public ObservableCollection<ProductModel> ObservableCollectionProductModelClean { get; protected set; }
-        public ObservableCollection<SupplierModel> ObservableCollectionSupplierModel { get; set; }
+        public ObservableCollection<PurchaseOrderModel> ObservableCollectionPurchaseOrderModel { get; set; }
         public ObservableCollection<ProductModel> ObservableCollectionProductModel { get; set; }
         public ObservableCollection<CategoryModel> ObservableCollectionCategoryModel { get; set; }
-        public ObservableCollection<PurchaseOrderModel> ObservableCollectionPurchaseOrderModel { get; set; }
-        public List<string> category_list { get; set; }
+        public ObservableCollection<SupplierModel> ObservableCollectionSupplierModel { get; set; }
+
+        private ProductModel _SelectedProduct;
+        public ProductModel SelectedProduct
+        {
+            get => _SelectedProduct; 
+            set
+            {
+                if (_SelectedProduct != value);
+                _SelectedProduct = value;
+                NotifyOfPropertyChange(() => SelectedProduct);
+                if (SelectedProduct?.IsSelected != null)
+                {
+                    LoadSupplier();
+                    //Boolean productSelected = true;
+                    //LoadFileList();
+                }
+            }
+         }
+
+        #region Selected Product Supplier
+        private string _selected_supplier_name;
+        public string selected_supplier_name
+        {
+            get => _selected_supplier_name; 
+            set
+            {
+                if (_selected_supplier_name != value)
+                _selected_supplier_name = value;
+                NotifyOfPropertyChange(() => selected_supplier_name);
+            }
+        }
+        private string _selected_lot_number;
+        public string selected_lot_number
+        {
+            get => _selected_lot_number;
+            set
+            {
+                if (_selected_lot_number != value)
+                    _selected_lot_number = value;
+                NotifyOfPropertyChange(() => selected_lot_number);
+            }
+        }
+        
+        #endregion
+
 
         #region Filters
         private bool _canRemoveSupplierFilter;
@@ -130,7 +182,6 @@ namespace VMSales.ViewModels
         {
             canRemoveCategoryFilter = false;
             selected_category_filter.category_pk = 0;
-            selected_category_filter.category_name = null;
             NotifyOfPropertyChange(() => canRemoveCategoryFilter);
             NotifyOfPropertyChange(() => selected_category_filter);
             UpdateProduct();
@@ -139,7 +190,6 @@ namespace VMSales.ViewModels
         {
             canRemoveSupplierFilter = false;
             selected_supplier_filter.supplier_pk = 0;
-            selected_supplier_filter.supplier_name = null;
             NotifyOfPropertyChange(() => canRemoveSupplierFilter);
             NotifyOfPropertyChange(() => selected_supplier_filter);
             UpdateProduct();
@@ -149,14 +199,11 @@ namespace VMSales.ViewModels
         {
             try
             {
-
-                dataBaseProvider = getprovider();
-                DataBaseLayer.ProductRepository ProductRepo = new DataBaseLayer.ProductRepository(dataBaseProvider);
-                ObservableCollectionProductModelDirty.Clear();
-
                 if (selected_category_filter.category_pk > 0 || selected_supplier_filter.supplier_pk > 0)
                 {
-                    
+                    dataBaseProvider = getprovider();
+                    ObservableCollectionProductModelDirty.Clear();
+                    DataBaseLayer.ProductRepository ProductRepo = new DataBaseLayer.ProductRepository(dataBaseProvider);
                     ObservableCollectionProductModelDirty = ProductRepo.GetAllWithID(
                         selected_supplier_filter.supplier_pk,
                         selected_category_filter.category_pk)
@@ -166,7 +213,6 @@ namespace VMSales.ViewModels
 
                 else
                 {
-                    ProductRepo.Dispose();
                     ObservableCollectionProductModelDirty = new ObservableCollection<ProductModel>();
                     initial_load();
                 }
@@ -184,7 +230,62 @@ namespace VMSales.ViewModels
         //public async Task SaveCommand()
         public void SaveCommand()
         {
+            // Create an instance of DataProcessor with ProductModel type
+            var dataProcessor = new DataProcessor<ProductModel>();
 
+            // Call the Compare method
+            ObservableCollection<ProductModel> differences = dataProcessor.Compare(ObservableCollectionProductModelClean, ObservableCollectionProductModelDirty);
+
+            foreach (var item in differences)
+            {
+                
+
+                //ProductRepository ProductRepo = new ProductRepository(dataBaseProvider);
+                // need to handle product supplier and product category as well.
+                // not fully implemented
+
+
+                try
+                {
+                    // implement check for foreign keys, if foreign key exists, warn user.
+                    switch (item.Action)
+                    {
+                        case "Update":
+                            //bool Update_Category = ProductRepo.Update(item).Result;
+                            //if (Update_Category == false)
+                            //{ throw new Exception("Update Failed"); }
+                            //else
+                                //ProductRepo.Commit();
+                            break;
+                        case "Insert":
+                            //int category_pk = await ProductRepo.Insert(item);
+                            //if (product_pk == 0)
+                            //{ throw new Exception("Insert Failed"); }
+                            //else
+                                //ProductRepo.Commit();
+                            break;
+                        case "Delete":
+                            //bool Delete_Product = ProductRepo.Delete(item).Result;
+                            //if (Product_Category == false)
+                            //{ MessageBox.Show("Foreign Key Exists, You must delete the associated foreign key first Category FK=" + item.category_pk); }
+                            //else
+                                //ProductRepo.Commit();
+                            break;
+                        //default:
+                           // throw new InvalidOperationException("Unexpected Action read, expected Update Insert or Delete.");
+                    }
+                    //ProductRepo.Dispose();
+                    //initial_load();
+                    NotifyOfPropertyChange(() => ObservableCollectionProductModelDirty);
+
+                }
+                catch (Exception e)
+                {
+                    MessageBox.Show("An unexpected error has occured." + e);
+                    //ProductRepo.Revert();
+                    //ProductRepo.Dispose();
+                }
+            }
         }
 
         public void ResetCommand()
@@ -207,6 +308,7 @@ namespace VMSales.ViewModels
             ObservableCollectionCategoryModel = new ObservableCollection<CategoryModel>();
             ObservableCollectionSupplierModel = new ObservableCollection<SupplierModel>();
 
+
             dataBaseProvider = getprovider();
             DataBaseLayer.ProductRepository ProductRepo = new DataBaseLayer.ProductRepository(dataBaseProvider);
             ObservableCollectionProductModelDirty = ProductRepo.GetAll().Result.ToObservable();
@@ -216,6 +318,11 @@ namespace VMSales.ViewModels
             ObservableCollectionPurchaseOrderModel = PurchaseOrderRepo.GetAll().Result.ToObservable();
             PurchaseOrderRepo.Dispose();
 
+            SupplierRepository SupplierRepo = new SupplierRepository(dataBaseProvider);
+            ObservableCollectionSupplierModel = SupplierRepo.GetAll().Result.ToObservable();
+            SupplierRepo.Dispose();
+
+
             CategoryRepository CategoryRepo = new CategoryRepository(dataBaseProvider);
             ObservableCollectionCategoryModel = CategoryRepo.GetAll().Result.ToObservable();
             CategoryRepo.Dispose();
@@ -224,14 +331,34 @@ namespace VMSales.ViewModels
             {
                 category_list.Add(item.category_name);
             }
-
-
-            SupplierRepository SupplierRepo = new SupplierRepository(dataBaseProvider);
-            ObservableCollectionSupplierModel = SupplierRepo.GetAll().Result.ToObservable();
-            SupplierRepo.Dispose();
+            product_filter = new List<string>{"Product Name", "Description", "Brand Name","Quantity","Cost","SKU","Listed Price","Listing URL"," Listing Number","Listing Date"};        }
+        
+        public void LoadSupplier()
+        {
+            if (SelectedProduct != null && SelectedProduct.product_pk != 0)
+            {
+                try
+                {
+                    var ProductPurchaseRepo = new DataBaseLayer.PurchaseOrderRepository(dataBaseProvider);
+                    ObservableCollectionPurchaseOrderModel = ProductPurchaseRepo.GetProductPurchase_Order(SelectedProduct.product_pk).Result.ToObservable();
+                    ProductPurchaseRepo.Commit();
+                    ProductPurchaseRepo.Dispose();
+                }
+                catch (Exception e)
+                {
+                    MessageBox.Show("An Error has occured:" + e);
+                }
+                finally
+                {
+                    foreach (var item in ObservableCollectionPurchaseOrderModel)
+                    {
+                        selected_supplier_name = item.supplier_name;
+                        selected_lot_number = item.lot_number;
+                    }
+                }
+            }
         }
-
-        public ProductViewModel()
+            public ProductViewModel()
         {
             initial_load();
         }
@@ -417,30 +544,6 @@ namespace VMSales.ViewModels
         #endregion
         #region Associate
 
-        private string _selected_supplier_name { get; set; }
-        public string selected_supplier_name
-        {
-            get { return _selected_supplier_name; }
-            set
-            {
-                if (_selected_supplier_name == value) return;
-                _selected_supplier_name = value;
-                //RaisePropertyChanged("selected_supplier_name");
-                if (selected_supplier_name != null)
-                    canEnableProductSupplier = true;
-            }
-        }
-        private int _selected_lot_number { get; set; }
-        public int selected_lot_number
-        {
-            get { return _selected_lot_number; }
-            set
-            {
-                if (_selected_lot_number == value) return;
-                _selected_lot_number = value;
-                //RaisePropertyChanged("selected_lot_number");
-            }
-        }
 
         private bool _canEnableProductSupplier;
         public bool canEnableProductSupplier
@@ -512,26 +615,6 @@ namespace VMSales.ViewModels
                 }
             }
         }
-
-        private ProductModel _SelectedItem { get; set; }
-        public ProductModel SelectedItem
-        {
-            get { return _SelectedItem; }
-            set
-            {
-                if (_SelectedItem == value) return;
-                _SelectedItem = value;
-                //RaisePropertyChanged("SelectedItem");
-                LoadSupplier();
-                if (SelectedItem?.IsSelected != null)
-                {
-                    productSelected = true;
-                    LoadFileList();
-                    GetSupplierByProduct();
-                }
-            }
-        }
-
 
         #endregion
 
@@ -624,7 +707,7 @@ namespace VMSales.ViewModels
         }
 
         #endregion
-        #region SupplierChange
+        #region Selected Product
         public void LoadSupplier()
         {
             int get_product_purchase_order_detail_fk = 0;
@@ -643,7 +726,15 @@ namespace VMSales.ViewModels
                 }
                 finally
                 {
-                    LoadSelectedPurchaseOrder(get_product_purchase_order_detail_fk);
+                   if (purchase_order_detail_pk > 0)
+            {
+                dataBaseProvider = getprovider();
+                DataBaseLayer.PurchaseOrderRepository PurchaseOrderRepo = new DataBaseLayer.PurchaseOrderRepository(dataBaseProvider);
+                selected_lot_number = PurchaseOrderRepo.Get_PurchaseOrderDetail_by_pk(purchase_order_detail_pk).Result;
+                PurchaseOrderRepo.Commit();
+                PurchaseOrderRepo.Dispose();
+         
+
                 }
             }
         }

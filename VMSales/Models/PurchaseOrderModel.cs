@@ -17,6 +17,7 @@ namespace VMSales.Models
         private string _invoice_number { get; set; }
         private DateTime _purchase_date { get; set; }
         public int supplier_fk { get; set; }
+        public string supplier_name { get; set; }
 
         [ExplicitKey]
         public int purchase_order_pk

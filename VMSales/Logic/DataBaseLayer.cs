@@ -2,9 +2,9 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Diagnostics;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Forms;
 using VMSales.Models;
 
 namespace VMSales.Logic
@@ -97,7 +97,6 @@ namespace VMSales.Logic
                 }
                 catch (Exception e)
                 {
-                    MessageBox.Show(e.ToString());
                     return 0;
                 }
             }
@@ -123,6 +122,23 @@ namespace VMSales.Logic
                     id = entity.purchase_order_detail_pk
                 }, null);
             }
+
+            public async Task<IEnumerable<PurchaseOrderModel>> GetProductPurchase_Order(int product_pk)
+            {
+
+                return await Connection.QueryAsync<PurchaseOrderModel>("SELECT DISTINCT " +
+                    "supplier_name, lot_number " +
+                    "FROM product p " +
+                    "INNER JOIN product_supplier ps ON p.product_pk = ps.product_fk " +
+                    "INNER JOIN supplier s ON ps.supplier_fk = s.supplier_pk " +
+                    "INNER JOIN product_purchase_order ppo ON p.product_pk = ppo.product_fk " +
+                    "INNER JOIN product on p.product_pk = ps.product_fk " +
+                    "INNER JOIN purchase_order_detail pod ON ppo.product_purchase_order_detail_fk = pod.purchase_order_detail_pk " +
+                    "WHERE p.product_pk = @product_pk",
+                    new { product_pk }, Transaction);
+            }
+
+
 
             //get last insert
             public async Task<int> Get_last_insert()
@@ -233,6 +249,11 @@ namespace VMSales.Logic
                     "FROM purchase_order_detail as pod " +
                     "WHERE pod.purchase_order_detail_pk = @purchase_order_detail_pk", new { purchase_order_detail_pk }, Transaction);
             }
+
+ 
+
+
+
 
             
         
@@ -548,8 +569,7 @@ namespace VMSales.Logic
                     new { searchterm, selected_search }, Transaction);
             }
 
-
-
+            
 
             public override async Task<bool> Update(ProductModel entity)
             {
