@@ -2,8 +2,6 @@
 using Dapper;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using System.Windows.Controls.Primitives;
-using System.Windows.Forms;
 using VMSales.Models;
 
 namespace VMSales.Logic

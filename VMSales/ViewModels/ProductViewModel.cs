@@ -1,5 +1,4 @@
 ﻿using Caliburn.Micro;
-using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -12,8 +11,6 @@ using System.Windows.Controls;
 using System.Windows.Media.Imaging;
 using VMSales.Logic;
 using VMSales.Models;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement;
-using static VMSales.Logic.DataBaseLayer;
 
 namespace VMSales.ViewModels
 {
@@ -229,7 +226,7 @@ namespace VMSales.ViewModels
                 {
                     dataBaseProvider = getprovider();
                     ObservableCollectionProductModelDirty.Clear();
-                    DataBaseLayer.ProductRepository ProductRepo = new DataBaseLayer.ProductRepository(dataBaseProvider);
+                    ProductRepository ProductRepo = new ProductRepository(dataBaseProvider);
                     ObservableCollectionProductModelDirty = ProductRepo.GetAllWithID(
                         selected_supplier_filter.supplier_pk,
                         selected_category_filter.category_pk,
@@ -354,7 +351,8 @@ namespace VMSales.ViewModels
 
 
             dataBaseProvider = getprovider();
-            DataBaseLayer.ProductRepository ProductRepo = new DataBaseLayer.ProductRepository(dataBaseProvider);
+            ProductRepository ProductRepo = new ProductRepository(dataBaseProvider);
+            
             ObservableCollectionProductModelDirty = ProductRepo.GetAll().Result.ToObservable();
             ProductRepo.Dispose();
 
@@ -415,69 +413,6 @@ namespace VMSales.ViewModels
 
 /*
 
-namespace VMSales.ViewModels
-{
-    public class ProductViewModel : BaseViewModel
-    {
-
-        private string searchterm;
-        private string _searchbox;
-        public string searchbox
-        {
-            get { return _searchbox; }
-            set
-            {
-                if (_searchbox != value)
-                {
-                    _searchbox = value;
-                    //RaisePropertyChanged("searchbox");
-                }
-            }
-        }
-        public int selected_supplier_fk_filter;
-        public int selected_category_fk_filter;
-
-        private string _searchdropselect;
-        public string searchdropselect
-        {
-            get { return _searchdropselect; }
-            set
-            {
-                if (_searchdropselect != value)
-                {
-                    _searchdropselect = value;
-                    //RaisePropertyChanged("searchdropselect");
-                }
-            }*-
-        }
-
-        private Visibility _showsearchtext;
-        public Visibility showsearchtext
-        {
-            get { return _showsearchtext; }
-            set
-            {
-                if (_showsearchtext != value)
-                {
-                    _showsearchtext = value;
-                    //RaisePropertyChanged("showsearchtext");
-                }
-            }
-        }
-
-        private Visibility _showsearchdrop;
-        public Visibility showsearchdrop
-        {
-            get { return _showsearchdrop; }
-            set
-            {
-                if (_showsearchdrop != value)
-                {
-                    _showsearchdrop = value;
-                    //RaisePropertyChanged("showsearchdrop");
-                }
-            }
-        }
 
 
         private BitmapImage _imageSource;
@@ -494,48 +429,6 @@ namespace VMSales.ViewModels
             }
         }
 
-        private ObservableCollection<string> _searchdrop { get; set; }
-        public ObservableCollection<string> searchdrop
-        {
-            get { return _searchdrop; }
-            set
-            {
-                if (_searchdrop == value) return;
-                _searchdrop = value;
-                //RaisePropertyChanged("searchdrop");
-            }
-        }
-
-        private ObservableCollection<string> _searchdropdown { get; set; }
-        public ObservableCollection<string> searchdropdown
-        {
-            get { return _searchdropdown; }
-            set
-            {
-                if (_searchdropdown == value) return;
-                _searchdropdown = value;
-                //RaisePropertyChanged("searchdropdown");
-            }
-        }
-
-        private string _selected_search { get; set; }
-
-        public string selected_search
-        {
-            get { return _selected_search; }
-            set
-            {
-                _selected_search = value;
-                //RaisePropertyChanged("selected_search");
-                if (selected_search == "Condition")
-                {
-                    searchterm = "Condition";
-                    showsearchdrop = Visibility.Visible;
-                    showsearchtext = Visibility.Hidden;
-                }
-                else { showsearchdrop = Visibility.Hidden; showsearchtext = Visibility.Visible; }
-            }
-        }
 
         private ObservableCollection<string> _filelist { get; set; }
         public ObservableCollection<string> filelist
@@ -562,16 +455,6 @@ namespace VMSales.ViewModels
             }
         }
 
-        private bool _productSelected;
-        public bool productSelected
-        {
-            get { return _productSelected; }
-            set
-            {
-                _productSelected = value;
-                //RaisePropertyChanged("productSelected");
-            }
-        }
 
 
         
@@ -1372,30 +1255,5 @@ namespace VMSales.ViewModels
                 SelectedItem.product_supplier_pk = item.product_supplier_pk;
                 SelectedItem.supplier_fk = item.supplier_fk;
             }
-
-            // Load Category
-
-            try
-            {
-                category_list = new List<string>();
-                BindableCollectionCategoryModel = new BindableCollection<CategoryModel>();
-                CategoryRepository CategoryRepos = new CategoryRepository(dataBaseProvider);
-                BindableCollectionCategoryModel = DataConversion.ToBindableCollection(CategoryRepos.Get_all_category_name().Result.ToObservable());
-                CategoryRepos.Commit();
-                CategoryRepos.Dispose();
-           
-            }
-            catch (Exception ext)
-            {
-                MessageBox.Show(ext.ToString());
-            }
-        }
-
-        public ProductViewModel()
-        {
-            initial_load();
-        }
-    }
-}
 
 */

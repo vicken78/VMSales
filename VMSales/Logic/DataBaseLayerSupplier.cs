@@ -15,7 +15,6 @@ namespace VMSales.Logic
             return await Connection.QuerySingleAsync<int>("SELECT supplier_pk FROM supplier WHERE supplier_name = @supplier_name ORDER BY supplier_name", new { supplier_name }, Transaction);
         }
 
-
         //get product_supplier
         public async Task<IEnumerable<string>> Selected_Supplier(int product_pk)
         {
