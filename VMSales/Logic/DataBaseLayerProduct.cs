@@ -2,7 +2,12 @@
 using Dapper;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.Security.Policy;
 using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Forms;
+using System.Windows.Shapes;
 using VMSales.Models;
 
 
@@ -11,6 +16,20 @@ namespace VMSales.Logic
     public class ProductRepository : Repository<ProductModel>
     {
         public ProductRepository(IDatabaseProvider dbProvider) : base(dbProvider) { }
+        //map search text to proper column
+        internal Dictionary<string, string> mapping = new Dictionary<string, string>
+        {
+            { "Product Name", "product_name" },
+            { "Description", "description" },
+            { "Quantity", "quantity" },
+            { "Cost", "cost" },
+            { "Listed Price", "listed_price" },
+            { "Listed Number", "listed_number" },
+            { "Listed URL", "listing_url" },
+            { "Listed Date", "listing_date" }
+        };
+
+
 
         //Get Product Purchase Order
         public async Task<int> Get_product_purchase_order(int product_fk)
@@ -78,15 +97,17 @@ namespace VMSales.Logic
 
         public async Task<IEnumerable<ProductModel>> GetAllWithID(int supplier_fk, int category_fk, string selected_product_filter, string searchtext)
         {
+
+
             var actions = new Dictionary<(bool, bool, bool), Func<Task<IEnumerable<ProductModel>>>>
         {
             { (true, false, false), () => ReturnCategoryOnly() },
             { (false, true, false), () => ReturnSupplierOnly() },
-           // { (false, false, true), () => ReturnProductSearchOnly() },
             { (true, true, false), () => ReturnCategoryAndSupplier() },
-         //   { (true, false, true), () => ReturnCategoryAndProductSearch() },
-         //   { (false, true, true), () => ReturnSupplierAndProductSearch() },
-         //   { (true, true, true), () => ReturnAll() }
+            { (false, false, true), () => ReturnProductSearchOnly(selected_product_filter, searchtext) },
+            { (true, false, true), () => ReturnCategoryAndProductSearch(selected_product_filter, searchtext,category_fk) },
+            { (false, true, true), () => ReturnSupplierAndProductSearch(selected_product_filter, searchtext,supplier_fk) },
+            { (true, true, true), () => ReturnAll(selected_product_filter, searchtext, category_fk, supplier_fk) }
         };
             // Determine if each variable is non-empty
             bool hasCategory = category_fk > 0;
@@ -165,8 +186,150 @@ namespace VMSales.Logic
             return null;
         }
 
-        // get all products by supplier and purchase_order
-        public async Task<IEnumerable<ProductModel>> GetAllWithAllID(int supplier_fk, int purchase_order_detail_pk)
+        async Task<IEnumerable<ProductModel>> ReturnProductSearchOnly(string selected_product_filter, string searchtext)
+        {
+            if (mapping.TryGetValue(selected_product_filter, out string columnName))
+            {
+                // Perform your search logic here, using the columnName and searchtext
+                string query = $"SELECT * FROM product WHERE {columnName} LIKE @searchtext";
+
+                // Ensure the search text is formatted correctly with SQL wildcards
+                var parameters = new { searchtext = $"%{searchtext}%" };  // Adding '%' for wildcard search
+
+                // Execute the query and return the results
+                return await Connection.QueryAsync<ProductModel>(query, parameters);
+            }
+            else
+            {
+                throw new ArgumentException("Invalid product filter selected.");
+            }
+        }
+
+        async Task<IEnumerable<ProductModel>> ReturnCategoryAndProductSearch(string selected_product_filter, string searchtext, int category_fk)
+        {
+
+            if (mapping.TryGetValue(selected_product_filter, out string columnName))
+            {
+
+                
+
+                // Perform your search logic here, using the columnName , searchtext and category_fk
+                string query =
+                $"SELECT DISTINCT c.category_pk, c.category_name, p.*, ps.* " +
+                $"FROM product p " +
+                $"INNER JOIN product_supplier ps ON p.product_pk = ps.product_fk " +
+                $"INNER JOIN supplier s ON s.supplier_pk = ps.supplier_fk " +
+                $"LEFT JOIN product_category pc ON p.product_pk = pc.product_fk " +
+                $"LEFT JOIN category c ON c.category_pk = pc.category_fk " +
+                $"WHERE pc.category_fk = @category_fk " +
+                $"AND p.{columnName} LIKE @searchtext " +
+                $"UNION " +
+                $"SELECT DISTINCT c.category_pk, c.category_name, p.*, ps.* " +
+                $"FROM product p " +
+                $"INNER JOIN product_supplier ps ON p.product_pk = ps.product_fk " +
+                $"INNER JOIN supplier s ON s.supplier_pk = ps.supplier_fk " +
+                $"INNER JOIN product_category pc ON p.product_pk = pc.product_fk " +
+                $"INNER JOIN category c ON c.category_pk = pc.category_fk " +
+                $"WHERE pc.category_fk = @category_fk " +
+                $"AND p.{columnName} LIKE @searchtext";
+
+                // Ensure the search text is formatted correctly with SQL wildcards
+                var parameters = new { searchtext = $"%{searchtext}%", category_fk };  // Adding '%' for wildcard search
+
+                // Execute the query and return the results
+                return await Connection.QueryAsync<ProductModel>(query, parameters);
+            }
+            else
+            {
+                throw new ArgumentException("Invalid product filter selected.");
+            }
+        }
+
+        async Task<IEnumerable<ProductModel>> ReturnSupplierAndProductSearch(string selected_product_filter, string searchtext, int supplier_fk)
+        {
+            if (mapping.TryGetValue(selected_product_filter, out string columnName))
+            {
+                // Perform your search logic here, using the columnName , searchtext and category_fk
+                string query =
+                $"SELECT DISTINCT c.category_pk, c.category_name, p.*, ps.* " +
+                $"FROM product p " +
+                $"INNER JOIN product_supplier ps ON p.product_pk = ps.product_fk " +
+                $"INNER JOIN supplier s ON s.supplier_pk = ps.supplier_fk " +
+                $"LEFT JOIN product_category pc ON p.product_pk = pc.product_fk " +
+                $"LEFT JOIN category c ON c.category_pk = pc.category_fk " +
+                $"WHERE ps.supplier_fk = @supplier_fk " +
+                $"AND p.{columnName} LIKE @searchtext " +
+                $"UNION " +
+                $"SELECT DISTINCT c.category_pk, c.category_name, p.*, ps.* " +
+                $"FROM product p " +
+                $"INNER JOIN product_supplier ps ON p.product_pk = ps.product_fk " +
+                $"INNER JOIN supplier s ON s.supplier_pk = ps.supplier_fk " +
+                $"INNER JOIN product_category pc ON p.product_pk = pc.product_fk " +
+                $"INNER JOIN category c ON c.category_pk = pc.category_fk " +
+                $"WHERE ps.supplier_fk = @supplier_fk " +
+                $"AND p.{columnName} LIKE @searchtext";
+
+
+                // Ensure the search text is formatted correctly with SQL wildcards
+                var parameters = new { searchtext = $"%{searchtext}%", supplier_fk };  // Adding '%' for wildcard search
+
+                // Execute the query and return the results
+                return await Connection.QueryAsync<ProductModel>(query, parameters);
+            }
+            else
+            {
+                throw new ArgumentException("Invalid product filter selected.");
+            }
+        }
+
+
+
+
+
+
+        async Task<IEnumerable<ProductModel>> ReturnAll(string selected_product_filter, string searchtext, int supplier_fk, int category_fk)
+        // Logic for "supplier and category" and product search case
+        {
+            if (mapping.TryGetValue(selected_product_filter, out string columnName))
+            {
+                string query =
+                $"SELECT DISTINCT c.category_pk, c.category_name, p.*, ps.* " +
+                $"FROM product p " +
+                $"INNER JOIN product_supplier ps ON p.product_pk = ps.product_fk " +
+                $"INNER JOIN supplier s ON s.supplier_pk = ps.supplier_fk " +
+                $"LEFT JOIN product_category pc ON p.product_pk = pc.product_fk " +
+                $"LEFT JOIN category c ON c.category_pk = pc.category_fk " +
+                $"WHERE ps.supplier_fk = @supplier_fk AND pc.category_fk = @category_fk " +
+                $"AND p.{columnName} LIKE @searchtext " +
+                $"UNION SELECT DISTINCT " +
+                $"c.category_pk, c.category_name, p.*, ps.* " +
+                $"FROM product p " +
+                $"INNER JOIN product_supplier ps ON p.product_pk = ps.product_fk " +
+                $"INNER JOIN supplier s ON s.supplier_pk = ps.supplier_fk " +
+                $"INNER JOIN product_category pc ON p.product_pk = pc.product_fk " +
+                $"INNER JOIN category c ON c.category_pk = pc.category_fk " +
+                $"WHERE ps.supplier_fk = @supplier_fk AND pc.category_fk = @category_fk " +
+                $"AND p.{columnName} LIKE @searchtext";
+
+                var parameters = new { searchtext = $"%{searchtext}%", supplier_fk, category_fk};  // Adding '%' for wildcard search
+                return await Connection.QueryAsync<ProductModel>(query, parameters);
+
+            }
+            else
+        {
+                {
+                    throw new ArgumentException("Invalid product filter selected.");
+                }
+            }
+        }
+
+        
+
+
+    // end filter
+
+    // get all products by supplier and purchase_order
+    public async Task<IEnumerable<ProductModel>> GetAllWithAllID(int supplier_fk, int purchase_order_detail_pk)
         {
 
             return await Connection.QueryAsync<ProductModel>("SELECT DISTINCT " +

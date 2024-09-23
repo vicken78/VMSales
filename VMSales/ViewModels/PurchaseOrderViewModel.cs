@@ -634,7 +634,7 @@ namespace VMSales.ViewModels
                             supplier_fk = item.supplier_fk
                         };
 
-                        DataBaseLayer.ProductRepository ProductRepo = new DataBaseLayer.ProductRepository(dataBaseProvider);
+                        ProductRepository ProductRepo = new ProductRepository(dataBaseProvider);
                         try
                         {
 

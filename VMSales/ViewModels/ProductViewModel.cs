@@ -43,7 +43,7 @@ namespace VMSales.ViewModels
             get => _SelectedProduct; 
             set
             {
-                if (_SelectedProduct != value);
+                if (_SelectedProduct != value)
                 _SelectedProduct = value;
                 NotifyOfPropertyChange(() => SelectedProduct);
                 if (SelectedProduct?.IsSelected != null)
@@ -316,16 +316,30 @@ namespace VMSales.ViewModels
 
         public void ResetCommand()
         {
+         
             ObservableCollectionProductModelDirty.Clear();
             ObservableCollectionProductModelClean.Clear();
+            RemoveCategoryFilterCommand();
+            RemoveSupplierFilterCommand();
             initial_load();
         }
 
         public void SearchCommand()
-        { 
-        if (selected_product_filter != null && searchtext != null)
-            { 
-            
+        {
+            if (selected_product_filter != null && searchtext != null)
+            {
+                dataBaseProvider = getprovider();
+                ObservableCollectionProductModelDirty.Clear();
+                ProductRepository ProductRepo = new ProductRepository(dataBaseProvider);
+                ObservableCollectionProductModelDirty = ProductRepo.GetAllWithID(
+                selected_supplier_filter.supplier_pk,
+                selected_category_filter.category_pk,
+                selected_product_filter,
+                searchtext
+                )
+                .Result.ToObservable();
+                ProductRepo.Dispose();
+
             }
         }
 
