@@ -235,8 +235,11 @@
 				<DataGridTemplateColumn Header="Condition" Width="70">
 					<DataGridTemplateColumn.CellTemplate>
 						<DataTemplate>
-							<ComboBox ItemsSource="{Binding conditionlist}" SelectedValue="{Binding condition, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-						</DataTemplate>
+                            <ComboBox 
+    ItemsSource="{Binding DataContext.conditionlist, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type UserControl}}}"
+    SelectedValue="{Binding condition, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+
+                        </DataTemplate>
 					</DataGridTemplateColumn.CellTemplate>
 				</DataGridTemplateColumn>
 				<!-- Quantity -->

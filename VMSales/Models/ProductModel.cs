@@ -104,18 +104,6 @@ namespace VMSales.Models
 
         }
 
-        private List<string> _conditionlist;
-        public List<string> conditionlist
-        {
-            get => _conditionlist = new List<string> { "New","Used" }; 
-            set
-            {
-                if (_conditionlist != value)
-                _conditionlist = value;
-                NotifyOfPropertyChange(() => conditionlist);
-            }
-        }
-        
         private string _condition;
         public string condition
         {

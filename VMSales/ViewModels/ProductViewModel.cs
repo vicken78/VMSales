@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
+using System.Linq;
 using System.Windows;
 using VMSales.Logic;
 using VMSales.Models;
@@ -207,6 +209,13 @@ namespace VMSales.ViewModels
             UpdateProduct();
         }
 
+        public ObservableCollection<string> conditionlist { get; } = new ObservableCollection<string>
+    {
+        "New",
+        "Used",
+        "Refurbished"
+    };
+
         public void UpdateProduct()
         {
             try
@@ -245,15 +254,17 @@ namespace VMSales.ViewModels
         //public async Task SaveCommand()
         public void SaveCommand()
         {
+
             // Create an instance of DataProcessor with ProductModel type
             var dataProcessor = new DataProcessor<ProductModel>();
 
             // Call the Compare method
             ObservableCollection<ProductModel> differences = dataProcessor.Compare(ObservableCollectionProductModelClean, ObservableCollectionProductModelDirty);
 
+            Debug.WriteLine(differences.Count);
             foreach (var item in differences)
             {
-                
+
 
                 //ProductRepository ProductRepo = new ProductRepository(dataBaseProvider);
                 // need to handle product supplier and product category as well.
@@ -262,21 +273,27 @@ namespace VMSales.ViewModels
 
                 try
                 {
+                   
                     // implement check for foreign keys, if foreign key exists, warn user.
                     switch (item.Action)
                     {
                         case "Update":
-                            // do we need to set product category and supplier?
+                         
 
                             // are we changing product category and supplier if so warn user.
-              
+                            // get product dbsupplier
+                            // get product dbcategory
+
+                            // compare
+
+
                             // update product
 
                             //bool Update_Category = ProductRepo.Update(item).Result;
                             //if (Update_Category == false)
                             //{ throw new Exception("Update Failed"); }
                             //else
-                                //ProductRepo.Commit();
+                            //ProductRepo.Commit();
                             break;
                         case "Insert":
                             //int category_pk = await ProductRepo.Insert(item);
@@ -292,8 +309,8 @@ namespace VMSales.ViewModels
                             //else
                                 //ProductRepo.Commit();
                             break;
-                        //default:
-                           // throw new InvalidOperationException("Unexpected Action read, expected Update Insert or Delete.");
+                         default:
+                            throw new InvalidOperationException("Unexpected Action, expected Update Insert or Delete.");
                     }
                     //ProductRepo.Dispose();
                     //initial_load();
@@ -360,11 +377,41 @@ namespace VMSales.ViewModels
             ObservableCollectionCategoryModel = new ObservableCollection<CategoryModel>();
             ObservableCollectionSupplierModel = new ObservableCollection<SupplierModel>();
 
-
             dataBaseProvider = getprovider();
             ProductRepository ProductRepo = new ProductRepository(dataBaseProvider);
-            
+
             ObservableCollectionProductModelDirty = ProductRepo.GetAll().Result.ToObservable();
+            ObservableCollectionProductModelClean = new ObservableCollection<ProductModel>(ObservableCollectionProductModelDirty.Select(item => new ProductModel
+            {
+                // Copy properties from the item, or use a copy constructor if available
+                Action = item.Action,
+                brand_name = item.brand_name,
+                category_fk = item.category_fk,
+                category_name = item.category_name,
+                condition = item.condition,
+                cost = item.cost,
+                description = item.description,
+                FontColor = item.FontColor,
+                instock = item.instock,
+                //IsNotifying = item.IsNotifying,
+                //IsSelected = item.IsSelected,
+                listed_price = item.listed_price,
+                listing_date = item.listing_date,
+                listing_number = item.listing_number,
+                listing_url = item.listing_url,
+                product_category_pk = item.product_category_pk,
+                product_fk = item.product_fk,
+                product_name = item.product_name,
+                product_order_detail_fk = item.product_order_detail_fk,
+                product_pk = item.product_pk,
+                product_purchase_order_pk = item.product_purchase_order_pk,
+                product_supplier_pk = item.product_supplier_pk,
+                purchase_order_detail_fk = item.purchase_order_detail_fk,
+                quantity = item.quantity,
+                sku = item.sku,
+                supplier_fk = item.supplier_fk
+            }));
+
             ProductRepo.Dispose();
 
             DataBaseLayer.PurchaseOrderRepository PurchaseOrderRepo = new DataBaseLayer.PurchaseOrderRepository(dataBaseProvider);

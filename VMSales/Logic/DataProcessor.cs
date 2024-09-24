@@ -28,6 +28,8 @@ namespace VMSales.Logic
             var primaryKey = GetPrimaryKeyProperty();
 
             // Compare properties for items that exist in both collections
+            // old code
+            /*
             foreach (var cleanItem in collectionListClean)
             {
                 var dirtyItem = collectionListDirty.FirstOrDefault(x => ArePrimaryKeysEqual(x, cleanItem, primaryKey));
@@ -37,6 +39,45 @@ namespace VMSales.Logic
                     differences.Add(dirtyItem);
                 }
             }
+            */
+
+            foreach (var cleanItem in collectionListClean)
+            {
+                // Log the clean item details
+                LogProductModel(cleanItem, "Clean Item");
+
+                // Log and debug the primary key comparison
+                var dirtyItem = collectionListDirty.FirstOrDefault(x => ArePrimaryKeysEqual(x, cleanItem, primaryKey));
+
+                if (dirtyItem != null && !AreObjectsEqual(cleanItem, dirtyItem))  // Only when they are not equal
+                {
+                    dirtyItem.Action = "Update";  // Mark as Update
+                    differences.Add(dirtyItem);
+                }
+
+                if (dirtyItem != null)
+                {
+                    // Log the dirty item details if found
+                    LogProductModel(dirtyItem, "Dirty Item");
+                }
+                else
+                {
+                    //Debug.WriteLine("No matching dirty item found for clean item.");
+                }
+            }
+
+            void LogProductModel(T item, string itemName)
+            {
+                //Debug.WriteLine($"Logging {itemName}:");
+
+                foreach (var prop in item.GetType().GetProperties())
+                {
+                    var value = prop.GetValue(item, null) ?? "null";
+                    //Debug.WriteLine($"{prop.Name}: {value}");
+                }
+            }
+
+
 
             // Determine which items were added to CollectionDirtySet
             var addedItems = collectionListDirty.Except(collectionListClean, new ObjectPrimaryKeyComparer(this, primaryKey)).ToList();
@@ -80,24 +121,46 @@ namespace VMSales.Logic
         // Method to compare all properties of two objects
         private bool AreObjectsEqual(T item1, T item2)
         {
+            // Check if both items are the same reference
+            if (ReferenceEquals(item1, item2))
+                return true;
+
+            // Check if either item is null
+            if (item1 == null || item2 == null)
+                return false;
+
             var properties = typeof(T).GetProperties(BindingFlags.Public | BindingFlags.Instance);
             foreach (var property in properties)
             {
                 var value1 = property.GetValue(item1);
                 var value2 = property.GetValue(item2);
 
+                if (property.Name.Equals("IsSelected", StringComparison.OrdinalIgnoreCase))
+                {
+                    continue; // Skip this property
+                }
+
+
+
+                // Log or Debug the property names and values
+                //Debug.WriteLine($"Comparing Property: {property.Name}, Value1: {value1}, Value2: {value2}");
+
                 if (!Equals(value1, value2))
                 {
+                    Debug.WriteLine($"Property '{property.Name}' differs. Objects are not equal.");
                     return false;  // Property value differs, objects are not equal
                 }
             }
-            return true;  // All properties are equal
+
+            // If all properties are equal
+            return true;
         }
 
         // Method to get the first property as primary key property info
         private PropertyInfo GetPrimaryKeyProperty()
         {
             var properties = typeof(T).GetProperties(BindingFlags.Public | BindingFlags.Instance);
+
             var primaryKey = properties.FirstOrDefault();
             if (primaryKey == null)
                 throw new InvalidOperationException("Primary key property not found.");
