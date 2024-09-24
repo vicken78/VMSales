@@ -1,14 +1,7 @@
-﻿using Caliburn.Micro;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Diagnostics;
-using System.Linq;
-using System.Reflection;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Media.Imaging;
 using VMSales.Logic;
 using VMSales.Models;
 
@@ -89,11 +82,7 @@ namespace VMSales.ViewModels
                 NotifyOfPropertyChange(() => selected_product_filter);
             }
         }
-
-
-
         #endregion
-
 
         #region Filters
         private bool _canRemoveSupplierFilter;
@@ -277,6 +266,12 @@ namespace VMSales.ViewModels
                     switch (item.Action)
                     {
                         case "Update":
+                            // do we need to set product category and supplier?
+
+                            // are we changing product category and supplier if so warn user.
+              
+                            // update product
+
                             //bool Update_Category = ProductRepo.Update(item).Result;
                             //if (Update_Category == false)
                             //{ throw new Exception("Update Failed"); }
@@ -346,11 +341,13 @@ namespace VMSales.ViewModels
         public void ClearCommand()
         {
             searchtext = null;
+            if (canRemoveCategoryFilter == true || canRemoveSupplierFilter == true)
+            UpdateProduct();
+            if (canRemoveSupplierFilter == false && canRemoveCategoryFilter == false)
+            ResetCommand(); 
         }
 
-
         #endregion
-
 
         public void initial_load()
         {
@@ -469,94 +466,10 @@ namespace VMSales.ViewModels
             }
         }
 
-
-
-        
-        private bool _canEnableSearchFilter;
-        public bool canEnableSearchFilter
-        {
-            get { return _canEnableSearchFilter; }
-            set
-            {
-                _canEnableSearchFilter = value;
-                //RaisePropertyChanged("canEnableSearchFilter");
-            }
-        }
         #endregion
         #region Associate
 
-
-        private bool _canEnableProductSupplier;
-        public bool canEnableProductSupplier
-        {
-            get { return _canEnableProductSupplier; }
-            set
-            {
-                _canEnableProductSupplier = value;
-                //RaisePropertyChanged("canEnableProductSupplier");
-            }
-        }
-        private bool _canEnableProductPurchase;
-        public bool canEnableProductPurchase
-        {
-            get { return _canEnableProductPurchase; }
-            set
-            {
-                _canEnableProductPurchase = value;
-                //RaisePropertyChanged("canEnableProductPurchase");
-            }
-        }
-
-        #endregion
-
-        #region collections   
-
-
-        #endregion
-        #region Members
-
    
-        private int _supplier_pk;
-        public int supplier_pk
-        {
-            get { return _supplier_pk; }
-            set
-            {
-                if (_supplier_pk == value) return;
-                _supplier_pk = value;
-                //RaisePropertyChanged("supplier_pk");
-            }
-        }
-
-
-        private int _supplier_fk;
-        public int supplier_fk
-        {
-            get { return _supplier_fk; }
-            set
-            {
-                if (_supplier_fk == value) return;
-                _supplier_fk = value;
-                //RaisePropertyChanged("supplier_fk");
-            }
-        }
-
-        private int _purchase_order_detail_pk;
-        public int purchase_order_detail_pk
-        {
-            get { return _purchase_order_detail_pk; }
-            set
-            {
-                if (_purchase_order_detail_pk == value) return;
-                _purchase_order_detail_pk = value;
-                //RaisePropertyChanged("purchase_order_detail_pk");
-                if (purchase_order_detail_pk != 0)
-                {
-                    canEnableProductPurchase = true;
-                }
-            }
-        }
-
         #endregion
 
         #region filelistload
@@ -626,245 +539,6 @@ namespace VMSales.ViewModels
 
         #endregion
 
-        #region SupplierConvertor
-
-        public string GetSupplierByProduct()
-        {
-            try
-            {
-                // Load Supplier
-                SupplierRepository SupplierRepo = new SupplierRepository(dataBaseProvider);
-                if (SelectedItem.product_pk > 0)
-                    selected_supplier_name = SupplierRepo.Selected_Supplier(SelectedItem.product_pk).Result.First().ToString();
-                SupplierRepo.Commit();
-                SupplierRepo.Dispose();
-                // return selected_supplier_name;
-            }
-            catch (Exception e)
-            {
-                MessageBox.Show("an expected error has occured." + e);
-            }
-            return selected_supplier_name;
-        }
-
-        #endregion
-        #region Selected Product
-        public void LoadSupplier()
-        {
-            int get_product_purchase_order_detail_fk = 0;
-            if (SelectedItem != null && SelectedItem.product_pk != 0)
-            {
-                try
-                {
-                    DataBaseLayer.ProductRepository ProductRepo = new DataBaseLayer.ProductRepository(dataBaseProvider);
-                    get_product_purchase_order_detail_fk = ProductRepo.Get_product_purchase_order(SelectedItem.product_pk).Result;
-                    ProductRepo.Commit();
-                    ProductRepo.Dispose();
-                }
-                catch (Exception e)
-                {
-                    MessageBox.Show("An Error has occured:" + e);
-                }
-                finally
-                {
-                   if (purchase_order_detail_pk > 0)
-            {
-                dataBaseProvider = getprovider();
-                DataBaseLayer.PurchaseOrderRepository PurchaseOrderRepo = new DataBaseLayer.PurchaseOrderRepository(dataBaseProvider);
-                selected_lot_number = PurchaseOrderRepo.Get_PurchaseOrderDetail_by_pk(purchase_order_detail_pk).Result;
-                PurchaseOrderRepo.Commit();
-                PurchaseOrderRepo.Dispose();
-         
-
-                }
-            }
-        }
-
-        #endregion
-        IDatabaseProvider dataBaseProvider;
-
-
-        // expand
-
-
-        public void RemoveCategoryFilterCommand()
-        {
-            selected_category_fk_filter = 0;
-            canRemoveCategoryFilter = false;
-            ApplyFilter(FilterField.None);
-        }
-        public void RemoveSupplierFilterCommand()
-        {
-            selected_supplier_fk_filter = 0;
-            canRemoveSupplierFilter = false;
-            ApplyFilter(FilterField.None);
-        }
-        public void AddCategoryFilter()
-        {
-            if (!canRemoveCategoryFilter)
-                canRemoveCategoryFilter = true;
-     
-            // Load Supplier
-            try
-            {
-                dataBaseProvider = getprovider();
-                CategoryRepository CategoryRepo = new CategoryRepository(dataBaseProvider);
-                selected_category_fk_filter = CategoryRepo.Get_by_category_name(selected_category_name_filter.category_name).Result;
-                CategoryRepo.Commit();
-                CategoryRepo.Dispose();
-            }
-            catch (Exception e)
-            { MessageBox.Show("An Error has occured:" + e); }
-
-            dataBaseProvider = getprovider();
-            DataBaseLayer.ProductRepository ProductRepo = new DataBaseLayer.ProductRepository(dataBaseProvider);
-            BindableCollectionProductModel.Clear();
-            try
-            {
-                BindableCollectionProductModel = DataConversion.ToBindableCollection(ProductRepo.GetAllWithID(selected_supplier_fk_filter, selected_category_fk_filter).Result.ToObservable());
-            }
-            catch (Exception e)
-            {
-                MessageBox.Show("An error has occured" + e);
-            }
-            ProductRepo.Commit();
-            ProductRepo.Dispose();
-            SelectedItem = new ProductModel();
-
-            // Load product_category, product purchase order, product supplier
-            foreach (var item in BindableCollectionProductModel)
-            {
-                SelectedItem.category_name = item.category_name;
-                // product_purchase_order
-                SelectedItem.product_purchase_order_pk = item.product_purchase_order_pk;
-                SelectedItem.product_fk = item.product_fk;
-                SelectedItem.purchase_order_detail_fk = item.product_order_detail_fk;
-                // product_supplier
-                SelectedItem.product_supplier_pk = item.product_supplier_pk;
-                SelectedItem.supplier_fk = item.supplier_fk;
-            }
-            //RaisePropertyChanged("SelectedItem");
-            //RaisePropertyChanged("BindableCollectionProductModel");
-        }
-        public void AddSupplierFilter()
-        {
-            if (!canRemoveSupplierFilter)
-                canRemoveSupplierFilter = true;
-
-            // Load Supplier
-            try
-            {
-                dataBaseProvider = getprovider();
-                SupplierRepository SupplierRepo = new SupplierRepository(dataBaseProvider);
-                selected_supplier_fk_filter = SupplierRepo.Get_by_supplier_name(selected_supplier_name_filter.supplier_name).Result;
-                SupplierRepo.Commit();
-                SupplierRepo.Dispose();
-            }
-            catch (Exception e)
-            { MessageBox.Show("An Error has occured:" + e); }
-
-            dataBaseProvider = getprovider();
-            DataBaseLayer.ProductRepository ProductRepo = new DataBaseLayer.ProductRepository(dataBaseProvider);
-            BindableCollectionProductModel.Clear();
-            try
-            {
-                BindableCollectionProductModel = DataConversion.ToBindableCollection(ProductRepo.GetAllWithID(selected_supplier_fk_filter, selected_category_fk_filter).Result.ToObservable());
-            }
-            catch (Exception e)
-            {
-                MessageBox.Show("An error has occured" + e);
-            }
-            ProductRepo.Commit();
-            ProductRepo.Dispose();
-            SelectedItem = new ProductModel();
-
-            // Load product_category, product purchase order, product supplier
-            foreach (var item in BindableCollectionProductModel)
-            {
-                SelectedItem.category_name = item.category_name;
-                // product_purchase_order
-                SelectedItem.product_purchase_order_pk = item.product_purchase_order_pk;
-                SelectedItem.product_fk = item.product_fk;
-                SelectedItem.purchase_order_detail_fk = item.product_order_detail_fk;
-                // product_supplier
-                SelectedItem.product_supplier_pk = item.product_supplier_pk;
-                SelectedItem.supplier_fk = item.supplier_fk;
-            }
-            //RaisePropertyChanged("SelectedItem");
-            //RaisePropertyChanged("BindableCollectionProductModel");
-        }
-
-        #endregion
-
-        public void SaveCommand()
-        {
-            var selectedRows = BindableCollectionProductModel.Where(i => i.IsSelected);
-
-            foreach (var item in selectedRows)
-            {
-                SelectedItem.product_pk = item.product_pk;
-                SelectedItem.brand_name = item.brand_name;
-                SelectedItem.product_name = item.product_name;
-                SelectedItem.category_name = item.category_name;
-                SelectedItem.description = item.description;
-                SelectedItem.quantity = item.quantity;
-                SelectedItem.cost = item.cost;
-                SelectedItem.sku = item.sku;
-                SelectedItem.listed_price = item.listed_price;
-                SelectedItem.instock = item.instock;
-                SelectedItem.condition = item.condition;
-                SelectedItem.listing_url = item.listing_url;
-                SelectedItem.listing_number = item.listing_number;
-                SelectedItem.listing_date = item.listing_date;
-            }
-            // first check for null values
-            if (SelectedItem.category_name == null)
-            {
-                MessageBox.Show("Please select a category name.");
-                return;
-            }
-            if (SelectedItem.product_name == null)
-            {
-                MessageBox.Show("Please enter a product name.");
-                return;
-            }
-
-            if (SelectedItem.sku == null)
-            {
-                MessageBox.Show("Please enter a sku.");
-                return;
-            }
-            if (selected_supplier_name == null)
-            {
-                MessageBox.Show("Please select a supplier.");
-                return;
-            }
-            if (selected_lot_number == 0)
-            {
-                MessageBox.Show("Please select a lot number.");
-                return;
-            }
-            SupplierRepository SupplierRepo = new SupplierRepository(dataBaseProvider);
-            // convert supplier_name to fk
-            SelectedItem.supplier_fk = SupplierRepo.Get_by_supplier_name(selected_supplier_name).Result;
-            SelectedItem.purchase_order_detail_fk = selected_lot_number;
-            SupplierRepo.Commit();
-            SupplierRepo.Dispose();
-
-            CategoryRepository CategoryRepo = new CategoryRepository(dataBaseProvider);
-            // convert category_name to fk
-            SelectedItem.category_fk = CategoryRepo.Get_by_category_name(SelectedItem.category_name).Result;
-            CategoryRepo.Commit();
-            CategoryRepo.Dispose();
-
-
-            DataBaseLayer.ProductRepository SelectProductRepo = new DataBaseLayer.ProductRepository(dataBaseProvider);
-            bool get_product_category = SelectProductRepo.Get_Product_Category(SelectedItem).Result;
-            SelectProductRepo.Commit();
-            SelectProductRepo.Dispose();
-
-            DataBaseLayer.ProductRepository ProductRepo = new DataBaseLayer.ProductRepository(dataBaseProvider);
-       
             // Insert and Update Logic Needs to be redone.
 
             // Case Insert
@@ -1085,10 +759,6 @@ namespace VMSales.ViewModels
                 }
             }
         }
-        public void ResetCommand()
-        {
-            initial_load();
-        }
 
         // databaselayer line 597
         public void SearchCommand()
@@ -1130,13 +800,6 @@ namespace VMSales.ViewModels
             }
         }
 
-        public void ClearCommand()
-        {
-            canEnableSearchFilter = false;
-            initial_load();
-        }
-
-
 
         public void UploadImageCommand()
         {
@@ -1151,123 +814,5 @@ namespace VMSales.ViewModels
                 _ = _windowManager.ShowWindowAsync(popupwindow);
             }
         }
-
-        public void LoadSelectedPurchaseOrder(int purchase_order_detail_pk)
-        {
-
-            if (purchase_order_detail_pk > 0)
-            {
-                dataBaseProvider = getprovider();
-                DataBaseLayer.PurchaseOrderRepository PurchaseOrderRepo = new DataBaseLayer.PurchaseOrderRepository(dataBaseProvider);
-                selected_lot_number = PurchaseOrderRepo.Get_PurchaseOrderDetail_by_pk(purchase_order_detail_pk).Result;
-                PurchaseOrderRepo.Commit();
-                PurchaseOrderRepo.Dispose();
-            }
-        }
-
-        public void initial_load()
-        {
-            // reset buttons
-            searchterm = null;
-            showsearchdrop = Visibility.Hidden;
-            showsearchtext = Visibility.Visible;
-            searchbox = null;
-            selected_search = null;
-            _productSelected = false;
-            productSelected = false;
-            canEnableProductSupplier = false;
-            canEnableProductPurchase = false;
-            selected_supplier_name = null;
-            selected_lot_number = 0;
-            purchase_order_detail_pk = 0;
-
-            searchdrop = new ObservableCollection<string>
-            {
-                "New", "Used"
-            };
-
-
-            searchdropdown = new ObservableCollection<string>
-            {
-                "Condition", "Product Name", "Description", "SKU", "Brand Name"
-            };
-
-            // reset filters
-            if (selected_supplier_name_filter != null && selected_supplier_name_filter.supplier_name != null)
-            {
-                selected_supplier_name_filter = null;
-            }
-
-            if (selected_category_name_filter != null && selected_category_name_filter.category_name != null)
-            {
-                selected_category_name_filter = null;
-            }
-
-            dataBaseProvider = getprovider();
-
-            
-            // Get Suppliers
-            BindableCollectionSupplierModel = new BindableCollection<SupplierModel>();
-            SupplierRepository SupplierRepo = new SupplierRepository(dataBaseProvider);
-
-            BindableCollectionSupplierModel = DataConversion.ToBindableCollection(SupplierRepo.GetAll().Result.ToBindableCollection());
-
-            if (BindableCollectionSupplierModel.Count == 0)
-            {
-                SupplierRepo.Revert();
-                SupplierRepo.Dispose();
-                MessageBox.Show("Please add a supplier.");
-                return;
-            }
-            else
-            {
-                SupplierRepo.Commit();
-                SupplierRepo.Dispose();
-            }
-
-            // Check for Purchase Order
-            BindableCollectionPurchaseOrderModel = new BindableCollection<PurchaseOrderModel>();
-            DataBaseLayer.PurchaseOrderRepository PurchaseOrderRepo = new DataBaseLayer.PurchaseOrderRepository(dataBaseProvider);
-            BindableCollectionPurchaseOrderModel = DataConversion.ToBindableCollection(PurchaseOrderRepo.GetAll().Result.ToObservable());
-            if (BindableCollectionPurchaseOrderModel.Count() == 0)
-            {
-                PurchaseOrderRepo.Revert();
-                PurchaseOrderRepo.Dispose();
-                MessageBox.Show("You must add purchase orders.");
-                return;
-            }
-            else
-            {
-                PurchaseOrderRepo.Commit();
-                PurchaseOrderRepo.Dispose();
-            }
-
-            // Load Products
-            DataBaseLayer.ProductRepository ProductRepo = new DataBaseLayer.ProductRepository(dataBaseProvider);
-
-            if (BindableCollectionProductModel != null)
-            {
-                BindableCollectionProductModel.Clear();
-                BindableCollectionProductModel = new BindableCollection<ProductModel>();
-            }
-            BindableCollectionProductModel = DataConversion.ToBindableCollection(ProductRepo.GetAll().Result.ToObservable());
-            ProductRepo.Commit();
-            ProductRepo.Dispose();
-            SelectedItem = new ProductModel();
-            ////RaisePropertyChanged("SelectedItem");
-            ////RaisePropertyChanged("BindableCollectionProductModel");
-
-            // Load product_category, product purchase order, product supplier
-            foreach (var item in BindableCollectionProductModel)
-            {
-                SelectedItem.category_name = item.category_name;
-                // product_purchase_order
-                SelectedItem.product_purchase_order_pk = item.product_purchase_order_pk;
-                SelectedItem.product_fk = item.product_fk;
-                SelectedItem.purchase_order_detail_fk = item.product_order_detail_fk;
-                // product_supplier
-                SelectedItem.product_supplier_pk = item.product_supplier_pk;
-                SelectedItem.supplier_fk = item.supplier_fk;
-            }
 
 */
