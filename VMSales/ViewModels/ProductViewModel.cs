@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows;
 using VMSales.Logic;
 using VMSales.Models;
@@ -251,8 +252,7 @@ namespace VMSales.ViewModels
         #endregion
 
         #region Commands
-        //public async Task SaveCommand()
-        public void SaveCommand()
+        public async Task SaveCommand()
         {
 
             // Create an instance of DataProcessor with ProductModel type
@@ -272,22 +272,37 @@ namespace VMSales.ViewModels
 
                 try
                 {
-
+                    dataBaseProvider = getprovider();
+                    
                     // implement check for foreign keys, if foreign key exists, warn user.
                     switch (item.Action)
                     {
                         case "Update":
-                            // first just implement product update.
-
-                            // are we changing product category and supplier if so warn user.
-                            // get product dbsupplier
-                            // get product dbcategory
-
+                            
                             // update product category from previous value
                             if (item.category_name != null)
-                            
-                            // update product_category    
-                           
+                            {
+                                // update product_category
+                                CategoryRepository CategoryRepo = new CategoryRepository(dataBaseProvider);
+                                int update_category_fk = await CategoryRepo.Get_by_category_name(item.category_name);
+                                CategoryRepo.Dispose();
+
+                                ProductRepository UpdateProductRepo = new ProductRepository(dataBaseProvider);
+                                bool Update_Product_Category = await UpdateProductRepo.Update_Product_Category(item,update_category_fk);
+                                if (Update_Product_Category == false)
+                                {
+                                    UpdateProductRepo.Revert();
+                                    UpdateProductRepo.Dispose();
+                                    throw new Exception("Failed to Update Product Category");
+                                }
+                                else
+                                {
+                                    UpdateProductRepo.Commit();
+                                    UpdateProductRepo.Dispose();
+                                }
+                            }
+
+                            // in progress to fix.
 
                             // update product category from blank value
                             if (item.category_fk == 0)
@@ -299,9 +314,7 @@ namespace VMSales.ViewModels
 
                                 // insert into product_category values category_pk, product_pk
                                 //DataBaseLayer Category Get_by_category_name
-                            }
-
-                            dataBaseProvider = getprovider();
+                             }
                                 ProductRepository ProductRepo = new ProductRepository(dataBaseProvider);
                                 bool Update_Product = ProductRepo.Update(item).Result;
                                 if (Update_Product == false)

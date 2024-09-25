@@ -66,7 +66,7 @@ namespace VMSales.Logic
           throw new NotImplementedException();
        }
 
-        //custom GetAllWithID for Product Only
+        //custom GetAllWithID for Product Only - FILTERS
         public async Task<IEnumerable<ProductModel>> GetAllWithID(int supplier_fk, int category_fk, string selected_product_filter, string searchtext)
         {
 
@@ -285,11 +285,8 @@ namespace VMSales.Logic
                 }
             }
         }
-
+        // END FILTERS
         
-
-
-    // end filter
 
     // get all products by supplier and purchase_order
     public async Task<IEnumerable<ProductModel>> GetAllWithAllID(int supplier_fk, int purchase_order_detail_pk)
@@ -381,27 +378,15 @@ namespace VMSales.Logic
         }
 
         // Product_Category
-        public async Task<bool> Update_Product_Category(ProductModel entity,string category_name)
+        public async Task<bool> Update_Product_Category(ProductModel entity,int update_category_fk)
         {
-            // need addtional logic here.
-
-            // select category_fk from category name
-
-            // compare values
-
-            // update values
-
-
             bool update_product_category = (await Connection.ExecuteAsync("UPDATE product_category SET " +
-            "product_fk = @product_fk, category_fk = @category_fk WHERE product_fk = @product_fk", new
+            "category_fk = @category_fk WHERE product_category_pk = @product_category_pk", new
             {
-                product_fk = entity.product_fk,
-                category_fk = entity.category_fk
+                product_category_pk = entity.product_category_pk,
+                category_fk = update_category_fk
             }, null)) == 1;
             return update_product_category;
-        
-        
-        
         }
 
         public async Task<bool> Update_Product_Supplier(ProductModel entity)
