@@ -29,28 +29,19 @@ namespace VMSales.Logic
             {
                 return await Connection.QuerySingleAsync<int>("SELECT category_pk FROM category WHERE category_name = @category_name", new { category_name }, Transaction);
             }
-
-            public async Task<CategoryModel> Get_by_category_pk(int category_pk)
+            
+            // may not be needed
+      /*      public async Task<CategoryModel> Get_by_category_pk(int category_pk)
             {
                 return await Connection.QuerySingleAsync<CategoryModel>("SELECT category_name FROM category WHERE category_pk = @category_pk", new { category_pk }, Transaction);
             }
+      */
 
             public async Task<IEnumerable<CategoryModel>> Get_all_category_name()
             {
                 return await Connection.QueryAsync<CategoryModel>("SELECT category_name FROM category ORDER BY category_name", null, Transaction);
             }
-
-            /*     public async Task<IEnumerable<CategoryModel>> Get_Product_Category()
-                 {
-                     return await Connection.QueryAsync<CategoryModel>(
-                     "SELECT DISTINCT category_pk, category_name, (category_pk - 1) as selected_category  " +
-                     "FROM category as c, product_category as pc " +
-                     "INNER JOIN product_category on pc.category_fk = c.category_pk UNION " +
-                     "SELECT category_pk, category_name, null  FROM category as c"
-                     , null, Transaction);
-
-                 }
-            */
+  
             public override async Task<CategoryModel> Get(int id)
             {
                 return await Connection.QuerySingleAsync<CategoryModel>("SELECT category_pk FROM category WHERE category_pk = @id", new { id }, Transaction);

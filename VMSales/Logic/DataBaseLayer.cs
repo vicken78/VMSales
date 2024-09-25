@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Forms;
@@ -95,7 +96,7 @@ namespace VMSales.Logic
                     }
                     return 0;
                 }
-                catch (Exception e)
+                catch (Exception)
                 {
                     return 0;
                 }
@@ -721,6 +722,7 @@ namespace VMSales.Logic
             {
                 return null;
             }
+            
 
             public override async Task<CustomerOrderModel> Get(int id)
             {
@@ -752,6 +754,7 @@ namespace VMSales.Logic
                 //change
                 return 0;
             }
+            
 
             public override async Task<bool> Update(CustomerOrderModel entity)
             {
@@ -766,6 +769,7 @@ namespace VMSales.Logic
                 return false;
             }
         }
+            
         #endregion
     }
 }

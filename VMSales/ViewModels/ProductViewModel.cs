@@ -261,7 +261,6 @@ namespace VMSales.ViewModels
             // Call the Compare method
             ObservableCollection<ProductModel> differences = dataProcessor.Compare(ObservableCollectionProductModelClean, ObservableCollectionProductModelDirty);
 
-            Debug.WriteLine(differences.Count);
             foreach (var item in differences)
             {
 
@@ -273,29 +272,52 @@ namespace VMSales.ViewModels
 
                 try
                 {
-                   
+
                     // implement check for foreign keys, if foreign key exists, warn user.
                     switch (item.Action)
                     {
                         case "Update":
-                         
+                            // first just implement product update.
 
                             // are we changing product category and supplier if so warn user.
                             // get product dbsupplier
                             // get product dbcategory
 
-                            // compare
+                            // update product category from previous value
+                            if (item.category_name != null)
+                            
+                            // update product_category    
+                           
 
+                            // update product category from blank value
+                            if (item.category_fk == 0)
+                            {
+                
+                                MessageBox.Show("product_pk "+item.product_pk.ToString());
+                                MessageBox.Show("category_name" + item.category_name.ToString());
+                                // we need a name to category_pk function.
 
-                            // update product
+                                // insert into product_category values category_pk, product_pk
+                                //DataBaseLayer Category Get_by_category_name
+                            }
 
-                            //bool Update_Category = ProductRepo.Update(item).Result;
-                            //if (Update_Category == false)
-                            //{ throw new Exception("Update Failed"); }
-                            //else
-                            //ProductRepo.Commit();
+                            dataBaseProvider = getprovider();
+                                ProductRepository ProductRepo = new ProductRepository(dataBaseProvider);
+                                bool Update_Product = ProductRepo.Update(item).Result;
+                                if (Update_Product == false)
+                                {
+                                    ProductRepo.Revert();
+                                    ProductRepo.Dispose();
+                                    throw new Exception("Update Failed"); 
+                                }
+                                else
+                                {
+                                ProductRepo.Commit();
+                                ProductRepo.Dispose();
+                                }
                             break;
-                        case "Insert":
+
+                            case "Insert":
                             //int category_pk = await ProductRepo.Insert(item);
                             //if (product_pk == 0)
                             //{ throw new Exception("Insert Failed"); }
@@ -376,44 +398,43 @@ namespace VMSales.ViewModels
             ObservableCollectionPurchaseOrderModel = new ObservableCollection<PurchaseOrderModel>();
             ObservableCollectionCategoryModel = new ObservableCollection<CategoryModel>();
             ObservableCollectionSupplierModel = new ObservableCollection<SupplierModel>();
-
-            dataBaseProvider = getprovider();
-            ProductRepository ProductRepo = new ProductRepository(dataBaseProvider);
-
-            ObservableCollectionProductModelDirty = ProductRepo.GetAll().Result.ToObservable();
-            ObservableCollectionProductModelClean = new ObservableCollection<ProductModel>(ObservableCollectionProductModelDirty.Select(item => new ProductModel
+            try
             {
-                // Copy properties from the item, or use a copy constructor if available
-                Action = item.Action,
-                brand_name = item.brand_name,
-                category_fk = item.category_fk,
-                category_name = item.category_name,
-                condition = item.condition,
-                cost = item.cost,
-                description = item.description,
-                FontColor = item.FontColor,
-                instock = item.instock,
-                //IsNotifying = item.IsNotifying,
-                //IsSelected = item.IsSelected,
-                listed_price = item.listed_price,
-                listing_date = item.listing_date,
-                listing_number = item.listing_number,
-                listing_url = item.listing_url,
-                product_category_pk = item.product_category_pk,
-                product_fk = item.product_fk,
-                product_name = item.product_name,
-                product_order_detail_fk = item.product_order_detail_fk,
-                product_pk = item.product_pk,
-                product_purchase_order_pk = item.product_purchase_order_pk,
-                product_supplier_pk = item.product_supplier_pk,
-                purchase_order_detail_fk = item.purchase_order_detail_fk,
-                quantity = item.quantity,
-                sku = item.sku,
-                supplier_fk = item.supplier_fk
-            }));
+                dataBaseProvider = getprovider();
+                ProductRepository ProductRepo = new ProductRepository(dataBaseProvider);
 
-            ProductRepo.Dispose();
-
+                ObservableCollectionProductModelDirty = ProductRepo.GetAll().Result.ToObservable();
+                ObservableCollectionProductModelClean = new ObservableCollection<ProductModel>(ObservableCollectionProductModelDirty.Select(item => new ProductModel
+                {
+                    // Copy properties from the item, or use a copy constructor if available
+                    Action = item.Action,
+                    brand_name = item.brand_name,
+                    category_fk = item.category_fk,
+                    category_name = item.category_name,
+                    condition = item.condition,
+                    cost = item.cost,
+                    description = item.description,
+                    FontColor = item.FontColor,
+                    instock = item.instock,
+                    listed_price = item.listed_price,
+                    listing_date = item.listing_date,
+                    listing_number = item.listing_number,
+                    listing_url = item.listing_url,
+                    product_category_pk = item.product_category_pk,
+                    product_fk = item.product_fk,
+                    product_name = item.product_name,
+                    product_order_detail_fk = item.product_order_detail_fk,
+                    product_pk = item.product_pk,
+                    product_purchase_order_pk = item.product_purchase_order_pk,
+                    product_supplier_pk = item.product_supplier_pk,
+                    purchase_order_detail_fk = item.purchase_order_detail_fk,
+                    quantity = item.quantity,
+                    sku = item.sku,
+                    supplier_fk = item.supplier_fk
+                }));
+                ProductRepo.Dispose();
+            }
+            catch (Exception e) { MessageBox.Show("An unexpected error has occured: "+e); }
             DataBaseLayer.PurchaseOrderRepository PurchaseOrderRepo = new DataBaseLayer.PurchaseOrderRepository(dataBaseProvider);
             ObservableCollectionPurchaseOrderModel = PurchaseOrderRepo.GetAll().Result.ToObservable();
             PurchaseOrderRepo.Dispose();
@@ -446,7 +467,7 @@ namespace VMSales.ViewModels
                 }
                 catch (Exception e)
                 {
-                    MessageBox.Show("An Error has occured:" + e);
+                    MessageBox.Show("An Error has occured: " + e);
                 }
                 finally
                 {
