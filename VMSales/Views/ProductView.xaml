@@ -69,6 +69,14 @@
                 SelectedValue="{Binding selected_lot_number, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" 
                 Grid.Column="1" Grid.Row="3"/>
 
+            <Label Content="Invoice Number" Grid.Column="0" Grid.Row="6"/>
+            <TextBox Name="InvoiceNumber"  Background="WhiteSmoke" Text="{Binding invoice_number}" Grid.Row="6" Grid.Column="1"/>
+            <Label Content="Purchase Date" Grid.Column="0" Grid.Row="8"/>
+            <TextBox Name="PurchaseDate"  Background="WhiteSmoke" Text="{Binding purchase_date}" Grid.Row="8" Grid.Column="1"/>
+
+
+
+
             <!-- Filter Category -->
 
 			<TextBlock Grid.Row="2" Grid.Column="6" FontSize="14" HorizontalAlignment="Center" FontWeight="Bold">Filter Category</TextBlock>
@@ -165,9 +173,9 @@
                           ItemsSource="{Binding ObservableCollectionProductModelDirty,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
                           CanUserReorderColumns="False"
                           SelectedItem="{Binding SelectedProduct, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                          CanUserAddRows="False"
+                          CanUserAddRows="True"
                           EnableRowVirtualization="True" IsReadOnly="False" Grid.Row="10" 
-                          Height="Auto" Width="1525" HorizontalAlignment="Left"
+                          Height="Auto" Width="Auto" HorizontalAlignment="Left"
                           SelectionMode="Single">
 			<DataGrid.RowStyle>
 				<Style TargetType="{x:Type DataGridRow}">
