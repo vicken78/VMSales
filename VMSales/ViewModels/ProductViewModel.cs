@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using System.Windows;
 using VMSales.Logic;
@@ -274,15 +275,13 @@ namespace VMSales.ViewModels
                 {
                     dataBaseProvider = getprovider();
                     
-                    // implement check for foreign keys, if foreign key exists, warn user.
                     switch (item.Action)
                     {
                         case "Update":
-                            
+
                             // update product category from previous value
-                            if (item.category_name != null)
+                            if (item.category_name != null && item.category_fk > 0)
                             {
-                                // update product_category
                                 CategoryRepository CategoryRepo = new CategoryRepository(dataBaseProvider);
                                 int update_category_fk = await CategoryRepo.Get_by_category_name(item.category_name);
                                 CategoryRepo.Dispose();
@@ -301,35 +300,46 @@ namespace VMSales.ViewModels
                                     UpdateProductRepo.Dispose();
                                 }
                             }
-
-                            // in progress to fix.
-
-                            // update product category from blank value
-                            if (item.category_fk == 0)
+                            
+                            // insert into product category from blank value
+                            if (item.category_name != null && item.category_fk == 0)
                             {
-                
-                                MessageBox.Show("product_pk "+item.product_pk.ToString());
-                                MessageBox.Show("category_name" + item.category_name.ToString());
-                                // we need a name to category_pk function.
+                                CategoryRepository CategoryRepo = new CategoryRepository(dataBaseProvider);
+                                int new_category_fk = await CategoryRepo.Get_by_category_name(item.category_name);
+                                CategoryRepo.Dispose();
 
                                 // insert into product_category values category_pk, product_pk
-                                //DataBaseLayer Category Get_by_category_name
-                             }
+
                                 ProductRepository ProductRepo = new ProductRepository(dataBaseProvider);
-                                bool Update_Product = ProductRepo.Update(item).Result;
-                                if (Update_Product == false)
+                                bool Insert_Product_Category = ProductRepo.InsertProductCategory(item,new_category_fk).Result;
+                                if (Insert_Product_Category == false)
                                 {
                                     ProductRepo.Revert();
                                     ProductRepo.Dispose();
-                                    throw new Exception("Update Failed"); 
+                                    throw new Exception("Failed to Insert Product Category");
                                 }
                                 else
                                 {
-                                ProductRepo.Commit();
-                                ProductRepo.Dispose();
+                                    ProductRepo.Commit();
+                                    ProductRepo.Dispose();
                                 }
-                            break;
+                            }
+                            // Now Update Product
+                            ProductRepository FinalUpdateRepo = new ProductRepository(dataBaseProvider);
+                            bool Update_Product = FinalUpdateRepo.Update(item).Result;
+                            if (Update_Product == false)
+                            {
+                                FinalUpdateRepo.Revert();
+                                FinalUpdateRepo.Dispose();
+                                throw new Exception("Failed to Update Product");
+                            }
+                            else
+                            {
+                                FinalUpdateRepo.Commit();
+                                FinalUpdateRepo.Dispose();
+                            }
 
+                            break;
                             case "Insert":
                             //int category_pk = await ProductRepo.Insert(item);
                             //if (product_pk == 0)

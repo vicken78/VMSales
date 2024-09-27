@@ -2,10 +2,7 @@
 using Dapper;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.Threading;
 using System.Threading.Tasks;
-using System.Windows.Controls.Primitives;
 using VMSales.Models;
 
 
@@ -448,13 +445,12 @@ namespace VMSales.Logic
             return product_pk;
         }
 
-        public async Task<bool> InsertProductCategory(ProductModel entity)
+        public async Task<bool> InsertProductCategory(ProductModel entity, int new_category_fk)
         {
-            //check why is this failing, insert if dont exist maybe
             bool insertproductcategory = (await Connection.ExecuteAsync("INSERT INTO product_category (product_fk, category_fk) VALUES (@product_fk, @category_fk);", new
             {
-                product_fk = entity.product_fk,
-                category_fk = entity.category_fk
+                product_fk = entity.product_pk,
+                category_fk = new_category_fk
             }, Transaction)) == 1;
             return insertproductcategory;
         }
