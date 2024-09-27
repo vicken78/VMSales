@@ -86,6 +86,29 @@ namespace VMSales.ViewModels
                 NotifyOfPropertyChange(() => selected_product_filter);
             }
         }
+
+        private string _selected_invoice_number;
+        public string selected_invoice_number
+        {
+            get => _selected_invoice_number;
+            set
+            {
+                if (_selected_invoice_number != value)
+                    _selected_invoice_number = value;
+                NotifyOfPropertyChange(() => selected_invoice_number);
+            }
+        }
+        private DateTime _selected_purchase_date;
+        public DateTime selected_purchase_date
+        {
+            get => _selected_purchase_date;
+            set
+            {
+                if (_selected_purchase_date != value)
+                    _selected_purchase_date = value;
+                NotifyOfPropertyChange(() => selected_purchase_date);
+            }
+        }
         #endregion
 
         #region Filters
@@ -498,6 +521,8 @@ namespace VMSales.ViewModels
                     {
                         selected_supplier_name = item.supplier_name;
                         selected_lot_number = item.lot_number;
+                        selected_purchase_date = item.purchase_date;
+                        selected_invoice_number = item.invoice_number;
                     }
                 }
             }

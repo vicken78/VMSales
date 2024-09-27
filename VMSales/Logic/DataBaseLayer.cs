@@ -128,13 +128,14 @@ namespace VMSales.Logic
             {
 
                 return await Connection.QueryAsync<PurchaseOrderModel>("SELECT DISTINCT " +
-                    "supplier_name, lot_number " +
+                    "supplier_name, lot_number, invoice_number, purchase_date " +
                     "FROM product p " +
                     "INNER JOIN product_supplier ps ON p.product_pk = ps.product_fk " +
                     "INNER JOIN supplier s ON ps.supplier_fk = s.supplier_pk " +
                     "INNER JOIN product_purchase_order ppo ON p.product_pk = ppo.product_fk " +
                     "INNER JOIN product on p.product_pk = ps.product_fk " +
                     "INNER JOIN purchase_order_detail pod ON ppo.product_purchase_order_detail_fk = pod.purchase_order_detail_pk " +
+                    "INNER JOIN purchase_order po ON ppo.product_purchase_order_detail_fk = po.purchase_order_pk " +
                     "WHERE p.product_pk = @product_pk",
                     new { product_pk }, Transaction);
             }

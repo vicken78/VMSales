@@ -70,12 +70,9 @@
                 Grid.Column="1" Grid.Row="3"/>
 
             <Label Content="Invoice Number" Grid.Column="0" Grid.Row="6"/>
-            <TextBox Name="InvoiceNumber"  Background="WhiteSmoke" Text="{Binding invoice_number}" Grid.Row="6" Grid.Column="1"/>
+            <TextBox Name="InvoiceNumber"  Background="WhiteSmoke" Text="{Binding selected_invoice_number}" Grid.Row="6" Grid.Column="1"/>
             <Label Content="Purchase Date" Grid.Column="0" Grid.Row="8"/>
-            <TextBox Name="PurchaseDate"  Background="WhiteSmoke" Text="{Binding purchase_date}" Grid.Row="8" Grid.Column="1"/>
-
-
-
+            <TextBox Name="PurchaseDate"  Background="WhiteSmoke" Text="{Binding selected_purchase_date,StringFormat='MM-dd-yyyy'}" Grid.Row="8" Grid.Column="1"/>
 
             <!-- Filter Category -->
 
