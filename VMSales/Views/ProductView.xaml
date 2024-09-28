@@ -111,7 +111,7 @@
 
 
 			<Button x:Name="OpenImageCommand" Grid.Row="2" Grid.Column="10" Grid.RowSpan="10" Grid.ColumnSpan="2">
-				<Image x:Name="imageControl" Margin="10,10,10,10" Source="{Binding Selectedfilelist}" />
+				<Image x:Name="imageControl" Margin="10,10,10,10" Source="{Binding Selectedfilelist}" Width="200" Height="200"/>
 			</Button>
 
 

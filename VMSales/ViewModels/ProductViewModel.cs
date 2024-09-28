@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Caliburn.Micro;
+using Microsoft.Win32;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
@@ -6,6 +8,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Media.Imaging;
 using VMSales.Logic;
 using VMSales.Models;
 
@@ -33,24 +36,6 @@ namespace VMSales.ViewModels
         public ObservableCollection<ProductModel> ObservableCollectionProductModel { get; set; }
         public ObservableCollection<CategoryModel> ObservableCollectionCategoryModel { get; set; }
         public ObservableCollection<SupplierModel> ObservableCollectionSupplierModel { get; set; }
-
-        private ProductModel _SelectedProduct;
-        public ProductModel SelectedProduct
-        {
-            get => _SelectedProduct; 
-            set
-            {
-                if (_SelectedProduct != value)
-                _SelectedProduct = value;
-                NotifyOfPropertyChange(() => SelectedProduct);
-                if (SelectedProduct?.IsSelected != null)
-                {
-                    LoadSupplier();
-                    //Boolean productSelected = true;
-                    //LoadFileList();
-                }
-            }
-         }
 
         #region Selected Product Supplier
         private string _selected_supplier_name;
@@ -240,6 +225,68 @@ namespace VMSales.ViewModels
         "Used",
         "Refurbished"
     };
+        #endregion
+
+        #region filelist
+        private BitmapImage _imageSource;
+        public BitmapImage ImageSource
+        {
+            get => _imageSource;
+            set
+            {
+                if (_imageSource != value)
+                {
+                    _imageSource = value;
+                    NotifyOfPropertyChange(() => ImageSource);
+
+                }
+            }
+        }
+
+        private ObservableCollection<string> _filelist;
+        public ObservableCollection<string> filelist
+        {
+            get => _filelist; 
+            set
+            {
+                if (_filelist != value)
+                _filelist = value;
+                NotifyOfPropertyChange(() => filelist);
+            }
+        }
+
+        private string _selectedfilelist;
+        public string Selectedfilelist
+        {
+            get => _selectedfilelist; 
+            set
+            {
+                if (_selectedfilelist != value)
+                _selectedfilelist = value;
+                NotifyOfPropertyChange(() => Selectedfilelist);
+                LoadImage(Selectedfilelist);
+            }
+        }
+
+        private ProductModel _SelectedProduct;
+        public ProductModel SelectedProduct
+        {
+            get => _SelectedProduct;
+            set
+            {
+                if (_SelectedProduct != value)
+                    _SelectedProduct = value;
+                NotifyOfPropertyChange(() => SelectedProduct);
+                if (SelectedProduct?.IsSelected != null)
+                {
+                    LoadSupplier();
+                    //Boolean productSelected = true;
+                    LoadFileList();
+                }
+            }
+        }
+
+        #endregion
 
         public void UpdateProduct()
         {
@@ -273,8 +320,7 @@ namespace VMSales.ViewModels
              
         }
 
-        #endregion
-
+ 
         #region Commands
         public async Task SaveCommand()
         {
@@ -288,11 +334,8 @@ namespace VMSales.ViewModels
             foreach (var item in differences)
             {
 
-
-                //ProductRepository ProductRepo = new ProductRepository(dataBaseProvider);
-                // need to handle product supplier and product category as well.
+                // need to handle product supplier
                 // not fully implemented
-
 
                 try
                 {
@@ -434,6 +477,82 @@ namespace VMSales.ViewModels
 
         #endregion
 
+        #region Images
+
+        public void OpenImageCommand()
+        {
+            if (Selectedfilelist != null)
+            {
+                // Handle opening the selected files
+                IWindowManager _windowManager = new WindowManager();
+                var popupwindow = new ProductPhotoViewModel(SelectedProduct, Selectedfilelist);
+                _windowManager.ShowWindowAsync(popupwindow);
+                LoadFileList();
+            }
+        }
+
+        public void LoadFileList()
+        {
+            if (filelist?.Count > 0)
+                filelist.Clear();
+
+            if (SelectedProduct.product_pk > 0)
+            {
+                DataBaseLayer.PhotoRepository PhotoRepo = new DataBaseLayer.PhotoRepository(dataBaseProvider);
+                filelist = PhotoRepo.GetFileList(SelectedProduct.product_pk).Result.ToObservable();
+                PhotoRepo.Commit();
+                PhotoRepo.Dispose();
+            }
+            else
+            {
+                filelist = new ObservableCollection<string>();
+            }
+            NotifyOfPropertyChange(() => filelist);
+        }
+
+        public void UploadImageCommand()
+        {
+
+            OpenFileDialog openFileDialog = new OpenFileDialog();
+            openFileDialog.Filter = "Image Files (*.bmp, *.jpg, *.png)|*.bmp;*.jpg;*.png";
+            if (openFileDialog.ShowDialog() == true)
+            {
+                string filePath = openFileDialog.FileName;
+                IWindowManager _windowManager = new WindowManager();
+                var popupwindow = new ProductPhotoViewModel(SelectedProduct, filePath);
+                _ = _windowManager.ShowWindowAsync(popupwindow);
+            }
+        }
+
+        private void LoadImage(string Selectedfilelist)
+        {
+            if (!string.IsNullOrEmpty(Selectedfilelist))
+            {
+                try
+                {
+                    BitmapImage image = new BitmapImage();
+                    image.BeginInit();
+                    image.CacheOption = BitmapCacheOption.OnLoad;
+                    image.UriSource = new Uri(Selectedfilelist);
+                    image.DecodePixelWidth = 150;
+                    image.DecodePixelHeight = 150;
+                    image.EndInit();
+                    ImageSource = image;
+                }
+                catch (Exception ex)
+                {
+                    // Handle any exceptions that may occur during image loading.
+                    MessageBox.Show(ex.Message);
+                }
+            }
+            else
+            {
+                // Clear the image source if the file path is null or empty
+                ImageSource = null;
+            }
+        }
+        #endregion
+
         public void initial_load()
         {
             _selected_supplier_filter = new SupplierModel { supplier_pk = 0, supplier_name = null };
@@ -539,121 +658,6 @@ namespace VMSales.ViewModels
 /* OLD CODE */
 
 /*
-
-
-
-        private BitmapImage _imageSource;
-        public BitmapImage ImageSource
-        {
-            get { return _imageSource; }
-            set
-            {
-                if (_imageSource != value)
-                {
-                    _imageSource = value;
-                    //RaisePropertyChanged("ImageSource");
-                }
-            }
-        }
-
-
-        private ObservableCollection<string> _filelist { get; set; }
-        public ObservableCollection<string> filelist
-        {
-            get { return _filelist; }
-            set
-            {
-                if (_filelist == value) return;
-                _filelist = value;
-                //RaisePropertyChanged("filelist");
-            }
-        }
-
-        private string _selectedfilelist;
-
-        public string Selectedfilelist
-        {
-            get { return _selectedfilelist; }
-            set
-            {
-                _selectedfilelist = value;
-                //RaisePropertyChanged("Selectedfilelist");
-                LoadImage(Selectedfilelist);
-            }
-        }
-
-        #endregion
-        #region Associate
-
-   
-        #endregion
-
-        #region filelistload
-
-        private void LoadImage(string Selectedfilelist)
-        {
-            if (!string.IsNullOrEmpty(Selectedfilelist))
-            {
-                try
-                {
-                    BitmapImage image = new BitmapImage();
-                    image.BeginInit();
-                    image.CacheOption = BitmapCacheOption.OnLoad;
-                    image.UriSource = new Uri(Selectedfilelist);
-                    image.DecodePixelWidth = 250;
-                    image.DecodePixelHeight = 250;
-                    image.EndInit();
-                    ImageSource = image;
-                }
-                catch (Exception ex)
-                {
-                    // Handle any exceptions that may occur during image loading.
-                    MessageBox.Show(ex.Message);
-                }
-            }
-            else
-            {
-                // Clear the image source if the file path is null or empty
-                ImageSource = null;
-            }
-        }
-
-        public void LoadFileList()
-        {
-            if (filelist?.Count > 0)
-                filelist.Clear();
-
-            if (SelectedItem.product_pk > 0)
-            {
-                DataBaseLayer.PhotoRepository PhotoRepo = new DataBaseLayer.PhotoRepository(dataBaseProvider);
-                filelist = PhotoRepo.GetFileList(SelectedItem.product_pk).Result.ToObservable();
-                PhotoRepo.Commit();
-                PhotoRepo.Dispose();
-                //RaisePropertyChanged("filelist");
-            }
-            else
-            {
-                filelist = new ObservableCollection<string>();
-                //RaisePropertyChanged("filelist");
-            }
-        }
-        #endregion
-
-        #region OpenImageCommand
-
-        public void OpenImageCommand()
-        {
-            if (Selectedfilelist != null)
-            {
-                // Handle opening the selected files
-                IWindowManager _windowManager = new WindowManager();
-                var popupwindow = new ProductPhotoViewModel(SelectedItem, Selectedfilelist);
-                _windowManager.ShowWindowAsync(popupwindow);
-                LoadFileList();
-            }
-        }
-
-        #endregion
 
             // Insert and Update Logic Needs to be redone.
 
@@ -875,60 +879,4 @@ namespace VMSales.ViewModels
                 }
             }
         }
-
-        // databaselayer line 597
-        public void SearchCommand()
-        {
-            canEnableSearchFilter = true;
-
-            if (searchterm == "Condition" && !string.IsNullOrWhiteSpace(searchdropselect))
-            
-            {
-                PropertyInfo property = typeof(ProductModel).GetProperty(searchterm);
-                BindableCollectionProductModel = new BindableCollection<ProductModel>(
-                BindableCollectionProductModel.Where(item => item.condition == searchdropselect));
-                //RaisePropertyChanged("BindableCollectionProductModel");
-            }
-            if (!string.IsNullOrWhiteSpace(searchbox) && !string.IsNullOrWhiteSpace(selected_search))
-            {
-                  switch (selected_search)
-                  {
-                      case "Product Name":
-                          searchterm = "product_name";
-                          break;
-                      case "Description":
-                          searchterm = "description";
-                          break;
-                      case "SKU":
-                          searchterm = "sku";
-                          break;
-                      case "Brand Name":
-                          searchterm = "brand_name";
-                          break;
-                      default:
-                          searchterm = "product_name";
-                          break;
-                  }
-                    PropertyInfo property = typeof(ProductModel).GetProperty(searchterm);
-                    BindableCollectionProductModel = new BindableCollection<ProductModel>(
-                    BindableCollectionProductModel.Where(item => property.GetValue(item)?.ToString().IndexOf(searchbox, StringComparison.OrdinalIgnoreCase) >= 0));
-                    //RaisePropertyChanged("BindableCollectionProductModel");
-            }
-        }
-
-
-        public void UploadImageCommand()
-        {
-
-            OpenFileDialog openFileDialog = new OpenFileDialog();
-            openFileDialog.Filter = "Image Files (*.bmp, *.jpg, *.png)|*.bmp;*.jpg;*.png";
-            if (openFileDialog.ShowDialog() == true)
-            {
-                string filePath = openFileDialog.FileName;
-                IWindowManager _windowManager = new WindowManager();
-                var popupwindow = new ProductPhotoViewModel(SelectedItem, filePath);
-                _ = _windowManager.ShowWindowAsync(popupwindow);
-            }
-        }
-
 */
