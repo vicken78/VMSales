@@ -5,9 +5,9 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Media.Imaging;
 using VMSales.Logic;
 using VMSales.Models;
@@ -227,7 +227,7 @@ namespace VMSales.ViewModels
     };
         #endregion
 
-        #region filelist
+        #region Image Handling
         private BitmapImage _imageSource;
         public BitmapImage ImageSource
         {
@@ -280,13 +280,17 @@ namespace VMSales.ViewModels
                 if (SelectedProduct?.IsSelected != null)
                 {
                     LoadSupplier();
-                    //Boolean productSelected = true;
                     LoadFileList();
+                    if (filelist.Count > 0)
+                    {
+                        LoadImage(Selectedfilelist);
+                        Selectedfilelist = filelist.First();
+                        LoadImage(Selectedfilelist);
+                    }
                 }
             }
         }
-
-        #endregion
+      #endregion
 
         public void UpdateProduct()
         {
@@ -320,7 +324,7 @@ namespace VMSales.ViewModels
              
         }
 
- 
+
         #region Commands
         public async Task SaveCommand()
         {
