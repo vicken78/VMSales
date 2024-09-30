@@ -604,7 +604,7 @@ namespace VMSales.ViewModels
                 ProductRepo.Dispose();
             }
             catch (Exception e) { MessageBox.Show("An unexpected error has occured: "+e); }
-            DataBaseLayer.PurchaseOrderRepository PurchaseOrderRepo = new DataBaseLayer.PurchaseOrderRepository(dataBaseProvider);
+            PurchaseOrderRepository PurchaseOrderRepo = new PurchaseOrderRepository(dataBaseProvider);
             ObservableCollectionPurchaseOrderModel = PurchaseOrderRepo.GetAll().Result.ToObservable();
             PurchaseOrderRepo.Dispose();
 
@@ -629,7 +629,7 @@ namespace VMSales.ViewModels
             {
                 try
                 {
-                    var ProductPurchaseRepo = new DataBaseLayer.PurchaseOrderRepository(dataBaseProvider);
+                    var ProductPurchaseRepo = new PurchaseOrderRepository(dataBaseProvider);
                     ObservableCollectionPurchaseOrderModel = ProductPurchaseRepo.GetProductPurchase_Order(SelectedProduct.product_pk).Result.ToObservable();
                     ProductPurchaseRepo.Commit();
                     ProductPurchaseRepo.Dispose();

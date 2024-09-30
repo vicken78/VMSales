@@ -385,7 +385,7 @@ namespace VMSales.ViewModels
                 if (SelectedItem.purchase_order_pk != 0 && SelectedItem.purchase_order_fk != 0 && SelectedItem.purchase_order_detail_pk != 0)
                 {
                     dataBaseProvider = getprovider();
-                    DataBaseLayer.PurchaseOrderRepository PurchaseOrderRepo = new DataBaseLayer.PurchaseOrderRepository(dataBaseProvider);
+                    PurchaseOrderRepository PurchaseOrderRepo = new PurchaseOrderRepository(dataBaseProvider);
                     try
                     {
 
@@ -451,7 +451,7 @@ namespace VMSales.ViewModels
             if (supplier_fk.ToString() == null || supplier_fk == 0)
             {
                 dataBaseProvider = getprovider();
-                DataBaseLayer.PurchaseOrderRepository PurchaseOrderRepo = new DataBaseLayer.PurchaseOrderRepository(dataBaseProvider);
+                PurchaseOrderRepository PurchaseOrderRepo = new PurchaseOrderRepository(dataBaseProvider);
 
                 // attempt to get supplier.
                 try
@@ -487,7 +487,7 @@ namespace VMSales.ViewModels
             // same invoice number, UPDATE purchase_order_detail.
 
             dataBaseProvider = getprovider();
-            DataBaseLayer.PurchaseOrderRepository SavePurchaseOrderRepo = new DataBaseLayer.PurchaseOrderRepository(dataBaseProvider);
+            PurchaseOrderRepository SavePurchaseOrderRepo = new PurchaseOrderRepository(dataBaseProvider);
             try
             {
                 if (SelectedItem.purchase_order_detail_pk != 0)
@@ -566,7 +566,7 @@ namespace VMSales.ViewModels
             // select all without qty check and make sure product does not exist.
 
             dataBaseProvider = getprovider();
-            DataBaseLayer.PurchaseOrderRepository ProductPurchaseOrderRepo = new DataBaseLayer.PurchaseOrderRepository(dataBaseProvider);
+            PurchaseOrderRepository ProductPurchaseOrderRepo = new PurchaseOrderRepository(dataBaseProvider);
             try
             {
                 var result = ProductPurchaseOrderRepo.Eligible_Products();
@@ -598,7 +598,7 @@ namespace VMSales.ViewModels
                     //select each purchase_order_detail_pk
                     try
                     {
-                        DataBaseLayer.PurchaseOrderRepository PurchaseOrder = new DataBaseLayer.PurchaseOrderRepository(dataBaseProvider);
+                        PurchaseOrderRepository PurchaseOrder = new PurchaseOrderRepository(dataBaseProvider);
                         POM.Add(PurchaseOrder.GetAllWithPK(purchase_order_detail_pk).Result);
                         PurchaseOrder.Commit();
                         PurchaseOrder.Dispose();
@@ -677,7 +677,7 @@ namespace VMSales.ViewModels
             }
 
             dataBaseProvider = getprovider();
-            DataBaseLayer.PurchaseOrderRepository PurchaseOrderRepo = new DataBaseLayer.PurchaseOrderRepository(dataBaseProvider);
+            PurchaseOrderRepository PurchaseOrderRepo = new PurchaseOrderRepository(dataBaseProvider);
 
 
             if (supplier_fk == 0)
@@ -760,7 +760,7 @@ namespace VMSales.ViewModels
                 ObservableCollectionTotalPurchaseOrderModel = new ObservableCollection<PurchaseOrderModel>();
 
                 dataBaseProvider = getprovider();
-                DataBaseLayer.PurchaseOrderRepository PurchaseOrderRepo = new DataBaseLayer.PurchaseOrderRepository(dataBaseProvider);
+                PurchaseOrderRepository PurchaseOrderRepo = new PurchaseOrderRepository(dataBaseProvider);
                 var Result = PurchaseOrderRepo.GetAll().Result;
                 if (Result.Count() == 0)
                 {

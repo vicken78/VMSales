@@ -237,9 +237,10 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Bootstrapper.cs" />
-    <Compile Include="Logic\DataBaseLayerCategory.cs" />
-    <Compile Include="Logic\DataBaseLayerProduct.cs" />
-    <Compile Include="Logic\DataBaseLayerSupplier.cs" />
+    <Compile Include="Logic\CategoryRepository.cs" />
+    <Compile Include="Logic\ProductRepository.cs" />
+    <Compile Include="Logic\PurchaseOrderRepository.cs" />
+    <Compile Include="Logic\SupplierRepository.cs" />
     <Compile Include="Logic\DataConversion.cs" />
     <Compile Include="Logic\CollectionIsEnabled.cs" />
     <Compile Include="Logic\DataProcessor.cs" />
