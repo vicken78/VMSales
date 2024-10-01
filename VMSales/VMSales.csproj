@@ -238,6 +238,8 @@
     </ApplicationDefinition>
     <Compile Include="Bootstrapper.cs" />
     <Compile Include="Logic\CategoryRepository.cs" />
+    <Compile Include="Logic\CustomerOrderRepositoy.cs" />
+    <Compile Include="Logic\CustomerRepository.cs" />
     <Compile Include="Logic\ProductRepository.cs" />
     <Compile Include="Logic\PurchaseOrderRepository.cs" />
     <Compile Include="Logic\SupplierRepository.cs" />
@@ -247,7 +249,7 @@
     <Compile Include="Logic\IRepository.cs" />
     <Compile Include="Logic\Repository.cs" />
     <Compile Include="Logic\SQLiteDataBaseProvider.cs" />
-    <Compile Include="Logic\DataBaseLayer.cs" />
+    <Compile Include="Logic\PhotoRepository.cs" />
     <Compile Include="Models\CategoryModel.cs" />
     <Compile Include="Models\CustomerModel.cs" />
     <Compile Include="Models\CustomerOrderDetailModel.cs" />
