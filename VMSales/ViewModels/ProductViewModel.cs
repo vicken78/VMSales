@@ -502,7 +502,7 @@ namespace VMSales.ViewModels
 
             if (SelectedProduct.product_pk > 0)
             {
-                DataBaseLayer.PhotoRepository PhotoRepo = new DataBaseLayer.PhotoRepository(dataBaseProvider);
+                PhotoRepository PhotoRepo = new PhotoRepository(dataBaseProvider);
                 filelist = PhotoRepo.GetFileList(SelectedProduct.product_pk).Result.ToObservable();
                 PhotoRepo.Commit();
                 PhotoRepo.Dispose();

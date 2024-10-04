@@ -43,7 +43,7 @@ namespace VMSales.ViewModels
             {
                 ObservableCollectionCustomerModel = new ObservableCollection<CustomerModel>();
                 dataBaseProvider = getprovider();
-                DataBaseLayer.CustomerRepository CustomerRepo = new DataBaseLayer.CustomerRepository(dataBaseProvider);
+                CustomerRepository CustomerRepo = new CustomerRepository(dataBaseProvider);
                 ObservableCollectionCustomerModel = CustomerRepo.GetAll().Result.ToObservable();
                 CustomerRepo.Commit();
                 CustomerRepo.Dispose();

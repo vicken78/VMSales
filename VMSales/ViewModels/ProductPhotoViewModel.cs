@@ -37,7 +37,7 @@ namespace VMSales.ViewModels
             photoModel.photo_path = photofilePath;
             IDatabaseProvider dataBaseProvider;
             dataBaseProvider = getprovider();
-            DataBaseLayer.PhotoRepository PhotoRepo = new DataBaseLayer.PhotoRepository(dataBaseProvider);
+            PhotoRepository PhotoRepo = new PhotoRepository(dataBaseProvider);
             // 1. get next photo order
             try
             {

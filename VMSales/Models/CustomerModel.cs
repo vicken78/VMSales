@@ -1,12 +1,12 @@
 ﻿using VMSales.Logic;
 using Dapper.Contrib.Extensions;
-
+using VMSales.ViewModels;
 
 
 namespace VMSales.Models
 {
     [Table("customer")]
-    public class CustomerModel : DataBaseLayer
+    public class CustomerModel : BaseViewModel
     {
         [ExplicitKey]
         private int _customer_pk { get; set; }

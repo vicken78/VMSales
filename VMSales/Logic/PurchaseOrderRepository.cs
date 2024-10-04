@@ -179,7 +179,7 @@ namespace VMSales.Logic
             "CASE " +
             "WHEN product_purchase_order.product_purchase_order_detail_fk IS NULL THEN 'True' " +
             "ELSE 'False' " +
-         "END AS productinventoried " +
+         "END AS isproductinventory " +
          "FROM " +
             "purchase_order AS po " +
          "JOIN " +
@@ -197,7 +197,7 @@ namespace VMSales.Logic
            IEnumerable<bool> result = await Connection.QueryAsync<bool>("SELECT CASE " +
                "WHEN product_purchase_order.product_purchase_order_detail_fk IS NULL THEN 'True' " +
                "ELSE 'False' " +
-           "END AS productinventoried " +
+           "END AS isproductinventory " +
            "FROM " +
                "purchase_order_detail " +
            "LEFT JOIN " +

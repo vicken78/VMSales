@@ -13,6 +13,7 @@ namespace VMSales.ViewModels
 {
     public class PurchaseOrderViewModel : BaseViewModel
     {
+
         #region Propertychanged
         // private
 
@@ -780,7 +781,7 @@ namespace VMSales.ViewModels
                         sales_tax = 0,
                         shipping_cost = 0,
                         quantity_check = 0,
-                        productinventoried = false
+                        isproductinventory = false
                     });
                 }
 

@@ -1,5 +1,6 @@
 ﻿using Dapper.Contrib.Extensions;
 using System.Collections.Generic;
+using System.Drawing.Text;
 using System.Text.RegularExpressions;
 using VMSales.ViewModels;
 
@@ -7,185 +8,181 @@ namespace VMSales.Models
 {
     public partial class PurchaseOrderModel : BaseViewModel
     {
-        public bool productinventoried { get; set; }
-        private int _purchase_order_detail_pk { get; set; }
-        private int _purchase_order_fk { get; set; }
-        private decimal _lot_cost { get; set; }
-        private int _lot_quantity { get; set; }
-        private string _lot_name { get; set; }
-        private string _lot_number { get; set; }
-        private string _lot_description { get; set; }
-        private decimal _sales_tax { get; set; }
-        private decimal _shipping_cost { get; set; }
-
-        private decimal _total_lot { get; set; }
-        private decimal _total_sales_tax { get; set; }
-        private decimal _total_shipping { get; set; }
-        private decimal _total_cost { get; set; }
-
-        private int _quantity_check {get; set;}
-
-        // purchase order detail
+        // to move to view
+        public bool isproductinventory { get; set; }
+   
+        private int _purchase_order_detail_pk;
         [ExplicitKey]
         public int purchase_order_detail_pk
         {
-            get { return _purchase_order_detail_pk; }
+            get => _purchase_order_detail_pk; 
             set
             {
-                if (_purchase_order_detail_pk == value) return;
+                if (_purchase_order_detail_pk != value)
                 _purchase_order_detail_pk = value;
-                //RaisePropertyChanged("purchase_order_detail_pk");
-
+                NotifyOfPropertyChange(() => purchase_order_detail_pk);
             }
         }
+        private int _purchase_order_fk;
         public int purchase_order_fk
         {
-            get { return _purchase_order_fk; }
+            get => _purchase_order_fk; 
             set
             {
-                if (_purchase_order_fk == value) return;
+                if (_purchase_order_fk != value) 
                 _purchase_order_fk = value;
-                //RaisePropertyChanged("purchase_order_fk");
-            }
-        }
-        public string lot_number
-        {
-            get { return _lot_number; }
-            set
-            {
-                if (_lot_number == value) return;
-                _lot_number = value;
-                //RaisePropertyChanged("lot_number");
+                NotifyOfPropertyChange(() => purchase_order_fk);
             }
         }
 
-      
-        public decimal lot_cost
+        private string _lot_number;
+        public string lot_number
         {
-            get 
-            {
-                    return _lot_cost;
-            }
+            get => _lot_number; 
             set
             {
-                if (_lot_cost == value) return;
+                if (_lot_number != value) 
+                _lot_number = value;
+                NotifyOfPropertyChange(() => lot_number);
+            }
+        }
+
+        private decimal _lot_cost;
+        public decimal lot_cost
+        {
+            get => _lot_cost;
+            set
+            {
+                if (_lot_cost != value) 
                 _lot_cost = value;
                 var regex = new Regex(@"^\d+\.\d{2}?$"); // ^\d+(\.|\,)\d{2}?$ use this incase your dec separator can be comma or decimal.
                 var flg = regex.IsMatch(_lot_cost.ToString());
                 if (flg)
                 {
-                    //RaisePropertyChanged("lot_cost");
+                    NotifyOfPropertyChange(() => lot_cost);
                 }
 
             }
         }
+   
+        private int _lot_quantity;
         public int lot_quantity
         {
-            get { return _lot_quantity; }
+            get => _lot_quantity; 
             set
             {
-                if (_lot_quantity == value) return;
+                if (_lot_quantity != value) 
                 _lot_quantity = value;
-                //RaisePropertyChanged("lot_quantity");
+                NotifyOfPropertyChange(() => lot_quantity);
             }
         }
 
+        private string _lot_name;
         public string lot_name
         {
-            get { return _lot_name; }
+            get => _lot_name; 
             set
             {
-                if (_lot_name == value) return;
+                if (_lot_name != value)
                 _lot_name = value;
-                //RaisePropertyChanged("lot_name");
+                NotifyOfPropertyChange(() => lot_name);
             }
         }
 
+        private string _lot_description;
         public string lot_description
         {
             get { return _lot_description; }
             set
             {
-                if (_lot_description == value) return;
+                if (_lot_description != value)
                 _lot_description = value;
-                //RaisePropertyChanged("lot_description");
+                NotifyOfPropertyChange(() => lot_description);
             }
         }
+
+        private decimal _sales_tax;
         public decimal sales_tax
         {
-            get { return _sales_tax; }
+            get => _sales_tax; 
             set
             {
-                if (_sales_tax == value) return;
+                if (_sales_tax != value)
                 _sales_tax = value;
-                //RaisePropertyChanged("sales_tax");
+                NotifyOfPropertyChange(() => sales_tax);
             }
         }
+
+        private decimal _shipping_cost;
         public decimal shipping_cost
         {
-            get { return _shipping_cost; }
+            get => _shipping_cost; 
             set
             {
-                if (_shipping_cost == value) return;
+                if (_shipping_cost != value)
                 _shipping_cost = value;
-                //RaisePropertyChanged("shipping_cost");
+                NotifyOfPropertyChange(() => shipping_cost);
             }
         }
+
+        private decimal _total_lot;
         public decimal total_lot
         {
-            get { return _total_lot; }
+            get => _total_lot; 
             set
             {
-                if (_total_lot == value) return;
+                if (_total_lot != value) 
                 _total_lot = value;
-                //RaisePropertyChanged("total_lot");
+                NotifyOfPropertyChange(() => total_lot);
             }
         }
 
+        private decimal _total_sales_tax;
         public decimal total_sales_tax
         {
-            get { return _total_sales_tax; }
+            get => _total_sales_tax; 
             set
             {
-                if (_total_sales_tax == value) return;
+                if (_total_sales_tax != value)
                 _total_sales_tax = value;
-                //RaisePropertyChanged("total_sales_tax");
+                NotifyOfPropertyChange(() => total_sales_tax);
             }
         }
 
+        private decimal _total_shipping;
         public decimal total_shipping
         {
-            get { return _total_shipping; }
+            get => _total_shipping; 
             set
             {
-                if (_total_shipping == value) return;
+                if (_total_shipping != value)
                 _total_shipping = value;
-                //RaisePropertyChanged("total_shipping");
+                NotifyOfPropertyChange(() => total_shipping);
             }
         }
 
+        private decimal _total_cost;
         public decimal total_cost
         {
-            get { return _total_cost; }
+            get => _total_cost; 
             set
             {
-                if (_total_cost == value) return;
+                if (_total_cost != value) 
                 _total_cost = value;
-                //RaisePropertyChanged("total_cost");
+                NotifyOfPropertyChange(() => total_cost);
             }
         }
 
-
+        private int _quantity_check;
         public int quantity_check
         {
-            get { return _quantity_check; }
+            get => _quantity_check; 
             set
             {
-                if (_quantity_check == value) return;
+                if (_quantity_check != value) 
                 _quantity_check = value;
-                //RaisePropertyChanged("quantity_check");
+                NotifyOfPropertyChange(() => quantity_check);
             }
         }
-
     }
 }

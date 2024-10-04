@@ -44,7 +44,7 @@ namespace VMSales.ViewModels
             try
             {
                 var dataBaseProvider = getprovider();
-                var CustomerRepo = new DataBaseLayer.CustomerRepository(dataBaseProvider);
+                var CustomerRepo = new CustomerRepository(dataBaseProvider);
 
                 // Create a new instance of CustomerRepository using the database provider
 
@@ -141,7 +141,7 @@ namespace VMSales.ViewModels
             // set db value to null until checked
             String cust_pk;
             dataBaseProvider = getprovider();
-            DataBaseLayer.CustomerRepository CustomerRepo = new DataBaseLayer.CustomerRepository(dataBaseProvider);
+            CustomerRepository CustomerRepo = new CustomerRepository(dataBaseProvider);
 
             // get primary key.
             try
@@ -184,7 +184,7 @@ namespace VMSales.ViewModels
             {
                 Select_Request = new CustomerModel();
                 dataBaseProvider = getprovider();
-                DataBaseLayer.CustomerRepository CustomerRepo = new DataBaseLayer.CustomerRepository(dataBaseProvider);
+                CustomerRepository CustomerRepo = new CustomerRepository(dataBaseProvider);
                 ObservableCollectionCustomerModel = CustomerRepo.GetAll().Result.ToObservable();
                 CustomerRepo.Commit();
                 CustomerRepo.Dispose();
