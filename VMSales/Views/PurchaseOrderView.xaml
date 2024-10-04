@@ -35,6 +35,9 @@
                 <ColumnDefinition Width="100"/>
                 <ColumnDefinition Width="100"/>
                 <ColumnDefinition Width="100"/>
+                <ColumnDefinition Width="100"/>
+                <ColumnDefinition Width="100"/>
+                <ColumnDefinition Width="100"/>
             </Grid.ColumnDefinitions>
 
 
@@ -45,11 +48,6 @@
             <ComboBox x:Name="cmbSupplier" ItemsSource="{Binding Path=ObservableCollectionSupplierModel}" 
           DisplayMemberPath="supplier_name" SelectedValue="{Binding supplier_fk, Mode=TwoWay}" 
           SelectedValuePath="supplier_pk" Grid.Row="2" Grid.Column="1"/>
-
-            <Button x:Name="RemoveSupplier" HorizontalAlignment="Left" Margin="20,0,0,0" Grid.Row="2" Grid.Column="2" Width="16" Height="16" 
-            IsEnabled="{Binding CanRemoveSupplierFilter, Mode=OneWay}">
-                <Image Width="10" Height="10" Style="{DynamicResource ImageStyleForButtons}"/>
-            </Button>
 
             <!-- Address -->
             <Label Content="Address" Grid.Column="0" Grid.Row="4" />
@@ -79,46 +77,61 @@
                         Grid.Column="1" Grid.Row="9"/>
 
             <!-- Invoice Number Combobox -->
+            <TextBlock Grid.Row="3" Grid.ColumnSpan="6" Grid.Column="3" FontSize="18" HorizontalAlignment="Center" FontWeight="Bold">Filters</TextBlock>
 
-            <TextBlock Grid.Row="3" Grid.Column="3" FontSize="12" HorizontalAlignment="Center" FontWeight="Bold">Invoice No.</TextBlock>
+            
+            <TextBlock Grid.Row="5" Grid.Column="3" FontSize="12" HorizontalAlignment="Center" FontWeight="Bold">Invoice No.</TextBlock>
 
-            <ComboBox Background="White" Grid.Row="3" Grid.Column="4" 
+            <ComboBox Background="White" Grid.Row="5" Grid.Column="4" 
                 ItemsSource="{Binding FilterInvoiceNumber, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" 
-                SelectedItem="{Binding SelectedInvoiceNumber, 
-                Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+                SelectedItem="{Binding SelectedInvoiceNumber, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
                 Width="100" HorizontalAlignment="Left"/>
 
-            <Button x:Name="RemoveInvoiceNumberFilterCommand" HorizontalAlignment="Left" Margin="20,0,0,0" Grid.Row="3" Grid.Column="5" Width="16" Height="16" 
+            <Button x:Name="RemoveInvoiceNumberFilterCommand" HorizontalAlignment="Left" Margin="20,0,0,0" Grid.Row="5" Grid.Column="5" Width="16" Height="16" 
             IsEnabled="{Binding CanRemoveInvoiceNumberFilter, Mode=OneWay}">
                 <Image Width="10" Height="10" Style="{DynamicResource ImageStyleForButtons}"/>
             </Button>
 
 
-            <Label Content="Invoice No." FontSize="12" FontWeight="Bold" Grid.Column="3" HorizontalAlignment="Center" Grid.Row="6" />
-            <TextBox x:Name="invoice_number" Background="White" Text="{Binding SelectedItem.invoice_number, ElementName=purchaseorderdatagrid, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
-                        Grid.Column="4" Grid.Row="6"/>
+            <Label Content="Invoice No." FontSize="12" FontWeight="Bold" Grid.Column="3" HorizontalAlignment="Center" Grid.Row="7" />
+            <TextBox x:Name="invoice_number" Background="White" Text="{Binding SelectedInvoiceNumber, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
+                        Grid.Column="4" Grid.Row="7"/>
 
 
-            <Label Content="Purchase Date" FontSize="12" FontWeight="Bold" Grid.Column="6" Grid.Row="6" />
-            <TextBox x:Name="purchase_date" Background="White" Text="{Binding SelectedItem.purchase_date, StringFormat='MM/dd/yyyy', ElementName=purchaseorderdatagrid, UpdateSourceTrigger=PropertyChanged}"
-                        Grid.Column="7" Grid.Row="6"/>
+            <Label Content="Purchase Date" FontSize="12" FontWeight="Bold" Grid.Column="6" Grid.Row="7" />
+            <TextBox x:Name="purchase_date" Background="White" Text="{Binding SelectedPurchaseDate, StringFormat='MM/dd/yyyy', UpdateSourceTrigger=PropertyChanged}"
+                        Grid.Column="7" Grid.Row="7"/>
             <!-- Purchase Date ComboBox-->
-            <CheckBox Content="Keep Last" IsChecked="{Binding keep_last, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Column="8" Grid.Row="6" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+            <CheckBox Content="Keep Last" IsChecked="{Binding keep_last, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Column="8" Grid.Row="7" HorizontalAlignment="Center" VerticalAlignment="Center"/>
 
 
-            <TextBlock Grid.Row="3" Grid.Column="6" FontSize="12" FontWeight="Bold" HorizontalAlignment="Center">Purchase Date</TextBlock>
+            <TextBlock Grid.Row="5" Grid.Column="6" FontSize="12" FontWeight="Bold" HorizontalAlignment="Center">Purchase Date</TextBlock>
 
-            <ComboBox Background="White" Grid.Row="3" Grid.Column="7" 
-                ItemsSource="{Binding FilterPurchaseDate,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"  
+            <ComboBox Background="White" Grid.Row="5" Grid.Column="7" 
+                ItemsSource="{Binding FilterPurchaseDate,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" 
                 SelectedItem="{Binding SelectedPurchaseDate, 
                 Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                 ItemStringFormat="{}{0:MM-dd-yyyy}"
                 Width="100" HorizontalAlignment="Left"/>
 
-            <Button x:Name="RemovePurchaseDateFilterCommand" HorizontalAlignment="Left" Margin="20,0,0,0" Grid.Row="3" Grid.Column="8" Width="16" Height="16" 
+            <Button x:Name="RemovePurchaseDateFilterCommand" HorizontalAlignment="Left" Margin="20,0,0,0" Grid.Row="5" Grid.Column="8" Width="16" Height="16" 
             IsEnabled="{Binding CanRemovePurchaseDateFilter, Mode=OneWay}">
                 <Image Width="10" Height="10" Style="{DynamicResource ImageStyleForButtons}"/>
             </Button>
+            <TextBlock Grid.Row="5" Grid.Column="9" FontSize="12" FontWeight="Bold" HorizontalAlignment="Center">Supplier</TextBlock>
+
+            <ComboBox x:Name="SupplierFilter" ItemsSource="{Binding Path=ObservableCollectionSupplierModel}" 
+        DisplayMemberPath="supplier_name" SelectedValue="{Binding supplier_fk, Mode=TwoWay}" 
+        SelectedValuePath="supplier_pk" Grid.Row="5" Grid.Column="10"/>
+
+            <Button x:Name="RemoveSupplier" HorizontalAlignment="Left" Margin="20,0,0,0" Grid.Row="5" Grid.Column="11" Width="16" Height="16" 
+     IsEnabled="{Binding CanRemoveSupplierFilter, Mode=OneWay}">
+                <Image Width="10" Height="10" Style="{DynamicResource ImageStyleForButtons}"/>
+            </Button>
+
+            <Label Content="Supplier" FontSize="12" FontWeight="Bold" Grid.Column="9" Grid.Row="7" HorizontalAlignment="Center" />
+            <TextBox x:Name="Supplier" Background="White" Text="{Binding SelectedSupplier, UpdateSourceTrigger=PropertyChanged}"
+              Grid.Column="10" Grid.Row="7"/>
 
 
 
@@ -183,7 +196,7 @@
 
 
             <DataGrid x:Name="purchaseorderdatagrid" AutoGenerateColumns="False" 
-                      ItemsSource="{Binding ObservableCollectionPurchaseOrderModel, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                      ItemsSource="{Binding ObservableCollectionPurchaseOrderModelDirty, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                       IsSynchronizedWithCurrentItem="True" 
                           CanUserDeleteRows="False"
                           SelectionMode="Single"

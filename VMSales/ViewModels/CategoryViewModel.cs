@@ -84,9 +84,7 @@ namespace VMSales.ViewModels
             ObservableCollectionCategoryModelDirty.Clear();
             ObservableCollectionCategoryModelClean.Clear();
             initial_load();
-        }
-     
-        public void initial_load() 
+        }    public void initial_load() 
             {
                 ObservableCollectionCategoryModelDirty = new ObservableCollection<CategoryModel>();
                 ObservableCollectionCategoryModelClean = new ObservableCollection<CategoryModel>();
@@ -107,6 +105,8 @@ namespace VMSales.ViewModels
             CategoryRepo.Commit();
             CategoryRepo.Dispose();
             }
+    
+     
         
         public CategoryViewModel()
             {
