@@ -6,7 +6,7 @@
              xmlns:cal="http://caliburnmicro.com" 
              xmlns:logic="clr-namespace:VMSales.Logic"
              mc:Ignorable="d" 
-             Height="900" Width="1920" VerticalAlignment="Top" MinHeight="800" MinWidth="800">
+             Height="1080" Width="1920"  VerticalAlignment="Top" MinHeight="800" MinWidth="800">
 
     <DockPanel LastChildFill="True">
         <Grid Margin="10" DockPanel.Dock="Top" Background="Azure">
@@ -45,7 +45,7 @@
             <Label Grid.Row="2" Grid.Column="0">Supplier</Label>
 
             <!-- <ComboBox x:Name="cmbSupplier" ItemsSource="{Binding Path=ObservableCollectionSupplierModel}" DisplayMemberPath="supplier_name" SelectedValue="{Binding supplier_fk, Mode=TwoWay}" SelectedIndex="{Binding cmbSupplier, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" SelectedValuePath="supplier_pk" Grid.Row="2" Grid.Column="1"/>-->
-            <ComboBox x:Name="cmbSupplier" ItemsSource="{Binding Path=ObservableCollectionSupplierModel}" 
+            <ComboBox x:Name="cmbSupplier" ItemsSource="{Binding Path=ObservableCollectionPurchaseOrderModelDirty}" 
           DisplayMemberPath="supplier_name" SelectedValue="{Binding supplier_fk, Mode=TwoWay}" 
           SelectedValuePath="supplier_pk" Grid.Row="2" Grid.Column="1"/>
 
@@ -88,7 +88,7 @@
                 Width="100" HorizontalAlignment="Left"/>
 
             <Button x:Name="RemoveInvoiceNumberFilterCommand" HorizontalAlignment="Left" Margin="20,0,0,0" Grid.Row="5" Grid.Column="5" Width="16" Height="16" 
-            IsEnabled="{Binding CanRemoveInvoiceNumberFilter, Mode=OneWay}">
+            IsEnabled="{Binding CanRemoveInvoiceNumberFilter, Mode=TwoWay}">
                 <Image Width="10" Height="10" Style="{DynamicResource ImageStyleForButtons}"/>
             </Button>
 
@@ -115,7 +115,7 @@
                 Width="100" HorizontalAlignment="Left"/>
 
             <Button x:Name="RemovePurchaseDateFilterCommand" HorizontalAlignment="Left" Margin="20,0,0,0" Grid.Row="5" Grid.Column="8" Width="16" Height="16" 
-            IsEnabled="{Binding CanRemovePurchaseDateFilter, Mode=OneWay}">
+            IsEnabled="{Binding CanRemovePurchaseDateFilter, Mode=TwoWay}">
                 <Image Width="10" Height="10" Style="{DynamicResource ImageStyleForButtons}"/>
             </Button>
             <TextBlock Grid.Row="5" Grid.Column="9" FontSize="12" FontWeight="Bold" HorizontalAlignment="Center">Supplier</TextBlock>
@@ -125,7 +125,7 @@
         SelectedValuePath="supplier_pk" Grid.Row="5" Grid.Column="10"/>
 
             <Button x:Name="RemoveSupplier" HorizontalAlignment="Left" Margin="20,0,0,0" Grid.Row="5" Grid.Column="11" Width="16" Height="16" 
-     IsEnabled="{Binding CanRemoveSupplierFilter, Mode=OneWay}">
+     IsEnabled="{Binding CanRemoveSupplierFilter, Mode=TwoWay}">
                 <Image Width="10" Height="10" Style="{DynamicResource ImageStyleForButtons}"/>
             </Button>
 
@@ -196,14 +196,16 @@
 
 
             <DataGrid x:Name="purchaseorderdatagrid" AutoGenerateColumns="False" 
-                      ItemsSource="{Binding ObservableCollectionPurchaseOrderModelDirty, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                      ItemsSource="{Binding PurchaseOrderView, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                       IsSynchronizedWithCurrentItem="True" 
+                      VerticalScrollBarVisibility="Visible"
                           CanUserDeleteRows="False"
                           SelectionMode="Single"
                           SelectedItem="{Binding SelectedItem, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                           CanUserAddRows="False" 
+                          
                           EnableRowVirtualization="True" IsReadOnly="False" 
-                          Height="Auto" Width="1800"  HorizontalAlignment="Center" Margin="60,45,60,0" Grid.RowSpan="2">
+                          Height="Auto" Width="Auto"  HorizontalAlignment="Center" Grid.Row="1">
                 <DataGrid.RowStyle>
                     <Style TargetType="DataGridRow">
                         <Setter Property="IsSelected"  Value="{Binding IsSelected, Mode=TwoWay}"/>
