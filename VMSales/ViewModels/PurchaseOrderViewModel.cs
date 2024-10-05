@@ -244,26 +244,37 @@ namespace VMSales.ViewModels
             CanRemoveInvoiceNumberFilter = false;
             CanRemovePurchaseDateFilter = false;
             CanRemoveSupplierFilter = false;
-            PurchaseOrderView.Refresh();
             initial_load();
         }
 
         public void initial_load()
         {
             if (ObservableCollectionPurchaseOrderModelDirty is null)
-            ObservableCollectionPurchaseOrderModelDirty = new ObservableCollection<PurchaseOrderModel>();
-            ObservableCollectionPurchaseOrderModelClean = new ObservableCollection<PurchaseOrderModel>();
+            {
+                ObservableCollectionPurchaseOrderModelDirty = new ObservableCollection<PurchaseOrderModel>();
+                ObservableCollectionPurchaseOrderModelClean = new ObservableCollection<PurchaseOrderModel>();
+            }
+            else
+            {
+                ObservableCollectionPurchaseOrderModelDirty.Clear();
+                ObservableCollectionPurchaseOrderModelClean.Clear();
+            }
 
             dataBaseProvider = getprovider();
             PurchaseOrderRepository PurchaseOrderRepo = new PurchaseOrderRepository(dataBaseProvider);
-            ObservableCollectionPurchaseOrderModelDirty = PurchaseOrderRepo.GetAll().Result.ToObservable();
+            var result = PurchaseOrderRepo.GetAll().Result.ToObservable();
+
+            foreach (var item in result)
+            {
+                ObservableCollectionPurchaseOrderModelDirty.Add(item);
+            }
 
             if (PurchaseOrderView == null)
             {
-                var collectionViewSource = new CollectionViewSource { Source = ObservableCollectionPurchaseOrderModelDirty };
-                PurchaseOrderView = collectionViewSource.View;
+                PurchaseOrderView = CollectionViewSource.GetDefaultView(ObservableCollectionPurchaseOrderModelDirty);
             }
 
+            PurchaseOrderView.Refresh();
             ObservableCollectionPurchaseOrderModelClean = new ObservableCollection<PurchaseOrderModel>(ObservableCollectionPurchaseOrderModelDirty.Select(item => new PurchaseOrderModel
             {
                 // Copy properties from the item, or use a copy constructor if available
