@@ -225,16 +225,23 @@ namespace VMSales.ViewModels
         }
         public void RemovePurchaseDateFilterCommand()
         {
-            SelectedPurchaseDate = DateTime.MinValue;
+            SelectedPurchaseDate = null;
             NotifyOfPropertyChange(() => SelectedPurchaseDate);
             CanRemovePurchaseDateFilter = false;
             PurchaseOrderView.Filter -= new FilterEventHandler(FilterByPurchaseDate);
         }
         public void ResetCommand()
         {
+            PurchaseOrderView.Filter -= new FilterEventHandler(FilterByInvoiceNumber);
+            PurchaseOrderView.Filter -= new FilterEventHandler(FilterByPurchaseDate);
+            PurchaseOrderView.Filter -= new FilterEventHandler(FilterBySupplier);
+
             SelectedInvoiceNumber = null;
             SelectedPurchaseDate = null;
+            SelectedSupplier = null;
+            
             NotifyOfPropertyChange(() => SelectedInvoiceNumber);
+            NotifyOfPropertyChange(() => SelectedPurchaseDate);
             CanRemoveInvoiceNumberFilter = false;
             CanRemovePurchaseDateFilter = false;
             CanRemoveSupplierFilter = false;
@@ -261,6 +268,15 @@ namespace VMSales.ViewModels
             foreach (var item in result)
             {
                 ObservableCollectionPurchaseOrderModelDirty.Add(item);
+
+
+                // are we getting supplier_fk and supplier_name?
+
+                if (item.supplier_fk != 0)
+                {
+                    Debug.WriteLine("sup_fk " + item.supplier_fk);
+                    Debug.WriteLine("sup_name " + item.supplier_name);
+                }
             }
 
             if (PurchaseOrderView == null)
@@ -281,7 +297,7 @@ namespace VMSales.ViewModels
                 sales_tax = item.sales_tax,
                 shipping_cost = item.shipping_cost,
                 supplier_name = item.supplier_name,
-                supplier_fk = item.supplier_fk,
+                supplier_fk = item.supplier_fk
             }
             ));
             PurchaseOrderRepo.Commit();
@@ -306,7 +322,7 @@ namespace VMSales.ViewModels
             {
                 FilterInvoiceNumber = new ObservableCollection<string>();
                 FilterPurchaseDate = new ObservableCollection<DateTime>();
-                //FilterSupplierName = new ObservableCollection<string>();
+                FilterSupplier = new ObservableCollection<string>();
             }
         }
 
@@ -321,7 +337,7 @@ namespace VMSales.ViewModels
                     AddPurchaseDateFilter();
                     break;
                 case FilterField.Supplier:
-                    //AddSupplierFilter();
+                    AddSupplierFilter();
                     break;
                 default:
                     break;
@@ -333,7 +349,7 @@ namespace VMSales.ViewModels
             var src = e.Item as PurchaseOrderModel;
             if (src == null)
                 e.Accepted = false;
-            else if (string.Compare(SelectedInvoiceNumber, src.invoice_number.ToString()) != 0)
+            else if (string.Compare(SelectedInvoiceNumber, src.invoice_number) != 0)
                 e.Accepted = false;
         }
 
@@ -343,6 +359,15 @@ namespace VMSales.ViewModels
             if (src == null)
                 e.Accepted = false;
             else if (string.Compare(SelectedPurchaseDate.ToString(), src.purchase_date.ToString()) != 0)
+                e.Accepted = false;
+        }
+
+        private void FilterBySupplier(object sender, FilterEventArgs e)
+        {
+            var src = e.Item as PurchaseOrderModel;
+            if (src == null)
+                e.Accepted = false;
+            else if (string.Compare(SelectedSupplier, src.supplier_name) != 0)
                 e.Accepted = false;
         }
 
@@ -373,22 +398,20 @@ namespace VMSales.ViewModels
                 NotifyOfPropertyChange(() => CanRemovePurchaseDateFilter);
             }
         }
- /*
+
         public void AddSupplierFilter()
         {
             if (CanRemoveSupplierFilter)
             {
-                cvs.Filter -= new FilterEventHandler(FilterBySupplier);
-                cvs.Filter += new FilterEventHandler(FilterBySupplier);
+                PurchaseOrderView.Filter -= new FilterEventHandler(FilterBySupplier);
             }
             else
             {
-                cvs.Filter += new FilterEventHandler(FilterBySupplier);
+                PurchaseOrderView.Filter += new FilterEventHandler(FilterBySupplier);
                 CanRemoveSupplierFilter = true;
+                NotifyOfPropertyChange(() => CanRemoveSupplierFilter);
             }
         }
- */
- 
  
         #endregion
 
@@ -402,7 +425,7 @@ namespace VMSales.ViewModels
 }
 
 /*
- * OLD CODE
+ * OLD CODE incomplete
  * 
 public class PurchaseOrderViewModel : BaseViewModel
 {
@@ -410,19 +433,6 @@ public class PurchaseOrderViewModel : BaseViewModel
     private List<int> purchase_order_products;
     private string invoicetemp;
     private DateTime purchase_datetemp;
-
-    private PurchaseOrderModel _SelectedItem { get; set; }
-    public PurchaseOrderModel SelectedItem
-    {
-        get { return _SelectedItem; }
-        set
-        {
-            if (_SelectedItem == value)
-                return;
-            _SelectedItem = value;
-            ////RaisePropertyChanged("SelectedItem");
-        }
-    }
 
     #endregion
 
@@ -895,8 +905,6 @@ public class PurchaseOrderViewModel : BaseViewModel
             FilterInvoiceNumber = new ObservableCollection<string>(InvoiceNumberList.Cast<String>());
             FilterPurchaseDate = new ObservableCollection<DateTime>(PurchaseDateList.Cast<DateTime>());
         }
-        //////RaisePropertyChanged("FilterInvoiceNumber");
-        //////RaisePropertyChanged("FilterPurchaseDate");
 
         if (ObservableCollectionPurchaseOrderModel is null)
         {
@@ -965,16 +973,5 @@ public class PurchaseOrderViewModel : BaseViewModel
             MessageBox.Show(e.ToString());
         }
     }
-
-
-    #region pageload
-    public PurchaseOrderViewModel()
-    {
-    initial_load();
-    }
-
-}
-#endregion
-}
 
 */
