@@ -15,6 +15,17 @@ namespace VMSales.Logic
             return await Connection.QuerySingleAsync<int>("SELECT supplier_pk FROM supplier WHERE supplier_name = @supplier_name ORDER BY supplier_name", new { supplier_name }, Transaction);
         }
 
+        // get suppliers for purchase orders
+        public async Task<IEnumerable<SupplierModel>> GetSupplier()
+        {
+
+            return await Connection.QueryAsync<SupplierModel>("SELECT DISTINCT " +
+                "s.*, COALESCE(po.supplier_fk, 0) AS supplier_fk " +
+                "FROM supplier s " +
+                "LEFT JOIN purchase_order po ON s.supplier_pk = po.supplier_fk " +
+                "ORDER BY s.supplier_name");
+        }
+
         //get product_supplier
         public async Task<IEnumerable<string>> Selected_Supplier(int product_pk)
         {

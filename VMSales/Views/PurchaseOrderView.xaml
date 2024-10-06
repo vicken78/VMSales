@@ -45,7 +45,7 @@
             <Label Grid.Row="2" Grid.Column="0">Supplier</Label>
 
             <!-- <ComboBox x:Name="cmbSupplier" ItemsSource="{Binding Path=ObservableCollectionSupplierModel}" DisplayMemberPath="supplier_name" SelectedValue="{Binding supplier_fk, Mode=TwoWay}" SelectedIndex="{Binding cmbSupplier, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" SelectedValuePath="supplier_pk" Grid.Row="2" Grid.Column="1"/>-->
-            <ComboBox x:Name="cmbSupplier" ItemsSource="{Binding Path=ObservableCollectionPurchaseOrderModelDirty}" 
+          <ComboBox x:Name="cmbSupplier" ItemsSource="{Binding Path=ObservableCollectionSupplierModel}" 
           DisplayMemberPath="supplier_name" SelectedValue="{Binding supplier_fk, Mode=TwoWay}" 
           SelectedValuePath="supplier_pk" Grid.Row="2" Grid.Column="1"/>
 
@@ -133,7 +133,9 @@
             <TextBox x:Name="Supplier" Background="White" Text="{Binding SelectedSupplier, UpdateSourceTrigger=PropertyChanged}"
               Grid.Column="10" Grid.Row="7"/>
 
+            <Label Content="Row Count" FontSize="12" Grid.Column="3" Grid.Row="9" HorizontalAlignment="Center" />
 
+            <TextBox Text="{Binding RowCount,Mode=OneWay}" FontSize="12" Background="WhiteSmoke" IsReadOnly="True" Grid.Column="4"  Grid.Row="9"/>
 
 
             <!--  Save Button -->

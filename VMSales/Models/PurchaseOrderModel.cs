@@ -87,7 +87,6 @@ namespace VMSales.Models
 
 
 
-
         private bool _IsSelected;
         public bool IsSelected
         {

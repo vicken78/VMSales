@@ -3,6 +3,7 @@ using Dapper;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 using VMSales.Logic;
 using VMSales.Models;
 
@@ -174,7 +175,7 @@ namespace VMSales.Logic
                 "INNER JOIN purchase_order_detail on po.purchase_order_pk = pod.purchase_order_fk " +
                 "INNER JOIN supplier on sup.supplier_pk = po.supplier_fk;", null, Transaction);
          */
-         "DISTINCT po.purchase_order_pk, po.purchase_date, po.invoice_number, pod.purchase_order_detail_pk, pod.purchase_order_fk, " +
+         "DISTINCT po.purchase_order_pk, po.purchase_date, po.invoice_number, po.supplier_fk, sup.supplier_name, pod.purchase_order_detail_pk, pod.purchase_order_fk, " +
          "pod.lot_number, pod.lot_cost, pod.lot_quantity, pod.lot_name, pod.lot_description, pod.sales_tax, pod.shipping_cost, pod.quantity_check, " +
             "CASE " +
             "WHEN product_purchase_order.product_purchase_order_detail_fk IS NULL THEN 'True' " +

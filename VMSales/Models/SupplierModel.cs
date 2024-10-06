@@ -19,7 +19,7 @@ namespace VMSales.Models
                 NotifyOfPropertyChange(() => supplier_pk);
            }
         }
-
+        
         private string _supplier_name { get; set; }
         public string supplier_name
         {

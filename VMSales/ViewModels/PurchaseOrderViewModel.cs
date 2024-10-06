@@ -17,6 +17,19 @@ namespace VMSales.ViewModels
     public class PurchaseOrderViewModel : BaseViewModel
     {
         public CollectionViewSource PurchaseOrderView { get; set; }
+
+        private int _RowCount;
+        public int RowCount
+        {
+            get => _RowCount = PurchaseOrderView?.View?.Cast<object>().Count() ?? 0;
+            set
+            {
+            if (_RowCount != value)
+                _RowCount = value;
+                NotifyOfPropertyChange(() => RowCount);
+            }
+        }
+
         private PurchaseOrderModel _SelectedItem;
         public PurchaseOrderModel SelectedItem
         {
@@ -27,13 +40,13 @@ namespace VMSales.ViewModels
                 {
                     _SelectedItem = value;
                     NotifyOfPropertyChange(() => SelectedItem);
+                    Debug.WriteLine("");
                 }
             }
          }
 
 
         public ObservableCollection<SupplierModel> ObservableCollectionSupplierModel { get; set; }
-
         private ObservableCollection<PurchaseOrderModel> _ObservableCollectionPurchaseOrderModelDirty { get; set; }
         public ObservableCollection<PurchaseOrderModel> ObservableCollectionPurchaseOrderModelDirty
         {
@@ -154,7 +167,13 @@ namespace VMSales.ViewModels
                 {
                     _FilterSupplier = value;
                     NotifyOfPropertyChange(() => FilterSupplier);
-                }
+                    NotifyOfPropertyChange(() => SelectedSupplier);
+                    NotifyOfPropertyChange(() => RowCount);
+                    ApplyFilter(!string.IsNullOrEmpty(SelectedSupplier) ? FilterField.Supplier: FilterField.None);
+                    _cancanremovesupplierfilter = true;
+                    NotifyOfPropertyChange(() => _cancanremovesupplierfilter);
+ 
+            }
             }
         }
 
@@ -168,6 +187,7 @@ namespace VMSales.ViewModels
                 {
                     _SelectedInvoiceNumber = value;
                     NotifyOfPropertyChange(() => SelectedInvoiceNumber);
+                    NotifyOfPropertyChange(() => RowCount);
                     ApplyFilter(!string.IsNullOrEmpty(SelectedInvoiceNumber) ? FilterField.InvoiceNumber : FilterField.None);
                     _cancanremoveinvoicenumberfilter = true;
                     NotifyOfPropertyChange(() => _cancanremoveinvoicenumberfilter);
@@ -185,10 +205,10 @@ namespace VMSales.ViewModels
                 {
                     _SelectedPurchaseDate = value;
                     NotifyOfPropertyChange(() => SelectedPurchaseDate);
+                    NotifyOfPropertyChange(() => RowCount);
                     ApplyFilter(!string.IsNullOrEmpty(SelectedPurchaseDate.ToString()) ? FilterField.PurchaseDate : FilterField.None);
                     _cancanremovepurchasedatefilter = true;
                     NotifyOfPropertyChange(() => _cancanremovepurchasedatefilter);
-
                 }
             }
         }
@@ -203,7 +223,8 @@ namespace VMSales.ViewModels
                 {
                     _SelectedSupplier = value;
                     NotifyOfPropertyChange(() => SelectedSupplier);
-                    ApplyFilter(!string.IsNullOrEmpty(SelectedSupplier) ? FilterField.Supplier : FilterField.None);
+                    NotifyOfPropertyChange(() => RowCount);
+                ApplyFilter(!string.IsNullOrEmpty(SelectedSupplier) ? FilterField.Supplier : FilterField.None);
                 }
             }
         }
@@ -222,6 +243,7 @@ namespace VMSales.ViewModels
             NotifyOfPropertyChange(() => SelectedInvoiceNumber);
             CanRemoveInvoiceNumberFilter = false;
             PurchaseOrderView.Filter -= new FilterEventHandler(FilterByInvoiceNumber);
+            NotifyOfPropertyChange(() => RowCount);
         }
         public void RemovePurchaseDateFilterCommand()
         {
@@ -229,7 +251,17 @@ namespace VMSales.ViewModels
             NotifyOfPropertyChange(() => SelectedPurchaseDate);
             CanRemovePurchaseDateFilter = false;
             PurchaseOrderView.Filter -= new FilterEventHandler(FilterByPurchaseDate);
+            NotifyOfPropertyChange(() => RowCount);
         }
+        public void RemoveSupplierFilterCommand()
+        {
+            SelectedSupplier = null;
+            NotifyOfPropertyChange(() => SelectedSupplier);
+            CanRemoveSupplierFilter = false;
+            PurchaseOrderView.Filter -= new FilterEventHandler(FilterBySupplier);
+            NotifyOfPropertyChange(() => RowCount);
+        }
+
         public void ResetCommand()
         {
             PurchaseOrderView.Filter -= new FilterEventHandler(FilterByInvoiceNumber);
@@ -254,36 +286,54 @@ namespace VMSales.ViewModels
             {
                 ObservableCollectionPurchaseOrderModelDirty = new ObservableCollection<PurchaseOrderModel>();
                 ObservableCollectionPurchaseOrderModelClean = new ObservableCollection<PurchaseOrderModel>();
+                ObservableCollectionSupplierModel = new ObservableCollection<SupplierModel>();
             }
             else
             {
                 ObservableCollectionPurchaseOrderModelDirty.Clear();
                 ObservableCollectionPurchaseOrderModelClean.Clear();
+                ObservableCollectionSupplierModel.Clear();
             }
 
             dataBaseProvider = getprovider();
             PurchaseOrderRepository PurchaseOrderRepo = new PurchaseOrderRepository(dataBaseProvider);
             var result = PurchaseOrderRepo.GetAll().Result.ToObservable();
+            PurchaseOrderRepo.Commit();
+            PurchaseOrderRepo.Dispose();
 
             foreach (var item in result)
             {
                 ObservableCollectionPurchaseOrderModelDirty.Add(item);
-
-
-                // are we getting supplier_fk and supplier_name?
-
-                if (item.supplier_fk != 0)
-                {
-                    Debug.WriteLine("sup_fk " + item.supplier_fk);
-                    Debug.WriteLine("sup_name " + item.supplier_name);
-                }
             }
+
+            // get supplier_name and supplier_fk
+            dataBaseProvider = getprovider();
+            SupplierRepository SupplierRepo = new SupplierRepository(dataBaseProvider);
+            var suppliersresult = SupplierRepo.GetSupplier().Result.ToObservable();
+
+            foreach (var item in suppliersresult) 
+            { 
+                ObservableCollectionSupplierModel.Add(item);
+            }
+
+
+            SupplierRepo.Commit();
+            SupplierRepo.Dispose();
+
 
             if (PurchaseOrderView == null)
             {
                 PurchaseOrderView = new CollectionViewSource { Source = ObservableCollectionPurchaseOrderModelDirty };
+                RowCount = 0;
             }
-            else PurchaseOrderView.Source = ObservableCollectionPurchaseOrderModelDirty;
+            else
+            { 
+                PurchaseOrderView.Source = ObservableCollectionPurchaseOrderModelDirty;
+                PurchaseOrderView.View.CollectionChanged += (s, e) =>
+                {
+                    NotifyOfPropertyChange(() => RowCount);
+                };
+            }
 
             PurchaseOrderView.View.Refresh();
             ObservableCollectionPurchaseOrderModelClean = new ObservableCollection<PurchaseOrderModel>(ObservableCollectionPurchaseOrderModelDirty.Select(item => new PurchaseOrderModel
@@ -296,14 +346,11 @@ namespace VMSales.ViewModels
                 purchase_order_pk = item.purchase_order_pk,
                 sales_tax = item.sales_tax,
                 shipping_cost = item.shipping_cost,
+                supplier_fk = item.supplier_fk,
                 supplier_name = item.supplier_name,
-                supplier_fk = item.supplier_fk
             }
             ));
-            PurchaseOrderRepo.Commit();
-            PurchaseOrderRepo.Dispose();
-
-            
+        
             if (ObservableCollectionPurchaseOrderModelDirty != null)
             {
                 FilterPurchaseDate = new ObservableCollection<DateTime>(ObservableCollectionPurchaseOrderModelDirty.Select(p => p.purchase_date));
@@ -364,7 +411,7 @@ namespace VMSales.ViewModels
 
         private void FilterBySupplier(object sender, FilterEventArgs e)
         {
-            var src = e.Item as PurchaseOrderModel;
+            var src = e.Item as SupplierModel;
             if (src == null)
                 e.Accepted = false;
             else if (string.Compare(SelectedSupplier, src.supplier_name) != 0)

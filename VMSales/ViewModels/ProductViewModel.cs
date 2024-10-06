@@ -642,7 +642,7 @@ namespace VMSales.ViewModels
                 {
                     foreach (var item in ObservableCollectionPurchaseOrderModel)
                     {
-                        selected_supplier_name = item.supplier_name;
+                        //selected_supplier_name = item.supplier_name;
                         selected_lot_number = item.lot_number;
                         selected_purchase_date = item.purchase_date;
                         selected_invoice_number = item.invoice_number;
