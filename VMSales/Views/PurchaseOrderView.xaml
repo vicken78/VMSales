@@ -196,7 +196,7 @@
 
 
             <DataGrid x:Name="purchaseorderdatagrid" AutoGenerateColumns="False" 
-                      ItemsSource="{Binding PurchaseOrderView, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                      ItemsSource="{Binding PurchaseOrderView.View}"
                       IsSynchronizedWithCurrentItem="True" 
                       VerticalScrollBarVisibility="Visible"
                           CanUserDeleteRows="False"

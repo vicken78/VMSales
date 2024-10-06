@@ -16,7 +16,7 @@ namespace VMSales.ViewModels
 {
     public class PurchaseOrderViewModel : BaseViewModel
     {
-        public ICollectionView PurchaseOrderView { get; set; }
+        public CollectionViewSource PurchaseOrderView { get; set; }
         private PurchaseOrderModel _SelectedItem;
         public PurchaseOrderModel SelectedItem
         {
@@ -175,16 +175,6 @@ namespace VMSales.ViewModels
             }
         }
 
-        private bool FilterByInvoiceNumber(object item)
-        {
-            if (item is PurchaseOrderModel purchaseOrder)
-            {
-                return string.IsNullOrEmpty(SelectedInvoiceNumber) ||
-                purchaseOrder.invoice_number.Contains(SelectedInvoiceNumber);
-            }
-            return false;
-        }
-
         private DateTime? _SelectedPurchaseDate;
         public DateTime? SelectedPurchaseDate
         { 
@@ -229,18 +219,22 @@ namespace VMSales.ViewModels
         public void RemoveInvoiceNumberFilterCommand()
         {
             SelectedInvoiceNumber = null;
-            PurchaseOrderView.Filter = null;
             NotifyOfPropertyChange(() => SelectedInvoiceNumber);
             CanRemoveInvoiceNumberFilter = false;
-            PurchaseOrderView.Refresh();
+            PurchaseOrderView.Filter -= new FilterEventHandler(FilterByInvoiceNumber);
         }
-
+        public void RemovePurchaseDateFilterCommand()
+        {
+            SelectedPurchaseDate = DateTime.MinValue;
+            NotifyOfPropertyChange(() => SelectedPurchaseDate);
+            CanRemovePurchaseDateFilter = false;
+            PurchaseOrderView.Filter -= new FilterEventHandler(FilterByPurchaseDate);
+        }
         public void ResetCommand()
         {
             SelectedInvoiceNumber = null;
             SelectedPurchaseDate = null;
             NotifyOfPropertyChange(() => SelectedInvoiceNumber);
-            PurchaseOrderView.Filter = null;
             CanRemoveInvoiceNumberFilter = false;
             CanRemovePurchaseDateFilter = false;
             CanRemoveSupplierFilter = false;
@@ -271,10 +265,11 @@ namespace VMSales.ViewModels
 
             if (PurchaseOrderView == null)
             {
-                PurchaseOrderView = CollectionViewSource.GetDefaultView(ObservableCollectionPurchaseOrderModelDirty);
+                PurchaseOrderView = new CollectionViewSource { Source = ObservableCollectionPurchaseOrderModelDirty };
             }
+            else PurchaseOrderView.Source = ObservableCollectionPurchaseOrderModelDirty;
 
-            PurchaseOrderView.Refresh();
+            PurchaseOrderView.View.Refresh();
             ObservableCollectionPurchaseOrderModelClean = new ObservableCollection<PurchaseOrderModel>(ObservableCollectionPurchaseOrderModelDirty.Select(item => new PurchaseOrderModel
             {
                 // Copy properties from the item, or use a copy constructor if available
@@ -321,19 +316,34 @@ namespace VMSales.ViewModels
             {
                 case FilterField.InvoiceNumber:
                     AddInvoiceNumberFilter();
-                    PurchaseOrderView.Filter = new Predicate<object>(x => ((PurchaseOrderModel)x).invoice_number.ToString() == SelectedInvoiceNumber);
                     break;
                 case FilterField.PurchaseDate:
                     AddPurchaseDateFilter();
-                    //FilterView.Filter = new Predicate<object>(x => ((PurchaseOrderModel)x).purchase_date.ToString() == SelectedPurchaseDate.ToString());
                     break;
                 case FilterField.Supplier:
                     //AddSupplierFilter();
-                    //PurchaseOrderView.Filter = new Predicate<object>(x => ((PurchaseOrderModel)x).supplier_name.ToString() == SelectedSupplier);
                     break;
                 default:
                     break;
             }
+        }
+
+        private void FilterByInvoiceNumber(object sender, FilterEventArgs e)
+        {
+            var src = e.Item as PurchaseOrderModel;
+            if (src == null)
+                e.Accepted = false;
+            else if (string.Compare(SelectedInvoiceNumber, src.invoice_number.ToString()) != 0)
+                e.Accepted = false;
+        }
+
+        private void FilterByPurchaseDate(object sender, FilterEventArgs e)
+        {
+            var src = e.Item as PurchaseOrderModel;
+            if (src == null)
+                e.Accepted = false;
+            else if (string.Compare(SelectedPurchaseDate.ToString(), src.purchase_date.ToString()) != 0)
+                e.Accepted = false;
         }
 
         #region filter methods
@@ -341,13 +351,11 @@ namespace VMSales.ViewModels
         {
             if (CanRemoveInvoiceNumberFilter)
             {
-                PurchaseOrderView.Filter = null;
-                //cvs.Filter -= new FilterEventHandler(FilterByInvoiceNumber);
-                //cvs.Filter += new FilterEventHandler(FilterByInvoiceNumber);
+                PurchaseOrderView.Filter -= new FilterEventHandler(FilterByInvoiceNumber);
             }
             else
             {
-                //cvs.Filter += new FilterEventHandler(FilterByInvoiceNumber);
+                PurchaseOrderView.Filter += new FilterEventHandler(FilterByInvoiceNumber);
                 CanRemoveInvoiceNumberFilter = true;
                 NotifyOfPropertyChange(() => CanRemoveInvoiceNumberFilter);
             }
@@ -356,13 +364,13 @@ namespace VMSales.ViewModels
         {
             if (CanRemovePurchaseDateFilter)
             {
-                //cvs.Filter -= new FilterEventHandler(FilterByPurchaseDate);
-                //cvs.Filter += new FilterEventHandler(FilterByPurchaseDate);
+                PurchaseOrderView.Filter -= new FilterEventHandler(FilterByPurchaseDate);
             }
             else
             {
-                //cvs.Filter += new FilterEventHandler(FilterByPurchaseDate);
-                //CanRemovePurchaseDateFilter = true;
+                PurchaseOrderView.Filter += new FilterEventHandler(FilterByPurchaseDate);
+                CanRemovePurchaseDateFilter = true;
+                NotifyOfPropertyChange(() => CanRemovePurchaseDateFilter);
             }
         }
  /*
@@ -381,42 +389,7 @@ namespace VMSales.ViewModels
         }
  */
  
-
- /*       private void FilterByInvoiceNumber(object sender, FilterEventArgs e)
-        {
-            var src = e.Item as PurchaseOrderModel;
-            if (src == null)
-                e.Accepted = false;
-            else if (string.Compare(SelectedInvoiceNumber, src.invoice_number.ToString()) != 0)
-                e.Accepted = false;
-        }
-        private void FilterByPurchaseDate(object sender, FilterEventArgs e)
-        {
-            var src = e.Item as PurchaseOrderModel;
-            if (src == null)
-                e.Accepted = false;
-            else if (string.Compare(SelectedPurchaseDate.ToString(), src.purchase_date.ToString()) != 0)
-                e.Accepted = false;
-        }
-
-        public void RemoveInvoiceNumberFilterCommand()
-        {
-            cvs.Filter -= new FilterEventHandler(FilterByInvoiceNumber);
-            SelectedInvoiceNumber = null;
-            //FilterView.Filter = null;
-            CanRemoveInvoiceNumberFilter = false;
-            ////RaisePropertyChanged("PurchaseOrderView");
  
-        }
-        public void RemovePurchaseDateFilterCommand()
-        {
-            cvs.Filter -= new FilterEventHandler(FilterByPurchaseDate);
-            SelectedPurchaseDate = DateTime.MinValue;
-            //FilterView.Filter = null;
-            CanRemovePurchaseDateFilter = false;
-            ////RaisePropertyChanged("PurchaseOrderView");
-        }
- */
         #endregion
 
 
@@ -600,10 +573,7 @@ public class PurchaseOrderViewModel : BaseViewModel
             }
         }
     }
-    public void ResetCommand()
-    {
-        initial_load();
-    }
+   
     public void SaveCommand()
     {
         SelectedItem = new PurchaseOrderModel();
