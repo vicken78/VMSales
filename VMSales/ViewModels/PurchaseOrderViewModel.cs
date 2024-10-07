@@ -16,19 +16,18 @@ namespace VMSales.ViewModels
 {
     public class PurchaseOrderViewModel : BaseViewModel
     {
+
+
         public CollectionViewSource PurchaseOrderView { get; set; }
 
         private int _RowCount;
         public int RowCount
         {
             get => _RowCount = PurchaseOrderView?.View?.Cast<object>().Count() ?? 0;
-            set
-            {
-            if (_RowCount != value)
-                _RowCount = value;
-                NotifyOfPropertyChange(() => RowCount);
-            }
+        
         }
+
+
 
         private PurchaseOrderModel _SelectedItem;
         public PurchaseOrderModel SelectedItem
@@ -183,8 +182,8 @@ namespace VMSales.ViewModels
                 {
                     _SelectedInvoiceNumber = value;
                     NotifyOfPropertyChange(() => SelectedInvoiceNumber);
-                    NotifyOfPropertyChange(() => RowCount);
                     ApplyFilter(!string.IsNullOrEmpty(SelectedInvoiceNumber) ? FilterField.InvoiceNumber : FilterField.None);
+                    NotifyOfPropertyChange(() => RowCount);
                     _cancanremoveinvoicenumberfilter = true;
                     NotifyOfPropertyChange(() => _cancanremoveinvoicenumberfilter);
                 }
@@ -201,8 +200,8 @@ namespace VMSales.ViewModels
                 {
                     _SelectedPurchaseDate = value;
                     NotifyOfPropertyChange(() => SelectedPurchaseDate);
-                    NotifyOfPropertyChange(() => RowCount);
                     ApplyFilter(!string.IsNullOrEmpty(SelectedPurchaseDate.ToString()) ? FilterField.PurchaseDate : FilterField.None);
+                    NotifyOfPropertyChange(() => RowCount);
                     _cancanremovepurchasedatefilter = true;
                     NotifyOfPropertyChange(() => _cancanremovepurchasedatefilter);
                 }
@@ -219,8 +218,8 @@ namespace VMSales.ViewModels
                 {
                     _SelectedSupplier = value;
                     NotifyOfPropertyChange(() => SelectedSupplier);
-                    NotifyOfPropertyChange(() => RowCount);
                     ApplyFilter(!string.IsNullOrEmpty(SelectedSupplier.ToString()) ? FilterField.Supplier : FilterField.None);
+                    NotifyOfPropertyChange(() => RowCount);
                     _cancanremovesupplierfilter = true;
                     NotifyOfPropertyChange(() => _cancanremovesupplierfilter);
                 }
@@ -321,19 +320,36 @@ namespace VMSales.ViewModels
             SupplierRepo.Dispose();
 
 
+            // initialize the view
+
             if (PurchaseOrderView == null)
             {
+                // Initialize PurchaseOrderView and set its source
                 PurchaseOrderView = new CollectionViewSource { Source = ObservableCollectionPurchaseOrderModelDirty };
-                RowCount = 0;
+
+                // Subscribe to filter event after initializing
+                PurchaseOrderView.Filter += (s, e) =>
+                {
+                    NotifyOfPropertyChange(() => RowCount);  // Update row count when filter changes
+                };
             }
             else
-            { 
+            {
+                // If PurchaseOrderView already exists, just reset the source
                 PurchaseOrderView.Source = ObservableCollectionPurchaseOrderModelDirty;
+
+                // If filter logic is already in place, you can ensure the Filter event is handled here too
+                PurchaseOrderView.Filter += (s, e) =>
+                {
+                    NotifyOfPropertyChange(() => RowCount);  // Update row count when filter changes
+                };
+
+                // Subscribe to the CollectionChanged event to handle changes in the collection
                 PurchaseOrderView.View.CollectionChanged += (s, e) =>
                 {
                     NotifyOfPropertyChange(() => RowCount);
                 };
-            }
+       }
 
             PurchaseOrderView.View.Refresh();
             ObservableCollectionPurchaseOrderModelClean = new ObservableCollection<PurchaseOrderModel>(ObservableCollectionPurchaseOrderModelDirty.Select(item => new PurchaseOrderModel
