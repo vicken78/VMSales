@@ -11,11 +11,16 @@ using System.Threading.Tasks;
 using System.Diagnostics;
 using VMSales.Views;
 using System.ComponentModel;
+using Caliburn.Micro;
 
 namespace VMSales.ViewModels
 {
     public class PurchaseOrderViewModel : BaseViewModel
     {
+
+        public string newinvoicenumber;
+        public string newsuppliername;
+        public DateTime? newpurchasedate;
 
 
         public CollectionViewSource PurchaseOrderView { get; set; }
@@ -24,10 +29,8 @@ namespace VMSales.ViewModels
         public int RowCount
         {
             get => _RowCount = PurchaseOrderView?.View?.Cast<object>().Count() ?? 0;
-        
+
         }
-
-
 
         private PurchaseOrderModel _SelectedItem;
         public PurchaseOrderModel SelectedItem
@@ -45,9 +48,11 @@ namespace VMSales.ViewModels
                     var supplier_fk = SelectedItem.supplier_fk;
                 }
             }
-         }
+        }
 
-
+        
+        
+        
         public ObservableCollection<SupplierModel> ObservableCollectionSupplierModel { get; set; }
         private ObservableCollection<PurchaseOrderModel> _ObservableCollectionPurchaseOrderModelDirty { get; set; }
         public ObservableCollection<PurchaseOrderModel> ObservableCollectionPurchaseOrderModelDirty
@@ -59,7 +64,21 @@ namespace VMSales.ViewModels
                 NotifyOfPropertyChange(() => ObservableCollectionPurchaseOrderModelDirty);
             }
         }
-        public ObservableCollection<PurchaseOrderModel> ObservableCollectionPurchaseOrderModelClean { get; protected set; }
+        private ObservableCollection<PurchaseOrderModel> _ObservableCollectionTotalPurchaseOrderModel;
+        public ObservableCollection<PurchaseOrderModel> ObservableCollectionTotalPurchaseOrderModel 
+        {
+            get => _ObservableCollectionTotalPurchaseOrderModel;
+            set
+            {
+                _ObservableCollectionTotalPurchaseOrderModel = value;
+                NotifyOfPropertyChange(() => ObservableCollectionTotalPurchaseOrderModel);
+            }
+         }
+
+
+
+
+public ObservableCollection<PurchaseOrderModel> ObservableCollectionPurchaseOrderModelClean { get; protected set; }
 
         IDatabaseProvider dataBaseProvider;
 
@@ -72,7 +91,7 @@ namespace VMSales.ViewModels
                 if (_keep_last != value)
                 {
                     _keep_last = value;
-                    NotifyOfPropertyChange(() => keep_last);  
+                    NotifyOfPropertyChange(() => keep_last);
                 }
             }
         }
@@ -96,7 +115,7 @@ namespace VMSales.ViewModels
         private bool _cancanremovepurchasedatefilter;
         public bool CanRemovePurchaseDateFilter
         {
-            get => _cancanremovepurchasedatefilter; 
+            get => _cancanremovepurchasedatefilter;
             set
             {
                 if (_cancanremovepurchasedatefilter != value)
@@ -110,7 +129,7 @@ namespace VMSales.ViewModels
         private bool _cancanremovesupplierfilter;
         public bool CanRemoveSupplierFilter
         {
-            get => _cancanremovesupplierfilter; 
+            get => _cancanremovesupplierfilter;
             set
             {
                 if (_cancanremovesupplierfilter != value)
@@ -128,7 +147,7 @@ namespace VMSales.ViewModels
             Supplier,
             None
         }
-       
+
         private ObservableCollection<string> _FilterInvoiceNumber;
         public ObservableCollection<string> FilterInvoiceNumber
         {
@@ -146,10 +165,10 @@ namespace VMSales.ViewModels
         private ObservableCollection<DateTime> _FilterPurchaseDate;
         public ObservableCollection<DateTime> FilterPurchaseDate
         {
-            get =>  _FilterPurchaseDate; 
+            get => _FilterPurchaseDate;
             set
             {
-                if (_FilterPurchaseDate != value) 
+                if (_FilterPurchaseDate != value)
                 {
                     _FilterPurchaseDate = value;
                     NotifyOfPropertyChange(() => FilterPurchaseDate);
@@ -173,10 +192,10 @@ namespace VMSales.ViewModels
         }
 
         private string _SelectedInvoiceNumber;
-        public string  SelectedInvoiceNumber 
-        { 
+        public string SelectedInvoiceNumber
+        {
             get => _SelectedInvoiceNumber;
-        set
+            set
             {
                 if (_SelectedInvoiceNumber != value)
                 {
@@ -192,7 +211,7 @@ namespace VMSales.ViewModels
 
         private DateTime? _SelectedPurchaseDate;
         public DateTime? SelectedPurchaseDate
-        { 
+        {
             get => _SelectedPurchaseDate;
             set
             {
@@ -222,11 +241,24 @@ namespace VMSales.ViewModels
                     NotifyOfPropertyChange(() => RowCount);
                     _cancanremovesupplierfilter = true;
                     NotifyOfPropertyChange(() => _cancanremovesupplierfilter);
+                    UpdateTotal(SelectedSupplier);
                 }
             }
         }
 
         #endregion
+
+            public void UpdateTotal(int supplier_fk)
+            {
+            ObservableCollectionTotalPurchaseOrderModel.Clear();
+            dataBaseProvider = getprovider();
+            PurchaseOrderRepository PurchaseOrderRepo = new PurchaseOrderRepository(dataBaseProvider);
+            ObservableCollectionTotalPurchaseOrderModel = PurchaseOrderRepo.GetAllTotal(supplier_fk).Result.ToObservable();
+            PurchaseOrderRepo.Commit();
+            PurchaseOrderRepo.Dispose();
+            NotifyOfPropertyChange(() => ObservableCollectionTotalPurchaseOrderModel);
+        }
+
 
         //Commands
         public async Task SaveCommand()
@@ -257,10 +289,19 @@ namespace VMSales.ViewModels
             CanRemoveSupplierFilter = false;
             PurchaseOrderView.Filter -= new FilterEventHandler(FilterBySupplier);
             NotifyOfPropertyChange(() => RowCount);
+            UpdateTotal(0);
         }
 
         public void ResetCommand()
         {
+
+            if (keep_last == false)
+            {
+            newinvoicenumber = null;
+            newsuppliername = null;
+            newpurchasedate = null;
+            }
+
             PurchaseOrderView.Filter -= new FilterEventHandler(FilterByInvoiceNumber);
             PurchaseOrderView.Filter -= new FilterEventHandler(FilterByPurchaseDate);
             PurchaseOrderView.Filter -= new FilterEventHandler(FilterBySupplier);
@@ -286,6 +327,8 @@ namespace VMSales.ViewModels
                 ObservableCollectionPurchaseOrderModelDirty = new ObservableCollection<PurchaseOrderModel>();
                 ObservableCollectionPurchaseOrderModelClean = new ObservableCollection<PurchaseOrderModel>();
                 ObservableCollectionSupplierModel = new ObservableCollection<SupplierModel>();
+                ObservableCollectionTotalPurchaseOrderModel = new ObservableCollection<PurchaseOrderModel>();
+
             }
             else
             {
@@ -297,6 +340,9 @@ namespace VMSales.ViewModels
             dataBaseProvider = getprovider();
             PurchaseOrderRepository PurchaseOrderRepo = new PurchaseOrderRepository(dataBaseProvider);
             var result = PurchaseOrderRepo.GetAll().Result.ToObservable();
+
+            ObservableCollectionTotalPurchaseOrderModel = PurchaseOrderRepo.GetAllTotal(0).Result.ToObservable();
+
             PurchaseOrderRepo.Commit();
             PurchaseOrderRepo.Dispose();
 
@@ -304,6 +350,8 @@ namespace VMSales.ViewModels
             {
                 ObservableCollectionPurchaseOrderModelDirty.Add(item);
             }
+
+         
 
             // get supplier_name and supplier_fk
             dataBaseProvider = getprovider();
@@ -487,7 +535,7 @@ namespace VMSales.ViewModels
 }
 
 /*
- * OLD CODE incomplete
+ * OLD CODE deleting as we go
  * 
 public class PurchaseOrderViewModel : BaseViewModel
 {
@@ -495,50 +543,6 @@ public class PurchaseOrderViewModel : BaseViewModel
     private List<int> purchase_order_products;
     private string invoicetemp;
     private DateTime purchase_datetemp;
-
-    #endregion
-
-
-    #region Members
-    private int _supplier_fk { get; set; }
-    #endregion
-
-
-
-    public int supplier_fk
-    {
-        get { return _supplier_fk; }
-        set
-        {
-            if (_supplier_fk == value) return;
-            _supplier_fk = value;
-            ////RaisePropertyChanged("supplier_fk");
-            LoadPurchaseOrder(supplier_fk);
-            CanRemoveSupplierFilter = !CanRemoveSupplierFilter;
-            // Remove filters for purchase date and invoice
-            RemoveInvoiceNumberFilterCommand();
-            RemovePurchaseDateFilterCommand();
-            // ReLoad
-            LoadFilterLists(ObservableCollectionPurchaseOrderModel);
-
-        }
-    }
-
-    public List<string> InvoiceNumberList { get; set; }
-    public List<DateTime> PurchaseDateList { get; set; }
-
-    IDatabaseProvider dataBaseProvider;
-
-    #region ButtonCommands
-    // remove Supplier Filter
-    public void RemoveSupplier()
-    {
-        supplier_fk = 0;
-        ////RaisePropertyChanged("supplier_fk");
-        LoadPurchaseOrder(0);
-        CanRemoveSupplierFilter = false;
-    }
-
 
     public void AddCommand()
     {
@@ -927,65 +931,8 @@ public class PurchaseOrderViewModel : BaseViewModel
                 ObservableCollectionTotalPurchaseOrderModel = PurchaseOrderRepo.GetAllTotal(supplier_fk).Result.ToObservable();
             }
         }
-        ////RaisePropertyChanged("ObservableCollectionPurchaseOrderModel");
-        ////RaisePropertyChanged("ObservableCollectionTotalPurchaseOrderModel");
-        PurchaseOrderRepo.Commit();
-        PurchaseOrderRepo.Dispose();
-
-    }
-
-    public void LoadFilterLists(ObservableCollection<PurchaseOrderModel> ObservableCollectionPurchaseOrderModel)
-    {
-        // first clear
-        if (FilterInvoiceNumber != null || FilterPurchaseDate != null)
-        {
-            cvs.Filter -= new FilterEventHandler(FilterByInvoiceNumber);
-            cvs.Filter -= new FilterEventHandler(FilterByPurchaseDate);
-
-            FilterInvoiceNumber.Clear();
-            FilterPurchaseDate.Clear();
-        }
 
 
-        //then load
-
-        foreach (var item in ObservableCollectionPurchaseOrderModel)
-        {
-            SelectedItem = item;
-            if (item.invoice_number != null || item.purchase_date != null)
-                if (!InvoiceNumberList.Contains(item.invoice_number))
-                    InvoiceNumberList.Add(item.invoice_number);
-            if (!PurchaseDateList.Contains(item.purchase_date))
-                PurchaseDateList.Add(item.purchase_date);
-        }
-
-        InvoiceNumberList.Sort();
-        PurchaseDateList.Sort();
-
-        if (InvoiceNumberList.Count > 0 || PurchaseDateList.Count > 0)
-        {
-            FilterInvoiceNumber = new ObservableCollection<string>(InvoiceNumberList.Cast<String>());
-            FilterPurchaseDate = new ObservableCollection<DateTime>(PurchaseDateList.Cast<DateTime>());
-        }
-
-        if (ObservableCollectionPurchaseOrderModel is null)
-        {
-            throw new ArgumentNullException(nameof(ObservableCollectionPurchaseOrderModel));
-        }
-    }
-
-    public void initial_load()
-    {
-        try
-        {
-            //Initial Page Load
-
-            InvoiceNumberList = new List<string>();
-            PurchaseDateList = new List<DateTime>();
-
-            // Get All Purchase Order
-            ObservableCollectionPurchaseOrderModel = new ObservableCollection<PurchaseOrderModel>();
-            ObservableCollectionTotalPurchaseOrderModel = new ObservableCollection<PurchaseOrderModel>();
 
             dataBaseProvider = getprovider();
             PurchaseOrderRepository PurchaseOrderRepo = new PurchaseOrderRepository(dataBaseProvider);
@@ -1011,29 +958,5 @@ public class PurchaseOrderViewModel : BaseViewModel
                     isproductinventory = false
                 });
             }
-
-
-        ObservableCollectionPurchaseOrderModel = PurchaseOrderRepo.GetAll().Result.ToObservable();
-        ObservableCollectionTotalPurchaseOrderModel = PurchaseOrderRepo.GetAllTotal(supplier_fk).Result.ToObservable();
-        cvs.Source = ObservableCollectionPurchaseOrderModel;
-        PurchaseOrderRepo.Commit();
-        PurchaseOrderRepo.Dispose();
-        ////RaisePropertyChanged("ObservableCollectionPurchaseOrderModel");
-
-        LoadFilterLists(ObservableCollectionPurchaseOrderModel);
-
-        // Get Suppliers
-        ObservableCollectionSupplierModel = new ObservableCollection<SupplierModel>();
-        dataBaseProvider = getprovider();
-        SupplierRepository SupplierRepo = new SupplierRepository(dataBaseProvider);
-        ObservableCollectionSupplierModel = SupplierRepo.GetAll().Result.ToObservable();
-        SupplierRepo.Commit();
-        SupplierRepo.Dispose();
-        }
-        catch (Exception e)
-        {
-            MessageBox.Show(e.ToString());
-        }
-    }
 
 */

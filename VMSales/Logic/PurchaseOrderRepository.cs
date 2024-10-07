@@ -3,8 +3,6 @@ using Dapper;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using System.Windows.Forms;
-using VMSales.Logic;
 using VMSales.Models;
 
 

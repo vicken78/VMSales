@@ -84,8 +84,18 @@ namespace VMSales.Models
                 NotifyOfPropertyChange(() => supplier_name);
             }
         }
-
-
+        
+        private string _new_supplier_name;
+        public string new_supplier_name
+        {
+            get => _new_supplier_name;
+            set
+            {
+                if (_new_supplier_name != value)
+                    _new_supplier_name = value;
+                NotifyOfPropertyChange(() => new_supplier_name);
+            }
+        }
 
         private bool _IsSelected;
         public bool IsSelected

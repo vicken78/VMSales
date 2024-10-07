@@ -96,16 +96,16 @@
             </Button>
 
 
-            <Label Content="Invoice No." FontSize="12" FontWeight="Bold" Grid.Column="3" HorizontalAlignment="Center" Grid.Row="7" />
-            <TextBox x:Name="invoice_number" Background="White" Text="{Binding SelectedInvoiceNumber, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
+            <Label Content="New Invoice" FontSize="12" FontWeight="Bold" Grid.Column="3" HorizontalAlignment="Center" Grid.Row="7" />
+            <TextBox x:Name="invoice_number" Background="White" Text="{Binding newinvoicenumber, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
                         Grid.Column="4" Grid.Row="7"/>
 
 
-            <Label Content="Purchase Date" FontSize="12" FontWeight="Bold" Grid.Column="6" Grid.Row="7" />
-            <TextBox x:Name="purchase_date" Background="White" Text="{Binding SelectedPurchaseDate, StringFormat='MM/dd/yyyy', UpdateSourceTrigger=PropertyChanged}"
+            <TextBlock Text="New Purchase Date" FontSize="12" TextWrapping="Wrap" HorizontalAlignment="Center" FontWeight="Bold" Grid.Column="6" Grid.Row="7" />
+            <TextBox x:Name="purchase_date" Background="White" Text="{Binding newpurchasedate, StringFormat='MM/dd/yyyy', UpdateSourceTrigger=PropertyChanged}"
                         Grid.Column="7" Grid.Row="7"/>
             <!-- Purchase Date ComboBox-->
-            <CheckBox Content="Keep Last" IsChecked="{Binding keep_last, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Column="8" Grid.Row="7" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+            <CheckBox Content="Keep Last" IsChecked="{Binding keep_last, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Column="6" Grid.Row="9" HorizontalAlignment="Center" VerticalAlignment="Center"/>
 
 
             <TextBlock Grid.Row="5" Grid.Column="6" FontSize="12" FontWeight="Bold" HorizontalAlignment="Center">Purchase Date</TextBlock>
@@ -141,8 +141,8 @@
                 <Image Width="10" Height="10" Style="{DynamicResource ImageStyleForButtons}"/>
             </Button>
 
-            <Label Content="Supplier" FontSize="12" FontWeight="Bold" Grid.Column="9" Grid.Row="7" HorizontalAlignment="Center" />
-            <TextBox x:Name="Supplier" Background="White" Text="{Binding SelectedSupplier.supplier_name, UpdateSourceTrigger=PropertyChanged}"
+            <Label Content="New Supplier" FontSize="12" FontWeight="Bold" Grid.Column="9" Grid.Row="7" HorizontalAlignment="Center" />
+            <TextBox x:Name="Supplier" Background="White" Text="{Binding newsuppliername, UpdateSourceTrigger=PropertyChanged}"
               Grid.Column="10" Grid.Row="7"/>
 
             <Label Content="Row Count" FontSize="12" Grid.Column="3" Grid.Row="9" HorizontalAlignment="Center" />
