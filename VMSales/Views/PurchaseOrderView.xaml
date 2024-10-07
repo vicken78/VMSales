@@ -193,7 +193,7 @@
                           FontWeight="Bold"
                           IsReadOnly="True"
                           EnableRowVirtualization="True" Grid.Row="0" 
-                          Height="50" Width="1800" Margin="955,0,0,0" VerticalAlignment="Top">
+                          Height="50" Width="1700" Margin="1130,0,0,0" VerticalAlignment="Top">
                 <DataGrid.Columns>
                     <DataGridTextColumn x:Name="LotTotal" Header="Lot Total" Width="70"
                             IsReadOnly="True" Binding="{Binding Path=total_lot, StringFormat='c', Mode=Twoway, UpdateSourceTrigger=PropertyChanged}"/>
@@ -216,10 +216,9 @@
                           CanUserDeleteRows="False"
                           SelectionMode="Single"
                           SelectedItem="{Binding SelectedItem, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                          CanUserAddRows="False" 
-                          
+                          CanUserAddRows="False"                      
                           EnableRowVirtualization="True" IsReadOnly="False" 
-                          Height="Auto" Width="Auto"  HorizontalAlignment="Center" Grid.Row="1">
+                          Height="500" Width="1700" HorizontalAlignment="Left" VerticalAlignment="Top" Grid.Row="1">
                 <DataGrid.RowStyle>
                     <Style TargetType="DataGridRow">
                         <Setter Property="IsSelected"  Value="{Binding IsSelected, Mode=TwoWay}"/>

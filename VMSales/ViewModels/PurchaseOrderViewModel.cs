@@ -4,14 +4,8 @@ using System.Data;
 using System.Windows.Data;
 using VMSales.Models;
 using System.Linq;
-using System.Collections.Generic;
 using VMSales.Logic;
-using System.Windows;
 using System.Threading.Tasks;
-using System.Diagnostics;
-using VMSales.Views;
-using System.ComponentModel;
-using Caliburn.Micro;
 
 namespace VMSales.ViewModels
 {
@@ -50,9 +44,6 @@ namespace VMSales.ViewModels
             }
         }
 
-        
-        
-        
         public ObservableCollection<SupplierModel> ObservableCollectionSupplierModel { get; set; }
         private ObservableCollection<PurchaseOrderModel> _ObservableCollectionPurchaseOrderModelDirty { get; set; }
         public ObservableCollection<PurchaseOrderModel> ObservableCollectionPurchaseOrderModelDirty
@@ -74,9 +65,6 @@ namespace VMSales.ViewModels
                 NotifyOfPropertyChange(() => ObservableCollectionTotalPurchaseOrderModel);
             }
          }
-
-
-
 
 public ObservableCollection<PurchaseOrderModel> ObservableCollectionPurchaseOrderModelClean { get; protected set; }
 
@@ -176,7 +164,6 @@ public ObservableCollection<PurchaseOrderModel> ObservableCollectionPurchaseOrde
             }
         }
 
-
         private ObservableCollection<String> _FilterSupplier;
         public ObservableCollection<String> FilterSupplier
         {
@@ -257,12 +244,13 @@ public ObservableCollection<PurchaseOrderModel> ObservableCollectionPurchaseOrde
             PurchaseOrderRepo.Commit();
             PurchaseOrderRepo.Dispose();
             NotifyOfPropertyChange(() => ObservableCollectionTotalPurchaseOrderModel);
-        }
+            }
 
 
         //Commands
         public async Task SaveCommand()
         {
+            // Update and then do insert
             var dataProcessor = new DataProcessor<PurchaseOrderModel>();
         }
 
@@ -547,18 +535,6 @@ public class PurchaseOrderViewModel : BaseViewModel
     public void AddCommand()
     {
 
-        if (supplier_fk == 0)
-        {
-            MessageBox.Show("Please select a supplier.");
-            return;
-        }
-
-        var selectedRows = ObservableCollectionPurchaseOrderModel.Where(i => i.IsSelected);
-        foreach (var item in selectedRows)
-        {
-            invoicetemp = item.invoice_number;
-            purchase_datetemp = item.purchase_date;
-        }
 
         if (keep_last == false)
         {
@@ -794,6 +770,8 @@ public class PurchaseOrderViewModel : BaseViewModel
     }
 
 
+//generate product from purchase order
+
     // generate product from purchase order
     public void GenerateCommand()
     {
@@ -898,40 +876,7 @@ public class PurchaseOrderViewModel : BaseViewModel
         }
     }
 
-    public void LoadPurchaseOrder(int supplier_fk)
-    {
-
-        ObservableCollectionPurchaseOrderModel = new ObservableCollection<PurchaseOrderModel>();
-
-        //clear and reload invoicedate and purchasedate based on supplier
-        if (InvoiceNumberList.Count > 0 && PurchaseDateList.Count > 0)
-        {
-            InvoiceNumberList.Clear();
-            PurchaseDateList.Clear();
-        }
-
-        dataBaseProvider = getprovider();
-        PurchaseOrderRepository PurchaseOrderRepo = new PurchaseOrderRepository(dataBaseProvider);
-
-
-        if (supplier_fk == 0)
-        {
-            ObservableCollectionPurchaseOrderModel = PurchaseOrderRepo.GetAll().Result.ToObservable();
-            LoadFilterLists(ObservableCollectionPurchaseOrderModel);
-            ObservableCollectionTotalPurchaseOrderModel = PurchaseOrderRepo.GetAllTotal(supplier_fk).Result.ToObservable();
-        }
-        else
-        {
-            var Result = PurchaseOrderRepo.GetAllWithID(supplier_fk).Result;
-            if (Result.Count() > 0)
-            {
-                ObservableCollectionPurchaseOrderModel = Result.ToObservable();
-                LoadFilterLists(ObservableCollectionPurchaseOrderModel);
-                ObservableCollectionTotalPurchaseOrderModel.Clear();
-                ObservableCollectionTotalPurchaseOrderModel = PurchaseOrderRepo.GetAllTotal(supplier_fk).Result.ToObservable();
-            }
-        }
-
+// end generate
 
 
             dataBaseProvider = getprovider();
