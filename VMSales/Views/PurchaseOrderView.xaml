@@ -44,11 +44,14 @@
             <!-- Supplier Combo static -->
             <Label Grid.Row="2" Grid.Column="0">Supplier</Label>
 
-            <!-- <ComboBox x:Name="cmbSupplier" ItemsSource="{Binding Path=ObservableCollectionSupplierModel}" DisplayMemberPath="supplier_name" SelectedValue="{Binding supplier_fk, Mode=TwoWay}" SelectedIndex="{Binding cmbSupplier, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" SelectedValuePath="supplier_pk" Grid.Row="2" Grid.Column="1"/>-->
-          <ComboBox x:Name="cmbSupplier" ItemsSource="{Binding Path=ObservableCollectionSupplierModel}" 
-          DisplayMemberPath="supplier_name" SelectedValue="{Binding supplier_fk, Mode=TwoWay}" 
-          SelectedValuePath="supplier_pk" Grid.Row="2" Grid.Column="1"/>
-
+            <ComboBox x:Name="cmbSupplier" 
+          ItemsSource="{Binding ObservableCollectionSupplierModel}" 
+          DisplayMemberPath="supplier_name" 
+          SelectedValue="{Binding SelectedItem.supplier_fk, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+          SelectedValuePath="supplier_pk" 
+          Grid.Row="2" 
+          Grid.Column="1"/>
+            
             <!-- Address -->
             <Label Content="Address" Grid.Column="0" Grid.Row="4" />
             <TextBox Name="Address" IsReadOnly="True" Background="WhiteSmoke"  Text="{Binding SelectedItem.address, ElementName=cmbSupplier}" 
@@ -120,17 +123,26 @@
             </Button>
             <TextBlock Grid.Row="5" Grid.Column="9" FontSize="12" FontWeight="Bold" HorizontalAlignment="Center">Supplier</TextBlock>
 
-            <ComboBox x:Name="SupplierFilter" ItemsSource="{Binding Path=ObservableCollectionSupplierModel}" 
-        DisplayMemberPath="supplier_name" SelectedValue="{Binding supplier_fk, Mode=TwoWay}" 
-        SelectedValuePath="supplier_pk" Grid.Row="5" Grid.Column="10"/>
 
-            <Button x:Name="RemoveSupplier" HorizontalAlignment="Left" Margin="20,0,0,0" Grid.Row="5" Grid.Column="11" Width="16" Height="16" 
+
+            <ComboBox x:Name="SupplierFilter" 
+            ItemsSource="{Binding Path=ObservableCollectionSupplierModel}" 
+            DisplayMemberPath="supplier_name" 
+            SelectedValue="{Binding SelectedSupplier, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+            SelectedValuePath="supplier_pk" 
+            Grid.Row="5" 
+            Grid.Column="10"/>
+
+
+        
+
+            <Button x:Name="RemoveSupplierFilterCommand" HorizontalAlignment="Left" Margin="20,0,0,0" Grid.Row="5" Grid.Column="11" Width="16" Height="16" 
      IsEnabled="{Binding CanRemoveSupplierFilter, Mode=TwoWay}">
                 <Image Width="10" Height="10" Style="{DynamicResource ImageStyleForButtons}"/>
             </Button>
 
             <Label Content="Supplier" FontSize="12" FontWeight="Bold" Grid.Column="9" Grid.Row="7" HorizontalAlignment="Center" />
-            <TextBox x:Name="Supplier" Background="White" Text="{Binding SelectedSupplier, UpdateSourceTrigger=PropertyChanged}"
+            <TextBox x:Name="Supplier" Background="White" Text="{Binding SelectedSupplier.supplier_name, UpdateSourceTrigger=PropertyChanged}"
               Grid.Column="10" Grid.Row="7"/>
 
             <Label Content="Row Count" FontSize="12" Grid.Column="3" Grid.Row="9" HorizontalAlignment="Center" />

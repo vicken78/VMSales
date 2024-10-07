@@ -40,7 +40,10 @@ namespace VMSales.ViewModels
                 {
                     _SelectedItem = value;
                     NotifyOfPropertyChange(() => SelectedItem);
-                    Debug.WriteLine("");
+                }
+                if (SelectedItem != null)
+                {
+                    var supplier_fk = SelectedItem.supplier_fk;
                 }
             }
          }
@@ -117,7 +120,6 @@ namespace VMSales.ViewModels
                     NotifyOfPropertyChange(() => CanRemoveSupplierFilter);
                 }
             }
-
         }
 
         private enum FilterField
@@ -167,13 +169,7 @@ namespace VMSales.ViewModels
                 {
                     _FilterSupplier = value;
                     NotifyOfPropertyChange(() => FilterSupplier);
-                    NotifyOfPropertyChange(() => SelectedSupplier);
-                    NotifyOfPropertyChange(() => RowCount);
-                    ApplyFilter(!string.IsNullOrEmpty(SelectedSupplier) ? FilterField.Supplier: FilterField.None);
-                    _cancanremovesupplierfilter = true;
-                    NotifyOfPropertyChange(() => _cancanremovesupplierfilter);
- 
-            }
+                }
             }
         }
 
@@ -213,8 +209,8 @@ namespace VMSales.ViewModels
             }
         }
 
-        private string _SelectedSupplier;
-        public string SelectedSupplier
+        private int _SelectedSupplier;
+        public int SelectedSupplier
         {
             get => _SelectedSupplier;
             set
@@ -224,7 +220,9 @@ namespace VMSales.ViewModels
                     _SelectedSupplier = value;
                     NotifyOfPropertyChange(() => SelectedSupplier);
                     NotifyOfPropertyChange(() => RowCount);
-                ApplyFilter(!string.IsNullOrEmpty(SelectedSupplier) ? FilterField.Supplier : FilterField.None);
+                    ApplyFilter(!string.IsNullOrEmpty(SelectedSupplier.ToString()) ? FilterField.Supplier : FilterField.None);
+                    _cancanremovesupplierfilter = true;
+                    NotifyOfPropertyChange(() => _cancanremovesupplierfilter);
                 }
             }
         }
@@ -255,7 +253,7 @@ namespace VMSales.ViewModels
         }
         public void RemoveSupplierFilterCommand()
         {
-            SelectedSupplier = null;
+            SelectedSupplier = 0;
             NotifyOfPropertyChange(() => SelectedSupplier);
             CanRemoveSupplierFilter = false;
             PurchaseOrderView.Filter -= new FilterEventHandler(FilterBySupplier);
@@ -270,10 +268,12 @@ namespace VMSales.ViewModels
 
             SelectedInvoiceNumber = null;
             SelectedPurchaseDate = null;
-            SelectedSupplier = null;
+            SelectedSupplier = 0;
             
             NotifyOfPropertyChange(() => SelectedInvoiceNumber);
             NotifyOfPropertyChange(() => SelectedPurchaseDate);
+            NotifyOfPropertyChange(() => SelectedSupplier);
+
             CanRemoveInvoiceNumberFilter = false;
             CanRemovePurchaseDateFilter = false;
             CanRemoveSupplierFilter = false;
@@ -309,7 +309,7 @@ namespace VMSales.ViewModels
             // get supplier_name and supplier_fk
             dataBaseProvider = getprovider();
             SupplierRepository SupplierRepo = new SupplierRepository(dataBaseProvider);
-            var suppliersresult = SupplierRepo.GetSupplier().Result.ToObservable();
+            var suppliersresult = SupplierRepo.GetAll().Result.ToObservable();
 
             foreach (var item in suppliersresult) 
             { 
@@ -353,8 +353,7 @@ namespace VMSales.ViewModels
         
             if (ObservableCollectionPurchaseOrderModelDirty != null)
             {
-                FilterPurchaseDate = new ObservableCollection<DateTime>(ObservableCollectionPurchaseOrderModelDirty.Select(p => p.purchase_date));
-
+ 
                 FilterInvoiceNumber = new ObservableCollection<string>(ObservableCollectionPurchaseOrderModelDirty
             .Select(p => p.invoice_number)   // Select the invoice numbers
             .Distinct()                      // Remove duplicates
@@ -411,10 +410,10 @@ namespace VMSales.ViewModels
 
         private void FilterBySupplier(object sender, FilterEventArgs e)
         {
-            var src = e.Item as SupplierModel;
+            var src = e.Item as PurchaseOrderModel;
             if (src == null)
                 e.Accepted = false;
-            else if (string.Compare(SelectedSupplier, src.supplier_name) != 0)
+            else if (string.Compare(SelectedSupplier.ToString(), src.supplier_fk.ToString()) != 0)
                 e.Accepted = false;
         }
 
