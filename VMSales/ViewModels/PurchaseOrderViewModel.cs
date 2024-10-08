@@ -6,6 +6,8 @@ using VMSales.Models;
 using System.Linq;
 using VMSales.Logic;
 using System.Threading.Tasks;
+using System.Windows;
+using System.Diagnostics;
 
 namespace VMSales.ViewModels
 {
@@ -250,11 +252,41 @@ public ObservableCollection<PurchaseOrderModel> ObservableCollectionPurchaseOrde
         //Commands
         public async Task SaveCommand()
         {
-            // Update and then do insert
+            // Create an instance of DataProcessor with PurchaseOrderModel type
             var dataProcessor = new DataProcessor<PurchaseOrderModel>();
+            // Call the Compare method
+            ObservableCollection<PurchaseOrderModel> differences = dataProcessor.Compare(ObservableCollectionPurchaseOrderModelClean, ObservableCollectionPurchaseOrderModelDirty);
+            foreach (var item in differences)
+            {
+                //PurchaseOrderRepository PurchaseOrderRepo = new PurchaseOrderRepository(dataBaseProvider);
+                try
+                {
+                    switch (item.Action)
+                    {
+                        case "Update":
+                            //temp 
+                            Debug.WriteLine("Update");
+                            break;
+                        case "Insert":
+                            break;
+                        case "Delete":
+                            break;
+                        default:
+                            throw new InvalidOperationException("Unexpected Action read, expected Update Insert or Delete.");
+                    }
+                }
+                catch (Exception e)
+                {
+                    MessageBox.Show("An unexpected error has occured." + e);
+                    //PurchaseOrderRepo.Revert();
+                    //PurchaseOrderRepo.Dispose();
+                }
+                //PurchaseOrderRepo.Dispose();
+                //initial_load();
+            }
         }
 
-        public void RemoveInvoiceNumberFilterCommand()
+            public void RemoveInvoiceNumberFilterCommand()
         {
             SelectedInvoiceNumber = null;
             NotifyOfPropertyChange(() => SelectedInvoiceNumber);
@@ -400,6 +432,12 @@ public ObservableCollection<PurchaseOrderModel> ObservableCollectionPurchaseOrde
                 shipping_cost = item.shipping_cost,
                 supplier_fk = item.supplier_fk,
                 supplier_name = item.supplier_name,
+                lot_number = item.lot_number,
+                lot_description = item.lot_description,
+                lot_cost = item.lot_cost,
+                lot_name = item.lot_name,
+                lot_quantity = item.lot_quantity,
+                quantity_check = item.quantity_check
             }
             ));
         

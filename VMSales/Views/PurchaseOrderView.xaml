@@ -213,10 +213,10 @@
                       ItemsSource="{Binding PurchaseOrderView.View}"
                       IsSynchronizedWithCurrentItem="True" 
                       VerticalScrollBarVisibility="Visible"
-                          CanUserDeleteRows="False"
+                          CanUserAddRows="True"
+                          CanUserDeleteRows="True"
                           SelectionMode="Single"
                           SelectedItem="{Binding SelectedItem, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                          CanUserAddRows="False"                      
                           EnableRowVirtualization="True" IsReadOnly="False" 
                           Height="500" Width="1700" HorizontalAlignment="Left" VerticalAlignment="Top" Grid.Row="1">
                 <DataGrid.RowStyle>
