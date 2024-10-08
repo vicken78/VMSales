@@ -265,7 +265,7 @@ public ObservableCollection<PurchaseOrderModel> ObservableCollectionPurchaseOrde
                     {
                         case "Update":
                             //temp 
-                            Debug.WriteLine("Update");
+                            //Debug.WriteLine("Update");
                             break;
                         case "Insert":
                             break;
@@ -423,14 +423,14 @@ public ObservableCollection<PurchaseOrderModel> ObservableCollectionPurchaseOrde
             ObservableCollectionPurchaseOrderModelClean = new ObservableCollection<PurchaseOrderModel>(ObservableCollectionPurchaseOrderModelDirty.Select(item => new PurchaseOrderModel
             {
                 // Copy properties from the item, or use a copy constructor if available
-                invoice_number = item.invoice_number,
-                purchase_date = item.purchase_date,
+                purchase_order_pk = item.purchase_order_pk,
                 purchase_order_detail_pk = item.purchase_order_detail_pk,
                 purchase_order_fk = item.purchase_order_fk,
-                purchase_order_pk = item.purchase_order_pk,
+                supplier_fk = item.supplier_fk,
+                invoice_number = item.invoice_number,
+                purchase_date = item.purchase_date,
                 sales_tax = item.sales_tax,
                 shipping_cost = item.shipping_cost,
-                supplier_fk = item.supplier_fk,
                 supplier_name = item.supplier_name,
                 lot_number = item.lot_number,
                 lot_description = item.lot_description,
