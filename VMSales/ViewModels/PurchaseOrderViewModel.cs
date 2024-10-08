@@ -265,6 +265,8 @@ public ObservableCollection<PurchaseOrderModel> ObservableCollectionPurchaseOrde
                     {
                         case "Update":
                             //temp 
+                            // code is not detecting supplier_fk or supplier_pk change on combo box.
+
                             Debug.WriteLine("Update");
                             bool Update_PurchaseOrder = PurchaseOrderRepo.Update(item).Result;
                             if (Update_PurchaseOrder == false)

@@ -2,6 +2,7 @@
 using Dapper;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Threading.Tasks;
 using System.Windows;
 using VMSales.Models;
@@ -249,27 +250,37 @@ namespace VMSales.Logic
         // UPDATE TABLE PURCHASE_ORDER (INVOICE NUMBER OR PURCHASE DATE)
 
         //UPDATE TABLE PURCHASE_ORDER_DETAIL
-        //(LOT_COST, LOT_QUANTITY, LOT_NUMBER, LOT_NAME, LOT_DESCRIPTION, SALES_TAX, SHIPPING_COST, QUANTITY_CHECK(0,1)
+        //(LOT_COST, LOT_QUANTITY, LOT_NUMBER, LOT_NAME, LOT_DESCRIPTION, SALES_TAX,
+        //SHIPPING_COST, QUANTITY_CHECK(0,1)
 
-        // check if supplier_fk is changing.
+        // check if supplier_fk is changing and change supplier.
 
         public override async Task<bool> Update(PurchaseOrderModel entity)
         {
-            bool result = await Connection.QueryFirstAsync<bool>("SELECT CASE WHEN EXISTS (SELECT supplier_fk FROM purchase_order WHERE supplier_fk = @id) THEN 1 ELSE 0 END as result", new { id = entity.supplier_fk }, null);
+            bool result = await Connection.QueryFirstAsync<bool>(
+                "SELECT CASE WHEN EXISTS " +
+                "(SELECT 1 FROM purchase_order WHERE supplier_fk = @id AND purchase_order_pk = @purchase_order_pk) " +
+                "THEN 1 ELSE 0 END",
+                new { id = entity.supplier_fk, purchase_order_pk = entity.purchase_order_pk }, null);
+
             if (result == false)
             {
-                if (MessageBox.Show("Please Confirm Supplier Change.", "Question", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.No)
+                if (MessageBox.Show("Please Confirm Supplier Change.", "Question", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.Yes)
                 {
                     bool supplier_change = (await Connection.ExecuteAsync("UPDATE purchase_order SET " +
                     "supplier_fk = @supplier_fk WHERE purchase_order_pk = @id", new
-                  {
-                      id = entity.purchase_order_pk,
-                      supplier_fk = entity.supplier_fk,
-                  }, null)) == 1;
-                }
-                MessageBox.Show("Supplier not changed.");
-            }
+                    {
+                        id = entity.purchase_order_pk,
+                        supplier_fk = entity.supplier_fk,
+                    }, null)) == 1;
 
+                    if (supplier_change)
+                        MessageBox.Show("Supplier Updated.");
+                }
+            }
+            // Update Purchase_Order
+
+            // Update Purchase_Order_Detail
             
 
 
