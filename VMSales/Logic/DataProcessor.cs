@@ -158,6 +158,7 @@ namespace VMSales.Logic
 
                 if (!Equals(value1, value2))
                 {
+                    // for testing
                     Debug.WriteLine($"Property '{property.Name}' differs. Objects are not equal.");
                     return false;  // Property value differs, objects are not equal
                 }

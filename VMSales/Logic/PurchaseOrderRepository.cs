@@ -3,6 +3,7 @@ using Dapper;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using System.Windows;
 using VMSales.Models;
 
 
@@ -12,6 +13,9 @@ namespace VMSales.Logic
     {
         public PurchaseOrderRepository(IDatabaseProvider dbProvider) : base(dbProvider) { }
 
+        // NEED CODE REWRITE HERE.
+
+        // INSERTS
         public override async Task<int> Insert(PurchaseOrderModel entity)
         {
             // get invoice number
@@ -96,6 +100,8 @@ namespace VMSales.Logic
             }
         }
 
+        // SELECTS
+
         public async Task<PurchaseOrderModel> get_supplier_fk(int id)
         {
             return await Connection.QuerySingleAsync<PurchaseOrderModel>("SELECT supplier_fk FROM purchase_order WHERE purchase_order_pk = @id", new { id }, Transaction);
@@ -114,7 +120,6 @@ namespace VMSales.Logic
             }, null);
         }
 
-
         public async Task<IEnumerable<PurchaseOrderModel>> GetProductPurchase_Order(int product_pk)
         {
 
@@ -130,8 +135,6 @@ namespace VMSales.Logic
                 "WHERE p.product_pk = @product_pk",
                 new { product_pk }, Transaction);
         }
-
-
 
         //get last insert
         public async Task<int> Get_last_insert()
@@ -166,13 +169,6 @@ namespace VMSales.Logic
         {
 
             return await Connection.QueryAsync<PurchaseOrderModel>("SELECT " +
-         /*       "distinct po.purchase_order_pk, po.purchase_date, po.invoice_number, pod.purchase_order_detail_pk, " +
-                "pod.purchase_order_fk, pod.lot_number, pod.lot_cost, pod.lot_quantity," +
-                "pod.lot_name, pod.lot_description, pod.sales_tax, pod.shipping_cost, pod.quantity_check " +
-                "FROM purchase_order as po, purchase_order_detail as pod, supplier as sup " +
-                "INNER JOIN purchase_order_detail on po.purchase_order_pk = pod.purchase_order_fk " +
-                "INNER JOIN supplier on sup.supplier_pk = po.supplier_fk;", null, Transaction);
-         */
          "DISTINCT po.purchase_order_pk, pod.purchase_order_detail_pk, po.purchase_date, po.invoice_number, po.supplier_fk, sup.supplier_name, pod.purchase_order_fk, " +
          "pod.lot_number, pod.lot_cost, pod.lot_quantity, pod.lot_name, pod.lot_description, pod.sales_tax, pod.shipping_cost, pod.quantity_check, " +
             "CASE " +
@@ -244,18 +240,44 @@ namespace VMSales.Logic
         }
 
 
+
+
+        // UPDATES
+
         // Update Scenerios
+        // UPDATE TABLE PURCHASE_ORDER (change supplier -> supplier_fk warn user)
+        // UPDATE TABLE PURCHASE_ORDER (INVOICE NUMBER OR PURCHASE DATE)
 
-        // scenerio 3 
-        // keep same invoice number, UPDATE purchase_order_detail. (this should be already implemented?)
+        //UPDATE TABLE PURCHASE_ORDER_DETAIL
+        //(LOT_COST, LOT_QUANTITY, LOT_NUMBER, LOT_NAME, LOT_DESCRIPTION, SALES_TAX, SHIPPING_COST, QUANTITY_CHECK(0,1)
 
-
-
-        // scenerio 4 
-        // change the invoice number, UPDATE purchase_order_details to that invoice number.
+        // check if supplier_fk is changing.
 
         public override async Task<bool> Update(PurchaseOrderModel entity)
         {
+            bool result = await Connection.QueryFirstAsync<bool>("SELECT CASE WHEN EXISTS (SELECT supplier_fk FROM purchase_order WHERE supplier_fk = @id) THEN 1 ELSE 0 END as result", new { id = entity.supplier_fk }, null);
+            if (result == false)
+            {
+                if (MessageBox.Show("Please Confirm Supplier Change.", "Question", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.No)
+                {
+                    bool supplier_change = (await Connection.ExecuteAsync("UPDATE purchase_order SET " +
+                    "supplier_fk = @supplier_fk WHERE purchase_order_pk = @id", new
+                  {
+                      id = entity.purchase_order_pk,
+                      supplier_fk = entity.supplier_fk,
+                  }, null)) == 1;
+                }
+                MessageBox.Show("Supplier not changed.");
+            }
+
+            
+
+
+            return true;
+        }
+
+
+        /*
             // check if purchase_order really exists
             bool result = await Connection.QueryFirstAsync<bool>("SELECT CASE WHEN EXISTS (SELECT purchase_order_fk FROM purchase_order_detail WHERE purchase_order_fk = @id) THEN 1 ELSE 0 END as result", new { id = entity.purchase_order_fk }, null);
 
@@ -301,6 +323,10 @@ namespace VMSales.Logic
             }
             return false;
         }
+
+        */
+
+        // DELETES
 
         // FIX
         public override async Task<bool> Delete(PurchaseOrderModel entity)

@@ -258,14 +258,19 @@ public ObservableCollection<PurchaseOrderModel> ObservableCollectionPurchaseOrde
             ObservableCollection<PurchaseOrderModel> differences = dataProcessor.Compare(ObservableCollectionPurchaseOrderModelClean, ObservableCollectionPurchaseOrderModelDirty);
             foreach (var item in differences)
             {
-                //PurchaseOrderRepository PurchaseOrderRepo = new PurchaseOrderRepository(dataBaseProvider);
+                PurchaseOrderRepository PurchaseOrderRepo = new PurchaseOrderRepository(dataBaseProvider);
                 try
                 {
                     switch (item.Action)
                     {
                         case "Update":
                             //temp 
-                            //Debug.WriteLine("Update");
+                            Debug.WriteLine("Update");
+                            bool Update_PurchaseOrder = PurchaseOrderRepo.Update(item).Result;
+                            if (Update_PurchaseOrder == false)
+                            { throw new Exception("Update Failed"); }
+                            else
+                                PurchaseOrderRepo.Commit();
                             break;
                         case "Insert":
                             break;
@@ -278,11 +283,11 @@ public ObservableCollection<PurchaseOrderModel> ObservableCollectionPurchaseOrde
                 catch (Exception e)
                 {
                     MessageBox.Show("An unexpected error has occured." + e);
-                    //PurchaseOrderRepo.Revert();
-                    //PurchaseOrderRepo.Dispose();
+                     PurchaseOrderRepo.Revert();
+                     PurchaseOrderRepo.Dispose();
                 }
-                //PurchaseOrderRepo.Dispose();
-                //initial_load();
+                PurchaseOrderRepo.Dispose();
+                initial_load();
             }
         }
 
